@@ -10,11 +10,11 @@ import Community from "./pages/Community";
 function App() {
   return (
     <Routes>
-    <Route path="/" element={ <Homepage />} />
-    <Route path="/login" element={ <LoginPage />} />
-    <Route path="/signup" element={ <SignupPage />} />
-    <Route path="/community" element={ <Community />} />
-    <Route path="/classmetting" element={ <ClassMeeting />} />
+      <Route path="/" element={<Homepage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/community" element={<Community />} />
+      <Route path="/classmetting" element={<ClassMeeting />} />
     </Routes>
   );
 }

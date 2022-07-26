@@ -1,6 +1,7 @@
 import React from "react";
 import AttendeesList from "./AttendeesList";
 import ChattingWrapper from "./ChattingWrapper";
+import OpenViduTest from "./OpenViduTest";
 
 export interface DummyUser {
   id: number;
@@ -23,8 +24,9 @@ const Meeting = () => {
   return (
     <div>
       <div>
-        <AttendeesList items={DummyUsers} />
-        <ChattingWrapper />
+        <OpenViduTest></OpenViduTest>
+        {/* <AttendeesList items={DummyUsers} />
+        <ChattingWrapper /> */}
       </div>
     </div>
   );
