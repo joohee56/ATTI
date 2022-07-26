@@ -6,6 +6,7 @@ import LoginPage from "./pages/Login";
 import SignupPage from "./pages/Signup";
 import ClassMeeting from "./pages/ClassMeeting";
 import Community from "./pages/Community";
+import ModalTest from "./pages/ModalTest";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
     <Route path="/signup" element={ <SignupPage />} />
     <Route path="/community" element={ <Community />} />
     <Route path="/classmetting" element={ <ClassMeeting />} />
+    <Route path="/modaltest" element={ <ModalTest />} />
     </Routes>
   );
 }
