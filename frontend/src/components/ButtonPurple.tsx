@@ -1,10 +1,18 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import styled from "styled-components";
 
-function Button(): ReactElement {
-  return <ButtonStyled>Button</ButtonStyled>;
+interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode;
+  className?: string;
 }
 
-const ButtonStyled = styled.button``;
+function ButtonPurple({children}: ButtonProps): ReactElement {
+  return <ButtonStyled>{children}</ButtonStyled>;
+}
 
-export default Button;
+const ButtonStyled = styled.button`
+background: var(--button-bg-color, #EEA4CE);
+`;
+
+export default ButtonPurple;
