@@ -1,9 +1,12 @@
 import React from "react";
+import Meeting from "../components/educationRoom/Meeting";
 
 const ClassMeeting = () => {
   return (
     <div>
-      <div>클래스 미팅 룸입니다.</div>
+      <div>
+        <Meeting />
+      </div>
     </div>
   );
 };
