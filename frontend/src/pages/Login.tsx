@@ -1,2 +1,9 @@
-const login = 1
-export default login
+function LoginPage() {
+  return (
+    <div>
+      <div>로그인페이지</div>
+    </div>
+  );
+}
+
+export default LoginPage;
