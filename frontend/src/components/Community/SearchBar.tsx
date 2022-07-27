@@ -9,7 +9,7 @@ function SearchBar(){
 }
 
 const InputContainer = styled.input`
-width: 150px;
-height: 50px;
+width: 120px;
+height: 30px;
 `
 export default SearchBar
