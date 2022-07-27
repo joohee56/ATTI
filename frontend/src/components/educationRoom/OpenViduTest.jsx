@@ -15,7 +15,7 @@ const OpenViduTest = () => {
     publisher: undefined,
     subscribers: [],
   });
-  const [sessionLoad, setSessionLoad] = useState(false);
+  const [sessionLoad, setSessionLoad] = useState("");
   const messageRef = useRef();
   function handleChangeSessionId(e) {
     setState((prev) => ({
@@ -54,23 +54,27 @@ const OpenViduTest = () => {
   let OV = new OpenVidu();
   useEffect(() => {
     if (state.session !== undefined) {
-      state.session.on("signal:joinNewUser", (event) => {
-        console.log(event);
-        console.log(event.data);
+      state.session.on("signal", (event) => {
+        setSessionLoad(event.data);
       });
     }
   }, [state.session]);
+
   async function joinSession(e) {
     e.preventDefault();
     OV = new OpenVidu();
 
     const mySession = OV.initSession();
-
+    setState((prevState) => ({
+      ...prevState,
+      session: mySession,
+    }));
     console.log(mySession);
     mySession.on("streamCreated", (event) => {
       let subscriber = mySession.subscribe(event.stream, "subscriber");
       console.log("USER DATA: " + event.stream.connection.data);
       let subscribers = state.subscribers;
+      console.log(subscribers);
       subscribers.push(subscriber);
 
       setState((prevState) => ({
@@ -83,6 +87,10 @@ const OpenViduTest = () => {
       const sessionId_1 = await createSession(state.mySessionId);
       return await createToken(sessionId_1);
     }
+
+    mySession.on("streamDestroyed", (event) => {
+      deleteSubScriber(event.stream.streamManager);
+    });
     getToken().then((token) => {
       mySession
         .connect(token, { clientData: state.myUserName })
@@ -115,20 +123,6 @@ const OpenViduTest = () => {
             publisher: publisher,
           }));
         })
-        .then(() => {
-          mySession
-            .signal({
-              data: "hello world!",
-              to: [],
-              type: "joinNewUser",
-            })
-            .then(() => {
-              console.log("Message send success");
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        })
         .catch((error) => {
           console.log("세션에 연결할 수 없습니다.:", error.code, error.message);
         });
@@ -137,16 +131,24 @@ const OpenViduTest = () => {
     mySession.on("exception", (exception) => {
       console.warn(exception);
     });
-    setState((prevState) => ({
-      ...prevState,
-      session: mySession,
-    }));
   }
   function leaveSession() {
     const mySession = state.session;
 
     if (mySession) {
       mySession.disconnect();
+      mySession
+        .signal({
+          data: "hello world!",
+          to: [],
+          type: "disconnectUser",
+        })
+        .then(() => {
+          console.log("Message send success");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     OV = null;
 
