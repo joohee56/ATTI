@@ -6,14 +6,24 @@ interface CategoryType {
 }
 
 const dummyCategory = {
-    category_id : ['싸피', '대전1반', '대전3반'],
+    category_id : ['공지사항', '자유게시판', 'QnA'],
 }
 
 function CategoryList(dummyCategory: CategoryType){
     const rendering = () => {
+        const noClickStyle = {
+            border: "solid",
+            width: "100px",
+            height: "30px",
+        }
+        const clickStyle = {
+            border: "solid",
+            width: "150px",
+            height: "60px",
+        }
         const result = [];
         for (let i = 0; i < dummyCategory.category_id.length; i++) {
-          result.push(<div key={i}>{dummyCategory.category_id[i] + " / "}</div>);
+          result.push(<div key={i} style={noClickStyle}>{dummyCategory.category_id[i]}</div>);
         }
         return result;
       };
@@ -32,7 +42,7 @@ function Category(){
 const CategoryContainer = styled.div`
 width: 150px;
 height: 400px;
-border: 10px;
+border: solid;
 border-radius: 5px;
 `;
 export default Category
