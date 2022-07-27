@@ -1,19 +1,33 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback, PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
-import NormalPostFrame from '../components/Community/NormalPostFrame';
-import SearchBar from '../components/Community/SearchBar';
-import ButtonBlue from '../components/ButtonBlue';
-import Category from '../components/Community/Category';
+import NormalPostFrame from '../components/community/NormalPostFrame';
+import SearchBar from '../components/community/SearchBar';
+import {ButtonStyled} from '../components/ButtonBlue';
+import Category from '../components/community/Category';
+import PostEditor from '../components/community/PostEditor';
+
+import Modal from '../components/Modal';
 
 function Community(){
+
+  const [isOpenModal, setOpenModal] = useState<boolean>(false);
+  const onClickToggleModal = useCallback(() => {
+    setOpenModal(!isOpenModal);
+  }, [isOpenModal]);
   return(
       <Main>
         <Category/>
+        {isOpenModal && (
+      <Modal onClickToggleModal={onClickToggleModal}>
+        <PostEditor/>
+      </Modal>
+    )}
         <div>
           <FlexDiv>
             <SearchBar/>
-            <ButtonBlue>글쓰기</ButtonBlue>
+            <button>검색</button>
+            <ButtonStyled onClick={onClickToggleModal}>글쓰기</ButtonStyled>
           </FlexDiv> 
           <NormalPostFrame/>
         </div>

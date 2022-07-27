@@ -11,7 +11,7 @@ function ButtonBlue({children}: ButtonProps): ReactElement {
   return <ButtonStyled>{children}</ButtonStyled>;
 }
 
-const ButtonStyled = styled.button`
+export const ButtonStyled = styled.button`
 background: var(--button-bg-color, #9DCEFF);
 `;
 
