@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./UserVideoComponent";
@@ -15,7 +15,8 @@ const OpenViduTest = () => {
     publisher: undefined,
     subscribers: [],
   });
-
+  const [sessionLoad, setSessionLoad] = useState(false);
+  const messageRef = useRef();
   function handleChangeSessionId(e) {
     setState((prev) => ({
       ...prev,
@@ -51,93 +52,96 @@ const OpenViduTest = () => {
     }
   }
   let OV = new OpenVidu();
-  function joinSession(e) {
+  useEffect(() => {
+    if (state.session !== undefined) {
+      state.session.on("signal:joinNewUser", (event) => {
+        console.log(event);
+        console.log(event.data);
+      });
+    }
+  }, [state.session]);
+  async function joinSession(e) {
     e.preventDefault();
     OV = new OpenVidu();
 
-    setState(
-      (prevState) => ({
+    const mySession = OV.initSession();
+
+    console.log(mySession);
+    mySession.on("streamCreated", (event) => {
+      let subscriber = mySession.subscribe(event.stream, "subscriber");
+      console.log("USER DATA: " + event.stream.connection.data);
+      let subscribers = state.subscribers;
+      subscribers.push(subscriber);
+
+      setState((prevState) => ({
         ...prevState,
-        session: OV.initSession(),
-      }),
-      () => {}
-    );
-
-    console.log(state);
-  }
-
-  useEffect(() => {
-    if (state.session !== undefined) {
-      let mySession = state.session;
-
-      console.log(state.session);
-      console.log(state.subscribers);
-      mySession.on("streamCreated", (event) => {
-        let subscriber = mySession.subscribe(event.stream, undefined);
-        let subscribers = state.subscribers;
-        subscribers.push(subscriber);
-
-        setState((prevState) => ({
-          ...prevState,
-          subscribers: subscribers,
-        }));
-      });
-      mySession.on("exception", (exception) => {
-        console.warn(exception);
-      });
-      function getToken() {
-        return createSession(state.mySessionId).then((sessionId) =>
-          createToken(sessionId)
-        );
-      }
-      getToken().then((token) => {
-        mySession
-          .connect(token, { clientData: state.myUserName })
-          .then(async () => {
-            let devices = await OV.getDevices();
-            let videoDevices = devices.filter(
-              (device) => device.kind === "videoinput"
-            );
-            let publisher = OV.initPublisher(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: "640x480", // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-              mirror: true, // Whether to mirror your local video or not
-            });
-
-            // --- 6) Publish your stream ---
-
-            mySession.publish(publisher);
-
-            // Set the main video in the page to display our webcam and store our Publisher
-            setState((prevState) => ({
-              ...prevState,
-              currentVideoDevice: videoDevices[0],
-              mainStreamManager: publisher,
-              publisher: publisher,
-            }));
-          })
-          .catch((error) => {
-            console.log(
-              "세션에 연결할 수 없습니다.:",
-              error.code,
-              error.message
-            );
-          });
-      });
+        subscribers: subscribers,
+      }));
+    });
+    console.log("mySession", mySession);
+    async function getToken() {
+      const sessionId_1 = await createSession(state.mySessionId);
+      return await createToken(sessionId_1);
     }
-  }, [
-    OV,
-    state.mySessionId,
-    state.myUserName,
-    state.session,
-    state.subscribers,
-  ]);
+    getToken().then((token) => {
+      mySession
+        .connect(token, { clientData: state.myUserName })
+        .then(async () => {
+          let devices = await OV.getDevices();
+          let videoDevices = devices.filter(
+            (device) => device.kind === "videoinput"
+          );
+          let publisher = OV.initPublisher(undefined, {
+            audioSource: undefined, // The source of audio. If undefined default microphone
+            videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
+            publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+            publishVideo: true, // Whether you want to start publishing with your video enabled or not
+            resolution: "640x480", // The resolution of your video
+            frameRate: 30, // The frame rate of your video
+            insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+            mirror: true, // Whether to mirror your local video or not
+          });
 
+          // --- 6) Publish your stream ---
+
+          mySession.publish(publisher);
+
+          // Set the main video in the page to display our webcam and store our Publisher
+
+          setState((prevState) => ({
+            ...prevState,
+            currentVideoDevice: videoDevices[0],
+            mainStreamManager: publisher,
+            publisher: publisher,
+          }));
+        })
+        .then(() => {
+          mySession
+            .signal({
+              data: "hello world!",
+              to: [],
+              type: "joinNewUser",
+            })
+            .then(() => {
+              console.log("Message send success");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log("세션에 연결할 수 없습니다.:", error.code, error.message);
+        });
+    });
+
+    mySession.on("exception", (exception) => {
+      console.warn(exception);
+    });
+    setState((prevState) => ({
+      ...prevState,
+      session: mySession,
+    }));
+  }
   function leaveSession() {
     const mySession = state.session;
 
@@ -155,25 +159,6 @@ const OpenViduTest = () => {
       publisher: undefined,
     });
   }
-  useEffect(() => {
-    if (state.session !== undefined) {
-      const mySession = state.session;
-
-      if (mySession) {
-        mySession.disconnect();
-      }
-      OV = null;
-
-      setState({
-        session: undefined,
-        subscrubers: [],
-        mySessionId: "SessionA",
-        myUserName: "Participant" + Math.floor(Math.random() * 100),
-        mainStreamManager: undefined,
-        publisher: undefined,
-      });
-    }
-  }, []);
   async function switchCamera() {
     try {
       const devices = await OV.getDevices();
@@ -212,6 +197,22 @@ const OpenViduTest = () => {
       console.error(e);
     }
   }
+  function sendMessage() {
+    const mySession = state.session;
+    mySession
+      .signal({
+        data: messageRef.current.value,
+        to: [],
+        type: "my-chat",
+      })
+      .then(() => {
+        console.log("Message send success");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    messageRef.current.value = "";
+  }
 
   return (
     <div>
@@ -238,6 +239,8 @@ const OpenViduTest = () => {
           <div>{state.mySessionId}</div>
           <div>
             <button onClick={leaveSession}>세션 나가기</button>
+            <input type="text" id="message" ref={messageRef} />
+            <button onClick={sendMessage}>메시지 보내기</button>
           </div>
           {state.mainStreamManager !== undefined ? (
             <div className="col-md-6">
