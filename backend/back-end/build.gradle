@@ -1,0 +1,76 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.2'
+	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+	id 'org.asciidoctor.convert' version '1.5.8'
+	id 'java'
+}
+
+group = 'com.ssafy'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+
+//set build time and inject value to application.properties
+def buildTime() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd_HHmm')
+    return formattedDate
+}
+
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.session:spring-session-jdbc'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	
+	runtimeOnly 'mysql:mysql-connector-java'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	//STOMP 웹소캣 서버 사이드 테스트를 위한 의존성 추가
+    implementation("org.springframework.boot:spring-boot-starter-mustache")
+    //STOMP 관련 프론트 라이브러리
+    implementation('org.webjars.bower:jquery:3.3.1')
+    implementation('org.webjars:sockjs-client:1.1.2')
+    implementation('org.webjars:stomp-websocket:2.3.3-1')
+    implementation('org.webjars:webjars-locator:0.30')
+    //WebRTC 클라이언트 의존성 추가
+    implementation('org.webjars.bower:webrtc-adapter:7.4.0')
+    //Kurento (미디어서버) 관련 의존성 추가
+    implementation('org.kurento:kurento-client:6.16.0')
+    implementation('org.kurento:kurento-utils-js:6.15.0')
+}
+
+tasks.named('test') {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+	inputs.dir snippetsDir
+	dependsOn test
+}
