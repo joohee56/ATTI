@@ -8,11 +8,21 @@ interface ButtonProps
 }
 
 function ButtonPurple({children}: ButtonProps): ReactElement {
-  return <ButtonStyled>{children}</ButtonStyled>;
+  return <ButtonPurpleStyled>{children}</ButtonPurpleStyled>;
 }
 
-const ButtonStyled = styled.button`
-background: var(--button-bg-color, #EEA4CE);
+export const ButtonPurpleStyled = styled.button`
+background: linear-gradient(135deg, #c58bf2 0%,#eea4ce 100%);
+color: white;
+border-radius: 1rem;
+border: 0px solid;
+margin: 0;
+padding: 0.3rem 1rem;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+font-family: 'Noto Sans KR', sans-serif;
+font-size: 0.8rem;
+font-weight: bold;
+cursor:pointer
 `;
 
 export default ButtonPurple;
