@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./UserVideoComponent";
+import AttendeesList from "./AttendeesList";
+import ChattingWrapper from "./ChattingWrapper";
 
 const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -15,7 +17,8 @@ const OpenViduTest = () => {
     publisher: undefined,
     subscribers: [],
   });
-  const [sessionLoad, setSessionLoad] = useState("");
+  const [peopleList, setPeopleList] = useState([]);
+  const [chatList, setChatList] = useState([]);
   const messageRef = useRef();
   function handleChangeSessionId(e) {
     setState((prev) => ({
@@ -45,6 +48,13 @@ const OpenViduTest = () => {
     let index = subscribers.indexOf(streamManager, 0);
     if (index > -1) {
       subscribers.splice(index, 1);
+      const peoples = [state.myUserName];
+      setPeopleList(
+        subscribers.forEach((e) => {
+          console.log(e);
+          peoples.push(JSON.parse(e.stream.connection.data).clientData);
+        })
+      );
       setState((prevState) => ({
         ...prevState,
         subscribers: subscribers,
@@ -55,10 +65,14 @@ const OpenViduTest = () => {
   useEffect(() => {
     if (state.session !== undefined) {
       state.session.on("signal", (event) => {
-        setSessionLoad(event.data);
+        console.log(JSON.parse(event.from.data).clientData);
+        setChatList({
+          message: event.data,
+          from: JSON.parse(event.from.data).clientData,
+        });
       });
     }
-  }, [state.session]);
+  }, [state.session, state.subscribers]);
 
   async function joinSession(e) {
     e.preventDefault();
@@ -72,11 +86,13 @@ const OpenViduTest = () => {
     console.log(mySession);
     mySession.on("streamCreated", (event) => {
       let subscriber = mySession.subscribe(event.stream, "subscriber");
-      console.log("USER DATA: " + event.stream.connection.data);
       let subscribers = state.subscribers;
-      console.log(subscribers);
       subscribers.push(subscriber);
-
+      let peoples = [state.myUserName];
+      subscribers.forEach((e) => {
+        peoples.push(JSON.parse(e.stream.connection.data).clientData);
+      });
+      setPeopleList(peoples);
       setState((prevState) => ({
         ...prevState,
         subscribers: subscribers,
@@ -267,6 +283,14 @@ const OpenViduTest = () => {
                   <UserVideoComponent streamManager={sub} />
                 </div>
               ))}
+          </div>
+          <div>
+            <div>
+              <AttendeesList peopleList={peopleList} />
+            </div>
+            <div>
+              <ChattingWrapper chatList={chatList} />
+            </div>
           </div>
         </div>
       ) : null}

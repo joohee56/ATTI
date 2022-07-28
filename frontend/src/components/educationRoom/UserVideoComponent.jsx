@@ -2,7 +2,7 @@ import React from "react";
 import OpenViduVideoComponent from "./OpenViduVideoComponent";
 
 export default function UserVideoComponent(props) {
-  console.log(props);
+  console.log("UserVideoComponent", props);
   function getNickName() {
     return JSON.parse(props.streamManager.stream.connection.data).clientData;
   }

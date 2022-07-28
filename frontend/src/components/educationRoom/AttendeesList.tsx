@@ -1,21 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { DummyUser } from "./Meeting";
+
+type peopleProps = {
+  peopleList: string[];
+  // children: React.ReactNode;
+};
 
 const AttendeesListDiv = styled.div`
+  width: 350px;
+  height: 500px;
+  background-color: gray;
   color: black;
 `;
-const AttendeesList = ({ items }: { items: DummyUser[] }) => {
-  console.log(items);
+const AttendeesList = ({ peopleList }: peopleProps) => {
+  console.log(peopleList);
   return (
-    <AttendeesListDiv>
-      {items.map((e) => (
-        <div key={e.id}>
-          <div>{e.name}</div>
-          <div>{e.id}</div>
-        </div>
-      ))}
-    </AttendeesListDiv>
+    <div>
+      {peopleList !== undefined && peopleList.length > 0 ? (
+        <AttendeesListDiv>
+          {peopleList.map((e, i) => (
+            <div key={i}>
+              <>{console.log(e)}</>
+              <div>{e}</div>
+            </div>
+          ))}
+        </AttendeesListDiv>
+      ) : null}
+    </div>
   );
 };
 
