@@ -1,23 +1,61 @@
-import { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 import HomeIcon from "@mui/icons-material/Home";
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import Logo from "../assets/images/logoComputer.png";
-import { ButtonStyled } from "../components/ButtonBlue";
-import Modal from "../components/Modal";
+import { ButtonBlueStyled } from "../components/ButtonBlue";
+import { ButtonPurpleStyled } from "../components/ButtonPurple";
+import InputWithLabel from "../components/InputWithLabel";
 
-function LoginPage() {
-  const [isOpenModal, setOpenModal] = useState<boolean>(false);
-  const onClickToggleModal = useCallback(() => {
-    setOpenModal(!isOpenModal);
-  }, [isOpenModal]);
+interface userSignupInfo {
+  name: string;
+  id: string;
+  password: string;
+  date: string;
+  email: string;
+  phoneNumber: string;
+}
+
+function SignupPage() {
+  //회원가입
+  const [signupInfo, setSignupInfo] = useState<userSignupInfo>({
+    name: "",
+    id: "",
+    password: "",
+    date: "",
+    email: "",
+    phoneNumber: "",
+  });
+
+   const signSubmit = () => {
+    localStorage.setItem('userInfo',JSON.stringify(signupInfo));
+    alert("회원가입 되었습니다.");
+    
+  };
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setSignupInfo({
+      ...signupInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   return (
     <>
-      <HomeIcon />
+      <div>
+        <NavLink to="/">
+          <HomeIcon /> Home
+        </NavLink>
+        {" | "}
+        <NavLink to="/login">
+          <PersonOutlineOutlinedIcon /> Login
+        </NavLink>
+      </div>
       <HeaderDiv>회원가입</HeaderDiv>
       <StyledPage>
         <StyledContent>
@@ -34,31 +72,65 @@ function LoginPage() {
         </StyledContent>
         <StyledContent>
           <div>
-            <InputDiv>
-              <Input type="text" required placeholder="Name" />
-            </InputDiv>
-            <InputDiv>
-              <Input type="text" required placeholder="ID" />
-              <CheckIcon/>
-              <CloseIcon/>
-            </InputDiv>
-            <InputDiv>
-              <Input type="text" required placeholder="Password1" />
-            </InputDiv>
-            <InputDiv>
-              <Input type="text" required placeholder="Password2" />
-            </InputDiv>
-            <InputDiv>
-              <Input type="date"/>
-            </InputDiv>
-            <InputDiv>
-              <Input required placeholder="Email"/>
-            </InputDiv>
-            <InputDiv>
-              <Input required placeholder="Phone"/><button>인증</button>
-            </InputDiv>
+            <form onSubmit={signSubmit}>
+              <InputWithLabel
+                label="Name"
+                name="name"
+                placeholder="Name"
+                value={signupInfo.name}
+                onChange={onChange}
+              />
+              <InputWithLabel
+                label="Id"
+                name="id"
+                placeholder="ID"
+                value={signupInfo.id}
+                onChange={onChange}
+              />
+              <InputWithLabel
+                label="Password"
+                name="password"
+                placeholder="Password 1"
+                type="password"
+                value={signupInfo.password}
+                onChange={onChange}
+              />
+              <InputWithLabel
+                label="Password"
+                name="password"
+                placeholder="비밀번호 확인"
+                type="password"
+              />
+              <InputWithLabel
+                label="date"
+                name="date"
+                type="date"
+                value={signupInfo.date}
+                onChange={onChange}
+              />
+              <InputWithLabel
+                label="email"
+                name="email"
+                placeholder="email"
+                type="email"
+                value={signupInfo.email}
+                onChange={onChange}
+              />
+              <InputWithLabel
+                label="PhoneNumber"
+                name="phoneNumber"
+                placeholder="phoneNumber"
+                type="text"
+                value={signupInfo.phoneNumber}
+                onChange={onChange}
+              />
+
+              <ButtonPurpleStyled>폰 인증</ButtonPurpleStyled>
+
+              <ButtonBlueStyled type="submit">가입하기</ButtonBlueStyled>
+            </form>
           </div>
-          <ButtonStyled>가입하기</ButtonStyled>
+
           <p>------- 다른 서비스를 이용한 회원가입 -------</p>
           <div>
             <img
@@ -76,11 +148,6 @@ function LoginPage() {
             />
           </div>
         </StyledContent>
-        {isOpenModal && (
-          <Modal onClickToggleModal={onClickToggleModal}>
-            children 부분이 들어감!!
-          </Modal>
-        )}
       </StyledPage>
     </>
   );
@@ -142,11 +209,14 @@ const InputDiv = styled.div`
   border: 1px solid;
 `;
 
-const Input=styled.input`
-  width:75%;
-  border:none;  
+const Input = styled.input`
+  width: 75%;
+  border: none;
+  ::placeholder {
+    color: #bdbdbd;
+  }
 
-  &:focus{
+  &:focus {
     outline: none;
   }
 `;
@@ -158,4 +228,4 @@ const InfoPolicyStyle = {
   border: "1px solid",
 };
 
-export default LoginPage;
+export default SignupPage;
