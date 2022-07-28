@@ -4,14 +4,56 @@ import styled from "styled-components";
 
 import HomeIcon from "@mui/icons-material/Home";
 import Logo from "../assets/images/logoComputer.png";
-import ButtonBlue from "../components/ButtonBlue";
+import { ButtonBlueStyled } from "../components/ButtonBlue";
+import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
 
+interface userLoginInfo {
+  id: string;
+  password: string;
+}
+
 function LoginPage() {
-  const [isOpenModal, setOpenModal] = useState<boolean>(false);
-  const onClickToggleModal = useCallback(() => {
-    setOpenModal(!isOpenModal);
-  }, [isOpenModal]);
+  //로그인 클릭
+  const [loginInfo, setLoginInfo] = useState<userLoginInfo>({
+    id: "",
+    password: "",
+  });
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setLoginInfo({
+      ...loginInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const loginClick = () => {
+    // 데이터 가져오기
+    let localData: any = localStorage.getItem("userInfo");
+    let userData = JSON.parse(localData);
+
+    // input data 와 로컬 데이터 비교
+    if (loginInfo.id == userData.id && loginInfo.password == userData.password){
+      alert("로그인 성공");
+      sessionStorage.setItem('user_id', loginInfo.id);
+      document.location.href = '/community';
+    }
+    else {
+      alert("로그인실패");
+    }
+  };
+
+  // 모달클릭
+  const [findIdModal, setfindIdModal] = useState<boolean>(false);
+  const clickFindIdModal = useCallback(() => {
+    setfindIdModal(!findIdModal);
+  }, [findIdModal]);
+
+  const [findPwModal, setfindPwModal] = useState<boolean>(false);
+  const clickfindPwModal = useCallback(() => {
+    setfindPwModal(!findPwModal);
+  }, [findPwModal]);
 
   return (
     <>
@@ -41,24 +83,38 @@ function LoginPage() {
 
           <div>
             <div>
-              <input type="text" required placeholder="ID" />
+              <InputWithLabel
+                label="Id"
+                name="id"
+                placeholder="ID"
+                onChange={onChange}
+              />
+              <InputWithLabel
+                label="Password"
+                name="password"
+                placeholder="Password"
+                type="password"
+                onChange={onChange}
+              />
             </div>
-            <div>
-              <input type="text" required placeholder="PW" />
-            </div>
+
             <p>
-              <DialogButton onClick={onClickToggleModal}>
+              <DialogButton onClick={clickFindIdModal}>
                 아이디 찾기
               </DialogButton>{" "}
-              | <DialogButton onClick={onClickToggleModal}>
+              |{" "}
+              <DialogButton onClick={clickfindPwModal}>
                 비밀번호 찾기
-              </DialogButton>{" "}|{" "}
+              </DialogButton>{" "}
+              |{" "}
               <Link to="../signup">
                 <span>회원가입</span>
               </Link>
             </p>
           </div>
-          <button>로그인</button>
+
+          <ButtonBlueStyled onClick={loginClick}>로그인</ButtonBlueStyled>
+
           <p>다른 서비스를 이용한 로그인</p>
           <div>
             <img
@@ -76,9 +132,14 @@ function LoginPage() {
             />
           </div>
         </StyledContent>
-        {isOpenModal && (
-          <Modal onClickToggleModal={onClickToggleModal}>
-            children 부분이 들어감!!
+        {findIdModal && (
+          <Modal onClickToggleModal={clickFindIdModal}>
+            ID찾기
+          </Modal>
+        )}
+        {findPwModal && (
+          <Modal onClickToggleModal={clickfindPwModal}>
+            비밀번호 찾기
           </Modal>
         )}
       </StyledPage>
@@ -133,3 +194,10 @@ const DialogButton = styled.button`
 `;
 
 export default LoginPage;
+function dispatch(arg0: any) {
+  throw new Error("Function not implemented.");
+}
+
+function login(arg0: { id: string; password: string }): any {
+  throw new Error("Function not implemented.");
+}
