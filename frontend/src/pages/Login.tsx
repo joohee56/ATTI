@@ -5,6 +5,7 @@ import styled from "styled-components";
 import HomeIcon from "@mui/icons-material/Home";
 import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlueStyled } from "../components/ButtonBlue";
+import { ButtonPurpleStyled } from "../components/ButtonPurple";
 import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
 
@@ -48,7 +49,7 @@ function LoginPage() {
 
   // 모달클릭
   const [findValue, setFindValue] = useState<string>("");
-  const findValueSetting = (event:any) => {
+  const findValueSetting = (event: any) => {
     setFindValue(event.target.name);
   };
 
@@ -57,9 +58,14 @@ function LoginPage() {
     setOpenModal(!findInfoModal);
   }, [findInfoModal]);
 
-  const setClickModal = (event:any) => {
+  const setClickModal = (event: any) => {
     findValueSetting(event);
     onClickToggleModal();
+  };
+
+  // 모달 안 버튼 클릭
+  const Thisvalue = () => {
+    console.log("이게된다구???");
   };
 
   return (
@@ -141,8 +147,60 @@ function LoginPage() {
         </StyledContent>
         {findInfoModal && (
           <Modal onClickToggleModal={onClickToggleModal}>
-            {findValue == "findID" && <div>ID찾기 입니다.{findValue}</div>}
-            {findValue == "findPW" && <div>PW찾기 입니다.{findValue}</div>}
+            <ModalDiv>
+              <StyledPage>
+                <LeftTextDiv>
+                  <TextSpan onClick={Thisvalue}>아이디 찾기</TextSpan>
+                </LeftTextDiv>
+                <TextDiv>
+                  <TextSpan>비밀번호 찾기</TextSpan>
+                </TextDiv>
+              </StyledPage>
+              <div>
+              {findValue == "findID" && (
+                <>
+                  <InputWithLabel
+                    label="Name"
+                    name="name"
+                    placeholder="Name"
+                    // value={signupInfo.name}
+                    onChange={onChange}
+                  />
+                  <InputWithLabel
+                    label="email"
+                    name="email"
+                    placeholder="email"
+                    type="email"
+                    // value={signupInfo.email}
+                    onChange={onChange}
+                  />
+                  <InputWithLabel
+                    label="date"
+                    name="date"
+                    type="date"
+                    // value={signupInfo.date}
+                    onChange={onChange}
+                  />
+                  <p>(xx@naver.com) 에 해당하는 아이디는 “ ” 입니다.</p>
+                  <ButtonPurpleStyled>찾기</ButtonPurpleStyled>
+                </>
+              )}
+              {findValue == "findPW" && (
+                <>
+               <InputWithLabel
+                label="Id"
+                name="id"
+                placeholder="ID"
+                // value={signupInfo.id}
+                onChange={onChange}
+              />
+               <ButtonPurpleStyled>보내기</ButtonPurpleStyled>
+               <p>가입하신 이메일(xxx@naver.com)으로 임시비밀번호를 보내드렸습니다</p>
+               <ButtonBlueStyled>닫기</ButtonBlueStyled>
+              </>
+            )}
+            </div>
+            </ModalDiv>
           </Modal>
         )}
       </StyledPage>
@@ -155,16 +213,17 @@ const StyledPage = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  margin-bottom: 30px;
 `;
 
 const StyledContent = styled.div`
-  max-width: 500px;
-  min-width: 500px;
-  height: auto;
-  padding: 3rem;
-  text-align: center;
-  border-radius: 1rem;
-  border: 1px solid;
+max-width: 500px;
+min-width: 500px;
+height: 400px;
+padding: 3rem;
+text-align: center;
+border-radius: 1rem;
+border: 1px solid;
 `;
 
 const logoStyle = {
@@ -172,6 +231,8 @@ const logoStyle = {
   maxWidth: "500px",
   height: "auto",
 };
+
+
 
 const HeaderDiv = styled.div`
   color: #555555; //텍스트 색상
@@ -196,12 +257,32 @@ const DialogButton = styled.button`
   }
 `;
 
+const ModalDiv = styled.div`
+  color: gray; //텍스트 색상
+  font-size: middle; //텍스트 크기
+  font-weight: bold; //텍스트 굵기
+  text-align: center; //텍스트 정렬 방향
+  line-height: 50px; //줄간격
+  width: 80%;
+`;
+
+const LeftTextDiv = styled.div`
+  width: 50%;
+  height: 40px;
+  border-right: solid 2px black;
+`;
+
+const TextDiv = styled.div`
+  width: 50%;
+  height: 40px;
+`;
+
+const TextSpan = styled.span`
+  font-size: 1.2em;
+  cursor: pointer;
+  background: linear-gradient(135deg, #9dceff 0%, #92a3fd 100%);
+  color: transparent;
+  -webkit-background-clip: text;
+`;
 
 export default LoginPage;
-function dispatch(arg0: any) {
-throw new Error("Function not implemented.");
-}
-
-function login(arg0: { id: string; password: string }): any {
-throw new Error("Function not implemented.");
-}
