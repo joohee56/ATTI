@@ -4,12 +4,17 @@ import { BrowserRouter } from "react-router-dom";
 
 import "./index.css";
 import App from "./App";
+import { Provider } from 'react-redux'
+import communityStore from "./store/community";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-    <BrowserRouter>
-      <App />
+  
+  <BrowserRouter>
+      <Provider store={communityStore}>
+        <App />
+      </Provider>
     </BrowserRouter>
 );
