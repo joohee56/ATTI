@@ -12,7 +12,7 @@ function ButtonPurple({children}: ButtonProps): ReactElement {
 }
 
 export const ButtonPurpleStyled = styled.button`
-background: linear-gradient(135deg, #c58bf2 0%,#eea4ce 100%);
+background: linear-gradient(135deg, #eea4ce 0%,#c58bf2 100%);
 color: white;
 border-radius: 1rem;
 border: 0px solid;

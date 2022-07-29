@@ -12,7 +12,7 @@ function ButtonBlue({children}: ButtonProps): ReactElement {
 }
 
 export const ButtonBlueStyled = styled.button`
-background: linear-gradient(135deg, #92a3fd 0%,#9dceff 100%);
+background: linear-gradient(135deg, #9dceff 0% ,#92a3fd 100%);
 color: white;
 border-radius: 1rem;
 border: 0px solid;
