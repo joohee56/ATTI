@@ -1,11 +1,11 @@
 import React, { useState, useCallback, PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
-import NormalPostFrame from '../components/community/NormalPostFrame';
-import SearchBar from '../components/community/SearchBar';
+import NormalPostFrame from '../components/Community/NormalPostFrame';
+import SearchBar from '../components/Community/SearchBar';
 import {ButtonStyled} from '../components/ButtonBlue';
-import Category from '../components/community/Category';
-import PostEditor from '../components/community/PostEditor';
+import Category from '../components/Community/Category';
+import PostEditor from '../components/Community/PostEditor';
 import Modal from '../components/Modal';
 
 function Community(){

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {useSelector} from 'react-redux'
 
 import Modal from '../Modal';
+import PostDetail from '../Community/PostDetail'
 // import PostDetail
 
 
@@ -150,9 +151,17 @@ function NormalPostFrame(){
     setOpenModal(!isOpenModal);
     }, [isOpenModal]);
     return(
+        <div>
+        {isOpenModal && (
+        <Modal onClickToggleModal={onClickToggleModal}>
+            <PostDetail/>
+        </Modal>
+        )}
         <PostContainer onClick={onClickToggleModal}>
            {PostList()}
         </PostContainer>
+
+        </div>
     );
 }
 
