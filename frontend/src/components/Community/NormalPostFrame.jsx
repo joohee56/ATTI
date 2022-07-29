@@ -1,8 +1,9 @@
-import React, {PropsWithChildren } from 'react';
+import React, {PropsWithChildren, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import {useSelector} from 'react-redux'
 
-import PostEditor from './PostEditor'
+import Modal from '../Modal';
+// import PostDetail
 
 
 // interface Post{
@@ -144,8 +145,12 @@ function PostList(){
 }
 
 function NormalPostFrame(){
+    const [isOpenModal, setOpenModal] = useState(false);
+    const onClickToggleModal = useCallback(() => {
+    setOpenModal(!isOpenModal);
+    }, [isOpenModal]);
     return(
-        <PostContainer>
+        <PostContainer onClick={onClickToggleModal}>
            {PostList()}
         </PostContainer>
     );

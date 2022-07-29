@@ -6,7 +6,6 @@ import SearchBar from '../components/community/SearchBar';
 import {ButtonStyled} from '../components/ButtonBlue';
 import Category from '../components/community/Category';
 import PostEditor from '../components/community/PostEditor';
-
 import Modal from '../components/Modal';
 
 function Community(){

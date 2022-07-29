@@ -34,6 +34,7 @@ function PostEditor() {
         console.log(post)
         dispatch(normalPostActions.saveNormalPost({post_title: post.post_title, post_content: post.post_content, post_upd_date: post.post_upd_date}))
     }
+
     return (
         <div>
             <div className="form-wrapper">
