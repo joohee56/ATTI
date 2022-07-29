@@ -34,26 +34,33 @@ function LoginPage() {
     let userData = JSON.parse(localData);
 
     // input data 와 로컬 데이터 비교
-    if (loginInfo.id == userData.id && loginInfo.password == userData.password){
+    if (
+      loginInfo.id == userData.id &&
+      loginInfo.password == userData.password
+    ) {
       alert("로그인 성공");
-      sessionStorage.setItem('user_id', loginInfo.id);
-      document.location.href = '/community';
-    }
-    else {
+      sessionStorage.setItem("user_id", loginInfo.id);
+      document.location.href = "/welcome";
+    } else {
       alert("로그인실패");
     }
   };
 
   // 모달클릭
-  const [findIdModal, setfindIdModal] = useState<boolean>(false);
-  const clickFindIdModal = useCallback(() => {
-    setfindIdModal(!findIdModal);
-  }, [findIdModal]);
+  const [findValue, setFindValue] = useState<string>("");
+  const findValueSetting = (event:any) => {
+    setFindValue(event.target.name);
+  };
 
-  const [findPwModal, setfindPwModal] = useState<boolean>(false);
-  const clickfindPwModal = useCallback(() => {
-    setfindPwModal(!findPwModal);
-  }, [findPwModal]);
+  const [findInfoModal, setOpenModal] = useState<boolean>(false);
+  const onClickToggleModal = useCallback(() => {
+    setOpenModal(!findInfoModal);
+  }, [findInfoModal]);
+
+  const setClickModal = (event:any) => {
+    findValueSetting(event);
+    onClickToggleModal();
+  };
 
   return (
     <>
@@ -75,7 +82,7 @@ function LoginPage() {
             }
             alt="네이버로 로그인"
           />
-          <hr></hr>
+          <hr />
           <div>
             자동로그인
             <input type="checkbox" id="switch" value="off" />
@@ -99,11 +106,11 @@ function LoginPage() {
             </div>
 
             <p>
-              <DialogButton onClick={clickFindIdModal}>
+              <DialogButton name="findID" onClick={setClickModal}>
                 아이디 찾기
               </DialogButton>{" "}
               |{" "}
-              <DialogButton onClick={clickfindPwModal}>
+              <DialogButton name="findPW" onClick={setClickModal}>
                 비밀번호 찾기
               </DialogButton>{" "}
               |{" "}
@@ -132,14 +139,10 @@ function LoginPage() {
             />
           </div>
         </StyledContent>
-        {findIdModal && (
-          <Modal onClickToggleModal={clickFindIdModal}>
-            ID찾기
-          </Modal>
-        )}
-        {findPwModal && (
-          <Modal onClickToggleModal={clickfindPwModal}>
-            비밀번호 찾기
+        {findInfoModal && (
+          <Modal onClickToggleModal={onClickToggleModal}>
+            {findValue == "findID" && <div>ID찾기 입니다.{findValue}</div>}
+            {findValue == "findPW" && <div>PW찾기 입니다.{findValue}</div>}
           </Modal>
         )}
       </StyledPage>
@@ -193,11 +196,12 @@ const DialogButton = styled.button`
   }
 `;
 
+
 export default LoginPage;
 function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
+throw new Error("Function not implemented.");
 }
 
 function login(arg0: { id: string; password: string }): any {
-  throw new Error("Function not implemented.");
+throw new Error("Function not implemented.");
 }
