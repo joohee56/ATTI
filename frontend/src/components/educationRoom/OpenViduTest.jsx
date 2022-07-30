@@ -5,6 +5,8 @@ import UserVideoComponent from "./UserVideoComponent";
 import AttendeesList from "./AttendeesList";
 import ChattingWrapper from "./ChattingWrapper";
 import { PeopleBox, OpenviduBox, VideoBox } from "./OpenViduTestStyled";
+import { useNavigate } from "react-router-dom";
+import { ControlPointSharp } from "@mui/icons-material";
 
 // const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
 // const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -13,6 +15,7 @@ const OPENVIDU_SERVER_SECRET = "atti";
 // 도메인: https://i7b107.p.ssafy.io
 
 const OpenViduTest = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     mySessionId: "SessionA",
     myUserName: "Participant" + Math.floor(Math.random() * 100),
@@ -22,9 +25,11 @@ const OpenViduTest = () => {
     subscribers: [],
   });
   const [sendToUser, setSendToUser] = useState("");
+  const [disconnectUser, setDisconnectUser] = useState([]);
   const [sendToClientId, setSendToClientId] = useState("");
   const [peopleList, setPeopleList] = useState([]);
   const [chatList, setChatList] = useState([]);
+
   const messageRef = useRef();
 
   function setChattingInfo({ data, connectionId }) {
@@ -68,7 +73,7 @@ const OpenViduTest = () => {
       }));
     }
   }
-  let OV = new OpenVidu();
+  let OV = undefined;
   useEffect(() => {
     if (state.session !== undefined) {
       state.session.on("signal:my-chat", (event) => {
@@ -88,8 +93,13 @@ const OpenViduTest = () => {
           from: JSON.parse(event.from.data).clientData,
         });
       });
+      state.session.on("signal:disconnectUser", (event) => {
+        let disconnect = disconnectUser;
+        disconnect.push(event.from.connectionId);
+        setDisconnectUser(disconnect);
+      });
     }
-  }, [state.session, state.subscribers]);
+  }, [disconnectUser, state.session, state.subscribers]);
   async function getToken() {
     const sessionId_1 = await createSession(state.mySessionId);
     return createToken(sessionId_1);
@@ -106,10 +116,32 @@ const OpenViduTest = () => {
     mySession.on("connectionCreated", (event) => {
       console.log(event.connection);
       let peoples = peopleList;
-
-      peoples.push(event.connection);
-      console.log(peoples);
-      setPeopleList(peoples);
+      console.log("peopls", peoples);
+      console.log("disconnectUser", disconnectUser);
+      if (disconnectUser.length > 0) {
+        let result = peoples.filter((elements) => {
+          let flag = false;
+          disconnectUser.forEach((e) => {
+            console.log(elements.connectionId, e);
+            if (elements.connectionId === e) {
+              flag = true;
+            }
+          });
+          console.log("flag", flag);
+          if (!flag) {
+            return e;
+          } else {
+            return null;
+          }
+        });
+        console.log("result", result);
+        result.push(event.connection);
+        console.log(result);
+        setPeopleList(result);
+      } else {
+        peoples.push(event.connection);
+        setPeopleList(peoples);
+      }
     });
     mySession.on("streamCreated", (event) => {
       let subscriber = mySession.subscribe(event.stream, "subscriber");
@@ -127,12 +159,23 @@ const OpenViduTest = () => {
     mySession.on("streamDestroyed", (event) => {
       console.log(event.stream.streamManager.stream.connection);
       let people = peopleList;
-      let newPeople = people.filter((e) => {
-        return (
-          e.connectionId !==
-          event.stream.streamManager.stream.connection.connectionId
-        );
+      console.log("이시", people);
+      let newPeople = people.filter((elements) => {
+        let flag = false;
+        disconnectUser.forEach((e) => {
+          console.log(elements.connectionId, e);
+          if (elements.connectionId === e) {
+            flag = true;
+          }
+        });
+        console.log("flag", flag);
+        if (!flag) {
+          return e;
+        } else {
+          return null;
+        }
       });
+      console.log("newPeople", newPeople);
       setPeopleList(newPeople);
       deleteSubScriber(event.stream.streamManager);
     });
@@ -266,6 +309,8 @@ const OpenViduTest = () => {
       publisher: undefined,
       subscribers: [],
     });
+
+    navigate("/");
   }
   async function switchCamera() {
     try {
