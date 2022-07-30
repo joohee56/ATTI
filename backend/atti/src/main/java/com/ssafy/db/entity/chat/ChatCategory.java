@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.depart.UserPostMention;
 import com.ssafy.db.entity.message.Message;
 import com.ssafy.db.entity.message.UserMessage;
 import com.ssafy.db.entity.user.Auth;
@@ -30,7 +32,6 @@ import lombok.ToString;
 
 @Entity
 @Getter
-@Setter
 @ToString
 @Builder
 @NoArgsConstructor

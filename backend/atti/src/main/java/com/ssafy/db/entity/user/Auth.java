@@ -20,7 +20,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -41,4 +41,10 @@ public class Auth {
 	@OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user_id")
 	private User user;
+	
+	// 연관관계메소드
+	public void setUser(User user) {
+		this.user = user;
+		user.setAuth(this);
+	}
 }

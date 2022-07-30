@@ -21,7 +21,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -36,8 +36,17 @@ public class DepartTagList {
 	@JoinColumn(name="depart_id")
 	private Depart depart;
 
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="depart_tag_id")
 	private DepartTag departTag;
+	
+	public void setDepart(Depart depart) {
+		this.depart = depart;
+		depart.getDepartTagLists().add(this);
+	}
+	
+	public void setDepartTag(DepartTag departtag) {
+		this.departTag = departtag;
+		depart.getDepartTagLists().add(this);
+	}
 }

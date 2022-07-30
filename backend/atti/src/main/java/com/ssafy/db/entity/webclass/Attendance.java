@@ -29,7 +29,6 @@ import lombok.ToString;
 
 @Entity
 @Getter
-@Setter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -51,5 +50,15 @@ public class Attendance {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="webclass_id")
 	private WebClass webclass;
+	
+	public void setUser(User user) {
+		this.user = user;
+		user.getAttendances().add(this);
+	}
+	
+	public void setWebclass(WebClass webclass) {
+		this.webclass = webclass;
+		webclass.getAttendances().add(this);
+	}
 	
 }

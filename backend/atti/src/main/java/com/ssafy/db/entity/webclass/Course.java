@@ -67,9 +67,14 @@ public class Course {
     @JoinColumn(name = "make_user_id")
 	private User make_user;
 	
-	@OneToOne(mappedBy = "cousre", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private WebClass webclass;
 	
 	@OneToMany(mappedBy = "user")
-	private List<UserCourse> usercourse = new ArrayList<>();
+	private List<UserCourse> usercourses = new ArrayList<>();
+	
+	public void setUser(User user) {
+		this.in_user = user;
+		user.getCourses().add(this);
+	}
 }

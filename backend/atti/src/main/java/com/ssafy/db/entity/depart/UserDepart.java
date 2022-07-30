@@ -21,7 +21,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -39,4 +39,14 @@ public class UserDepart {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="depart_id")
 	private Depart depart;
+	
+	public void setUser(User user) {
+		this.user = user;
+		user.getUserDeparts().add(this);
+	}
+	
+	public void setDepart(Depart depart) {
+		this.depart = depart;
+		depart.getUserDeparts().add(this);
+	}
 }

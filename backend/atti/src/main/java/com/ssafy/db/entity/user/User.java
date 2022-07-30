@@ -110,22 +110,32 @@ public class User {
 	private Course course;
 	 
 	@OneToMany(mappedBy = "user")
-	private List<UserPostMention> userpostmention = new ArrayList<>();
+	private List<UserPostMention> userpostmentions = new ArrayList<>();
 	  
 	@OneToMany(mappedBy = "user")
-	private List<UserPostLike> userpostlike = new ArrayList<>();
+	private List<UserPostLike> userpostlikes = new ArrayList<>();
 	  
 	@OneToMany(mappedBy = "user")
-	private List<UserCommentMention> usercommentmention = new ArrayList<>();
+	private List<UserCommentMention> usercommentmentions = new ArrayList<>();
 	  
 	@OneToMany(mappedBy = "user")
-	private List<UserCommentLike> usercommentlike = new ArrayList<>();
+	private List<UserCommentLike> usercommentlikes = new ArrayList<>();
 	  
 	@OneToMany(mappedBy = "user")
-	private List<UserCourse> usercourse = new ArrayList<>();
+	private List<UserCourse> usercourses = new ArrayList<>();
 	  
 	@OneToMany(mappedBy = "user")
-	private List<UserDepart> userDepart = new ArrayList<>();
-	 
+	private List<UserDepart> userDeparts = new ArrayList<>();
+	
+	// 연관관계메소드
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+		profile.setUser(this);
+	}
+	
+	public void setCourse(Course course) {
+		this.course = course;
+		course.setUser(this);
+	}
 
 }

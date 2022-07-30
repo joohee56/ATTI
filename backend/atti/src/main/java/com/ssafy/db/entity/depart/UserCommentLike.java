@@ -21,7 +21,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -37,6 +37,16 @@ public class UserCommentLike {
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="post_id")
-	private Post post;
+	@JoinColumn(name="comment_id")
+	private Comment comment;
+	
+	public void setUser(User user) {
+		this.user = user;
+		user.getUsercommentlikes().add(this);
+	}
+	
+	public void setComment(Comment comment) {
+		this.comment = comment;
+		comment.getUsercommentlikes().add(this);
+	}
 }

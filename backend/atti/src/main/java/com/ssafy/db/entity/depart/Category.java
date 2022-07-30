@@ -20,7 +20,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -56,5 +56,16 @@ public class Category {
 	
 	@OneToMany(mappedBy = "category")
     private List<Post> posts = new ArrayList<>();
+	
+	public void setUser(User user) {
+		this.user = user;
+		user.getCategorys().add(this);
+	}
+	
+	public void setDepart(Depart depart) {
+		this.depart = depart;
+		depart.getCategorys().add(this);
+	}
+	
 
 }

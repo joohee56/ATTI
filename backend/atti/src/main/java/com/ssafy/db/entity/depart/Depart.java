@@ -24,7 +24,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -57,6 +57,10 @@ public class Depart {
 	@OneToMany(mappedBy = "depart")
 	private List<DepartTagList> departTagLists = new ArrayList<>();
 
+	public void setUser(User user) {
+		this.user = user;
+		user.getDeparts().add(this);
+	}
 	
 	
 }

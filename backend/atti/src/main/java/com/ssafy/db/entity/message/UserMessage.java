@@ -25,7 +25,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter 
 @ToString
 @Builder
 @NoArgsConstructor
@@ -53,5 +53,15 @@ public class UserMessage {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="from_user_id")
 	private User fuser;
+	
+	public void setTuser(User user) {
+		this.tuser = user;
+		user.getTousers().add(this);
+	}
+
+	public void setFuser(User user) {
+		this.fuser = user;
+		user.getFromusers().add(this);
+	}
 
 }

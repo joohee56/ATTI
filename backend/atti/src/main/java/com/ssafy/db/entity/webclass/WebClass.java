@@ -20,6 +20,7 @@ import javax.persistence.TemporalType;
 import com.ssafy.db.entity.chat.Chat;
 import com.ssafy.db.entity.chat.ChatRoom;
 import com.ssafy.db.entity.depart.Depart;
+import com.ssafy.db.entity.user.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +31,6 @@ import lombok.ToString;
 
 @Entity
 @Getter
-@Setter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -58,9 +58,23 @@ public class WebClass {
 	
 	@OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "course_id")
-	private Course cousre;
+	private Course course;
 	
 	@OneToOne(mappedBy="webclass", fetch=FetchType.LAZY)
 	private ChatRoom chatroom;
 	
+	public void setDepart(Depart depart) {
+		this.depart = depart;
+		depart.getWebclasses().add(this);
+	}
+	
+	public void setCourse(Course course) {
+		this.course = course;
+		course.setWebclass(this);
+	}
+	
+	public void setChatroom(ChatRoom chatroom) {
+		this.chatroom = chatroom;
+		chatroom.setWebclass(this);
+	}
 }

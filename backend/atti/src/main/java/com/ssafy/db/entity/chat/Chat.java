@@ -16,6 +16,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.ssafy.db.entity.depart.Comment;
+import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.depart.UserPostMention;
 import com.ssafy.db.entity.message.UserMessage;
 import com.ssafy.db.entity.user.Auth;
 import com.ssafy.db.entity.user.Profile;
@@ -31,7 +33,6 @@ import lombok.ToString;
 
 @Entity
 @Getter
-@Setter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -64,4 +65,22 @@ public class Chat {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="chat_room_id")
 	private ChatRoom chatroom;
+	
+//	연관 관계 메소드
+	public void setUser(User user) {
+		this.user = user;
+		user.getChats().add(this);
+	}
+	
+	public void setChatCategory(ChatCategory chatcategory) {
+		this.chatcategory = chatcategory;
+		chatcategory.getChats().add(this);
+	}
+	
+	public void setChatRoom(ChatRoom chatroom) {
+		this.chatroom = chatroom;
+		chatroom.getChats().add(this);
+	}
+	
+	
 }

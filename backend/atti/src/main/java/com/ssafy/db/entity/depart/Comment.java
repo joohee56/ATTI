@@ -31,7 +31,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -72,9 +72,21 @@ public class Comment {
 	@JoinColumn(name="post_id")
 	private Post post;
 	
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "comment")
     private List<UserCommentMention> usercommentmentions = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "comment")
 	private List<UserCommentLike> usercommentlikes = new ArrayList<>();
+	
+	public void setUser(User user) {
+		this.user = user;
+		user.getComments().add(this);
+	}
+	
+	public void setPost(Post post) {
+		this.post = post;
+		user.getComments().add(this);
+	}
+	
+	
 }

@@ -19,7 +19,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -42,4 +43,6 @@ public class Profile {
 	@OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user_id")
 	private User user;
+	
+
 }

@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.depart.UserPostMention;
 import com.ssafy.db.entity.message.UserMessage;
 import com.ssafy.db.entity.user.Auth;
 import com.ssafy.db.entity.user.Profile;
@@ -45,4 +47,7 @@ public class ChatRoom {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	private WebClass webclass;
+	
+// 연관관계 메소드
+
 }
