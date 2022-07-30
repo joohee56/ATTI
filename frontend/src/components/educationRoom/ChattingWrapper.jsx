@@ -15,7 +15,7 @@ const ChattingWrapper = ({ chatList }) => {
     <div>
       {chatting.map((e, i) => (
         <div key={i}>
-          <Chatting nickname={e.from} data={e.message} />
+          <Chatting type={e.type} nickname={e.from} data={e.message} />
         </div>
       ))}
     </div>

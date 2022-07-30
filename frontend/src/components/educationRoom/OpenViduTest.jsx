@@ -21,9 +21,17 @@ const OpenViduTest = () => {
     publisher: undefined,
     subscribers: [],
   });
+  const [sendToUser, setSendToUser] = useState("");
+  const [sendToClientId, setSendToClientId] = useState("");
   const [peopleList, setPeopleList] = useState([]);
   const [chatList, setChatList] = useState([]);
   const messageRef = useRef();
+
+  function setChattingInfo({ data, connectionId }) {
+    setSendToUser(data);
+    setSendToClientId(connectionId);
+  }
+
   function handleChangeSessionId(e) {
     setState((prev) => ({
       ...prev,
@@ -50,15 +58,10 @@ const OpenViduTest = () => {
   function deleteSubScriber(streamManager) {
     let subscribers = state.subscribers;
     let index = subscribers.indexOf(streamManager, 0);
+    console.log(index);
     if (index > -1) {
       subscribers.splice(index, 1);
-      const peoples = [state.myUserName];
-      setPeopleList(
-        subscribers.forEach((e) => {
-          console.log(e);
-          peoples.push(JSON.parse(e.stream.connection.data).clientData);
-        })
-      );
+
       setState((prevState) => ({
         ...prevState,
         subscribers: subscribers,
@@ -68,9 +71,19 @@ const OpenViduTest = () => {
   let OV = new OpenVidu();
   useEffect(() => {
     if (state.session !== undefined) {
-      state.session.on("signal", (event) => {
+      state.session.on("signal:my-chat", (event) => {
         console.log(JSON.parse(event.from.data).clientData);
         setChatList({
+          type: "public",
+          message: event.data,
+          from: JSON.parse(event.from.data).clientData,
+        });
+      });
+
+      state.session.on("signal:secret-chat", (event) => {
+        console.log(JSON.parse(event.from.data).clientData);
+        setChatList({
+          type: "private",
           message: event.data,
           from: JSON.parse(event.from.data).clientData,
         });
@@ -90,15 +103,21 @@ const OpenViduTest = () => {
       ...prevState,
       session: mySession,
     }));
+    mySession.on("connectionCreated", (event) => {
+      console.log(event.connection);
+      let peoples = peopleList;
+
+      peoples.push(event.connection);
+      console.log(peoples);
+      setPeopleList(peoples);
+    });
     mySession.on("streamCreated", (event) => {
       let subscriber = mySession.subscribe(event.stream, "subscriber");
       let subscribers = state.subscribers;
+
       subscribers.push(subscriber);
-      let peoples = [state.myUserName];
-      subscribers.forEach((e) => {
-        peoples.push(JSON.parse(e.stream.connection.data).clientData);
-      });
-      setPeopleList(peoples);
+      console.log(peopleList);
+
       setState((prevState) => ({
         ...prevState,
         subscribers: subscribers,
@@ -106,6 +125,15 @@ const OpenViduTest = () => {
     });
 
     mySession.on("streamDestroyed", (event) => {
+      console.log(event.stream.streamManager.stream.connection);
+      let people = peopleList;
+      let newPeople = people.filter((e) => {
+        return (
+          e.connectionId !==
+          event.stream.streamManager.stream.connection.connectionId
+        );
+      });
+      setPeopleList(newPeople);
       deleteSubScriber(event.stream.streamManager);
     });
     getToken().then((token) => {
@@ -130,9 +158,6 @@ const OpenViduTest = () => {
           // --- 6) Publish your stream ---
 
           mySession.publish(publisher);
-
-          // Set the main video in the page to display our webcam and store our Publisher
-
           setState((prevState) => ({
             ...prevState,
             currentVideoDevice: videoDevices[0],
@@ -168,18 +193,26 @@ const OpenViduTest = () => {
               let videoDevices = devices.filter(
                 (device) => device.kind === "videoinput"
               );
-              console.log("devices", videoDevices);
               let cameraPublisher = OV.initPublisher(undefined, {
+                audioSource: undefined, // The source of audio. If undefined default microphone
                 videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
                 publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
                 publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                resolution: "640x480", // The resolution of your video
+                frameRate: 30, // The frame rate of your video
+                insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
                 mirror: true, // Whether to mirror your local video or not
               });
 
-              sessionScreen.publish(cameraPublisher);
+              // --- 6) Publish your stream ---
+
+              state.session.publish(cameraPublisher);
+
+              // Set the main video in the page to display our webcam and store our Publisher
+
               setState((prevState) => ({
                 ...prevState,
-                currentVideoDevice: videoDevices,
+                currentVideoDevice: videoDevices[0],
                 mainStreamManager: cameraPublisher,
                 publisher: cameraPublisher,
               }));
@@ -209,7 +242,6 @@ const OpenViduTest = () => {
     const mySession = state.session;
 
     if (mySession) {
-      mySession.disconnect();
       mySession
         .signal({
           data: "hello world!",
@@ -223,15 +255,16 @@ const OpenViduTest = () => {
           console.log(error);
         });
     }
+    mySession.disconnect();
     OV = null;
 
     setState({
-      session: undefined,
-      subscrubers: [],
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
+      session: undefined,
       mainStreamManager: undefined,
       publisher: undefined,
+      subscribers: [],
     });
   }
   async function switchCamera() {
@@ -274,19 +307,42 @@ const OpenViduTest = () => {
   }
   function sendMessage() {
     const mySession = state.session;
-    mySession
-      .signal({
-        data: messageRef.current.value,
-        to: [],
-        type: "my-chat",
-      })
-      .then(() => {
-        console.log("Message send success");
-      })
-      .catch((error) => {
-        console.log(error);
+    if (sendToUser !== "") {
+      console.log("test", sendToClientId);
+      let people = peopleList;
+      const sendTo = people.filter((e) => {
+        return e.connectionId === sendToClientId;
       });
+      console.log(sendTo);
+      mySession
+        .signal({
+          data: messageRef.current.value,
+          to: [sendTo[0]],
+          type: "secret-chat",
+        })
+        .then(() => {
+          console.log("secret Message send success");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      mySession
+        .signal({
+          data: messageRef.current.value,
+          to: [],
+          type: "my-chat",
+        })
+        .then(() => {
+          console.log("Message send success");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
     messageRef.current.value = "";
+    setSendToUser("");
   }
 
   return (
@@ -315,7 +371,10 @@ const OpenViduTest = () => {
           <div>
             <button onClick={leaveSession}>세션 나가기</button>
             <input type="text" id="message" ref={messageRef} />
-            <button onClick={sendMessage}>메시지 보내기</button>
+            <div>
+              <span>{sendToUser}</span>
+              <button onClick={sendMessage}>메시지 보내기</button>
+            </div>
             <button onClick={screenShare}>화면 공유 하기</button>
           </div>
           <OpenviduBox>
@@ -347,7 +406,10 @@ const OpenViduTest = () => {
             </VideoBox>
             <PeopleBox>
               <div>
-                <AttendeesList peopleList={peopleList} />
+                <AttendeesList
+                  peopleList={peopleList}
+                  setChattingInfo={setChattingInfo}
+                />
               </div>
               <div>
                 <ChattingWrapper chatList={chatList} />
