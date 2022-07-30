@@ -2,11 +2,6 @@ import React, {PropsWithChildren, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import {useSelector} from 'react-redux'
 
-import Modal from '../Modal';
-import PostDetail from '../Community/PostDetail'
-// import PostDetail
-
-
 // interface Post{
 //     post : Array<any>;
 // }
@@ -97,9 +92,9 @@ function PostList(){
         ]
     }
     
-    const postTitle = useSelector(state => state.post_title)
-    const postContent = useSelector(state => state.post_content)
-    const postUpdDate = useSelector(state => state.post_upd_date)
+    const postTitle = useSelector(state => state.normalPost.post_title)
+    const postContent = useSelector(state => state.normalPost.post_content)
+    const postUpdDate = useSelector(state => state.normalPost.post_upd_date)
 
     dummyPost.post.push({
         post_title : postTitle,
@@ -146,18 +141,9 @@ function PostList(){
 }
 
 function NormalPostFrame(){
-    const [isOpenModal, setOpenModal] = useState(false);
-    const onClickToggleModal = useCallback(() => {
-    setOpenModal(!isOpenModal);
-    }, [isOpenModal]);
     return(
         <div>
-        {isOpenModal && (
-        <Modal onClickToggleModal={onClickToggleModal}>
-            <PostDetail/>
-        </Modal>
-        )}
-        <PostContainer onClick={onClickToggleModal}>
+        <PostContainer>
            {PostList()}
         </PostContainer>
 

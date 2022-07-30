@@ -1,9 +1,14 @@
+import {useSelector} from 'react-redux'
+
+
 function CommentList(){
     const commentStyle = {
         border: "solid",
         width: "950px",
         height: "100px",
     }
+
+    const commentContent = useSelector(state => state.comment.comment_content)
     return(
         <div style={commentStyle}>
             <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between"}}>
@@ -14,7 +19,7 @@ function CommentList(){
                         <button>best!</button>
                     </div>
                     <div>
-                        <p>댓글 내용입니다~~~</p>
+                        <p>{commentContent}</p>
                     </div>
                 </div>
                 <div style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>

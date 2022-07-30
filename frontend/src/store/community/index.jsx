@@ -24,9 +24,23 @@ const normalPostSlice = createSlice({
 
 });
 
+const commentSlice = createSlice({
+    name: 'comment',
+    initialState: {
+        comment_content: '',
+    },
+    reducers: {
+        saveComment(state, action) {
+            state.comment_content = action.payload.comment_content;
+        },
+    }
+})
+
 const communityStore = configureStore({
-    reducer: normalPostSlice.reducer
+    reducer: { normalPost: normalPostSlice.reducer, comment: commentSlice.reducer},
 });
 
 export const normalPostActions = normalPostSlice.actions;
+export const commentActions = commentSlice.actions;
+
 export default communityStore

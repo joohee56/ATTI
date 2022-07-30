@@ -25,8 +25,6 @@ function PostEditor() {
             // [e.target.name]: e.target.value
         }));
     };
-
-
     
     const dispatch = useDispatch();
     const postHandler = (event) => {
@@ -46,10 +44,11 @@ function PostEditor() {
                             <button>토글2</button>
                         </Top2>
                     </Top>
-                    <PostTitle type='text' placeholder='제목을 입력하세요' name='post_title' onChange={getValue}/>
+                    <PostTitle type="text" placeholder="제목을 입력하세요" name="post_title" onChange={getValue}/>
                     <CKEditor
                         editor={ ClassicEditor }
-                        data="처음 입력되어있는 data"
+                        data=""
+                        config={{placeholder: "내용을 입력하세요"}}
                         onReady={ editor => {
                             // You can store the "editor" and use when it is needed.
                             editor.editing.view.change((writer) => {
