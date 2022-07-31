@@ -78,7 +78,6 @@ public class User {
 
 	@OneToMany(mappedBy = "user") 
 	private List<Comment> comments = new ArrayList<>();
-	 
 	  
 	@OneToMany(mappedBy = "user")
 	private List<Attendance> attendances = new ArrayList<>();
