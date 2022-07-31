@@ -33,8 +33,8 @@ function SignupPage() {
 
    const signSubmit = () => {
     localStorage.setItem('userInfo',JSON.stringify(signupInfo));
+    document.location.href = "/login";
     alert("회원가입 되었습니다.");
-    
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

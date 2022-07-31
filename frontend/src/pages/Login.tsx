@@ -138,7 +138,7 @@ function LoginPage() {
         {findInfoModal && (
           <Modal
             onClickToggleModal={onClickToggleModal}
-            width="40%"
+            width="600px"
             height="auto"
           >
             <ModalDiv>
@@ -157,7 +157,6 @@ function LoginPage() {
                       label="Name"
                       name="name"
                       placeholder="Name"
-                      // value={signupInfo.name}
                       onChange={onChange}
                     />
                     <InputWithLabel
@@ -165,14 +164,12 @@ function LoginPage() {
                       name="email"
                       placeholder="email"
                       type="email"
-                      // value={signupInfo.email}
                       onChange={onChange}
                     />
                     <InputWithLabel
                       label="date"
                       name="date"
                       type="date"
-                      // value={signupInfo.date}
                       onChange={onChange}
                     />
                     <p>(xx@naver.com) 에 해당하는 아이디는 “ ” 입니다.</p>

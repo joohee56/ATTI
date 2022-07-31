@@ -8,14 +8,17 @@ function HomePage() {
   return (
     <StyledPage>
       <StyledContent>
-        <span>아띠</span>
+        <p>아띠</p>
         <img src={Logo} style={logoStyle} alt="Logo Cumputer Img" />
-        <Link to="/login">
-          <ButtonBlue>로그인</ButtonBlue>
-        </Link>
-        <Link to="/signup">
-          <ButtonBlue>회원가입</ButtonBlue>
-        </Link>
+        <div>
+          <Link to="/login">
+            <ButtonBlue>로그인</ButtonBlue>
+          </Link>
+          <br/>
+          <Link to="/signup">
+            <ButtonBlue>회원가입</ButtonBlue>
+          </Link>
+        </div>
       </StyledContent>
     </StyledPage>
   );
@@ -32,10 +35,13 @@ const StyledPage = styled.div`
 `;
 
 const StyledContent = styled.div`
-  maxwidth: 500px;
-  padding: 3rem;
-  border-radius: 1rem;
-  border: 1px solid;
+max-width: 500px;
+min-width: 500px;
+height: 300px;
+padding: 3rem;
+text-align: center;
+border-radius: 1rem;
+border: 1px solid;
 `;
 
 const logoStyle = {
