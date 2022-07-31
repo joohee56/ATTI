@@ -47,19 +47,17 @@ function LoginPage() {
     }
   };
 
-  // 모달클릭
+  // 아이디 찾기, 비밀번호 찾기
   const [findValue, setFindValue] = useState<string>("");
-  const findValueSetting = (event: any) => {
-    setFindValue(event.target.name);
-  };
 
+  // 모달 보이기 여부
   const [findInfoModal, setOpenModal] = useState<boolean>(false);
   const onClickToggleModal = useCallback(() => {
     setOpenModal(!findInfoModal);
   }, [findInfoModal]);
 
-  const setClickModal = (event: any) => {
-    findValueSetting(event);
+  const setClickModal = (value: string) => {
+    setFindValue(value);
     onClickToggleModal();
   };
 
@@ -112,17 +110,9 @@ function LoginPage() {
             </div>
 
             <p>
-              <DialogButton name="findID" onClick={setClickModal}>
-                아이디 찾기
-              </DialogButton>{" "}
-              |{" "}
-              <DialogButton name="findPW" onClick={setClickModal}>
-                비밀번호 찾기
-              </DialogButton>{" "}
-              |{" "}
-              <Link to="../signup">
-                <span>회원가입</span>
-              </Link>
+              <DialogButton onClick={(e)=>{setClickModal("findID")}}>아이디 찾기</DialogButton>| 
+              <DialogButton onClick={(e)=>{setClickModal("findPW")}}>비밀번호 찾기</DialogButton>
+              |  <Link to="../signup">회원가입</Link>
             </p>
           </div>
 
@@ -146,60 +136,68 @@ function LoginPage() {
           </div>
         </StyledContent>
         {findInfoModal && (
-          <Modal onClickToggleModal={onClickToggleModal}>
+          <Modal
+            onClickToggleModal={onClickToggleModal}
+            width="40%"
+            height="auto"
+          >
             <ModalDiv>
               <StyledPage>
                 <LeftTextDiv>
-                  <TextSpan onClick={Thisvalue}>아이디 찾기</TextSpan>
+                  <TextSpan onClick={(e)=>{setFindValue("findID")}}>아이디 찾기</TextSpan>
                 </LeftTextDiv>
                 <TextDiv>
-                  <TextSpan>비밀번호 찾기</TextSpan>
+                  <TextSpan onClick={(e)=>{setFindValue("findPW")}}>비밀번호 찾기</TextSpan>
                 </TextDiv>
               </StyledPage>
               <div>
-              {findValue == "findID" && (
-                <>
-                  <InputWithLabel
-                    label="Name"
-                    name="name"
-                    placeholder="Name"
-                    // value={signupInfo.name}
-                    onChange={onChange}
-                  />
-                  <InputWithLabel
-                    label="email"
-                    name="email"
-                    placeholder="email"
-                    type="email"
-                    // value={signupInfo.email}
-                    onChange={onChange}
-                  />
-                  <InputWithLabel
-                    label="date"
-                    name="date"
-                    type="date"
-                    // value={signupInfo.date}
-                    onChange={onChange}
-                  />
-                  <p>(xx@naver.com) 에 해당하는 아이디는 “ ” 입니다.</p>
-                  <ButtonPurpleStyled>찾기</ButtonPurpleStyled>
-                </>
-              )}
-              {findValue == "findPW" && (
-                <>
-               <InputWithLabel
-                label="Id"
-                name="id"
-                placeholder="ID"
-                // value={signupInfo.id}
-                onChange={onChange}
-              />
-               <ButtonPurpleStyled>보내기</ButtonPurpleStyled>
-               <p>가입하신 이메일(xxx@naver.com)으로 임시비밀번호를 보내드렸습니다</p>
-               <ButtonBlueStyled>닫기</ButtonBlueStyled>
-              </>
-            )}
-            </div>
+                {findValue == "findID" && (
+                  <>
+                    <InputWithLabel
+                      label="Name"
+                      name="name"
+                      placeholder="Name"
+                      // value={signupInfo.name}
+                      onChange={onChange}
+                    />
+                    <InputWithLabel
+                      label="email"
+                      name="email"
+                      placeholder="email"
+                      type="email"
+                      // value={signupInfo.email}
+                      onChange={onChange}
+                    />
+                    <InputWithLabel
+                      label="date"
+                      name="date"
+                      type="date"
+                      // value={signupInfo.date}
+                      onChange={onChange}
+                    />
+                    <p>(xx@naver.com) 에 해당하는 아이디는 “ ” 입니다.</p>
+                    <ButtonPurpleStyled>찾기</ButtonPurpleStyled>
+                  </>
+                )}
+                {findValue == "findPW" && (
+                  <>
+                    <InputWithLabel
+                      label="Id"
+                      name="id"
+                      placeholder="ID"
+                      // value={signupInfo.id}
+                      onChange={onChange}
+                    />
+                    <ButtonPurpleStyled>보내기</ButtonPurpleStyled>
+                    <p>
+                      가입하신 이메일(xxx@naver.com)으로
+                      <br />
+                      임시비밀번호를 보내드렸습니다
+                    </p>
+                    <ButtonBlueStyled>닫기</ButtonBlueStyled>
+                  </>
+                )}
+              </div>
             </ModalDiv>
           </Modal>
         )}
@@ -217,13 +215,13 @@ const StyledPage = styled.div`
 `;
 
 const StyledContent = styled.div`
-max-width: 500px;
-min-width: 500px;
-height: 400px;
-padding: 3rem;
-text-align: center;
-border-radius: 1rem;
-border: 1px solid;
+  max-width: 500px;
+  min-width: 500px;
+  height: 400px;
+  padding: 3rem;
+  text-align: center;
+  border-radius: 1rem;
+  border: 1px solid;
 `;
 
 const logoStyle = {
@@ -231,8 +229,6 @@ const logoStyle = {
   maxWidth: "500px",
   height: "auto",
 };
-
-
 
 const HeaderDiv = styled.div`
   color: #555555; //텍스트 색상
