@@ -134,6 +134,7 @@ public class User {
 	public void setCourse(Course course) {
 		this.course = course;
 		course.setUser(this);
+		
 	}
 
 }
