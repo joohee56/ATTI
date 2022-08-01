@@ -51,8 +51,8 @@ const DialogBox = styled.dialog<ModalStyle>`
   ${({ width = "800px", height = "400px" }) => css`
     width: ${width};
     height: ${height};
-  `}
-`;
+  `}`;
+
 
 const Backdrop = styled.div`
   width: 100vw;
