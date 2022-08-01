@@ -47,10 +47,6 @@ dependencies {
 	// JpaRepository 인식
 	annotationProcessor("org.springframework.boot:spring-boot-starter-data-jpa")
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-<<<<<<< HEAD
-	// testImplementation 'org.springframework.security:spring-security-test'
-}
-=======
 	testImplementation 'org.springframework.security:spring-security-test'
 	
 	//swagger(@Api)인식
@@ -64,7 +60,6 @@ dependencies {
 	
     
 }	
->>>>>>> 226b43c1000323111030b6fe06ecc5e36ea31403
 
 tasks.named('test') {
 	useJUnitPlatform()
