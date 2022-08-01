@@ -73,7 +73,7 @@ const OpenViduTest = () => {
       }));
     }
   }
-  let OV = undefined;
+  let OV = new OpenVidu();
   useEffect(() => {
     if (state.session !== undefined) {
       state.session.on("signal:my-chat", (event) => {
