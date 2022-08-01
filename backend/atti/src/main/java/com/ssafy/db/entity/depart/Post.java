@@ -39,9 +39,8 @@ public class Post {
 	@Column(name="post_id")
 	private Long postId;
 	
-	
-	@Column(name="post_content")
 	@Lob
+	@Column(name="post_content")
 	private String postContent;
 	
 	@Column(name="post_reg_date")
