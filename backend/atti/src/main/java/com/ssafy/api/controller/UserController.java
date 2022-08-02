@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,12 +9,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.request.MemberRequest;
 import com.ssafy.api.service.UserService;
 import com.ssafy.db.entity.user.User;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
-@Controller
+@Api(value = "유저 API", tags = {"User"})
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
@@ -32,9 +39,14 @@ public class UserController {
 	}
 	
 	// 일반 회원가입
+	@ApiResponses({
+		@ApiResponse(code =  200, message = "성공"),
+		@ApiResponse(code = 401, message = "인증 실패"),
+		@ApiResponse(code = 404, message = "사용자 없음"),
+		@ApiResponse(code = 500, message = "서버 오류")
+	})
 	@PostMapping("/signup/normal")
-	public String signUpNormal(@RequestBody User user) throws Exception {
-		// 유효성 체크
+	public String signUpNormal(@RequestBody @Valid User user) throws Exception {
 		userService.signUp(user);
 		return "redirect:/user/login";
 	}

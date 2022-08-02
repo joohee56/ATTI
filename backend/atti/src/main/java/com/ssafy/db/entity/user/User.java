@@ -18,6 +18,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.db.entity.chat.Chat;
 import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Comment;
@@ -33,25 +35,23 @@ import com.ssafy.db.entity.webclass.Attendance;
 import com.ssafy.db.entity.webclass.Course;
 import com.ssafy.db.entity.webclass.UserCourse;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
+	@ApiModelProperty(name="유저 ID", example="ssafy")
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
-	private Long userId;
+	private String userId;
+	
+	@ApiModelProperty(name="유저 Password", example="your_password")
+//	@JsonIgnore
+//	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private String password;
 
 	@Column(name = "user_name")
 	private String userName;
