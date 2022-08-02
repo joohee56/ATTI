@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.MemberRequest;
 import com.ssafy.api.service.UserService;
+import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.user.User;
 
 import io.swagger.annotations.Api;
@@ -46,9 +48,9 @@ public class UserController {
 		@ApiResponse(code = 500, message = "서버 오류")
 	})
 	@PostMapping("/signup/normal")
-	public String signUpNormal(@RequestBody @Valid User user) throws Exception {
+	public ResponseEntity<?> signUpNormal(@RequestBody @Valid User user) throws Exception {
 		userService.signUp(user);
-		return "redirect:/user/login";
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 	
 	// 소셜 회원가입
