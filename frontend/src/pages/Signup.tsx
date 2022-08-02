@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
@@ -10,6 +10,8 @@ import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlue } from "../components/ButtonStyled";
 import { ButtonPurple } from "../components/ButtonStyled";
 import InputWithLabel from "../components/InputWithLabel";
+import { palette } from "../styles/palette";
+import axios from "axios";
 
 interface userSignupInfo {
   name: string;
@@ -21,29 +23,125 @@ interface userSignupInfo {
 }
 
 function SignupPage() {
-  //회원가입
-  const [signupInfo, setSignupInfo] = useState<userSignupInfo>({
-    name: "",
-    id: "",
-    password: "",
-    date: "",
-    email: "",
-    phoneNumber: "",
-  });
+  //이름, 이메일, 비밀번호, 비밀번호 확인
+  const [name, setName] = useState<string>("");
+  const [id, setId] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [passwordConfirm, setPasswordConfirm] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
 
-   const signSubmit = () => {
-    //localStorage.setItem('userInfo',JSON.stringify(signupInfo));
-    //document.location.href = "/login";
-    //alert("회원가입 되었습니다.");
+  //오류메시지 상태저장
+  const [nameMessage, setNameMessage] = useState<string>("");
+  const [idMessage, setIdMessage] = useState<string>("");
+  const [passwordMessage, setPasswordMessage] = useState<string>("");
+  const [passwordConfirmMessage, setPasswordConfirmMessage] =
+    useState<string>("");
+  const [emailMessage, setEmailMessage] = useState<string>("");
+  const [phoneNumberMessage, setPhoneNumberMessage] = useState<string>("");
+
+  // 유효성 검사
+  const [isName, setIsName] = useState<boolean>(false);
+  const [isId, setIsId] = useState<boolean>(false);
+  const [isEmail, setIsEmail] = useState<boolean>(false);
+  const [isPassword, setIsPassword] = useState<boolean>(false);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(false);
+  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
+
+  const [mismatchError, setMismatchError] = useState(false); // 비밀번호 일치여부
+  const [signUpError, setSignUpError] = useState(""); // 회원가입 에러
+  const [signUpSuccess, setSignUpSuccess] = useState(false); // 회원가입 성공여부
+
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    if (e.target.value.length < 2 || e.target.value.length > 5) {
+      setNameMessage("2글자 이상 5글자 미만으로 입력해주세요.");
+      setIsName(false);
+    } else {
+      setNameMessage("올바른 이름 형식입니다 :)");
+      setIsName(true);
+    }
   };
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setSignupInfo({
-      ...signupInfo,
-      [event.target.name]: event.target.value,
-    });
+  const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setId(e.target.value);
+    const regex = /^[0-9a-z][^\s/g]{6,16}$/;
+    if (!regex.test(e.target.value)) {
+      setIdMessage("영소문자, 숫자를 조합한 ID 6~16자만 가능합니다.");
+      setIsId(false);
+    } else {
+      setIsId(true);
+    }
   };
+
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\~!@#$%^&*])[^\s/g]{6,12}$/;
+    if (!regex.test(e.target.value)) {
+      setPasswordMessage(
+        "영문자, 숫자, 특수문자(~!@#$%^&*) 1개 이상을 포함한 비밀번호 6~12자만 가능합니다."
+      );
+      setIsPassword(false);
+    } else setIsPassword(true);
+  };
+
+  const onChangePasswordConfirm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordConfirm(e.target.value);
+    if (password != e.target.value) {
+      setPasswordConfirmMessage("위에 입력한 비밀번호와 일치하지 않습니다.");
+      setIsPasswordConfirm(false);
+    } else setIsPasswordConfirm(true);
+  };
+
+  const onChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDate(e.target.value);
+  };
+
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regex =
+      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    setEmail(e.target.value);
+    if (!regex.test(e.target.value)) {
+      setEmailMessage("이메일 형식이 아닙니다");
+      setIsEmail(false);
+    } else setIsEmail(true);
+  };
+
+  const onChangePhonNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regex = /[0-9]{11}$/; // 010-0000-0000 형식 : /010-[0-9]{4}-[0-9]{4}$/
+    setPhoneNumber(e.target.value);
+    if (!regex.test(e.target.value)) {
+      setPhoneNumberMessage("폰번호 형식이 아닙니다");
+      setIsPhoneNumber(false);
+    } else setIsPhoneNumber(true);
+  };
+
+  const signSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      //console.log(name, id, password, email, date, phoneNumber);
+      try {
+        await axios
+          .post("/api/auth/login/normal", {
+            username: name,
+            password: password,
+            email: email,
+          })
+          .then((res) => {
+            console.log("response:", res);
+            if (res.status === 200) {
+              document.location.href = "/login";
+            }
+          });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [name, id, password, email, date, phoneNumber]
+  );
 
   return (
     <>
@@ -76,54 +174,92 @@ function SignupPage() {
               <InputWithLabel
                 label="Name"
                 name="name"
-                placeholder="Name"
-                value={signupInfo.name}
-                onChange={onChange}
+                placeholder="닉네임"
+                value={name}
+                onChange={onChangeName}
               />
+              {name.length > 0 && !isName && (
+                <span className={`message ${isName ? "success" : "error"}`}>
+                  {nameMessage}
+                </span>
+              )}
               <InputWithLabel
                 label="Id"
                 name="id"
-                placeholder="ID"
-                value={signupInfo.id}
-                onChange={onChange}
+                placeholder="아이디"
+                value={id}
+                onChange={onChangeId}
               />
+              {id.length > 0 && !isId && (
+                <span className={`message ${isId ? "success" : "error"}`}>
+                  {idMessage}
+                </span>
+              )}
               <InputWithLabel
                 label="Password"
                 name="password"
-                placeholder="Password 1"
+                placeholder="비밀번호"
                 type="password"
-                value={signupInfo.password}
-                onChange={onChange}
+                value={password}
+                onChange={onChangePassword}
               />
+              {password.length > 0 && !isPassword && (
+                <span className={`message ${isPassword ? "success" : "error"}`}>
+                  {passwordMessage}
+                </span>
+              )}
               <InputWithLabel
                 label="Password"
-                name="password"
+                name="password2"
                 placeholder="비밀번호 확인"
                 type="password"
+                value={passwordConfirm}
+                onChange={onChangePasswordConfirm}
               />
+              {passwordConfirm.length > 0 && !isPasswordConfirm && (
+                <span
+                  className={`message ${
+                    isPasswordConfirm ? "success" : "error"
+                  }`}
+                >
+                  {passwordConfirmMessage}
+                </span>
+              )}
               <InputWithLabel
                 label="date"
                 name="date"
                 type="date"
-                value={signupInfo.date}
-                onChange={onChange}
+                value={date}
+                onChange={onChangeDate}
               />
               <InputWithLabel
                 label="email"
                 name="email"
-                placeholder="email"
+                placeholder="이메일"
                 type="email"
-                value={signupInfo.email}
-                onChange={onChange}
+                value={email}
+                onChange={onChangeEmail}
               />
+              {email.length > 0 && !isEmail && (
+                <span className={`message ${isEmail ? "success" : "error"}`}>
+                  {emailMessage}
+                </span>
+              )}
               <InputWithLabel
                 label="PhoneNumber"
                 name="phoneNumber"
-                placeholder="phoneNumber"
+                placeholder="폰 번호"
                 type="text"
-                value={signupInfo.phoneNumber}
-                onChange={onChange}
+                value={phoneNumber}
+                onChange={onChangePhonNumber}
               />
+              {phoneNumber.length > 0 && !isPhoneNumber && (
+                <span
+                  className={`message ${isPhoneNumber ? "success" : "error"}`}
+                >
+                  {phoneNumberMessage}
+                </span>
+              )}
 
               <ButtonPurple>폰 인증</ButtonPurple>
 
@@ -153,26 +289,9 @@ function SignupPage() {
   );
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const success = styled.span`
+  color: ${palette.green_1};
+`;
 
 const StyledPage = styled.div`
   display: flex;
