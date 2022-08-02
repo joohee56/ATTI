@@ -36,10 +36,7 @@ function Community(){
         <PostDetail/>
       </Modal>
         )} */}
-        <div>
-            <NormalPostFrame/>
-          
-        </div>
+        <NormalPostFrame/>
       </Main>
 
     </div>

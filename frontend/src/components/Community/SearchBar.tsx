@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 function SearchBar(){
     const searchBarStyle = {
-        width: "350px",
+        width: "400px",
         display: "flex",
         fiexDirection: "row",
         justifyContent: "flex-start",
@@ -30,7 +30,7 @@ function SearchBar(){
 }
 
 const InputContainer = styled.input`
-width: 305px;
+width: 360px;
 height: 50px;
 border: none;
 `
