@@ -12,6 +12,15 @@ export const OpenviduBox = styled.div`
 `;
 
 export const VideoBox = styled.div`
+  /* min-height: 1vh; */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* background-color: #333333; */
+`;
+
+export const MeetingRoom = styled.div`
+  background-color: #333333;
+  width: 100%;
+  min-height: 100vh;
 `;
