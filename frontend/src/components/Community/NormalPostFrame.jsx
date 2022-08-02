@@ -1,6 +1,13 @@
 import React, {PropsWithChildren, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import {useSelector} from 'react-redux'
+import ReactHtmlParser from 'react-html-parser'
+
+import PostDetail from './PostDetail';
+import PostEditor from './PostEditor';
+import Modal from '../Modal';
+import SearchBar from './SearchBar';
+import {ButtonBlueStyled} from '../ButtonBlue';
 
 // interface Post{
 //     post : Array<any>;
@@ -106,17 +113,16 @@ function PostList(){
         const result = [];
         const postStyle = {
             border: "solid",
-            width: "1000px",
-            height: "120px",
+            width: "1200px",
+            height: "80px",
             margin: "30px 0 0 50px",
         }
-    
 
         for (let i = 0; i < dummyPost.post.length; i++) {
           result.push(<div key={i} style={postStyle}>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "space-between"}}>
                 <div>
-                    {dummyPost.post[i]['post_content']}
+                    <p>작성자 : 이현태</p>
                     {/* {postContent} */}
                 </div>
                 <div>
@@ -127,7 +133,7 @@ function PostList(){
                 <hr/>
                 <hr/>
             <div>
-            {dummyPost.post[i]['post_title']}
+                {dummyPost.post[i]['post_title']}
             {/* {postTitle} */}
             </div>
         
@@ -136,30 +142,63 @@ function PostList(){
         )}
         return result;
       };
-    
-    return <div>{rendering()}</div>;
+    const [isOpenModal2, setOpenModal2] = useState(false);
+    const onClickToggleModal2 = useCallback(() => {
+    setOpenModal2(!isOpenModal2);
+    }, [isOpenModal2]);
+
+
+
+    return <div id="괴물2" onClick={onClickToggleModal2}>
+                {/* {isOpenModal2 && (
+            <Modal onClickToggleModal={onClickToggleModal2} width="1100px" height="600px">
+                <PostDetail/>
+            </Modal>
+                )} */}
+            {rendering()}
+        </div>;
 }
 
 function NormalPostFrame(){
+    
+    const [isOpenModal1, setOpenModal1] = useState(false);
+    const onClickToggleModal1 = useCallback(() => {
+    setOpenModal1(!isOpenModal1);
+     }, [isOpenModal1]);
+    
     return(
-        <div>
         <PostContainer>
+            {/* {isOpenModal1 && (
+      <Modal onClickToggleModal={onClickToggleModal1} width="800px" height="680px">
+        <PostEditor/>
+      </Modal>
+        )}   */}
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                <Title> 공지사항 or 질문 or 자유게시판 </Title>
+                <div style={{display: "flex", flexDirection: "row"}}>
+                    <SearchBar/>
+                    <ButtonBlueStyled onClick={onClickToggleModal1}>글쓰기</ButtonBlueStyled>
+                </div>
+            </div>
            {PostList()}
         </PostContainer>
-
-        </div>
     );
 }
 
 
 
 const PostContainer = styled.div`
-width : 85vw;
+width : 88vw;
 height: 85vh;
-border: solid;
-border-radius: 7px;
+border: 0.5px solid gray;
+border-radius: 20px;
 `;
 
+const Title = styled.p`
+font-size: 30px;
+font-weight: bold;
+margin: 30px 0 0 20px;
+`;
 // const PostTop = styled.div`
 // display: flex;
 // align-items: space-between;

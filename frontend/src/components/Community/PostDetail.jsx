@@ -7,6 +7,8 @@ import {ButtonBlueStyled} from '../ButtonBlue';
 
 import { commentActions } from '../../store/community/index'
 
+import ReactHtmlParser from 'react-html-parser'
+
 function PostDetail(){
     const postTitle = useSelector(state => state.normalPost.post_title)
     const postContent = useSelector(state => state.normalPost.post_content)
@@ -40,6 +42,8 @@ function PostDetail(){
         flexDirection: "column",
         justifyContent: "space-between"
     }
+    
+
     return(
         <div style={detailStyle}>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between"}}>
@@ -72,7 +76,8 @@ function PostDetail(){
             <hr />
             <br />
             <div style={{border: "solid"}}>
-                {postContent}
+                {ReactHtmlParser(postContent)}
+                {/* {postContent}  */}
             </div>
             <hr />
             <br />
@@ -92,9 +97,20 @@ function PostDetail(){
     );
 }
 
+const style = document.createElement('style');
+
+style.textContent = `
+table {
+    border-collapse: collapse;
+}
+table, td {
+    border: 1px solid black;
+}
+`;
+
 const CommentInput = styled.input`
 width: 900px;
 height: 70px;   
-`
-;
+`;
+
 export default PostDetail

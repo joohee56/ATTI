@@ -2,12 +2,11 @@ import React, { useState, useCallback, PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
 import NormalPostFrame from '../components/Community/NormalPostFrame';
-import SearchBar from '../components/Community/SearchBar';
-import {ButtonBlueStyled} from '../components/ButtonBlue';
 import Category from '../components/Community/Category';
 import PostEditor from '../components/Community/PostEditor';
 import PostDetail from '../components/Community/PostDetail';
 import Modal from '../components/Modal';
+import NavBar from '../components/NavBar';
 
 function Community(){
 
@@ -23,9 +22,11 @@ function Community(){
 
 
   return(
+    <div>
+        <NavBar/>
       <Main>
         <Category/>
-        {isOpenModal1 && (
+        {/* {isOpenModal1 && (
       <Modal onClickToggleModal={onClickToggleModal1} width="800px" height="680px">
         <PostEditor/>
       </Modal>
@@ -34,18 +35,14 @@ function Community(){
       <Modal onClickToggleModal={onClickToggleModal2} width="1100px" height="600px">
         <PostDetail/>
       </Modal>
-        )}
+        )} */}
         <div>
-          <FlexDiv>
-            <SearchBar/>
-            <button>검색</button>
-            <ButtonBlueStyled onClick={onClickToggleModal1}>글쓰기</ButtonBlueStyled>
-          </FlexDiv>
-          <div onClick={onClickToggleModal2}>
             <NormalPostFrame/>
-          </div> 
+          
         </div>
       </Main>
+
+    </div>
   
   );
 }
