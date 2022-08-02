@@ -47,6 +47,7 @@ public class PostRepository {
 //		em.createQuery("delete p from Post as p where p.postId = :postId");
 	}
 	
+	// 게시글 전체 삭제
 	public void deleteAll() {
 //		em.createQuery("delete p from Post as p").get;
 		List<Post> result = em.createQuery("select p from Post as p", Post.class).getResultList();
@@ -55,6 +56,7 @@ public class PostRepository {
 		}
 	}
 	
+	// 단일 게시글 상세 보기
 	public Post findOne(Long postId) {
 		Post result = em.createQuery("select p from Post as p where p.postId = :postId", Post.class)
 				.setParameter("postId", postId)
