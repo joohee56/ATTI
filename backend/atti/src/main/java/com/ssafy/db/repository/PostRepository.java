@@ -4,12 +4,14 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
 import com.ssafy.db.entity.depart.Post;
 
 @Repository
+@Transactional
 public class PostRepository {
 	
 	@PersistenceContext
@@ -27,13 +29,34 @@ public class PostRepository {
 	}
 	
 	// 게시글 전체 삭제
-//	public void List<Post> deleteAll(Post post) {
+//	public void deleteAll(Post post) {
 //		em.remove(post);
 //	}
 	
+	// 단일 게시글 삭제
+	public void deleteOne(Long postId) {
+		//delete
+//		Customer firstCustomer = jpaRepository.findCustomerById(1);
+//		jpaRepository.delete(firstCustomer);
+		Post result = em.createQuery("select p from Post as p where p.postId = :postId", Post.class)
+				.setParameter("postId", postId)
+				.getSingleResult();
+		em.remove(result);
+		
+		
+//		em.createQuery("delete p from Post as p where p.postId = :postId");
+	}
+	
+	public void deleteAll() {
+//		em.createQuery("delete p from Post as p").get;
+		List<Post> result = em.createQuery("select p from Post as p", Post.class).getResultList();
+		for(int i=0; i<result.size(); i++) {
+			em.remove(result.get(i));
+		}
+	}
 	
 	public Post findOne(Long postId) {
-		Post result = em.createQuery("select p from Post as p where p.post_id = :postId", Post.class)
+		Post result = em.createQuery("select p from Post as p where p.postId = :postId", Post.class)
 				.setParameter("postId", postId)
 				.getSingleResult();
 		return result;
@@ -45,6 +68,16 @@ public class PostRepository {
 		return em.createQuery("select p from Post as p where p.user_id = :name", Post.class)
 				.setParameter("name", name)
 				.getResultList();
+	}
+	
+	// 단일 게시글 수정
+	public void updateOne(Post editPost) {
+		Post originPost = em.createQuery("select p from Post as p where p.postId = :postId", Post.class)
+				.setParameter("postId", editPost.getPostId())
+				.getSingleResult();
+		
+		originPost.setPostContent(editPost.getPostContent());
+		originPost.setPostUpdDate(editPost.getPostUpdDate());
 	}
 	
 	
