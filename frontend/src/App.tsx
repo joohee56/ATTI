@@ -1,31 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import AddCommentIcon from '@mui/icons-material/AddComment';
+import { Route, Routes } from "react-router-dom";
+
+//import AddCommentIcon from "@mui/icons-material/AddComment";
+import Homepage from "./pages/Home";
+import LoginPage from "./pages/Login";
+import SignupPage from "./pages/Signup";
+import ClassMeeting from "./pages/ClassMeeting";
+import Community from "./pages/Community";
+import WelcomePage from "./pages/Welcome";
+import ModalTest from "./pages/ModalTest";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <div>
-
-        <AddCommentIcon sx={{fontSize:'30px'}} color="action"/>
-      </div>
-    </div>
+    <Routes>
+    <Route path="/" element={ <Homepage />} />
+    <Route path="/login" element={ <LoginPage />} />
+    <Route path="/signup" element={ <SignupPage />} />
+    <Route path="/community" element={ <Community />} />
+    <Route path="/classmeeting" element={ <ClassMeeting />} />
+    <Route path="/welcome" element={ <WelcomePage />} />
+    <Route path="/modaltest" element={ <ModalTest />} />
+    </Routes>
   );
 }
 

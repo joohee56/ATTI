@@ -28,12 +28,15 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@Setter
 @Getter
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post {
+	
+	private String s;
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="post_id")
