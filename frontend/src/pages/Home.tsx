@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import Logo from "../assets/images/logoComputer.png";
-import ButtonBlue from "../components/ButtonBlue";
+import {ButtonBlue} from "../components/ButtonStyled";
 
 function HomePage() {
   return (
