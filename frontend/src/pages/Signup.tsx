@@ -7,8 +7,8 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import Logo from "../assets/images/logoComputer.png";
-import { ButtonBlueStyled } from "../components/ButtonBlue";
-import { ButtonPurpleStyled } from "../components/ButtonPurple";
+import { ButtonBlue } from "../components/ButtonStyled";
+import { ButtonPurple } from "../components/ButtonStyled";
 import InputWithLabel from "../components/InputWithLabel";
 
 interface userSignupInfo {
@@ -32,9 +32,9 @@ function SignupPage() {
   });
 
    const signSubmit = () => {
-    localStorage.setItem('userInfo',JSON.stringify(signupInfo));
-    document.location.href = "/login";
-    alert("회원가입 되었습니다.");
+    //localStorage.setItem('userInfo',JSON.stringify(signupInfo));
+    //document.location.href = "/login";
+    //alert("회원가입 되었습니다.");
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,9 +125,9 @@ function SignupPage() {
                 onChange={onChange}
               />
 
-              <ButtonPurpleStyled>폰 인증</ButtonPurpleStyled>
+              <ButtonPurple>폰 인증</ButtonPurple>
 
-              <ButtonBlueStyled type="submit">가입하기</ButtonBlueStyled>
+              <ButtonBlue type="submit">가입하기</ButtonBlue>
             </form>
           </div>
 
@@ -152,6 +152,27 @@ function SignupPage() {
     </>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const StyledPage = styled.div`
   display: flex;

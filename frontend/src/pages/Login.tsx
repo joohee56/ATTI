@@ -4,8 +4,8 @@ import styled from "styled-components";
 
 import HomeIcon from "@mui/icons-material/Home";
 import Logo from "../assets/images/logoComputer.png";
-import { ButtonBlueStyled } from "../components/ButtonBlue";
-import { ButtonPurpleStyled } from "../components/ButtonPurple";
+import { ButtonBlue } from "../components/ButtonStyled";
+import { ButtonPurple } from "../components/ButtonStyled";
 import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
 
@@ -116,7 +116,7 @@ function LoginPage() {
             </p>
           </div>
 
-          <ButtonBlueStyled onClick={loginClick}>로그인</ButtonBlueStyled>
+          <ButtonBlue onClick={loginClick}>로그인</ButtonBlue>
 
           <p>다른 서비스를 이용한 로그인</p>
           <div>
@@ -173,7 +173,7 @@ function LoginPage() {
                       onChange={onChange}
                     />
                     <p>(xx@naver.com) 에 해당하는 아이디는 “ ” 입니다.</p>
-                    <ButtonPurpleStyled>찾기</ButtonPurpleStyled>
+                    <ButtonBlue>찾기</ButtonBlue>
                   </>
                 )}
                 {findValue == "findPW" && (
@@ -185,13 +185,13 @@ function LoginPage() {
                       // value={signupInfo.id}
                       onChange={onChange}
                     />
-                    <ButtonPurpleStyled>보내기</ButtonPurpleStyled>
+                    <ButtonPurple>보내기</ButtonPurple>
                     <p>
                       가입하신 이메일(xxx@naver.com)으로
                       <br />
                       임시비밀번호를 보내드렸습니다
                     </p>
-                    <ButtonBlueStyled>닫기</ButtonBlueStyled>
+                    <ButtonBlue>닫기</ButtonBlue>
                   </>
                 )}
               </div>
