@@ -4,14 +4,18 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./UserVideoComponent";
 import AttendeesList from "./AttendeesList";
 import ChattingWrapper from "./ChattingWrapper";
-import { PeopleBox, OpenviduBox, VideoBox } from "./OpenViduTestStyled";
+import {
+  PeopleBox,
+  OpenviduBox,
+  VideoBox,
+  MeetingRoom,
+} from "./OpenViduTestStyled";
 import { useNavigate } from "react-router-dom";
-import { ControlPointSharp } from "@mui/icons-material";
 
-// const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
-// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
-const OPENVIDU_SERVER_URL = "https://i7b107.p.ssafy.io";
-const OPENVIDU_SERVER_SECRET = "atti";
+const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_URL = "https://i7b107.p.ssafy.io";
+// const OPENVIDU_SERVER_SECRET = "atti";
 // 도메인: https://i7b107.p.ssafy.io
 
 const OpenViduTest = () => {
@@ -25,10 +29,12 @@ const OpenViduTest = () => {
     subscribers: [],
   });
   const [sendToUser, setSendToUser] = useState("");
-  const [disconnectUser, setDisconnectUser] = useState([]);
+  // const [disconnectUser, setDisconnectUser] = useState([]);
   const [sendToClientId, setSendToClientId] = useState("");
   const [peopleList, setPeopleList] = useState([]);
   const [chatList, setChatList] = useState([]);
+  const [turnOnCamera, setTurnOnCamera] = useState(true);
+  const [turnOnAudio, setTurnOnAudio] = useState(true);
 
   const messageRef = useRef();
 
@@ -73,7 +79,40 @@ const OpenViduTest = () => {
       }));
     }
   }
-  let OV = new OpenVidu();
+  var OV = new OpenVidu();
+  useEffect(() => {
+    window.addEventListener("beforeunload", () => {
+      const mySession = state.session;
+      mySession.disconnect();
+      OV = null;
+
+      setState({
+        mySessionId: "SessionA",
+        myUserName: "Participant" + Math.floor(Math.random() * 100),
+        session: undefined,
+        mainStreamManager: undefined,
+        publisher: undefined,
+        subscribers: [],
+      });
+    });
+    return () => {
+      window.addEventListener("beforeunload", () => {
+        const mySession = state.session;
+        mySession.disconnect();
+        OV = null;
+
+        setState({
+          mySessionId: "SessionA",
+          myUserName: "Participant" + Math.floor(Math.random() * 100),
+          session: undefined,
+          mainStreamManager: undefined,
+          publisher: undefined,
+          subscribers: [],
+        });
+      });
+    };
+  }, []);
+
   useEffect(() => {
     if (state.session !== undefined) {
       state.session.on("signal:my-chat", (event) => {
@@ -93,13 +132,23 @@ const OpenViduTest = () => {
           from: JSON.parse(event.from.data).clientData,
         });
       });
-      state.session.on("signal:disconnectUser", (event) => {
-        let disconnect = disconnectUser;
-        disconnect.push(event.from.connectionId);
-        setDisconnectUser(disconnect);
+      state.session.on("signal:screenShareDead", (event) => {
+        console.log(event.data);
+        setState((prevState) => ({
+          ...prevState,
+          mainStreamManager: undefined,
+        }));
       });
+      state.session.on("signal:screenShareStart", (event) => {
+        console.log(event.from);
+      });
+      // state.session.on("signal:disconnectUser", (event) => {
+      //   let disconnect = disconnectUser;
+      //   disconnect.push(event.from.connectionId);
+      //   setDisconnectUser(disconnect);
+      // });
     }
-  }, [disconnectUser, state.session, state.subscribers]);
+  }, [state.session, state.subscribers]);
   async function getToken() {
     const sessionId_1 = await createSession(state.mySessionId);
     return createToken(sessionId_1);
@@ -114,69 +163,30 @@ const OpenViduTest = () => {
       session: mySession,
     }));
     mySession.on("connectionCreated", (event) => {
-      console.log(event.connection);
       let peoples = peopleList;
-      console.log("peopls", peoples);
-      console.log("disconnectUser", disconnectUser);
-      if (disconnectUser.length > 0) {
-        let result = peoples.filter((elements) => {
-          let flag = false;
-          disconnectUser.forEach((e) => {
-            console.log(elements.connectionId, e);
-            if (elements.connectionId === e) {
-              flag = true;
-            }
-          });
-          console.log("flag", flag);
-          if (!flag) {
-            return e;
-          } else {
-            return null;
-          }
-        });
-        console.log("result", result);
-        result.push(event.connection);
-        console.log(result);
-        setPeopleList(result);
-      } else {
-        peoples.push(event.connection);
-        setPeopleList(peoples);
-      }
+      peoples.push(event.connection);
+      setPeopleList(peoples);
     });
     mySession.on("streamCreated", (event) => {
       let subscriber = mySession.subscribe(event.stream, "subscriber");
       let subscribers = state.subscribers;
 
       subscribers.push(subscriber);
-      console.log(peopleList);
-
-      setState((prevState) => ({
-        ...prevState,
-        subscribers: subscribers,
-      }));
+      if (subscriber.stream.typeOfVideo === "SCREEN") {
+        setState((prevState) => ({
+          ...prevState,
+          subscribers: subscribers,
+          mainStreamManager: subscriber,
+        }));
+      } else {
+        setState((prevState) => ({
+          ...prevState,
+          subscribers: subscribers,
+        }));
+      }
     });
 
     mySession.on("streamDestroyed", (event) => {
-      console.log(event.stream.streamManager.stream.connection);
-      let people = peopleList;
-      console.log("이시", people);
-      let newPeople = people.filter((elements) => {
-        let flag = false;
-        disconnectUser.forEach((e) => {
-          console.log(elements.connectionId, e);
-          if (elements.connectionId === e) {
-            flag = true;
-          }
-        });
-        console.log("flag", flag);
-        if (!flag) {
-          return e;
-        } else {
-          return null;
-        }
-      });
-      console.log("newPeople", newPeople);
-      setPeopleList(newPeople);
       deleteSubScriber(event.stream.streamManager);
     });
     getToken().then((token) => {
@@ -195,7 +205,7 @@ const OpenViduTest = () => {
             resolution: "640x480", // The resolution of your video
             frameRate: 30, // The frame rate of your video
             insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-            mirror: true, // Whether to mirror your local video or not
+            mirror: false, // Whether to mirror your local video or not
           });
 
           // --- 6) Publish your stream ---
@@ -204,7 +214,7 @@ const OpenViduTest = () => {
           setState((prevState) => ({
             ...prevState,
             currentVideoDevice: videoDevices[0],
-            mainStreamManager: publisher,
+            // mainStreamManager: publisher,
             publisher: publisher,
           }));
         })
@@ -224,13 +234,25 @@ const OpenViduTest = () => {
         let publisher = OV.initPublisher(undefined, {
           videoSource: "screen",
         });
-
+        console.log(publisher);
         publisher.once("accessAllowed", (event) => {
           publisher.stream
             .getMediaStream()
             .getVideoTracks()[0]
             .addEventListener("ended", async () => {
               console.log("User press the Stop sharing button");
+              state.session
+                .signal({
+                  data: "화면 공유 종료",
+                  to: [],
+                  type: "screenShareDead",
+                })
+                .then(() => {
+                  console.log("메시지 전송 성공");
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
               sessionScreen.unpublish(publisher);
               let devices = await OV.getDevices();
               let videoDevices = devices.filter(
@@ -244,7 +266,7 @@ const OpenViduTest = () => {
                 resolution: "640x480", // The resolution of your video
                 frameRate: 30, // The frame rate of your video
                 insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-                mirror: true, // Whether to mirror your local video or not
+                mirror: false, // Whether to mirror your local video or not
               });
 
               // --- 6) Publish your stream ---
@@ -256,13 +278,27 @@ const OpenViduTest = () => {
               setState((prevState) => ({
                 ...prevState,
                 currentVideoDevice: videoDevices[0],
-                mainStreamManager: cameraPublisher,
+                mainStreamManager: undefined,
                 publisher: cameraPublisher,
               }));
             });
           sessionScreen.unpublish(state.publisher);
+          const save = publisher;
+          console.log(save);
 
           sessionScreen.publish(publisher);
+          state.session
+            .signal({
+              data: "test",
+              to: [],
+              type: "screenShareStart",
+            })
+            .then(() => {
+              console.log("메시지 전송 성공");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           setState((prevState) => ({
             ...prevState,
             publisher: publisher,
@@ -284,20 +320,20 @@ const OpenViduTest = () => {
   function leaveSession() {
     const mySession = state.session;
 
-    if (mySession) {
-      mySession
-        .signal({
-          data: "hello world!",
-          to: [],
-          type: "disconnectUser",
-        })
-        .then(() => {
-          console.log("Message send success");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+    // if (mySession) {
+    //   mySession
+    //     .signal({
+    //       data: "hello world!",
+    //       to: [],
+    //       type: "disconnectUser",
+    //     })
+    //     .then(() => {
+    //       console.log("Message send success");
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // }
     mySession.disconnect();
     OV = null;
 
@@ -335,13 +371,13 @@ const OpenViduTest = () => {
           });
 
           //newPublisher.once("accessAllowed", () => {
-          await state.session.unpublish(state.mainStreamManager);
+          await state.session.unpublish(state.publisher);
 
           await state.session.publish(newPublisher);
           setState((prevState) => ({
             ...prevState,
             currentVideoDevice: newVideoDevice,
-            mainStreamManager: newPublisher,
+            // mainStreamManager: newPublisher,
             publisher: newPublisher,
           }));
         }
@@ -391,7 +427,7 @@ const OpenViduTest = () => {
   }
 
   return (
-    <div>
+    <MeetingRoom id="test">
       {state.session === undefined ? (
         <div>
           테스트입니다
@@ -411,7 +447,7 @@ const OpenViduTest = () => {
         </div>
       ) : null}
       {state.session !== undefined ? (
-        <div>
+        <>
           <div>{state.mySessionId}</div>
           <div>
             <button onClick={leaveSession}>세션 나가기</button>
@@ -421,19 +457,41 @@ const OpenViduTest = () => {
               <button onClick={sendMessage}>메시지 보내기</button>
             </div>
             <button onClick={screenShare}>화면 공유 하기</button>
+            <button
+              onClick={() => {
+                state.publisher.publishVideo(!turnOnCamera);
+                setTurnOnCamera(!turnOnCamera);
+              }}
+            >
+              {turnOnCamera ? "카메라 종료하기" : "카메라 켜기"}
+            </button>
+            <button
+              onClick={() => {
+                state.publisher.publishAudio(!turnOnAudio);
+                setTurnOnAudio(!turnOnAudio);
+              }}
+            >
+              {turnOnAudio ? "마이크 종료하기" : "마이크 켜기"}
+            </button>
           </div>
           <OpenviduBox>
             <VideoBox>
               {state.mainStreamManager !== undefined ? (
                 <div className="col-md-6">
-                  <UserVideoComponent streamManager={state.mainStreamManager} />
+                  <UserVideoComponent
+                    streamManager={state.mainStreamManager}
+                    main="main"
+                  />
                   <button onClick={switchCamera}> 카메라 변경 </button>
                 </div>
               ) : null}
               <div>
                 {state.publisher !== undefined ? (
                   <div onClick={() => handleMainVideoStream(state.publisher)}>
-                    <UserVideoComponent streamManager={state.publisher} />
+                    <UserVideoComponent
+                      streamManager={state.publisher}
+                      main="sub"
+                    />
                   </div>
                 ) : null}
                 {state.subscribers &&
@@ -444,7 +502,7 @@ const OpenViduTest = () => {
                       onClick={() => handleMainVideoStream(sub)}
                     >
                       test
-                      <UserVideoComponent streamManager={sub} />
+                      <UserVideoComponent streamManager={sub} main="sub" />
                     </div>
                   ))}
               </div>
@@ -461,9 +519,9 @@ const OpenViduTest = () => {
               </div>
             </PeopleBox>
           </OpenviduBox>
-        </div>
+        </>
       ) : null}
-    </div>
+    </MeetingRoom>
   );
 
   /*

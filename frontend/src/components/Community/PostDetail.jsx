@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import styled from 'styled-components';
 
 import CommentList from './CommentList';
-import {ButtonStyled} from '../ButtonBlue';
+import {ButtonBlueStyled} from '../ButtonBlue';
 
 import { commentActions } from '../../store/community/index'
 
@@ -85,7 +85,7 @@ function PostDetail(){
                 </div>
                 <div style={{display: "flex", fiexDierction: "row", justifyContent: "space-between", alignItems: "flex-end", border: "solid", height: "100px"}}>
                     <CommentInput name='comment_content' onChange={getValue} value={comment.comment_content}/>
-                    <ButtonStyled onClick={commentHandler}>댓글 작성</ButtonStyled>
+                    <ButtonBlueStyled onClick={commentHandler}>댓글 작성</ButtonBlueStyled>
                 </div>
             </div>
         </div>
