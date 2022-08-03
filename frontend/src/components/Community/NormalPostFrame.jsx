@@ -7,7 +7,7 @@ import PostDetail from "./PostDetail";
 import PostEditor from "./PostEditor";
 import Modal from "../Modal";
 import SearchBar from "./SearchBar";
-import { ButtonBlueStyled } from "../ButtonBlue";
+// import { ButtonBlueStyled } from "../ButtonBlue";
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -153,9 +153,9 @@ function NormalPostFrame() {
           <Title> 공지사항 or 질문 or 자유게시판 </Title>
           <div style={{ display: "flex", flexDirection: "row", margin: "0 140px 0 0" }}>
             <SearchBar />
-            <ButtonBlueStyled onClick={onClickToggleModal1}>
+            {/* <ButtonBlueStyled onClick={onClickToggleModal1}>
               글쓰기
-            </ButtonBlueStyled>
+            </ButtonBlueStyled> */}
           </div>
         </div>
         <div onClick={onClickToggleModal2}>
