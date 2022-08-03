@@ -36,7 +36,7 @@ public class UserRepository {
 	}
 	
 	public List<User> findByName(String name){
-		return em.createQuery("select u from User u where u.user_name = :name", User.class).setParameter("name", name).getResultList();
+		return em.createQuery("select u from User u where u.userName= :name", User.class).setParameter("name", name).getResultList();
 	}
 	
 	public List<User> findId(UserFindIdReq findIdInfo){
@@ -44,7 +44,7 @@ public class UserRepository {
 		String email = findIdInfo.getEmail();
 		Date birth = findIdInfo.getBirth();
 		
-		return em.createQuery("select u from User u where u.name = :name and u.email = :email and u.birth = birth", User.class).setParameter("name", name).setParameter("email", email).setParameter("birth", birth).getResultList();
+		return em.createQuery("select u from User u where u.userName =: name and u.email =: email and u.birth =: birth", User.class).setParameter("name", name).setParameter("email", email).setParameter("birth", birth).getResultList();
 	}
 	
 	public User IdCheck(String userId) {

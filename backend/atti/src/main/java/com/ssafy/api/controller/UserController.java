@@ -78,7 +78,10 @@ public class UserController {
 		if(userList.isEmpty())
 			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "일치하는 회원이 없습니다."));
 		User user = userList.get(0);
-		String result = String.format("(%s) 에 해당하는 아이디는 \" %s \" 입니다.", user.getEmail(), user.getUserId());
+		char quotes = '\u0022';        
+		String result = "(" + user.getEmail() + ") 에 해당하는 아이디는 "+ quotes + user.getUserId() + quotes + "입니다.";
+//		String result = String.format("( %s ) 에 해당하는 아이디는 '\u0022' %s '\u0022' 입니다.", user.getEmail(), user.getUserId());
+//		String result = `( ${user.getEmail()} )에 해당하는 아이디는 ${} 입니다.`;
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, result));
 	}
 	
