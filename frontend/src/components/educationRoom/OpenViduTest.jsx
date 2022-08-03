@@ -35,7 +35,7 @@ const OpenViduTest = () => {
   const [chatList, setChatList] = useState([]);
   const [turnOnCamera, setTurnOnCamera] = useState(true);
   const [turnOnAudio, setTurnOnAudio] = useState(true);
-
+  const [anonymousMode, setAnonymousMode] = useState(false);
   const messageRef = useRef();
 
   function setChattingInfo({ data, connectionId }) {
@@ -65,7 +65,7 @@ const OpenViduTest = () => {
       }));
     }
   }
-
+ 
   function deleteSubScriber(streamManager) {
     let subscribers = state.subscribers;
     let index = subscribers.indexOf(streamManager, 0);
@@ -123,7 +123,9 @@ const OpenViduTest = () => {
           from: JSON.parse(event.from.data).clientData,
         });
       });
-
+      state.session.on("signal", (event) => {
+        console.log(state.session.connection);
+      });
       state.session.on("signal:secret-chat", (event) => {
         console.log(JSON.parse(event.from.data).clientData);
         setChatList({
@@ -142,13 +144,25 @@ const OpenViduTest = () => {
       state.session.on("signal:screenShareStart", (event) => {
         console.log(event.from);
       });
+      state.session.on("signal:anonymous", (event) => {
+        setAnonymousMode(!anonymousMode);
+      });
       // state.session.on("signal:disconnectUser", (event) => {
       //   let disconnect = disconnectUser;
       //   disconnect.push(event.from.connectionId);
       //   setDisconnectUser(disconnect);
       // });
     }
-  }, [state.session, state.subscribers]);
+  }, [anonymousMode, state.publisher, state.session, state.subscribers]);
+  useEffect(() => {
+    if (state.session !== undefined && anonymousMode) {
+      setTurnOnCamera(false);
+      setTurnOnAudio(false);
+      console.log(state.publisher);
+      state.publisher.publishVideo(false);
+      state.publisher.publishAudio(false);
+    }
+  }, [anonymousMode, state.publisher, state.session]);
   async function getToken() {
     const sessionId_1 = await createSession(state.mySessionId);
     return createToken(sessionId_1);
@@ -425,7 +439,20 @@ const OpenViduTest = () => {
     messageRef.current.value = "";
     setSendToUser("");
   }
-
+  function requestAnonymous() {
+    state.session
+      .signal({
+        data: "익명모드활성화",
+        to: [],
+        type: "anonymous",
+      })
+      .then(() => {
+        console.log("메시지 전송 성공");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   return (
     <MeetingRoom id="test">
       {state.session === undefined ? (
@@ -462,10 +489,12 @@ const OpenViduTest = () => {
                 state.publisher.publishVideo(!turnOnCamera);
                 setTurnOnCamera(!turnOnCamera);
               }}
+              disabled={anonymousMode}
             >
               {turnOnCamera ? "카메라 종료하기" : "카메라 켜기"}
             </button>
             <button
+              disabled={anonymousMode}
               onClick={() => {
                 state.publisher.publishAudio(!turnOnAudio);
                 setTurnOnAudio(!turnOnAudio);
@@ -473,6 +502,17 @@ const OpenViduTest = () => {
             >
               {turnOnAudio ? "마이크 종료하기" : "마이크 켜기"}
             </button>
+            <button onClick={requestAnonymous}>
+              {anonymousMode
+                ? "익명 모드 비활성화 하기"
+                : "익명 모드 활성화 하기"}
+            </button>
+            {anonymousMode ? (
+              <div>
+                익명 모드가 활성화 되었습니다. 마이크와 오디오를 제어할 수
+                없습니다.
+              </div>
+            ) : null}
           </div>
           <OpenviduBox>
             <VideoBox>
