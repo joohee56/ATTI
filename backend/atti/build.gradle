@@ -46,12 +46,8 @@ dependencies {
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
 	// https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
-<<<<<<< HEAD
-	
-=======
 	implementation("com.auth0:java-jwt:3.10.3")
 	implementation("com.google.guava:guava:29.0-jre")
->>>>>>> joohui
 	
 	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.7.2'
 	
