@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.api.request.UserFindIdReq;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.UserRepository;
 
@@ -40,10 +41,12 @@ public class UserService {
 		return userList.get(0);
 	}
 	
-	public String findId(String userEmail) {
-		List<User> userList = userRepository.findByEmail(userEmail);
-		if(userList.isEmpty()) return null;
-		return userList.get(0).getUserId();
+	public List<User> findId(UserFindIdReq findIdInfo) {
+		return userRepository.findId(findIdInfo);
+	}
+	
+	public User IdCheck(String userId) {
+		return userRepository.IdCheck(userId);
 	}
 	
 	

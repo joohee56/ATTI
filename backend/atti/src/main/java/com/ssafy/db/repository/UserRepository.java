@@ -1,5 +1,6 @@
 package com.ssafy.db.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.ssafy.api.request.UserFindIdReq;
 import com.ssafy.db.entity.user.User;
 
 import lombok.RequiredArgsConstructor;
@@ -37,8 +39,16 @@ public class UserRepository {
 		return em.createQuery("select u from User u where u.user_name = :name", User.class).setParameter("name", name).getResultList();
 	}
 	
-	public List<User> findByEmail(String userEmail){
-		return em.createQuery("select u from User u where u.email = :email", User.class).setParameter("email", userEmail).getResultList();
+	public List<User> findId(UserFindIdReq findIdInfo){
+		String name = findIdInfo.getName();
+		String email = findIdInfo.getEmail();
+		Date birth = findIdInfo.getBirth();
+		
+		return em.createQuery("select u from User u where u.name = :name and u.email = :email and u.birth = birth", User.class).setParameter("name", name).setParameter("email", email).setParameter("birth", birth).getResultList();
+	}
+	
+	public User IdCheck(String userId) {
+		return em.find(User.class, userId);
 	}
 		
 //	public User findOne(String id) {

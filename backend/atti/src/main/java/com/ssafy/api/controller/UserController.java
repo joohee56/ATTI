@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.request.UserFindIdReq;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.user.User;
@@ -62,19 +65,21 @@ public class UserController {
 	
 	// 아이디 중복 체크
 	@GetMapping("/idcheck")
-	public void idCheck() {
-		
+	public Boolean idCheck(@RequestParam("ckid") String checkId) throws Exception {
+		User user = userService.IdCheck(checkId);
+		if(user==null) return true;
+		return false;
 	}
 	
 	// 아이디 찾기
-	
-	@GetMapping("/findId")
-	public ResponseEntity<?> findId(@RequestParam String userEmail) {
-		
-		
-		
-		return null;
-	}
+//	@PostMapping("/findId")
+//	public ResponseEntity<?> findId(@RequestBody UserFindIdReq findIdInfo) {
+//		List<User> userList = userService.findId(findIdInfo);
+//		if(userList.isEmpty())
+//			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "일치하는 회원이 없습니다."));
+//		
+//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, ));
+//	}
 	
 
 }
