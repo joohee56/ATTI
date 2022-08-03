@@ -1,5 +1,6 @@
 package com.ssafy.db.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -28,7 +29,7 @@ public class PostRepository {
 		return result;
 	}
 	
-	// 게시글 전체 삭제
+	// 게시글 전체 삭제 (필요없음)
 //	public void deleteAll(Post post) {
 //		em.remove(post);
 //	}

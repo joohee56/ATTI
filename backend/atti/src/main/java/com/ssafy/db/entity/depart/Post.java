@@ -1,5 +1,6 @@
 package com.ssafy.db.entity.depart;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,12 +46,10 @@ public class Post {
 	private String postContent;
 	
 	@Column(name="post_reg_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date postRegDate;
+	private LocalDateTime postRegDate;
 	
 	@Column(name="post_upd_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date postUpdDate;
+	private LocalDateTime postUpdDate;
 	
 	@Column(name="post_ano_info")
 	private boolean postAnoInfo;
