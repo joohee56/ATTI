@@ -122,14 +122,22 @@ function SignupPage() {
       //console.log(name, id, password, email, date, phoneNumber);
       try {
         await axios
-          .post("/api/user/signup/normal", {
-            name: name,
-            id: id, 
-            password: password,
-            email: email,
-            date: date,
-            phoneNumber:phoneNumber,
-          })
+          .post("http://localhost:8081/api/user/signup/normal", {
+            userId: id,
+            password : password,
+            userName : name,
+            email : email,
+            birth : date,
+            phone : phoneNumber,
+            social : "none",
+            uid : 1111111,
+            userDeleteInfo : false,
+            userRole : "STUDENT"
+        },{
+          headers:{
+            'Content-type': 'application/json', 
+          }
+        })
           .then((res) => {
             console.log("response:", res);
             if (res.status === 201) {
@@ -140,7 +148,7 @@ function SignupPage() {
         console.error(err);
       }
     },
-    [name, id, password, email, date, phoneNumber]
+    [id, password, name, email, date, phoneNumber]
   );
 
   return (
