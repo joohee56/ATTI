@@ -125,14 +125,17 @@ function SignupPage() {
       //console.log(name, id, password, email, date, phoneNumber);
       try {
         await axios
-          .post("/api/auth/login/normal", {
-            username: name,
+          .post("/api/user/signup/normal", {
+            name: name,
+            id: id, 
             password: password,
             email: email,
+            date: date,
+            phoneNumber:phoneNumber,
           })
           .then((res) => {
             console.log("response:", res);
-            if (res.status === 200) {
+            if (res.status === 201) {
               document.location.href = "/login";
             }
           });
