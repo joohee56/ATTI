@@ -41,6 +41,8 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
 	@ApiModelProperty(name="유저 ID", example="ssafy")
@@ -50,7 +52,7 @@ public class User {
 	
 	@ApiModelProperty(name="유저 Password", example="your_password")
 //	@JsonIgnore
-//	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 
 	@Column(name = "user_name")

@@ -2,15 +2,16 @@ package com.ssafy.api.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.api.request.MemberRequest;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.user.User;
@@ -22,11 +23,11 @@ import lombok.RequiredArgsConstructor;
 
 @Api(value = "유저 API", tags = {"User"})
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 	
-	private final UserService userService;
+	@Autowired
+	UserService userService;
 	
 	// 단순 회원가입 페이지 이동
 	@GetMapping("/signup")	
@@ -64,5 +65,16 @@ public class UserController {
 	public void idCheck() {
 		
 	}
+	
+	// 아이디 찾기
+	
+	@GetMapping("/findId")
+	public ResponseEntity<?> findId(@RequestParam String userEmail) {
+		
+		
+		
+		return null;
+	}
+	
 
 }
