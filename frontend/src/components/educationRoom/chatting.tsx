@@ -1,3 +1,4 @@
+
 import styled from "styled-components";
 
 interface chatProps {
@@ -12,13 +13,14 @@ const ChattingDiv = styled.div`
   border-bottom: 2px solid;
   margin-left: 3px;
   margin-right: 3px;
+  background: white;
 `;
 
 const PrivateChattingDiv = styled(ChattingDiv)`
   background: rgba(238, 164, 206, 0.25);
 `;
 
-const Chatting = ({ type, nickname, data }: chatProps) => {
+const Chatting = ({ type, nickname, data}: chatProps) => {
   return (
     <div>
       <div>

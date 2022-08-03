@@ -112,7 +112,19 @@ const OpenViduTest = () => {
       });
     };
   }, []);
+  useEffect(() => {
+    if (anonymousMode) {
+      window.speechSynthesis.cancel();
+      const speechMsg = new SpeechSynthesisUtterance();
+      speechMsg.rate = 1.8;
+      speechMsg.pitch = 1;
+      speechMsg.lang = "ko-KR";
 
+      speechMsg.text = chatList.message;
+
+      window.speechSynthesis.speak(speechMsg);
+    }
+  }, [anonymousMode, chatList.message]);
   useEffect(() => {
     if (state.session !== undefined) {
       state.session.on("signal:my-chat", (event) => {
@@ -122,6 +134,7 @@ const OpenViduTest = () => {
           message: event.data,
           from: JSON.parse(event.from.data).clientData,
         });
+        console.log(anonymousMode);
       });
       state.session.on("signal", (event) => {
         console.log(state.session.connection);
@@ -145,7 +158,22 @@ const OpenViduTest = () => {
         console.log(event.from);
       });
       state.session.on("signal:anonymous", (event) => {
-        setAnonymousMode(!anonymousMode);
+        if (!anonymousMode) {
+          setChatList({
+            type: "public",
+            message: "익명모드가 활성화 되었습니다.",
+            from: "안내",
+          });
+        } else {
+          setChatList({
+            type: "public",
+            message: "익명모드가 비활성화 되었습니다.",
+            from: "안내",
+          });
+        }
+        setAnonymousMode((prev) => {
+          return !anonymousMode;
+        });
       });
       // state.session.on("signal:disconnectUser", (event) => {
       //   let disconnect = disconnectUser;
@@ -161,8 +189,19 @@ const OpenViduTest = () => {
       console.log(state.publisher);
       state.publisher.publishVideo(false);
       state.publisher.publishAudio(false);
+    } else if (
+      state.session !== undefined &&
+      state.publisher !== undefined &&
+      !anonymousMode
+    ) {
+      state.publisher.publishVideo(true);
+      state.publisher.publishAudio(true);
+      setTurnOnCamera(true);
+      setTurnOnAudio(true);
+      console.log(state.publisher);
     }
   }, [anonymousMode, state.publisher, state.session]);
+
   async function getToken() {
     const sessionId_1 = await createSession(state.mySessionId);
     return createToken(sessionId_1);
@@ -456,7 +495,7 @@ const OpenViduTest = () => {
   function testSpeech() {
     window.speechSynthesis.cancel();
     const speechMsg = new SpeechSynthesisUtterance();
-    speechMsg.rage = 0.7;
+    speechMsg.rate = 1.8;
     speechMsg.pitch = 1;
     speechMsg.lang = "ko-KR";
     speechMsg.text = messageRef.current.value;
@@ -566,7 +605,10 @@ const OpenViduTest = () => {
                 />
               </div>
               <div>
-                <ChattingWrapper chatList={chatList} />
+                <ChattingWrapper
+                  chatList={chatList}
+                  anonymousMode={anonymousMode}
+                />
               </div>
             </PeopleBox>
           </OpenviduBox>

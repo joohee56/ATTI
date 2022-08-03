@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Chatting from "./chatting";
 
-const ChattingWrapper = ({ chatList }) => {
+const ChattingWrapper = ({ chatList, anonymouseMode }) => {
   const [chatting, setChatting] = useState([]);
   // console.log(chatList);
 
@@ -15,7 +15,12 @@ const ChattingWrapper = ({ chatList }) => {
     <div>
       {chatting.map((e, i) => (
         <div key={i}>
-          <Chatting type={e.type} nickname={e.from} data={e.message} />
+          <Chatting
+            type={e.type}
+            nickname={e.from}
+            data={e.message}
+            anonymouseMode={anonymouseMode}
+          />
         </div>
       ))}
     </div>
