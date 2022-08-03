@@ -20,4 +20,12 @@ public class CommentRepository {
 		em.persist(comment);
 	}
 	
+	// 단일 댓글 삭제
+	public void deleteOne(Long commentId) {
+		Comment result = em.createQuery("select c from Comment as c where c.commentId = :commentId", Comment.class)
+				.setParameter("commentId", commentId)
+				.getSingleResult();
+		em.remove(result);
+	}
+	
 }

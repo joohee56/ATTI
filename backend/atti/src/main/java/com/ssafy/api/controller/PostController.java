@@ -22,8 +22,6 @@ import com.ssafy.db.repository.PostRepository;
 @RequestMapping("/post")
 public class PostController {
 	
-	
-	
 	@Autowired
 	private PostService postService;
 	
