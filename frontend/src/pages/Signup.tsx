@@ -55,24 +55,21 @@ function SignupPage() {
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
-    if (e.target.value.length < 2 || e.target.value.length > 5) {
-      setNameMessage("2글자 이상 5글자 미만으로 입력해주세요.");
+    const regex = /^[a-z|A-Z|가-힣|ㄱ-ㅎ|ㅏ-ㅣ][^0-9\s/g]{1,24}$/;
+    if (!regex.test(e.target.value)) {
+      setNameMessage("영어와 한글을 조합한 2글자 이상 24글자 미만으로 입력해주세요.");
       setIsName(false);
-    } else {
-      setNameMessage("올바른 이름 형식입니다 :)");
-      setIsName(true);
-    }
+    } else setIsName(true);
+    
   };
 
   const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
     setId(e.target.value);
     const regex = /^[0-9a-z][^\s/g]{6,16}$/;
     if (!regex.test(e.target.value)) {
-      setIdMessage("영소문자, 숫자를 조합한 ID 6~16자만 가능합니다.");
+      setIdMessage("ID는 영소문자, 숫자를 조합한 6~16자만 가능합니다.");
       setIsId(false);
-    } else {
-      setIsId(true);
-    }
+    } else setIsId(true);
   };
 
   const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
