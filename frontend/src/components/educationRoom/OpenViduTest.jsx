@@ -65,7 +65,7 @@ const OpenViduTest = () => {
       }));
     }
   }
- 
+
   function deleteSubScriber(streamManager) {
     let subscribers = state.subscribers;
     let index = subscribers.indexOf(streamManager, 0);
@@ -453,6 +453,16 @@ const OpenViduTest = () => {
         console.log(error);
       });
   }
+  function testSpeech() {
+    window.speechSynthesis.cancel();
+    const speechMsg = new SpeechSynthesisUtterance();
+    speechMsg.rage = 0.7;
+    speechMsg.pitch = 1;
+    speechMsg.lang = "ko-KR";
+    speechMsg.text = messageRef.current.value;
+
+    window.speechSynthesis.speak(speechMsg);
+  }
   return (
     <MeetingRoom id="test">
       {state.session === undefined ? (
@@ -482,6 +492,7 @@ const OpenViduTest = () => {
             <div>
               <span>{sendToUser}</span>
               <button onClick={sendMessage}>메시지 보내기</button>
+              <button onClick={testSpeech}>메시지 읽어주기</button>
             </div>
             <button onClick={screenShare}>화면 공유 하기</button>
             <button
