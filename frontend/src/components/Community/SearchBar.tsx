@@ -33,6 +33,7 @@ const InputContainer = styled.input`
 width: 360px;
 height: 50px;
 border: none;
+font-size: 22px;
 `
 const SearchButton = styled.button`
 border: 0;

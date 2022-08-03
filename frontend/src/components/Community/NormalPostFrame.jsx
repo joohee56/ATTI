@@ -101,19 +101,22 @@ function PostList() {
               }}
             >
               <div style={{fontSize: "20px", fontWeight: "bold"}}>
-                {dummyPost.post[i]["post_title"]}   
+                작성자: 이현태
               </div>
-              <div style={{fontSize: "20px", fontWeight: "bold"}}>
-                이현태
-              </div>
+              {dummyPost.post[i]["post_upd_date"]}
             </div>
             <hr />
+
             <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0 20px" }}>
-            <div>
-              <FavoriteBorderIcon/> {dummyPost.post[i]["post_content"]} 
-              <ChatBubbleOutlineIcon/> {dummyPost.post[i]["post_content"]} 
-            </div>
-              {dummyPost.post[i]["post_upd_date"]}
+              <div style={{fontSize: "20px", fontWeight: "bold"}}>
+                {dummyPost.post[i]["post_title"]}   
+              </div>
+              <div>
+              <FavoriteBorderIcon/> 24
+              &nbsp; &nbsp; &nbsp;
+              <ChatBubbleOutlineIcon/> 20
+              </div>
+            
             </div>
           </div>
         </IndividualPost>
@@ -198,4 +201,5 @@ const IndividualPost = styled.div`
   cursor: pointer
  }
 `
+
 export default NormalPostFrame;
