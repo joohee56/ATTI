@@ -72,14 +72,15 @@ public class UserController {
 	}
 	
 	// 아이디 찾기
-//	@PostMapping("/findId")
-//	public ResponseEntity<?> findId(@RequestBody UserFindIdReq findIdInfo) {
-//		List<User> userList = userService.findId(findIdInfo);
-//		if(userList.isEmpty())
-//			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "일치하는 회원이 없습니다."));
-//		
-//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, ));
-//	}
+	@PostMapping("/findId")
+	public ResponseEntity<?> findId(@RequestBody UserFindIdReq findIdInfo) {
+		List<User> userList = userService.findId(findIdInfo);
+		if(userList.isEmpty())
+			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "일치하는 회원이 없습니다."));
+		User user = userList.get(0);
+		String result = String.format("(%s) 에 해당하는 아이디는 \" %s \" 입니다.", user.getEmail(), user.getUserId());
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, result));
+	}
 	
 
 }

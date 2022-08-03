@@ -40,11 +40,6 @@ public class AuthController {
 		String userId = loginInfo.getUserId();
 		String password = loginInfo.getPassword();
 		
-		System.out.println("=================auth controller ===============");
-		System.out.println("userId : " + userId);
-		System.out.println("password : " + password);
-		System.out.println("===============================================");
-		
 		User user = userService.getUserByUserId(userId);
 		// 가입된 아이디를 찾을 수 없음
 		if(user == null) return ResponseEntity.status(401).body(UserLoginPostRes.of(404, "가입된 아이디가 없습니다.", null));
