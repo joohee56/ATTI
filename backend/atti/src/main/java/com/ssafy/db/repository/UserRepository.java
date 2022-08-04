@@ -50,6 +50,10 @@ public class UserRepository {
 	public User IdCheck(String userId) {
 		return em.find(User.class, userId);
 	}
+	
+	public List<User> phoneCheck(String phoneNumber) {
+		return em.createQuery("select u from User u where u.phone = :phoneNumber", User.class).setParameter("phoneNumber", phoneNumber).getResultList();
+	}
 		
 //	public User findOne(String id) {
 //		return em.find(User.class, id);
