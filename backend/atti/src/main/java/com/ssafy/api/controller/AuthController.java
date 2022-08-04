@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -10,6 +11,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.crypto.Mac;
@@ -31,9 +33,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.AuthPhoneReq;
+import com.ssafy.api.request.KakaoUser;
 import com.ssafy.api.request.UserFindIdReq;
 import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.response.UserLoginPostRes;
+import com.ssafy.api.service.AuthService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.AuthPhoneUtil;
@@ -54,6 +58,8 @@ public class AuthController {
 	
 	@Autowired
 	UserService userService;
+	@Autowired
+	AuthService authService;
 	
 	@Autowired
 	PasswordEncoder passwordEncorder;
@@ -75,6 +81,61 @@ public class AuthController {
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
 		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
 	}
+	
+	// 카카오로그인
+	@GetMapping("/login/kakao")
+    public ResponseEntity<UserLoginPostRes> redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
+        System.out.println("code:: " + code);
+
+        // 접속토큰 get
+        String kakaoToken = authService.getReturnAccessToken(code);
+
+        // 접속자 정보 get
+        Map<String, Object> result = authService.getUserInfo(kakaoToken);
+//        log.info("result:: " + result);
+        String snsId = (String) result.get("id");
+        String userName = (String) result.get("nickname");
+        String email = (String) result.get("email");
+        String userpw = snsId;
+
+        // 분기
+        KakaoUser kakaoUser = new KakaoUser();
+//         일치하는 snsId 없을 시 회원가입
+        System.out.println(userService.findKakaoId(snsId));
+        List<User> userList = userService.findKakaoId(snsId);
+        if (userList.isEmpty()) {
+//            log.warn("카카오로 회원가입");
+        	kakaoUser.setUserId(email);
+        	kakaoUser.setPassword(userpw);
+        	kakaoUser.setUserName(userName);
+        	kakaoUser.setSnsId(snsId);
+        	kakaoUser.setEmail(email);
+            userService.signUpKakao(kakaoUser);
+        }
+
+        // 일치하는 snsId가 있으면 멤버객체에 담음.
+//        log.warn("카카오로 로그인");
+//        String userid = memberService.findUserIdBy2(snsId);
+//        MemberVO vo = memberService.findByUserId(userid);
+////        log.warn("member:: " + vo);
+//            /*Security Authentication에 붙이는 과정*/
+//        CustomUser user = new CustomUser(vo);
+////        log.warn("user : " + user);
+//        List<GrantedAuthority> roles = CustomUser.getList(vo);
+//        Authentication auth = new UsernamePasswordAuthenticationToken(user, null, roles);
+////        log.warn("auth : " + auth);
+//        SecurityContextHolder.getContext().setAuthentication(auth);
+//
+//        /* 로그아웃 처리 시, 사용할 토큰 값 */
+//        session.setAttribute("kakaoToken", kakaoToken);
+//
+//        return "redirect:/";
+        //snsId 에 해당하는 아이디 가져옴
+        String userId = snsId;
+        
+        return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));	//토큰 넘김
+    }
+
 	
 	// 휴대폰 인증
 	@PostMapping("/phone")
@@ -114,7 +175,7 @@ public class AuthController {
 			session.removeAttribute("code");
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "인증되었습니다."));
 		} else {
-			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "인증번호가 다릅니다."));
+			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증번호가 다릅니다."));
 		}
 	}
 	

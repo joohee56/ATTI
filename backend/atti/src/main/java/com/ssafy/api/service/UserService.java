@@ -1,5 +1,12 @@
 package com.ssafy.api.service;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.Random;
 
@@ -8,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.ssafy.api.request.KakaoUser;
 import com.ssafy.api.request.UserFindIdReq;
 import com.ssafy.common.util.AuthPhoneUtil;
 import com.ssafy.db.entity.user.User;
@@ -34,6 +44,13 @@ public class UserService {
 		userRepository.signUp(user);
 	}
 	
+	// 카카오로 회원가입
+	public void signUpKakao(KakaoUser user) {
+		// 보안을 위해서 유저 패스워드 암호화하여 디비에 저장
+		user.setPassword(passwordEncorder.encode(user.getPassword()));
+		userRepository.signUpKakao(user);
+	}
+	
 	public User getUserByUserId(String userId) {
 		List<User> userList = userRepository.findById(userId);
 		if(userList.isEmpty()) return null;
@@ -48,6 +65,11 @@ public class UserService {
 	
 	public List<User> findId(UserFindIdReq findIdInfo) {
 		return userRepository.findId(findIdInfo);
+	}
+	
+	// 카카오로 회원가입했는 지 확인
+	public List<User> findKakaoId(String userId) {
+		return userRepository.findKakaoId(userId);
 	}
 	
 	public User IdCheck(String userId) {
@@ -65,8 +87,6 @@ public class UserService {
 	public void sendSMS(String phoneNumber, String fromNumber, String verifyCode) {
 		authPhoneUtil.sendSMS(phoneNumber, fromNumber, verifyCode);	// SMS 전송
 	}
-	
-	
 	
 //	private void validateDuplicateMember(User user) {
 //    	List<User> findUsers = userRepository.findById(user.getUserId());
