@@ -41,6 +41,9 @@ public class Post {
 	@Column(name="post_id")
 	private Long postId;
 	
+	@Column(name="post_title")
+	private String postTitle;
+	
 	@Lob
 	@Column(name="post_content")
 	private String postContent;

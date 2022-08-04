@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import com.ssafy.db.entity.message.Message;
+import com.ssafy.db.entity.message.UserMessage;
 
 @Repository
 @Transactional
@@ -23,8 +24,9 @@ public class MessageRepository {
 	}
 	
 	// 쪽지 전체 조회
-	public List<Message> allMessage() {
-		List<Message> messageBox = em.createQuery("select m from Message m", Message.class)
+	public List<UserMessage> allMessage(Long userMessageId) {
+		List<UserMessage> messageBox = em.createQuery("select m from UserMessage as m where m.userMessageId = :userMessageId", UserMessage.class)
+				.setParameter("userMessageId", userMessageId)
 				.getResultList();
 		return messageBox;
 	}
