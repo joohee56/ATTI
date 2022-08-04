@@ -7,7 +7,8 @@ import PostDetail from "./PostDetail";
 import PostEditor from "./PostEditor";
 import Modal from "../Modal";
 import SearchBar from "./SearchBar";
-// import { ButtonBlueStyled } from "../ButtonBlue";
+import { ButtonBlue } from "../ButtonStyled";
+import { palette } from "../../styles/palette";
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -80,8 +81,9 @@ function PostList() {
   const rendering = () => {
     const result = [];
     const postStyle = {
-      border: "solid",
+      
       borderRadius: "30px",
+      backgroundColor: palette.gray_1,
       width: "1500px",
       height: "90px",
       margin: "30px 0 0 50px",
@@ -128,7 +130,7 @@ function PostList() {
   };
   return (
     <>
-      <div id="괴물2">
+      <div>
         {rendering()}
       </div>
     </>
@@ -151,11 +153,11 @@ function NormalPostFrame() {
       <PostContainer>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <Title> 공지사항 or 질문 or 자유게시판 </Title>
-          <div style={{ display: "flex", flexDirection: "row", margin: "0 140px 0 0" }}>
+          <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
             <SearchBar />
-            {/* <ButtonBlueStyled onClick={onClickToggleModal1}>
+            <WriteButton onClick={onClickToggleModal1}>
               글쓰기
-            </ButtonBlueStyled> */}
+            </WriteButton>
           </div>
         </div>
         <div onClick={onClickToggleModal2}>
@@ -166,7 +168,7 @@ function NormalPostFrame() {
         <Modal
           onClickToggleModal={onClickToggleModal2}
           width="1100px"
-          height="600px"
+          height="800px"
         >
           <PostDetail />
         </Modal>
@@ -174,8 +176,8 @@ function NormalPostFrame() {
       {isOpenModal1 && (
         <Modal
           onClickToggleModal={onClickToggleModal1}
-          width="800px"
-          height="680px"
+          width="1000px"
+          height="850px"
         >
           <PostEditor />
         </Modal>
@@ -189,17 +191,24 @@ const PostContainer = styled.div`
   height: 85vh;
   border: 0.5px solid gray;
   border-radius: 20px;
+  background-color: white;
 `;
 
 const Title = styled.p`
   font-size: 30px;
   font-weight: bold;
-  margin: 30px 0 0 20px;
+  margin: 30px 0 0 40px;
 `;
 const IndividualPost = styled.div`
 &:hover{  
   cursor: pointer
  }
+`
+const WriteButton = styled(ButtonBlue)`
+width: 110px;
+height: 50px;
+padding: 0;
+border-radius: 10px;
 `
 
 export default NormalPostFrame;

@@ -14,6 +14,5 @@ const NavDiv = styled.div`
 width: 100%;
 height: 60px;
 border: 1px solid;
-margin: 0 0 10px 0;
 `;
 export default NavBar

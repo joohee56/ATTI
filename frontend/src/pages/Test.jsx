@@ -1,77 +1,193 @@
-import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
+// import styled from 'styled-components';
+// import { useSelector, useDispatch } from 'react-redux';
+// import React, { Component, useState, useCallback } from 'react';
 
-import {reducer} from '../store/community/index'
+// import {reducer, action, action2} from '../store/community/index'
+// import axios from 'axios'
+// function Test(){
 
-function Test(){
-
-  const [post, setPost] = useState({
-    postId: "",
-    postAnoInfo: "",
-    postComBanInfo: "",
-    postContent:"",
-    postRegDate: "",
-    postUpdDate: "",
-    categoryId: "",
-    userId: ""  
-})
-
-  const postId = useSelector((state) => state.posts.postId);
-  const postAnoInfo = useSelector((state) => state.posts.postAnoInfo);
-  const postComBanInfo = useSelector((state) => state.posts.postComBanInfo);
-  const postContent = useSelector((state) => state.posts.postContent);
-  const postRegDate = useSelector((state) => state.posts.postRegDate);
-  const postUpdDate = useSelector((state) => state.posts.postUpdDate);
-  const categoryId = useSelector((state) => state.posts.categotyId);
-  const userId = useSelector((state) => state.posts.userId);
+//   const [post, setPost] = useState({
+//     postId : "",
+//     postTitle : "",
+//     postContent : "",
+//     postRegDate : "",
+//     postUpdDate : "",
+//     user_id : "",
+//     category_id : ""
+// })
   
-  const dispatch = useDispatch();
+// const dispatch = useDispatch();
+ 
+// const action = {
+//   writePosts : createAsyncThunk("WRITE/POSTS", async(e) => {
+//       e.preventDefault();
+//       return axios.post(
+//         "http://localhost:8081/post/write",
+//           {
+//             postId : null,
+//             postTitle : "ㅎㅇ",
+//             postContent : "이현태도 왔다감",
+//             postRegDate : null,
+//             postUpdDate : null,
+//             user_id : 1234125,
+//             category_id : 12351235
+//           },
+//           {
+//             headers: {
+//               "Content-type": "application/json",
+//             },
+//           }
+//       ).then((res) => {
+//         console.log("response:", res)
+//       });
+    
+//     },
+//       [
+//         post.postId,
+//         post.postTitle,
+//         post.postContent,
+//         post.postRegDate,
+//         post.postUpdDate,
+//         post.user_id,
+//         post.category_id
+//       ]
+//       )
+//     };
 
-  const postHandler = (event) => {
-    event.preventDefault();
-    console.log(post)
-    dispatch(reducer.getPosts(
-      { postId : post.postId,
-        postAnoInfo : post.postAnoInfo,
-        postComBanInfo : post.postComBanInfo,
-        postContent : post.postContent,
-        postRegDate : post.postRegDate,
-        postUpdDate : post.postUpdDate,
-        categoryId : post.categoryId,
-        userId : post.userId})
-    )
-
-    const getValue = e => {
-      const {name,value} = e.target;
-     
-      setPost((prev) => ({
-          ...prev,
-          [name] : value,
-          // [e.target.name]: e.target.value
-      }));
-  };
-}
-
-
-  return(
-     <div>
-        <input type="text" name='postId'  onChange={getValue} />
-        <input type="text" name='postContent'  onChange={getValue} />
-        <input type="text" name='categoryId'  onChange={getValue}/>
-        <input type="text" name='userId'  onChange={getValue} />
-        <button onClick = {postHandler} >한 번 봅시다!</button>
-        {postId}
-        {postAnoInfo}
-        {postComBanInfo}
-        {postContent}
-        {postRegDate}
-        {postUpdDate}
-        {categoryId}
-        {userId}
-     </div>
-  );
-}
+// const signSubmi2t = useCallback(
+//   async (e) => {
+//     e.preventDefault();
+//     try {
+//       await axios
+//         .post(
+//           "http://localhost:8081/api/user/signup/normal",
+//           {
+//             userId: id,
+//             password: password,
+//             userName: name,
+//             email: email,
+//             birth: birthState.yy + birthState.mm + birthState.dd,
+//             phone: phoneNumber,
+//             social: "none",
+//             uid: 1111111,
+//             userDeleteInfo: false,
+//             userRole: "STUDENT",
+//           },
+//           {
+//             headers: {
+//               "Content-type": "application/json",
+//             },
+//           }
+//         )
+//         .then((res) => {
+//           console.log("response:", res);
+//         });
+//     } 
+//     catch (err) {
+//       const { response } = err ;
+//     }
+//   },
+//   [
+//     id,
+//     password,
+//     name,
+//     email,
+//     birthState.yy + birthState.mm + birthState.dd,
+//     phoneNumber,
+//   ]
+// );
 
 
+// const writePosts = useCallback(
+//   async (e) => {
+//     e.preventDefault();
+//     try {
+//       await axios
+//         .post(
+//           "http://localhost:8081/post/write",
+//           {
+//             postId : post.postId,
+//             postTitle : post.postTitle,
+//             postContent : post.postContent,
+//             postRegDate : post.postRegDate,
+//             postUpdDate : post.postUpdDate,
+//             user_id : post.user_id,
+//             category_id : post.category_id
+//           },
+//           {
+//             headers: {
+//               "Content-type": "application/json",
+//             },
+//           }
+//         )
+//         .then((res) => {
+//           console.log("response:", res);
 
-  export default Test;
+//         });
+//     } catch (err) {
+//       console.log(err)
+//     }
+//   },
+//   [
+//     post.postId,
+//     post.postTitle,
+//     post.postContent,
+//     post.postRegDate,
+//     post.postUpdDate,
+//     post.user_id,
+//     post.category_id
+//   ]
+// );
+
+
+// const signSubmit = useCallback(
+//   async (e) => {
+//     e.preventDefault();
+//     try {
+//       await axios
+//         .post(
+//           "http://localhost:8081/post/write",
+//           {
+//             postId : null,
+//             postTitle : "ㅎㅇ",
+//             postContent : "이현태도 왔다감",
+//             postRegDate : null,
+//             postUpdDate : null,
+//             user_id : 1234125,
+//             category_id : 12351235
+//           },
+//           {
+//             headers: {
+//               "Content-type": "application/json",
+//             },
+//           }
+//         )
+//         .then((res) => {
+//           console.log("response:", res);
+
+//         });
+//     } catch (err) {
+      
+//     }
+//   },
+  
+// );
+
+
+//   return(
+//      <div>
+//         {/* <input type="text" name='postId'  />
+//         <input type="text" name='postContent'  onChange= {getValue} />
+//         <input type="text" name='categoryId' />
+//         <input type="text" name='userId'  /> */}
+//         <button onClick = {signSubmit} >한 번 봅시다!</button>
+       
+//         {postContent}
+      
+//      </div>
+//   );
+// }
+
+
+
+//   export default Test;

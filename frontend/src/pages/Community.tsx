@@ -7,7 +7,7 @@ import PostEditor from '../components/Community/PostEditor';
 import PostDetail from '../components/Community/PostDetail';
 import Modal from '../components/Modal';
 import NavBar from '../components/NavBar';
-
+import CommunityBg from '../assets/images/communityBG.png'
 function Community(){
 
   const [isOpenModal1, setOpenModal1] = useState<boolean>(false);
@@ -22,27 +22,20 @@ function Community(){
 
 
   return(
-    <div>
+    <CommunityDiv>
         <NavBar/>
       <Main>
         <Category/>
-        {/* {isOpenModal1 && (
-      <Modal onClickToggleModal={onClickToggleModal1} width="800px" height="680px">
-        <PostEditor/>
-      </Modal>
-        )}
-        {isOpenModal2 && (
-      <Modal onClickToggleModal={onClickToggleModal2} width="1100px" height="600px">
-        <PostDetail/>
-      </Modal>
-        )} */}
         <NormalPostFrame/>
       </Main>
 
-    </div>
+    </CommunityDiv>
   
   );
 }
+const CommunityDiv = styled.div`
+  overflow: hidden;
+`;
 
 const Main = styled.div`
 display: flex;
@@ -50,6 +43,11 @@ flex-direction: row;
 justify-content: center;
 align-content: center;
 align-items: center;
+margin: 0;
+padding: 10px 10px 50px 10px;
+background-image: url('${CommunityBg}');
+background-position: center;
+background-size: cover;
 `;
 
 const FlexDiv = styled.div`

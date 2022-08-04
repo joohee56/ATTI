@@ -1,42 +1,43 @@
-import { createSlice, configureStore,createAsyncThunk, createReducer } from '@reduxjs/toolkit'
+import { createSlice, configureStore, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+import {postEditor} from '../../components/Community/PostEditor'
+
 export const action = {
-    getPosts : createAsyncThunk("GET/POSTS", async() => {
-        return axios({
-            method: "get",
-            url: "http://localhost:8081/post"
-        }).then(response => response.data);
-    }),
-};
-
-const postInitailState = {
-    postId: "",
-    postAnoInfo: "",
-    postComBanInfo: "",
-    postContent:"",
-    postRegDate: "",
-    postUpdDate: "",
-    categoryId: "",
-    userId: ""  
-}
-
-export const reducer = {
-    getPosts: (state, action) => {
-        state.postId = action.payload.postId;
-        state.postAnoInfo = action.payload.postAnoInfo;
-        state.postComBanInfo = action.payload.postComBanInfo;
-        state.postContent = action.payload.postContent;
-        state.postRegDate = action.payload.postRegDate;
-        state.postUpdDate = action.payload.postUpdDate;
-        state.categoryId = action.payload.categoryId;
-        state.userId = action.payload.userId;
-    }
-}
-
-export const postReducer = createReducer(postInitailState, builder => {
-    builder.addCase(action.getPosts.fuifilled, reducer.getPosts)
-});
+    // writePosts : createAsyncThunk("WRITE/POSTS", async(e) => {
+    //     e.preventDefault();
+    //     return axios.post(
+    //       "http://localhost:8081/post/write",
+    //         {
+    //           postId : postEditor().post.postId,
+    //           postTitle : postEditor().post.postTitle,
+    //           postContent : postEditor().post.postContent,
+    //           postRegDate : postEditor().post.postRegDate,
+    //           postUpdDate : postEditor().post.postUpdDate,
+    //           user_id : postEditor().post.user_id,
+    //           category_id : postEditor().post.category_id
+    //         },
+    //         {
+    //           headers: {
+    //             "Content-type": "application/json",
+    //           },
+    //         }
+    //     ).then((res) => {
+    //       console.log("response:", res)
+    //     });
+      
+    //   },
+    //     [
+    //       postEditor().post.postId,
+    //       postEditor().post.postTitle,
+    //       postEditor().post.postContent,
+    //       postEditor().post.postRegDate,
+    //       postEditor().post.postUpdDate,
+    //       postEditor().post.user_id,
+    //       postEditor().post.category_id
+    //     ]
+    //     )
+      };
 
 
 const normalPostSlice = createSlice({
@@ -79,7 +80,6 @@ const communityStore = configureStore({
     reducer: { 
         normalPost: normalPostSlice.reducer, 
         comment: commentSlice.reducer,
-        posts: postReducer,
         
     },
 });

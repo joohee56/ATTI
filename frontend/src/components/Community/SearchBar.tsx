@@ -13,7 +13,7 @@ function SearchBar(){
         border: "1px solid gray",
         borderRadius: "10px",
         opacity: "0.5",
-        margin: "30px 20px 10px 0",
+        margin: " 0 20px 0 0",
         boxShadow: "0.1px 0.2px 0.1px 0.2px"
 
     }

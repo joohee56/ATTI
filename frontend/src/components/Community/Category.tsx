@@ -8,7 +8,8 @@ import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
-import { css } from '@emotion/react';
+
+import { palette } from "../../styles/palette";
 
 interface CategoryType {
     category_id : Array<string>;
@@ -31,7 +32,7 @@ function CategoryList(dummyCategory: CategoryType){
             display: "flex",
             flexDirection: "row",
             justifyContent: "flex-start",
-            border: "1px solid",
+            backgroundColor: "white",
             borderRadius: "0 15px 15px 0",
             width: "180px",
             height: "60px",
@@ -43,19 +44,19 @@ function CategoryList(dummyCategory: CategoryType){
             display: "flex",
             flexDirection: "row",
             justifyContent: "flex-start",
-            border: "1px solid",
+            backgroundColor: "white",
             borderRadius: "10px 15px 15px 10px",
             width: "200px",
             height: "110px",
             margin: "15px 0 0 40px",
             boxShadow: "3px 3px 3px grey",
-            color: "red"
+            color: palette.blue_3
         }
         const purpleBar: React.CSSProperties | any = {
             width: "15px",
             height: "60px",
             position: 'absolute',
-            backgroundColor: "black"
+            backgroundColor: palette.purlue_2,
         }
         const result = [];
       
@@ -147,7 +148,7 @@ function CategoryList(dummyCategory: CategoryType){
 
 function Category(){
     return(
-        <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end"}}>
+        <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end",}}>
             {CategoryList(dummyCategory)}
         </div>
     );
@@ -167,7 +168,7 @@ const StyledLink = styled(NavLink)`
         text-decoration: none;
       }
       &:hover {
-        color: aquamarine;
+        color: ${palette.blue_2};
       }
      
 `;
