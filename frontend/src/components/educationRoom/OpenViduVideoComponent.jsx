@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const Video = styled.video`
-  width: ${(props) => (props.main ? "1280px" : "360px")};
-  height: ${(props) => (props.main ? "720px" : "240px")};
+  width: ${(props) => (props.main ? "960px" : "360px")};
+  position: relative;
 `;
 
 export default function OpenViduVideoComponent(props) {
