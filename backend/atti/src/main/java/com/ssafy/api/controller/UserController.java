@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.UserFindIdReq;
+import com.ssafy.api.response.FindIdRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.user.User;
@@ -87,12 +88,12 @@ public class UserController {
 	
 	// 아이디 찾기
 	@PostMapping("/findId")
-	public ResponseEntity<?> findId(@RequestBody UserFindIdReq findIdInfo) {
+	public ResponseEntity<FindIdRes> findId(@RequestBody UserFindIdReq findIdInfo) {
 		List<User> userList = userService.findId(findIdInfo);
 		if(userList.isEmpty())
-			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "일치하는 회원이 없습니다."));
+			return ResponseEntity.status(404).body(FindIdRes.of(404, "일치하는 회원이 없습니다.", null));
 		User user = userList.get(0);
-		String result = String.format("(%s) 에 해당하는 아이디는 \" %s \" 입니다.", user.getEmail(), user.getUserId());
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, result));
+		
+		return ResponseEntity.ok(FindIdRes.of(200, "Success", user.getUserId()));
 	}
 }

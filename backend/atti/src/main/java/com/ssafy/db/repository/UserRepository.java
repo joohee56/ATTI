@@ -46,12 +46,12 @@ public class UserRepository {
 		return em.createQuery("select u from User u where u.user_name = :name", User.class).setParameter("name", name).getResultList();
 	}
 	
+	// 아이디 찾기
 	public List<User> findId(UserFindIdReq findIdInfo){
 		String name = findIdInfo.getName();
 		String email = findIdInfo.getEmail();
-		Date birth = findIdInfo.getBirth();
 		
-		return em.createQuery("select u from User u where u.name = :name and u.email = :email and u.birth = birth", User.class).setParameter("name", name).setParameter("email", email).setParameter("birth", birth).getResultList();
+		return em.createQuery("select u from User u where u.name = :name and u.email = :email", User.class).setParameter("name", name).setParameter("email", email).getResultList();
 	}
 	
 	// 카카오 아이디 찾기
