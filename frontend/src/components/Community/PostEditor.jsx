@@ -1,19 +1,26 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import axios from 'axios';
 
-import { ButtonStyled } from '../ButtonBlue';
+import { ButtonBlue } from '../ButtonStyled';
 import { normalPostActions } from '../../store/community/index'
+import { palette } from "../../styles/palette";
+import UseSwitchesBasic from "../SwitchButton"
 
-function PostEditor() {
+export function PostEditor() {
 
     const [post, setPost] = useState({
-        post_title: '',
-        post_content: '',
-        post_upd_date : "2022-07-28 32:23",
+        postId : "",
+        postTitle : "",
+        postContent : "",
+        postRegDate : "",
+        postUpdDate : "",
+        user_id : "",
+        category_id : ""
     })
 
     const getValue = e => {
@@ -26,25 +33,77 @@ function PostEditor() {
         }));
     };
     
+    const writePosts = useCallback(
+        async (e) => {
+          e.preventDefault();
+          try {
+            await axios
+              .post(
+                "http://localhost:8081/post/write",
+                {
+                  postId : post.postId,
+                  postTitle : post.postTitle,
+                  postContent : post.postContent,
+                  postRegDate : post.postRegDate,
+                  postUpdDate : post.postUpdDate,
+                  user_id : post.user_id,
+                  category_id : post.category_id
+                },
+                {
+                  headers: {
+                    "Content-type": "application/json",
+                  },
+                }
+              )
+              .then((res) => {
+                console.log("response:", res);
+      
+              });
+          } catch (err) {
+            console.log(err)
+          }
+        },
+        [
+          post.postId,
+          post.postTitle,
+          post.postContent,
+          post.postRegDate,
+          post.postUpdDate,
+          post.user_id,
+          post.category_id
+        ]
+      );
+      
+
     const dispatch = useDispatch();
     const postHandler = (event) => {
         event.preventDefault();
         console.log(post)
-        dispatch(normalPostActions.saveNormalPost({post_title: post.post_title, post_content: post.post_content, post_upd_date: post.post_upd_date}))
+        dispatch(normalPostActions.saveNormalPost({post_title: post.postTitle, post_content: post.postContent}))
     }
 
     return (
-        <div>
+        <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
             <div className="form-wrapper">
                 <Main>
                     <Top>
-                        <h2>글쓰기</h2>
+                        <TopTitle>category이름+ 글쓰기</TopTitle>
                         <Top2>
-                            <button>토글1</button>
-                            <button>토글2</button>
+                            <SwitchDiv>
+                                <span style={{textAlign: "center" ,fontSize: "12px", marginBottom: "5px"}}>
+                                    익명으로 글쓰기 
+                                </span>
+                                {UseSwitchesBasic()}
+                            </SwitchDiv>
+                            <SwitchDiv>
+                                <span style={{textAlign: "center", fontSize: "12px",  marginBottom: "5px"}}>
+                                    댓글 금지하기 
+                                </span>
+                                {UseSwitchesBasic()}
+                            </SwitchDiv>
                         </Top2>
                     </Top>
-                    <PostTitle type="text" placeholder="제목을 입력하세요" name="post_title" onChange={getValue}/>
+                    <PostTitle type="text" placeholder="제목을 입력하세요" name="postTitle" onChange={getValue}/>
                     <CKEditor
                         editor={ ClassicEditor }
                         data=""
@@ -54,7 +113,7 @@ function PostEditor() {
                             editor.editing.view.change((writer) => {
                                 writer.setStyle(
                                     "height", 
-                                    "400px", 
+                                    "350px", 
                                     editor.editing.view.document.getRoot()
                                 );
                             });
@@ -65,7 +124,7 @@ function PostEditor() {
                             console.log( { event, editor, data } );
                             setPost({
                                 ...post,
-                                post_content: data
+                                postContent: data
                             })
                             // console.log(post)
                         } }
@@ -78,21 +137,30 @@ function PostEditor() {
                     />
                 </Main>
             </div>
-        <ButtonStyled className='submit-button'
-        // onClick={() => {
-        //     setSaveContent(saveContent.concat({...post}));
-        //     postHandler();}}
-          onClick = {postHandler}  
-            >
-            글작성</ButtonStyled>
+        <SubmitButton className='submit-button'
+          onClick = {writePosts}>
+            글작성</SubmitButton>
         </div>
         
     );
 }
 
+const TopTitle = styled.h2`
+background: ${palette.main_grBlue};
+color: transparent;
+-webkit-background-clip: text;
+text-align: center;
+margin: 6px 0;
+`;
 const PostTitle = styled.input`
 width: 700px;
-height: 50px;
+height: 30px;
+border: none;
+border-bottom: 2px solid;
+outline: none;
+margin: 0 0 10px 0;
+font-size: 20px;
+
 `;
 
 const Main = styled.main`
@@ -108,8 +176,21 @@ flex-direction: column;
 const Top2 = styled.div`
 display: flex;
 flex-direction: column;
-justify-content: flex-end;
+justify-content: flex-start;
 align-items: flex-end;
 `;
 
+const SubmitButton = styled(ButtonBlue)`
+width: 100px;
+height: 50px;
+margin: 10px 0 0 0;
+`;
+
+const SwitchDiv = styled.div`
+display: flex; 
+flex-direction: row; 
+align-items: center;
+justify-content: center;
+font-weight: bold;
+`;
 export default PostEditor;
