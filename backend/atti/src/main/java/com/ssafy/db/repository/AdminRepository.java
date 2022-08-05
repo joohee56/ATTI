@@ -2,18 +2,25 @@
 //
 //import java.util.List;
 //
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.data.jpa.repository.Query;
+//import javax.persistence.EntityManager;
+//import javax.persistence.PersistenceContext;
+//
 //import org.springframework.stereotype.Repository;
+//import org.springframework.transaction.annotation.Transactional;
 //
 //import com.ssafy.db.entity.depart.Post;
-//import com.ssafy.db.entity.user.User;
 //
 //// 사용 엔티티명, 해당 클래스의 pk 타입
 //@Repository
-//public interface AdminRepository extends JpaRepository<Post, Long>{
+//@Transactional
+//public class AdminRepository {
 //	
-//	// 전체 게시글 조회
-//	List<Post> findAllByPost();
-//		
+//	@PersistenceContext
+//	private EntityManager em;
+//	
+//	// 게시글 전체 조회
+//	public List<Post> findAll() {
+//		List<Post> result = em.createQuery("select p from Post as p", Post.class).getResultList();
+//		return result;
+//	}
 //}

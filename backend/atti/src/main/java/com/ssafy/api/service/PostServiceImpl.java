@@ -16,7 +16,6 @@ import com.ssafy.db.repository.PostRepository;
 @Transactional(readOnly = true) // readOnly true를 사용하면 읽기 최적화
 public class PostServiceImpl implements PostService {
 	
-	
 	@Autowired
 	private PostRepository postRepository;
 
