@@ -89,7 +89,9 @@ public class AuthController {
 
         // 접속토큰 get
         String kakaoToken = authService.getReturnAccessToken(code);
-
+        System.out.println("kakao Token :: " + kakaoToken);
+        
+        
         // 접속자 정보 get
         Map<String, Object> result = authService.getUserInfo(kakaoToken);
 //        log.info("result:: " + result);

@@ -94,16 +94,8 @@ public class UserController {
 		if(userList.isEmpty())
 			return ResponseEntity.status(404).body(FindIdRes.of(404, "일치하는 회원이 없습니다.", null));
 		User user = userList.get(0);
-<<<<<<< HEAD
-		char quotes = '\u0022';        
-		String result = "(" + user.getEmail() + ") 에 해당하는 아이디는 "+ quotes + user.getUserId() + quotes + "입니다.";
-//		String result = String.format("( %s ) 에 해당하는 아이디는 '\u0022' %s '\u0022' 입니다.", user.getEmail(), user.getUserId());
-//		String result = `( ${user.getEmail()} )에 해당하는 아이디는 ${} 입니다.`;
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, result));
-=======
 		
 		return ResponseEntity.ok(FindIdRes.of(200, "Success", user.getUserId()));
->>>>>>> joohui
 	}
 	
 	// 비밀번호 찾기
