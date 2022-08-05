@@ -44,11 +44,11 @@ const AttendeesWrapper = styled.div<styledProps>`
     border-radius: 6px;
   }
   width: 95%;
-  height: ${(props) => (props.openChattingList ? "45%" : "95%")};
+  height: ${(props) => (props.openChattingList ? "35%" : "85%")};
   border-radius: 15px;
 `;
 const AttendeesListDiv = styled.div`
-  width: 350px;
+  width: 100%;
   height: 100%;
   background-color: gray;
   color: black;

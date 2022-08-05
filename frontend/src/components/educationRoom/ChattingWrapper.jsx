@@ -3,6 +3,8 @@ import Chatting from "./chatting";
 import styled from "styled-components";
 import { ChatBox } from "./OpenViduTestStyled";
 
+
+
 const ChattingWrapper = ({ chatList, anonymouseMode }) => {
   const [chatting, setChatting] = useState([]);
   // console.log(chatList);

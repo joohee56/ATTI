@@ -34,7 +34,7 @@ export const VideoBox = styled.div`
 `;
 export const ChatBox = styled.div`
   width: 100%;
-  height: 72%;
+  height: 85%;
   background-color: white;
   margin-top: 15px;
   margin-bottom: 15px;
@@ -76,7 +76,10 @@ export const ChattingInputBox = styled.div`
   background-color: white;
   align-items: center;
 `;
-
+export const ChattingName = styled.div`
+  display: flex;
+  margin-left: 10px;
+`;
 export const ChattingInput = styled.input`
   width: 80%;
   height: 70%;
@@ -84,9 +87,19 @@ export const ChattingInput = styled.input`
   border: none;
 `;
 
+export const ChattinBoxgWrapper = styled.div`
+  width: 100%;
+  height: 80%;
+  background-color: white;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+`;
+
 export const ChattingBox = styled.div`
+  margin-top: 20px;
   width: 95%;
-  height: ${(props) => (props.openAttentList ? "50%" : "100%")};
+  height: ${(props) => (props.openAttentList ? "45%" : "80%")};
 `;
 export const MeetingButtonWrapper = styled.div`
   position: fixed;
@@ -108,4 +121,24 @@ export const MeetingButton = styled.button`
   height: 40px;
   margin-right: 5px;
   margin-left: 3px;
+`;
+export const MeetingAttendAndChattingWrapper = styled.span`
+  width: 100%;
+  height: 8%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+export const MeetingAttendAndChattingButton = styled.button`
+  border: none;
+  border-radius: 8px;
+  /* background-color: #cfd1dc; */
+  color: black;
+  text-align: center;
+  width: 40%;
+  height: 60%;
+  margin-right: 3px;
+  margin-left: 3px;
+  background-color: ${(props) => (props.isClick ? "#DBEAFE" : "#7A7C87")};
+  /*  inset,0px 0px 5px rgba(200,200,200,0.5);  */
 `;

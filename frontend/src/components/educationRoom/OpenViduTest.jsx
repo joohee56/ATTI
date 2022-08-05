@@ -17,8 +17,13 @@ import {
   MeetingButton,
   ScreenText,
   MeetingButtonWrapper,
+  MeetingAttendAndChattingButton,
+  MeetingAttendAndChattingWrapper,
+  ChattinBoxgWrapper,
+  ChattingName,
 } from "./OpenViduTestStyled";
 import { useNavigate } from "react-router-dom";
+import ChatIcon from "@mui/icons-material/Chat";
 
 const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -585,30 +590,6 @@ const OpenViduTest = () => {
           <div>
             <OpenviduBox id="OpenViduBox">
               <VideoBox id="VideoBox">
-                {state.mainStreamManager !== undefined ? (
-                  <div
-                    onClick={() => {
-                      setState((prev) => ({
-                        ...prev,
-                        mainStreamManager: undefined,
-                      }));
-                    }}
-                  >
-                    <UserVideoComponent
-                      streamManager={state.mainStreamManager}
-                      main="main"
-                    />
-                    <ScreenText>
-                      {
-                        JSON.parse(
-                          state.mainStreamManager.stream.connection.data
-                        ).clientData
-                      }
-                      님의 화면을 보고 있습니다.
-                    </ScreenText>
-                    {/* <button onClick={switchCamera}> 카메라 변경 </button> */}
-                  </div>
-                ) : null}
                 <SubStream
                   mainStream={
                     state.mainStreamManager !== undefined ? true : false
@@ -633,6 +614,30 @@ const OpenViduTest = () => {
                       </div>
                     ))}
                 </SubStream>
+                {state.mainStreamManager !== undefined ? (
+                  <div
+                    onClick={() => {
+                      setState((prev) => ({
+                        ...prev,
+                        mainStreamManager: undefined,
+                      }));
+                    }}
+                  >
+                    <UserVideoComponent
+                      streamManager={state.mainStreamManager}
+                      main="main"
+                    />
+                    <ScreenText>
+                      {
+                        JSON.parse(
+                          state.mainStreamManager.stream.connection.data
+                        ).clientData
+                      }
+                      님의 화면을 보고 있습니다.
+                    </ScreenText>
+                    {/* <button onClick={switchCamera}> 카메라 변경 </button> */}
+                  </div>
+                ) : null}
                 <div>
                   {anonymousMode ? (
                     <ScreenText>
@@ -680,26 +685,28 @@ const OpenViduTest = () => {
               </VideoBox>
 
               <PeopleBox>
-                <span>
-                  <button
+                <MeetingAttendAndChattingWrapper>
+                  <MeetingAttendAndChattingButton
                     onClick={() => {
                       setOpenAttentList((prev) => {
                         return !prev;
                       });
                     }}
+                    isClick={openAttentList}
                   >
                     참가자({peopleList.length})
-                  </button>
-                  <button
+                  </MeetingAttendAndChattingButton>
+                  <MeetingAttendAndChattingButton
                     onClick={() => {
                       setOpenChattingList((prev) => {
                         return !prev;
                       });
                     }}
+                    isClick={openChattingList}
                   >
                     채팅
-                  </button>
-                </span>
+                  </MeetingAttendAndChattingButton>
+                </MeetingAttendAndChattingWrapper>
                 {openAttentList ? (
                   <AttendeesList
                     peopleList={peopleList}
@@ -709,10 +716,16 @@ const OpenViduTest = () => {
                 ) : null}
                 {openChattingList ? (
                   <ChattingBox id="ChattingBox" openAttentList={openAttentList}>
-                    <ChattingWrapper
-                      chatList={chatList}
-                      anonymousMode={anonymousMode}
-                    />
+                    <ChattinBoxgWrapper>
+                      <ChattingName>
+                        <ChatIcon />
+                        채팅
+                      </ChattingName>
+                      <ChattingWrapper
+                        chatList={chatList}
+                        anonymousMode={anonymousMode}
+                      />
+                    </ChattinBoxgWrapper>
                     <ChattingInputBox>
                       <span>{sendToUser}</span>
                       <ChattingInput
