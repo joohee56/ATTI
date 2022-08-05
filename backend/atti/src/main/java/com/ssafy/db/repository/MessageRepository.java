@@ -19,8 +19,8 @@ public class MessageRepository {
 	private EntityManager em;
 	
 	// 쪽지 보내기
-	public void sendMessage() {
-		
+	public void sendMessage(Message message) {
+		em.persist(message);
 	}
 	
 	// 쪽지 전체 조회
