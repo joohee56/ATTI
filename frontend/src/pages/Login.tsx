@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, MouseEventHandler } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -7,17 +7,32 @@ import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlue } from "../components/ButtonStyled";
 import { ButtonPurple } from "../components/ButtonStyled";
 import InputWithLabel from "../components/InputWithLabel";
+import InputWithIcon from "../components/account/IputWithIcon";
 import Modal from "../components/Modal";
+import axios, { AxiosError } from "axios";
+import { BACKEND_URL } from "../constant/index";
+import { palette } from "../styles/palette";
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import { KAKAO_AUTH_URL } from "../constant/index";
 
 interface userLoginInfo {
-  id: string;
+  userId: string;
   password: string;
 }
 
+interface findIdInfo{
+  name: string,
+  email: string,
+  date: {
+    yy: Date,
+    mm: 1,
+    dd: 1,
+  } 
+}
+
 function LoginPage() {
-  //로그인 클릭
   const [loginInfo, setLoginInfo] = useState<userLoginInfo>({
-    id: "",
+    userId: "",
     password: "",
   });
 
@@ -29,24 +44,66 @@ function LoginPage() {
     });
   };
 
-  const loginClick = () => {
-    // 데이터 가져오기
-    let localData: any = localStorage.getItem("userInfo");
-    let userData = JSON.parse(localData);
+  const loginClick = useCallback(
+    async (e: any) => {
+      //e.preventDefault();
+      try {
+        await axios
+          .post(
+            BACKEND_URL + "/api/auth/login/normal",
+            {
+              userId: loginInfo.userId,
+              password: loginInfo.password,
+            },
+            {
+              headers: {
+                "Content-type": "application/json",
+              },
+            }
+          )
+          .then((res) => {
+            console.log("response:", res);
+            if (res.status === 200) {
+              document.location.href = "/welcome";
+            }
+          });
+      } catch (err) {
+        const { response } = err as unknown as AxiosError;
+        console.log(response);
+      }
+    },
+    [loginInfo.userId, loginInfo.password]
+  );
 
-    // input data 와 로컬 데이터 비교
-    if (
-      loginInfo.id == userData.id &&
-      loginInfo.password == userData.password
-    ) {
-      alert("로그인 성공");
-      sessionStorage.setItem("user_id", loginInfo.id);
-      document.location.href = "/welcome";
-    } else {
-      alert("로그인실패");
-    }
-  };
+  const kakaoLogin=()=>{
+    window.location.replace(KAKAO_AUTH_URL);
 
+    let AuthorizationCode = new URL(window.location.href).searchParams.get('code');
+    console.log(AuthorizationCode);
+  }
+
+
+  const findSubmit = async ( e: any) => {
+    // await axios.get(BACKEND_URL+"/api/user/findId", {
+    //   params: {
+    //     name: ,
+    //     emai: ,
+    //     birth: 
+    //   }
+    // })
+    // .then(function (response) {
+    //  let data:boolean = response.data;
+    //  if(data) setIsId(true);
+    //  else {
+    //   setIdMessage("중복된 ID입니다");
+    //   setIsId(false);
+    //  }
+    // }).catch(function (error) {
+    //   console.log(error);
+    // })
+  }
+  
+   
   // 아이디 찾기, 비밀번호 찾기
   const [findValue, setFindValue] = useState<string>("");
 
@@ -59,11 +116,6 @@ function LoginPage() {
   const setClickModal = (value: string) => {
     setFindValue(value);
     onClickToggleModal();
-  };
-
-  // 모달 안 버튼 클릭
-  const Thisvalue = () => {
-    console.log("이게된다구???");
   };
 
   return (
@@ -95,8 +147,7 @@ function LoginPage() {
           <div>
             <div>
               <InputWithLabel
-                label="Id"
-                name="id"
+                name="userId"
                 placeholder="ID"
                 onChange={onChange}
               />
@@ -110,9 +161,22 @@ function LoginPage() {
             </div>
 
             <p>
-              <DialogButton onClick={(e)=>{setClickModal("findID")}}>아이디 찾기</DialogButton>| 
-              <DialogButton onClick={(e)=>{setClickModal("findPW")}}>비밀번호 찾기</DialogButton>
-              |  <Link to="../signup">회원가입</Link>
+              <DialogButton
+                onClick={(e) => {
+                  setClickModal("findID");
+                }}
+              >
+                아이디 찾기
+              </DialogButton>
+              |
+              <DialogButton
+                onClick={(e) => {
+                  setClickModal("findPW");
+                }}
+              >
+                비밀번호 찾기
+              </DialogButton>
+              | <Link to="../signup">회원가입</Link>
             </p>
           </div>
 
@@ -126,6 +190,7 @@ function LoginPage() {
               }
               alt="카카오로 로그인"
               width={"50px"}
+              onClick={kakaoLogin}
             />
             <img
               src={
@@ -144,15 +209,27 @@ function LoginPage() {
             <ModalDiv>
               <StyledPage>
                 <LeftTextDiv>
-                  <TextSpan onClick={(e)=>{setFindValue("findID")}}>아이디 찾기</TextSpan>
+                  <TextSpan
+                    onClick={(e) => {
+                      setFindValue("findID");
+                    }}
+                  >
+                    아이디 찾기
+                  </TextSpan>
                 </LeftTextDiv>
                 <TextDiv>
-                  <TextSpan onClick={(e)=>{setFindValue("findPW")}}>비밀번호 찾기</TextSpan>
+                  <TextSpan
+                    onClick={(e) => {
+                      setFindValue("findPW");
+                    }}
+                  >
+                    비밀번호 찾기
+                  </TextSpan>
                 </TextDiv>
               </StyledPage>
               <div>
                 {findValue == "findID" && (
-                  <>
+                  <form onSubmit={findSubmit}>
                     <InputWithLabel
                       label="Name"
                       name="name"
@@ -172,9 +249,9 @@ function LoginPage() {
                       type="date"
                       onChange={onChange}
                     />
-                    <p>(xx@naver.com) 에 해당하는 아이디는 “ ” 입니다.</p>
-                    <ButtonBlue>찾기</ButtonBlue>
-                  </>
+                    <p>(dustnzlzl@naver.com) 에 해당하는 아이디는 없습니다.</p>
+                    <ButtonPurple type="submit">찾기</ButtonPurple>
+                    </form>
                 )}
                 {findValue == "findPW" && (
                   <>
