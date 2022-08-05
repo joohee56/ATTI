@@ -16,6 +16,11 @@ export const ButtonBlue = styled.button`
     filter: brightness(90%);
     background: ${palette.main_grBlue};
   }
+
+  &:disabled {
+    filter: brightness(80%);
+    background: ${palette.main_grBlue};
+  }
 `;
 
 export const ButtonPurple = styled.button`
