@@ -29,6 +29,7 @@ export const VideoBox = styled.div`
   flex-wrap: wrap;
   width: 100%;
   height: fit-content;
+  justify-content: center;
   /* margin-left: auto; */
   /* background-color: #333333; */
 `;
@@ -60,19 +61,37 @@ export const MeetingRoom = styled.div`
 `;
 
 export const SubStream = styled.div`
+  /* width: ${(props) => (props.mainStream ? null : "100%")}; */
   width: 100%;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   min-height: ${(props) => (props.mainStream ? null : "80vh")};
+  overflow-x: ${(props) => (props.mainStream ? "scroll" : null)};
+  overflow-y: hidden;
+  &::-webkit-scrollbar {
+    padding-right: 15px;
+    width: 8px;
+    height: 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+  }
 `;
-
+export const MeetingButtonControl = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 export const ChattingInputBox = styled.div`
   display: flex;
   flex-direction: column;
-
+  border-radius: 15px;
   width: 100%;
-  height: 20%;
+  height: 30%;
   background-color: white;
   align-items: center;
 `;
@@ -81,8 +100,8 @@ export const ChattingName = styled.div`
   margin-left: 10px;
 `;
 export const ChattingInput = styled.input`
-  width: 80%;
-  height: 70%;
+  width: 95%;
+  height: 45%;
   border-radius: 10px;
   border: none;
 `;
@@ -94,6 +113,18 @@ export const ChattinBoxgWrapper = styled.div`
   margin-top: 5px;
   margin-bottom: 15px;
   border-radius: 10px;
+`;
+
+export const ChattingSendButton = styled.button`
+  border-radius: 8px;
+  margin-left: auto;
+  background-color: #dbeafe;
+  border: none;
+  width: 50px;
+  height: 35px;
+  margin-right: 15px;
+  margin-top: auto;
+  margin-bottom: 4px;
 `;
 
 export const ChattingBox = styled.div`
@@ -112,13 +143,47 @@ export const MeetingButtons = styled.div`
   justify-content: center;
 `;
 
+export const LayoutButton = styled.button`
+  position: fixed;
+  width: 180px;
+  height: 50px;
+  border-radius: 10px;
+  background: #333333;
+  color: white;
+  border-color: white;
+  bottom: 10px;
+  z-index: 1;
+  left: 10px;
+`;
+const ScreenModeButton = styled.button`
+  position: fixed;
+  width: 180px;
+  height: 50px;
+  border-radius: 10px;
+  color: white;
+  border-color: white;
+  z-index: 1;
+  left: 10px;
+`;
+export const FullscreenButton = styled(ScreenModeButton)`
+  bottom: 65px;
+  background: ${(props) =>
+    props.fullScreenLayoutMode ? "#DBEAFE" : "#333333"};
+  color: ${(props) => (props.fullScreenLayoutMode ? "black" : "white")};
+`;
+export const NotFullScreenButton = styled(ScreenModeButton)`
+  background: ${(props) =>
+    props.fullScreenLayoutMode ? "#333333" : "#DBEAFE"};
+  bottom: 120px;
+  color: ${(props) => (props.fullScreenLayoutMode ? "white" : "black")};
+`;
 export const MeetingButton = styled.button`
   border-color: white;
-  background: none;
+  background: #333333;
   border-radius: 15px;
   color: white;
-  width: 150px;
-  height: 40px;
+  width: 160px;
+  height: 50px;
   margin-right: 5px;
   margin-left: 3px;
 `;

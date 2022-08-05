@@ -50,7 +50,7 @@ const AttendeesWrapper = styled.div<styledProps>`
 const AttendeesListDiv = styled.div`
   width: 100%;
   height: 100%;
-  background-color: gray;
+  background-color: #ffffff;
   color: black;
 `;
 const AttendWrapper = styled.div`
@@ -100,18 +100,20 @@ const AttendeesList = ({
                   {JSON.parse(e.data).clientData}
                 </AudioAndVideoButton>
               </NickNameWrapper>
-              <AudioAndVideoWrapper>
-                <AudioAndVideoButton>
-                  {e.stream.videoActive ? (
-                    <VideocamIcon></VideocamIcon>
-                  ) : (
-                    <VideocamOffIcon />
-                  )}
-                </AudioAndVideoButton>
-                <AudioAndVideoButton>
-                  {e.stream.audioActive ? <MicIcon /> : <MicOffIcon />}
-                </AudioAndVideoButton>
-              </AudioAndVideoWrapper>
+              {e.stream !== undefined ? (
+                <AudioAndVideoWrapper>
+                  <AudioAndVideoButton>
+                    {e.stream.videoActive ? (
+                      <VideocamIcon></VideocamIcon>
+                    ) : (
+                      <VideocamOffIcon />
+                    )}
+                  </AudioAndVideoButton>
+                  <AudioAndVideoButton>
+                    {e.stream.audioActive ? <MicIcon /> : <MicOffIcon />}
+                  </AudioAndVideoButton>
+                </AudioAndVideoWrapper>
+              ) : null}
             </AttendWrapper>
           ))}
         </AttendeesListDiv>

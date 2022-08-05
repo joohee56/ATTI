@@ -4,7 +4,18 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./UserVideoComponent";
 import AttendeesList from "./AttendeesList";
 import ChattingWrapper from "./ChattingWrapper";
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+import ScreenShareIcon from "@mui/icons-material/ScreenShare";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import FaceIcon from "@mui/icons-material/Face";
+import BorderAllIcon from "@mui/icons-material/BorderAll";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import {
+  LayoutButton,
   PeopleBox,
   OpenviduBox,
   VideoBox,
@@ -21,9 +32,14 @@ import {
   MeetingAttendAndChattingWrapper,
   ChattinBoxgWrapper,
   ChattingName,
+  ChattingSendButton,
+  MeetingButtonControl,
+  FullscreenButton,
+  NotFullScreenButton,
 } from "./OpenViduTestStyled";
 import { useNavigate } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
+import FaceRetouchingOffIcon from "@mui/icons-material/FaceRetouchingOff";
 
 const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -51,6 +67,8 @@ const OpenViduTest = () => {
   const [anonymousMode, setAnonymousMode] = useState(false);
   const [openAttentList, setOpenAttentList] = useState(true);
   const [openChattingList, setOpenChattingList] = useState(true);
+  const [fullScreenLayoutMode, setFullScreenLayoutMode] = useState(false);
+  const [layout, setLayout] = useState(false);
   const messageRef = useRef();
 
   function setChattingInfo({ data, connectionId }) {
@@ -564,7 +582,19 @@ const OpenViduTest = () => {
         console.log(error);
       });
   }
-
+  function layoutButton() {
+    setLayout((prev) => {
+      return !prev;
+    });
+  }
+  function fullScreenMode() {
+    setFullScreenLayoutMode((prev) => {
+      return !prev;
+    });
+    setLayout((prev) => {
+      return false;
+    });
+  }
   return (
     <MeetingRoom id="test">
       {state.session === undefined ? (
@@ -589,63 +619,105 @@ const OpenViduTest = () => {
         <>
           <div>
             <OpenviduBox id="OpenViduBox">
-              <VideoBox id="VideoBox">
-                <SubStream
-                  mainStream={
-                    state.mainStreamManager !== undefined ? true : false
-                  }
-                >
-                  {state.publisher !== undefined ? (
-                    <div onClick={() => handleMainVideoStream(state.publisher)}>
-                      <UserVideoComponent
-                        streamManager={state.publisher}
-                        main="sub"
-                      />
+              {state.mainStreamManager !== undefined ? (
+                <span>
+                  <LayoutButton onClick={layoutButton}>
+                    <MeetingButtonControl>
+                      <DashboardIcon />
+                      레이아웃
+                    </MeetingButtonControl>
+                  </LayoutButton>
+                  {layout ? (
+                    <div>
+                      <NotFullScreenButton
+                        onClick={fullScreenMode}
+                        fullScreenLayoutMode={fullScreenLayoutMode}
+                      >
+                        <MeetingButtonControl>
+                          <BorderAllIcon />
+                          참여자 영상 함께 보기
+                        </MeetingButtonControl>
+                      </NotFullScreenButton>
+                      <FullscreenButton
+                        onClick={fullScreenMode}
+                        fullScreenLayoutMode={fullScreenLayoutMode}
+                      >
+                        <MeetingButtonControl>
+                          <FullscreenIcon />
+                          전체보기
+                        </MeetingButtonControl>
+                      </FullscreenButton>
                     </div>
                   ) : null}
-                  {state.subscribers &&
-                    state.subscribers.map((sub, i) => (
-                      <div
-                        className="col-md-6"
-                        key={i}
-                        onClick={() => handleMainVideoStream(sub)}
-                      >
-                        <UserVideoComponent streamManager={sub} main="sub" />
-                      </div>
-                    ))}
-                </SubStream>
-                {state.mainStreamManager !== undefined ? (
-                  <div
-                    onClick={() => {
-                      setState((prev) => ({
-                        ...prev,
-                        mainStreamManager: undefined,
-                      }));
-                    }}
+                </span>
+              ) : null}
+              <VideoBox id="VideoBox">
+                {state.mainStreamManager !== undefined &&
+                fullScreenLayoutMode ? null : (
+                  <SubStream
+                    mainStream={
+                      state.mainStreamManager !== undefined ? true : false
+                    }
                   >
-                    <UserVideoComponent
-                      streamManager={state.mainStreamManager}
-                      main="main"
-                    />
-                    <ScreenText>
-                      {
-                        JSON.parse(
-                          state.mainStreamManager.stream.connection.data
-                        ).clientData
-                      }
-                      님의 화면을 보고 있습니다.
-                    </ScreenText>
-                    {/* <button onClick={switchCamera}> 카메라 변경 </button> */}
-                  </div>
-                ) : null}
+                    {state.publisher !== undefined ? (
+                      <div
+                        onClick={() => handleMainVideoStream(state.publisher)}
+                      >
+                        <UserVideoComponent
+                          streamManager={state.publisher}
+                          main="sub"
+                        />
+                      </div>
+                    ) : null}
+                    {state.subscribers &&
+                      state.subscribers.map((sub, i) => (
+                        <div
+                          className="col-md-6"
+                          key={i}
+                          onClick={() => handleMainVideoStream(sub)}
+                        >
+                          <UserVideoComponent streamManager={sub} main="sub" />
+                        </div>
+                      ))}
+                  </SubStream>
+                )}
+
                 <div>
-                  {anonymousMode ? (
-                    <ScreenText>
-                      익명 모드가 활성화 되었습니다. 마이크와 오디오를 제어할 수
-                      없습니다.
-                    </ScreenText>
+                  {state.mainStreamManager !== undefined ? (
+                    <div
+                      onClick={() => {
+                        setState((prev) => ({
+                          ...prev,
+                          mainStreamManager: undefined,
+                        }));
+                      }}
+                    >
+                      <UserVideoComponent
+                        streamManager={state.mainStreamManager}
+                        main="main"
+                        fullScreenLayoutMode={fullScreenLayoutMode}
+                      />
+                      <ScreenText>
+                        {
+                          JSON.parse(
+                            state.mainStreamManager.stream.connection.data
+                          ).clientData
+                        }
+                        님의 화면을 보고 있습니다.
+                      </ScreenText>
+                      {/* <button onClick={switchCamera}> 카메라 변경 </button> */}
+                    </div>
                   ) : null}
+                  <div>
+                    {anonymousMode ? (
+                      <ScreenText>
+                        익명 모드가 활성화 되었습니다. 마이크와 오디오를 제어할
+                        수 없습니다.
+                      </ScreenText>
+                    ) : null}
+                  </div>
                 </div>
+
                 <MeetingButtonWrapper>
                   <MeetingButtons>
                     <MeetingButton
@@ -655,7 +727,17 @@ const OpenViduTest = () => {
                         setTurnOnAudio(!turnOnAudio);
                       }}
                     >
-                      {turnOnAudio ? "마이크 종료하기" : "마이크 켜기"}
+                      {turnOnAudio ? (
+                        <MeetingButtonControl>
+                          <MicIcon />
+                          마이크 종료하기
+                        </MeetingButtonControl>
+                      ) : (
+                        <MeetingButtonControl>
+                          <MicOffIcon />
+                          마이크 켜기
+                        </MeetingButtonControl>
+                      )}
                     </MeetingButton>
 
                     <MeetingButton
@@ -665,20 +747,42 @@ const OpenViduTest = () => {
                       }}
                       disabled={anonymousMode}
                     >
-                      {turnOnCamera ? "카메라 종료하기" : "카메라 켜기"}
+                      {turnOnCamera ? (
+                        <MeetingButtonControl>
+                          <VideocamIcon /> 카메라 종료하기
+                        </MeetingButtonControl>
+                      ) : (
+                        <MeetingButtonControl>
+                          <VideocamOffIcon /> 카메라 켜기
+                        </MeetingButtonControl>
+                      )}
                     </MeetingButton>
                     <MeetingButton onClick={screenShare}>
-                      화면 공유 하기
+                      <MeetingButtonControl>
+                        <ScreenShareIcon />
+                        화면 공유 하기
+                      </MeetingButtonControl>
                     </MeetingButton>
                     {/* <div>{state.mySessionId}</div> */}
 
                     <MeetingButton onClick={requestAnonymous}>
-                      {anonymousMode
-                        ? "익명 모드 비활성화"
-                        : "익명 모드 활성화"}
+                      {anonymousMode ? (
+                        <MeetingButtonControl>
+                          <FaceIcon />
+                          익명 모드 비활성화
+                        </MeetingButtonControl>
+                      ) : (
+                        <MeetingButtonControl>
+                          <FaceRetouchingOffIcon />
+                          익명 모드 활성화
+                        </MeetingButtonControl>
+                      )}
                     </MeetingButton>
                     <MeetingButton onClick={leaveSession}>
-                      세션 나가기
+                      <MeetingButtonControl>
+                        <MeetingRoomIcon />
+                        세션 나가기
+                      </MeetingButtonControl>
                     </MeetingButton>
                   </MeetingButtons>
                 </MeetingButtonWrapper>
@@ -727,14 +831,19 @@ const OpenViduTest = () => {
                       />
                     </ChattinBoxgWrapper>
                     <ChattingInputBox>
-                      <span>{sendToUser}</span>
+                      <div>
+                        <span>채팅</span>
+                        <span>{sendToUser}</span>
+                      </div>
                       <ChattingInput
                         type="text"
                         id="message"
                         ref={messageRef}
                       />
 
-                      <button onClick={sendMessage}>메시지 보내기</button>
+                      <ChattingSendButton onClick={sendMessage}>
+                        전송
+                      </ChattingSendButton>
                       {/* <button onClick={testSpeech}>메시지 읽어주기</button> */}
                     </ChattingInputBox>
                   </ChattingBox>
