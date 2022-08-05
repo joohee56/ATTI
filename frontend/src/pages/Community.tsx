@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import NormalPostFrame from '../components/Community/NormalPostFrame';
 import SearchBar from '../components/Community/SearchBar';
-import {ButtonStyled} from '../components/ButtonBlue';
+import {ButtonBlue} from '../components/ButtonStyled';
 import Category from '../components/Community/Category';
 import PostEditor from '../components/Community/PostEditor';
 import PostDetail from '../components/Community/PostDetail';
@@ -26,12 +26,12 @@ function Community(){
       <Main>
         <Category/>
         {isOpenModal1 && (
-      <Modal onClickToggleModal={onClickToggleModal1}>
+      <Modal onClickToggleModal={onClickToggleModal1} width="800px" height="680px">
         <PostEditor/>
       </Modal>
         )}
         {isOpenModal2 && (
-      <Modal onClickToggleModal={onClickToggleModal2}>
+      <Modal onClickToggleModal={onClickToggleModal2} width="1100px" height="600px">
         <PostDetail/>
       </Modal>
         )}
@@ -39,7 +39,7 @@ function Community(){
           <FlexDiv>
             <SearchBar/>
             <button>검색</button>
-            <ButtonStyled onClick={onClickToggleModal1}>글쓰기</ButtonStyled>
+            <ButtonBlue onClick={onClickToggleModal1}>글쓰기</ButtonBlue>
           </FlexDiv>
           <div onClick={onClickToggleModal2}>
             <NormalPostFrame/>

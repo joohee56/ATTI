@@ -1,5 +1,7 @@
 package com.ssafy.api.request;
 
+import javax.persistence.Entity;
+
 import lombok.*;
 
 @Getter

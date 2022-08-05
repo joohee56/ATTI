@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-import { ButtonStyled } from '../ButtonBlue';
+import { ButtonBlue } from '../ButtonStyled';
 import { normalPostActions } from '../../store/community/index'
 
 function PostEditor() {
@@ -78,13 +78,13 @@ function PostEditor() {
                     />
                 </Main>
             </div>
-        <ButtonStyled className='submit-button'
+        <ButtonBlue className='submit-button'
         // onClick={() => {
         //     setSaveContent(saveContent.concat({...post}));
         //     postHandler();}}
           onClick = {postHandler}  
             >
-            글작성</ButtonStyled>
+            글작성</ButtonBlue>
         </div>
         
     );
