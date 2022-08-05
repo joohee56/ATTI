@@ -1,172 +1,215 @@
-import React, {PropsWithChildren, useState, useCallback } from 'react';
-import styled from 'styled-components';
-import {useSelector} from 'react-redux'
+import React, { PropsWithChildren, useState, useCallback , Component } from "react";
+import styled from "styled-components";
+import { useSelector } from "react-redux";
+import ReactHtmlParser from "react-html-parser";
 
-// interface Post{
-//     post : Array<any>;
-// }
+import PostDetail from "./PostDetail";
+import PostEditor from "./PostEditor";
+import Modal from "../Modal";
+import SearchBar from "./SearchBar";
+import { ButtonBlue } from "../ButtonStyled";
+import { palette } from "../../styles/palette";
 
-// interface State{
-//     state: string;
-// }
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
-// const dummyPost = {
-//     post: [
-//         {
-//             user_id : '이현태',
-//             post_id : 1,
-//             post_title : "아아아아아아아아아아",
-//             post_content : "222222222222222222222222",
-//             post_req_date : "2022-07-28 11:14",
-//             post_upd_date : "2022-07-28 11:15",
-//             post_ano_info : 0,
-//             post_com_ban_info : 0,
-//         },
-//         {
-//             user_id : '정진',
-//             post_id : 2,
-//             post_title : "오오오오오옹오옹오오오옹오",
-//             post_content : "3333333333333333333333333333",
-//             post_req_date : "2022-07-28 11:14",
-//             post_upd_date : "2022-07-28 11:15",
-//             post_ano_info : 0,
-//             post_com_ban_info : 0,
-//         },
-//         {
-//             user_id : '김연수',
-//             post_id : 3,
-//             post_title : "이이이잉이이이이이이이이이이이이이이",
-//             post_content : "44444444444444444444444444444",
-//             post_req_date : "2022-07-28 11:14",
-//             post_upd_date : "2022-07-28 11:15",
-//             post_ano_info : 0,
-//             post_com_ban_info : 0,
-//         }
-//     ]
-// }
 
-// const postTitle = useSelector(state => state.post_title)
-// const postContent = useSelector(state => state.post_content)
-// const postUpdDate = useSelector(state => state.post_upd_date)
 
-// dummyPost.post.push({
-//     post_title : postTitle,
-//     post_content: postContent,
-//     post_upd_date: postUpdDate,
-// })
-
-function PostList(){
-
-    const dummyPost = {
-        post: [
-            // {
-            //     user_id : '이현태',
-            //     post_id : 1,
-            //     post_title : "아아아아아아아아아아",
-            //     post_content : "222222222222222222222222",
-            //     post_req_date : "2022-07-28 11:14",
-            //     post_upd_date : "2022-07-28 11:15",
-            //     post_ano_info : 0,
-            //     post_com_ban_info : 0,
-            // },
-            // {
-            //     user_id : '정진',
-            //     post_id : 2,
-            //     post_title : "오오오오오옹오옹오오오옹오",
-            //     post_content : "3333333333333333333333333333",
-            //     post_req_date : "2022-07-28 11:14",
-            //     post_upd_date : "2022-07-28 11:15",
-            //     post_ano_info : 0,
-            //     post_com_ban_info : 0,
-            // },
-            // {
-            //     user_id : '김연수',
-            //     post_id : 3,
-            //     post_title : "이이이잉이이이이이이이이이이이이이이",
-            //     post_content : "44444444444444444444444444444",
-            //     post_req_date : "2022-07-28 11:14",
-            //     post_upd_date : "2022-07-28 11:15",
-            //     post_ano_info : 0,
-            //     post_com_ban_info : 0,
-            // }
-        ]
+function PostList({handleModal2}) {
+  const dummyPost = {
+    post: [
+      {
+          user_id : '이현태',
+          post_id : 1,
+          post_title : "아아아아아아아아아아",
+          post_content : "222222222222222222222222",
+          post_req_date : "2022-07-28 11:14",
+          post_upd_date : "2022-07-28 11:15",
+          post_ano_info : 0,
+          post_com_ban_info : 0,
+      },
+      {
+          user_id : '정진',
+          post_id : 2,
+          post_title : "오오오오오옹오옹오오오옹오",
+          post_content : "3333333333333333333333333333",
+          post_req_date : "2022-07-28 11:14",
+          post_upd_date : "2022-07-28 11:15",
+          post_ano_info : 0,
+          post_com_ban_info : 0,
+      },
+      {
+          user_id : '김연수',
+          post_id : 3,
+          post_title : "이이이잉이이이이이이이이이이이이이이",
+          post_content : "44444444444444444444444444444",
+          post_req_date : "2022-07-28 11:14",
+          post_upd_date : "2022-07-28 11:15",
+          post_ano_info : 0,
+          post_com_ban_info : 0,
+      },
+      {
+        user_id : '김연수',
+        post_id : 3,
+        post_title : "이이이잉이이이이이이이이이이이이이이",
+        post_content : "44444444444444444444444444444",
+        post_req_date : "2022-07-28 11:14",
+        post_upd_date : "2022-07-28 11:15",
+        post_ano_info : 0,
+        post_com_ban_info : 0,
     }
-    
-    const postTitle = useSelector(state => state.normalPost.post_title)
-    const postContent = useSelector(state => state.normalPost.post_content)
-    const postUpdDate = useSelector(state => state.normalPost.post_upd_date)
+    ],
+  };
 
-    dummyPost.post.push({
-        post_title : postTitle,
-        post_content: postContent,
-        post_upd_date: postUpdDate,
-    })
+  const postTitle = useSelector((state) => state.normalPost.post_title);
+  const postContent = useSelector((state) => state.normalPost.post_content);
+  const postUpdDate = useSelector((state) => state.normalPost.post_upd_date);
 
-    const rendering = () => {
-        const result = [];
-        const postStyle = {
-            border: "solid",
-            width: "1000px",
-            height: "120px",
-            margin: "30px 0 0 50px",
-        }
-    
-
-        for (let i = 0; i < dummyPost.post.length; i++) {
-          result.push(<div key={i} style={postStyle}>
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "space-between"}}>
-                <div>
-                    {dummyPost.post[i]['post_content']}
-                    {/* {postContent} */}
-                </div>
-                <div>
-                    {dummyPost.post[i]['post_upd_date']}
-                    {/* {postUpdDate} */}
-                </div>
-            </div>
-                <hr/>
-                <hr/>
-            <div>
-            {dummyPost.post[i]['post_title']}
-            {/* {postTitle} */}
-            </div>
-        
-            </div>
-
-        )}
-        return result;
-      };
-    
-    return <div>{rendering()}</div>;
+  dummyPost.post.push({
+    post_title: postTitle,
+    post_content: postContent,
+    post_upd_date: postUpdDate,
+  });
+  return (
+    <>
+      <Rendering dummyPost={dummyPost} handleModal2={handleModal2} />
+    </>
+  );
 }
+const Rendering = ({ dummyPost, handleModal2 }) => {
 
-function NormalPostFrame(){
-    return(
-        <div>
-        <PostContainer>
-           {PostList()}
-        </PostContainer>
+  console.log(dummyPost);
+    const result = [];
+    const postStyle = {
+      borderRadius: "30px",
+      backgroundColor: palette.gray_1,
+      width: "1150px",
+      height: "90px",
+      margin: "15px 0 0 50px",
+      boxShadow: "2px 2px 2px grey"
+  };
+  return (
+    <>
+      {Object.keys(dummyPost.post).map((e, i) => (
+        // <div key={i}>{dummyPost.post[e].user_id}</div>
+      <IndividualPost key={i}>
+        <div style={postStyle} onClick={handleModal2}>
+             <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+                padding: "10px 20px 0 "
+              }}
+            >
+              <UserIdDiv>
+                작성자: {dummyPost.post[e].user_id}
+              </UserIdDiv>
+              {dummyPost.post[e].post_upd_date}
+            </div>
+            <hr style={{width: "95%"}} />
 
-        </div>
+            <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0 20px" }}>
+              <div style={{fontSize: "20px", fontWeight: "bold"}}>
+                {dummyPost.post[e].post_title}   
+              </div>
+              <div>
+              <FavoriteBorderIcon/> 24
+              &nbsp; &nbsp; &nbsp;
+              <ChatBubbleOutlineIcon/> 20
+              </div>
+            
+            </div>
+            
+          </div>
+      </IndividualPost>
+      ))}
+    </>
+    )
+  };
+function NormalPostFrame() {
+  const [isOpenModal2, setOpenModal2] = useState(false);
+  const onClickToggleModal2 = useCallback(() => {
+    setOpenModal2(!isOpenModal2);
+    }, [isOpenModal2]);
+  const [isOpenModal1, setOpenModal1] = useState(false);
+  const onClickToggleModal1 = useCallback(() => {
+    setOpenModal1(!isOpenModal1);
+  }, [isOpenModal1]);
+  const handleModal2 = () => {
+    setOpenModal2((prev) => {
+      return !prev
+    }
     );
+  }
+  return (
+    <>
+      <PostContainer>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Title> 공지사항 or 질문 or 자유게시판 </Title>
+          <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
+            <SearchBar />
+            <WriteButton onClick={onClickToggleModal1}>
+              글쓰기
+            </WriteButton>
+          </div>
+        </div>
+        <div id="1234">
+          <PostList handleModal2={handleModal2} />
+        </div>
+      </PostContainer>
+      {isOpenModal2 && (
+        <Modal
+          onClickToggleModal={onClickToggleModal2}
+          width="1000px"
+          height="680px"
+        >
+          <PostDetail />
+        </Modal>
+      )}
+      {isOpenModal1 && (
+        <Modal
+          onClickToggleModal={onClickToggleModal1}
+          width="800px"
+          height="650px"
+        >
+          <PostEditor />
+        </Modal>
+      )}
+    </>
+  );
 }
-
-
-
+const UserIdDiv = styled.div`
+font-size: 20px;
+font-weight: bold;
+background: ${palette.main_grBlue};
+color: transparent;
+-webkit-background-clip: text;
+`;
 const PostContainer = styled.div`
-width : 85vw;
-height: 85vh;
-border: solid;
-border-radius: 7px;
+  width: 1300px;
+  height: 661px;
+  margin: 15px 0;
+ 
+  border-radius: 20px;
+  background-color: white;
 `;
 
-// const PostTop = styled.div`
-// display: flex;
-// align-items: space-between;
-// justify-content: space-between;
-// `;
+const Title = styled.p`
+  font-size: 30px;
+  font-weight: bold;
+  margin: 30px 0 0 40px;
+`;
+const IndividualPost = styled.div`
+&:hover{  
+  cursor: pointer
+ }
+`
+const WriteButton = styled(ButtonBlue)`
+width: 110px;
+height: 50px;
+padding: 0;
+border-radius: 10px;
+`
 
-// const PostMiddle = styled.div`
-// font-weight: bold;
-// `;
-export default NormalPostFrame
+export default NormalPostFrame;
