@@ -89,15 +89,17 @@ public class AuthController {
 
         // 접속토큰 get
         String kakaoToken = authService.getReturnAccessToken(code);
-
+        System.out.println("kakaoToken: " + kakaoToken);
+        
         // 접속자 정보 get
         Map<String, Object> result = authService.getUserInfo(kakaoToken);
 //        log.info("result:: " + result);
         String snsId = (String) result.get("id");
-        String userName = (String) result.get("nickname");
-        String email = (String) result.get("email");
+//        String userName = (String) result.get("nickname");
+//        String email = (String) result.get("email");
         String userpw = snsId;
-
+        
+        System.out.println("SNS ID : " + snsId);
         // 분기
         KakaoUser kakaoUser = new KakaoUser();
 //         일치하는 snsId 없을 시 회원가입
@@ -105,11 +107,11 @@ public class AuthController {
         List<User> userList = userService.findKakaoId(snsId);
         if (userList.isEmpty()) {
 //            log.warn("카카오로 회원가입");
-        	kakaoUser.setUserId(email);
+//        	kakaoUser.setUserId(email);
         	kakaoUser.setPassword(userpw);
-        	kakaoUser.setUserName(userName);
+//        	kakaoUser.setUserName(userName);
         	kakaoUser.setSnsId(snsId);
-        	kakaoUser.setEmail(email);
+//        	kakaoUser.setEmail(email);
             userService.signUpKakao(kakaoUser);
         }
 
