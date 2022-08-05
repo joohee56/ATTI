@@ -156,9 +156,11 @@ public class AuthController {
 			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "이미 가입된 아이디가 있습니다. 아이디를 찾고 싶으시면 아이디 찾기를 진행해 주세요."));
 		}
 			
-		String fromNumber = "01059368015";
+		String fromNumber = "";
 		String verifyCode = makeVerifyCode();  // 인증 키 생성
 		
+		if(fromNumber.equals(""))
+			return ResponseEntity.status(500).body(BaseResponseBody.of(500, "발신번호가 막혔습니다."));
 		// service 로 넘김
 		userService.sendSMS(phoneNumber, fromNumber, verifyCode);
 		
