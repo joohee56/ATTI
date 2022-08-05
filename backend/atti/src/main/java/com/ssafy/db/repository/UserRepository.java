@@ -43,7 +43,7 @@ public class UserRepository {
 	}
 	
 	public List<User> findByName(String name){
-		return em.createQuery("select u from User u where u.user_name = :name", User.class).setParameter("name", name).getResultList();
+		return em.createQuery("select u from User u where u.userName = :name", User.class).setParameter("name", name).getResultList();
 	}
 	
 	// 아이디 찾기
@@ -51,7 +51,7 @@ public class UserRepository {
 		String name = findIdInfo.getName();
 		String email = findIdInfo.getEmail();
 		
-		return em.createQuery("select u from User u where u.name = :name and u.email = :email", User.class).setParameter("name", name).setParameter("email", email).getResultList();
+		return em.createQuery("select u from User u where u.userName = :name and u.email = :email", User.class).setParameter("name", name).setParameter("email", email).getResultList();
 	}
 	
 	// 카카오 아이디 찾기

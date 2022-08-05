@@ -38,6 +38,7 @@ public class UserService {
 	@Autowired
 	AuthPhoneUtil authPhoneUtil;
 	
+	// 일반 회원가입
 	public void signUp(User user) {
 		// 보안을 위해서 유저 패스워드 암호화하여 디비에 저장
 		user.setPassword(passwordEncorder.encode(user.getPassword()));

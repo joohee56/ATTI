@@ -10,10 +10,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+@Service
 public class AuthService {
 	// 카카오에게 인가코드로 토큰 받고 자체 서버 토큰 발행
 	public String getReturnAccessToken(String code) {

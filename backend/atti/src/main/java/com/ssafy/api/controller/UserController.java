@@ -10,6 +10,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -96,4 +97,15 @@ public class UserController {
 		
 		return ResponseEntity.ok(FindIdRes.of(200, "Success", user.getUserId()));
 	}
+	
+	// 비밀번호 찾기
+//	@PostMapping("/findPassword")
+//	public ResponseEntity<?> findPassword(@RequestBody Map<String, String> findPasswordInfo) {
+//		// 가입한 아이디인지 검사
+//		User findUser = userService.getUserByUserId(findPasswordInfo.get("userId"));
+//		if(findUser == null)
+//			return ResponseEntity.status(404).body(FindIdRes.of(404, "일치하는 회원이 없습니다.", null));
+//		
+////		return "userId: " + findPasswordInfo.get("userId") + ", userName: " + findPasswordInfo.get("userName") + ", phoneNumber : " + findPasswordInfo.get("phoneNumber");
+//	}
 }
