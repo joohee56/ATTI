@@ -33,10 +33,10 @@ function CategoryList(dummyCategory: CategoryType){
             flexDirection: "row",
             justifyContent: "flex-start",
             backgroundColor: "white",
-            borderRadius: "0 15px 15px 0",
-            width: "180px",
+            
+            width: "155px",
             height: "60px",
-            margin: "15px 0 0 40px",
+            margin: "15px 0px 0px 0px",
             boxShadow: "3px 3px 3px grey"
             
         }
@@ -46,9 +46,9 @@ function CategoryList(dummyCategory: CategoryType){
             justifyContent: "flex-start",
             backgroundColor: "white",
             borderRadius: "10px 15px 15px 10px",
-            width: "200px",
-            height: "110px",
-            margin: "15px 0 0 40px",
+            width: "180px",
+            height: "100px",
+            margin: "15px 0px 0px 0px",
             boxShadow: "3px 3px 3px grey",
             color: palette.blue_3
         }
@@ -69,7 +69,7 @@ function CategoryList(dummyCategory: CategoryType){
                                 <div style={changeCss === 1 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <CampaignIcon/>
-                                    &nbsp; &nbsp;
+                                    &nbsp; 
                                     {dummyCategory.category_id[i]}
     
                                 </div>
@@ -82,7 +82,7 @@ function CategoryList(dummyCategory: CategoryType){
                                 <div style={changeCss === 2 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <ContactSupportOutlinedIcon/>
-                                    &nbsp; &nbsp;
+                                    &nbsp; 
                                     {dummyCategory.category_id[i]}
                                 </div>
                             </div>
@@ -94,7 +94,7 @@ function CategoryList(dummyCategory: CategoryType){
                                 <div style={changeCss === 3 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <FolderOutlinedIcon/>
-                                    &nbsp; &nbsp;
+                                    &nbsp; 
                                     {dummyCategory.category_id[i]}
                                 </div>
                             </div>
@@ -106,7 +106,7 @@ function CategoryList(dummyCategory: CategoryType){
                                 <div style={changeCss === 4 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <ArticleOutlinedIcon/>
-                                    &nbsp; &nbsp;
+                                    &nbsp;
                                     {dummyCategory.category_id[i]}
                                 </div>
                             </div>
@@ -118,7 +118,7 @@ function CategoryList(dummyCategory: CategoryType){
                                 <div style={changeCss === 5 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <VideocamOutlinedIcon/>
-                                     &nbsp; &nbsp;
+                                     &nbsp;
                                     {dummyCategory.category_id[i]}
                                 </div>
                             </div>
@@ -130,7 +130,7 @@ function CategoryList(dummyCategory: CategoryType){
                                 <div style={changeCss === 6 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <DateRangeOutlinedIcon/>
-                                    &nbsp; &nbsp;
+                                    &nbsp;
                                     {dummyCategory.category_id[i]}
                                 </div>
                             </div>
@@ -148,7 +148,7 @@ function CategoryList(dummyCategory: CategoryType){
 
 function Category(){
     return(
-        <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end",}}>
+        <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
             {CategoryList(dummyCategory)}
         </div>
     );
@@ -159,7 +159,7 @@ const StyledLink = styled(NavLink)`
     text-decoration: none;
     color: black;
     font-weight: bold;
-    font-size: large;
+    font-size: medium;
     &:focus, &:visited {
         text-decoration: none;
     }

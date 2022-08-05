@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState, useCallback } from "react";
+import React, { PropsWithChildren, useState, useCallback , Component } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import ReactHtmlParser from "react-html-parser";
@@ -13,16 +13,9 @@ import { palette } from "../../styles/palette";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
-// interface Post{
-//     post : Array<any>;
-// }
-
-// interface State{
-//     state: string;
-// }
 
 
-function PostList() {
+function PostList({handleModal2}) {
   const dummyPost = {
     post: [
       {
@@ -77,24 +70,31 @@ function PostList() {
     post_content: postContent,
     post_upd_date: postUpdDate,
   });
+  return (
+    <>
+      <Rendering dummyPost={dummyPost} handleModal2={handleModal2} />
+    </>
+  );
+}
+const Rendering = ({ dummyPost, handleModal2 }) => {
 
-  const rendering = () => {
+  console.log(dummyPost);
     const result = [];
     const postStyle = {
-      
       borderRadius: "30px",
       backgroundColor: palette.gray_1,
-      width: "1500px",
+      width: "1150px",
       height: "90px",
-      margin: "30px 0 0 50px",
-      boxShadow: "3px 3px 3px grey"
-    };
-
-    for (let i = 0; i < dummyPost.post.length; i++) {
-      result.push(
-        <IndividualPost>
-          <div key={i} style={postStyle}>
-            <div
+      margin: "15px 0 0 50px",
+      boxShadow: "2px 2px 2px grey"
+  };
+  return (
+    <>
+      {Object.keys(dummyPost.post).map((e, i) => (
+        // <div key={i}>{dummyPost.post[e].user_id}</div>
+      <IndividualPost key={i}>
+        <div style={postStyle} onClick={handleModal2}>
+             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -102,16 +102,16 @@ function PostList() {
                 padding: "10px 20px 0 "
               }}
             >
-              <div style={{fontSize: "20px", fontWeight: "bold"}}>
-                작성자: 이현태
-              </div>
-              {dummyPost.post[i]["post_upd_date"]}
+              <UserIdDiv>
+                작성자: {dummyPost.post[e].user_id}
+              </UserIdDiv>
+              {dummyPost.post[e].post_upd_date}
             </div>
-            <hr />
+            <hr style={{width: "95%"}} />
 
             <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0 20px" }}>
               <div style={{fontSize: "20px", fontWeight: "bold"}}>
-                {dummyPost.post[i]["post_title"]}   
+                {dummyPost.post[e].post_title}   
               </div>
               <div>
               <FavoriteBorderIcon/> 24
@@ -120,34 +120,28 @@ function PostList() {
               </div>
             
             </div>
+            
           </div>
-        </IndividualPost>
-
-        
-      );
-    }
-    return result;
-  };
-  return (
-    <>
-      <div>
-        {rendering()}
-      </div>
+      </IndividualPost>
+      ))}
     </>
-  );
-}
-
+    )
+  };
 function NormalPostFrame() {
+  const [isOpenModal2, setOpenModal2] = useState(false);
+  const onClickToggleModal2 = useCallback(() => {
+    setOpenModal2(!isOpenModal2);
+    }, [isOpenModal2]);
   const [isOpenModal1, setOpenModal1] = useState(false);
   const onClickToggleModal1 = useCallback(() => {
     setOpenModal1(!isOpenModal1);
   }, [isOpenModal1]);
-
-  const [isOpenModal2, setOpenModal2] = useState(false);
-  const onClickToggleModal2 = useCallback(() => {
-    setOpenModal2(!isOpenModal2);
-  }, [isOpenModal2]);
-
+  const handleModal2 = () => {
+    setOpenModal2((prev) => {
+      return !prev
+    }
+    );
+  }
   return (
     <>
       <PostContainer>
@@ -160,15 +154,15 @@ function NormalPostFrame() {
             </WriteButton>
           </div>
         </div>
-        <div onClick={onClickToggleModal2}>
-          {PostList()}
+        <div id="1234">
+          <PostList handleModal2={handleModal2} />
         </div>
       </PostContainer>
       {isOpenModal2 && (
         <Modal
           onClickToggleModal={onClickToggleModal2}
-          width="1100px"
-          height="800px"
+          width="1000px"
+          height="680px"
         >
           <PostDetail />
         </Modal>
@@ -176,8 +170,8 @@ function NormalPostFrame() {
       {isOpenModal1 && (
         <Modal
           onClickToggleModal={onClickToggleModal1}
-          width="1000px"
-          height="850px"
+          width="800px"
+          height="650px"
         >
           <PostEditor />
         </Modal>
@@ -185,11 +179,18 @@ function NormalPostFrame() {
     </>
   );
 }
-
+const UserIdDiv = styled.div`
+font-size: 20px;
+font-weight: bold;
+background: ${palette.main_grBlue};
+color: transparent;
+-webkit-background-clip: text;
+`;
 const PostContainer = styled.div`
-  width: 86vw;
-  height: 85vh;
-  border: 0.5px solid gray;
+  width: 1300px;
+  height: 661px;
+  margin: 15px 0;
+ 
   border-radius: 20px;
   background-color: white;
 `;

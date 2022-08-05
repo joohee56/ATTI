@@ -79,7 +79,7 @@ export function PostEditor() {
     const postHandler = (event) => {
         event.preventDefault();
         console.log(post)
-        dispatch(normalPostActions.saveNormalPost({post_title: post.post_title, post_content: post.post_content, post_upd_date: post.post_upd_date}))
+        dispatch(normalPostActions.saveNormalPost({post_title: post.postTitle, post_content: post.postContent}))
     }
 
     return (
@@ -90,13 +90,13 @@ export function PostEditor() {
                         <TopTitle>category이름+ 글쓰기</TopTitle>
                         <Top2>
                             <SwitchDiv>
-                                <span style={{textAlign: "center" , marginBottom: "10px"}}>
+                                <span style={{textAlign: "center" ,fontSize: "12px", marginBottom: "5px"}}>
                                     익명으로 글쓰기 
                                 </span>
                                 {UseSwitchesBasic()}
                             </SwitchDiv>
                             <SwitchDiv>
-                                <span style={{textAlign: "center",  marginBottom: "10px"}}>
+                                <span style={{textAlign: "center", fontSize: "12px",  marginBottom: "5px"}}>
                                     댓글 금지하기 
                                 </span>
                                 {UseSwitchesBasic()}
@@ -113,7 +113,7 @@ export function PostEditor() {
                             editor.editing.view.change((writer) => {
                                 writer.setStyle(
                                     "height", 
-                                    "450px", 
+                                    "350px", 
                                     editor.editing.view.document.getRoot()
                                 );
                             });
@@ -145,18 +145,22 @@ export function PostEditor() {
     );
 }
 
-const TopTitle = styled.h1`
+const TopTitle = styled.h2`
 background: ${palette.main_grBlue};
 color: transparent;
 -webkit-background-clip: text;
 text-align: center;
+margin: 6px 0;
 `;
 const PostTitle = styled.input`
 width: 700px;
-height: 50px;
+height: 30px;
 border: none;
 border-bottom: 2px solid;
+outline: none;
 margin: 0 0 10px 0;
+font-size: 20px;
+
 `;
 
 const Main = styled.main`
@@ -179,7 +183,7 @@ align-items: flex-end;
 const SubmitButton = styled(ButtonBlue)`
 width: 100px;
 height: 50px;
-margin: 20px 0 0 0;
+margin: 10px 0 0 0;
 `;
 
 const SwitchDiv = styled.div`
