@@ -39,4 +39,22 @@ public class PostServiceImpl implements PostService {
 	public List<Post> viewByName(String name) {
 		return postRepository.findByName(name);
 	}
+
+	@Override // 단일 게시글 삭제
+	@Transactional
+	public void deleteFindOne(Long postId) {
+		postRepository.deleteOne(postId);
+	}
+
+	@Override // 전체 게시글 일괄 삭제
+	@Transactional
+	public void deleteAll() {
+		postRepository.deleteAll();
+	}
+
+	@Override // 단일 게시글 수정
+	@Transactional
+	public void editPost(Post editPost) {
+		postRepository.updateOne(editPost);
+	}
 }
