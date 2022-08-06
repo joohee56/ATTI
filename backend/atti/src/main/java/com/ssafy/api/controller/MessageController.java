@@ -18,7 +18,7 @@ import com.ssafy.db.entity.message.UserMessage;
 import com.ssafy.db.repository.MessageRepository;
 
 @RestController
-@RequestMapping("/message/individual")
+@RequestMapping("/api/message/individual")
 public class MessageController {
 	
 	@Autowired

@@ -19,7 +19,7 @@ import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.repository.CommentRepository;
 
 @RestController
-@RequestMapping("/post/comment")
+@RequestMapping("/api/post/comment")
 public class CommentController {
 	
 	@Autowired

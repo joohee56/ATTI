@@ -19,4 +19,12 @@ public class DepartRepository {
 	public void createChannel(Depart depart) {
 		em.persist(depart);
 	}
+	
+	// 채널 입장
+	public Depart joinChannel(Long departCode) {
+		Depart channel = em.createQuery("select d from Depart d where d.departCode = :departCode", Depart.class)
+				.setParameter("departCode", departCode)
+				.getSingleResult();
+		return channel;
+	}
 }
