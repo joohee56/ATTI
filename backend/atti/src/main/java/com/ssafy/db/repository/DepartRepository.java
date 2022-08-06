@@ -15,8 +15,8 @@ public class DepartRepository {
 	@PersistenceContext
 	private EntityManager em;
 	
-	public Depart joinChannel() {
-		
-		return null;
+	// 채널 생성
+	public void createChannel(Depart depart) {
+		em.persist(depart);
 	}
 }

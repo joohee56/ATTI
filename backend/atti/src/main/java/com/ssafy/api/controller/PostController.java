@@ -37,9 +37,9 @@ public class PostController {
 	
 	@PostMapping("/write") // 게시글 쓰기
 	public ResponseEntity<String> createWriting(@RequestBody Post post) {
-		System.out.println(post);
+//		System.out.println(post);
 		postService.createWriting(post);
-		System.out.println(post);
+//		System.out.println(post);
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	
