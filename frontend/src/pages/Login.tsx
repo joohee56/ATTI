@@ -1,4 +1,4 @@
-import { useState, useCallback, MouseEventHandler } from "react";
+import { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -6,13 +6,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlue } from "../components/ButtonStyled";
 import { ButtonPurple } from "../components/ButtonStyled";
-import InputWithLabel from "../components/InputWithLabel";
-import InputWithIcon from "../components/account/IputWithIcon";
+import InputWithLable from "../components/InputWithLabel"
 import Modal from "../components/Modal";
 import axios, { AxiosError } from "axios";
 import { BACKEND_URL } from "../constant/index";
-import { palette } from "../styles/palette";
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { KAKAO_AUTH_URL } from "../constant/index";
 
 interface userLoginInfo {
@@ -20,14 +17,16 @@ interface userLoginInfo {
   password: string;
 }
 
-interface findIdInfo{
-  name: string,
-  email: string,
-  date: {
-    yy: Date,
-    mm: 1,
-    dd: 1,
-  } 
+interface findIdInfo {
+  findId_name: string;
+  findId_email: string;
+}
+
+interface findPwInfo {
+  findPw_Id: string;
+  findPw_name: string;
+  findPw_phone: string;
+  findPw_number: string;
 }
 
 function LoginPage() {
@@ -36,7 +35,19 @@ function LoginPage() {
     password: "",
   });
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [findIdInfo, setfindIdInfo] = useState<findIdInfo>({
+    findId_name: "",
+    findId_email: "",
+  });
+
+  // const [findPwInfo, setFindPwInfo] = useState<findPwInfo>({
+  //   findPw_Id: "",
+  //   findPw_name: "",
+  //   findPw_phone: "",
+  //   findPw_number: "",
+  // });
+
+  const onChangeLogin = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setLoginInfo({
       ...loginInfo,
@@ -44,9 +55,17 @@ function LoginPage() {
     });
   };
 
+  const onChangeFindID = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setfindIdInfo({
+      ...findIdInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  // 일반 로그인
   const loginClick = useCallback(
     async (e: any) => {
-      //e.preventDefault();
       try {
         await axios
           .post(
@@ -75,37 +94,46 @@ function LoginPage() {
     [loginInfo.userId, loginInfo.password]
   );
 
-  const kakaoLogin=()=>{
+  // 카카오 로그인
+  const kakaoLogin = () => {
     window.location.replace(KAKAO_AUTH_URL);
 
-    let AuthorizationCode = new URL(window.location.href).searchParams.get('code');
+    let AuthorizationCode = new URL(window.location.href).searchParams.get(
+      "code"
+    );
     console.log(AuthorizationCode);
-  }
+  };
 
+  // 아이디 찾기
+  const clickFindId = async (e: any) => {
+    try {
+      await axios
+        .post(
+          BACKEND_URL + "/api/user/findId",
+          {
+            name: findIdInfo.findId_name,
+            email: findIdInfo.findId_email,
+          },
+          {
+            headers: {
+              "Content-type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          setFindID("는 \""+res.data.userId+"\" 입니다.");
+        });
+    } catch (err) {
+      const { response } = err as unknown as AxiosError;
+      setFindID("가 존재하지 않습니다");
+    }
+ 
+  };
 
-  const findSubmit = async ( e: any) => {
-    // await axios.get(BACKEND_URL+"/api/user/findId", {
-    //   params: {
-    //     name: ,
-    //     emai: ,
-    //     birth: 
-    //   }
-    // })
-    // .then(function (response) {
-    //  let data:boolean = response.data;
-    //  if(data) setIsId(true);
-    //  else {
-    //   setIdMessage("중복된 ID입니다");
-    //   setIsId(false);
-    //  }
-    // }).catch(function (error) {
-    //   console.log(error);
-    // })
-  }
-  
-   
   // 아이디 찾기, 비밀번호 찾기
   const [findValue, setFindValue] = useState<string>("");
+  const [clickFindID, setFindID] = useState<string>("");
+  //const [clickFindID] = useState<boolean>(false);
 
   // 모달 보이기 여부
   const [findInfoModal, setOpenModal] = useState<boolean>(false);
@@ -146,17 +174,16 @@ function LoginPage() {
 
           <div>
             <div>
-              <InputWithLabel
+              <InputWithLable
                 name="userId"
                 placeholder="ID"
-                onChange={onChange}
+                onChange={onChangeLogin}
               />
-              <InputWithLabel
-                label="Password"
+              <InputWithLable
                 name="password"
                 placeholder="Password"
                 type="password"
-                onChange={onChange}
+                onChange={onChangeLogin}
               />
             </div>
 
@@ -200,11 +227,13 @@ function LoginPage() {
             />
           </div>
         </StyledContent>
+
+        {/* 모달 생성 */}
         {findInfoModal && (
           <Modal
             onClickToggleModal={onClickToggleModal}
             width="600px"
-            height="auto"
+            height="400px"
           >
             <ModalDiv>
               <StyledPage>
@@ -212,6 +241,7 @@ function LoginPage() {
                   <TextSpan
                     onClick={(e) => {
                       setFindValue("findID");
+                      setFindID("");
                     }}
                   >
                     아이디 찾기
@@ -228,39 +258,34 @@ function LoginPage() {
                 </TextDiv>
               </StyledPage>
               <div>
+                {/*아이디 찾기 모달*/}
                 {findValue == "findID" && (
-                  <form onSubmit={findSubmit}>
-                    <InputWithLabel
-                      label="Name"
-                      name="name"
+                  <>
+                    <InputWithLable
+                      name="findId_name"
                       placeholder="Name"
-                      onChange={onChange}
+                      onChange={onChangeFindID}
                     />
-                    <InputWithLabel
-                      label="email"
-                      name="email"
+                    <InputWithLable
+                      name="findId_email"
                       placeholder="email"
                       type="email"
-                      onChange={onChange}
+                      onChange={onChangeFindID}
                     />
-                    <InputWithLabel
-                      label="date"
-                      name="date"
-                      type="date"
-                      onChange={onChange}
-                    />
-                    <p>(dustnzlzl@naver.com) 에 해당하는 아이디는 없습니다.</p>
-                    <ButtonPurple type="submit">찾기</ButtonPurple>
-                    </form>
+                    {clickFindID && (
+                      <p>
+                        아이디{clickFindID}
+                      </p>
+                    )}
+                    <ButtonPurple onClick={clickFindId}>찾기</ButtonPurple>
+                  </>
                 )}
+                {/*비밀번호 찾기 모달*/}
                 {findValue == "findPW" && (
                   <>
-                    <InputWithLabel
-                      label="Id"
+                    <InputWithLable
                       name="id"
                       placeholder="ID"
-                      // value={signupInfo.id}
-                      onChange={onChange}
                     />
                     <ButtonPurple>보내기</ButtonPurple>
                     <p>
