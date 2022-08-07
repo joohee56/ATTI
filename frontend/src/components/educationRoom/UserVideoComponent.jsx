@@ -10,7 +10,7 @@ const UserVideo = styled.div`
   margin-right: 3px;
   margin-bottom: 3px;
   /* width: ${(props) => (props.main ? "960px" : "360px")}; */
-  width: ${(props) => (props.main ? `${props.screenMode}px` : "360px")};
+  width: ${(props) => (props.main ? `${props.screenMode}px` : "240px")};
   /* height: ${(props) => (props.main ? "720px" : "240px")}; */
   border-radius: ${(props) => (props.main ? null : "25px")};
 
@@ -19,6 +19,7 @@ const UserVideo = styled.div`
     0 14px 19px 0 rgba(0, 0, 0, 0.07);
   overflow: hidden;
   position: relative;
+  z-index: 1;
 `;
 const VideoAndNickNameParentDiv = styled.div`
   position: relative;
@@ -49,7 +50,7 @@ export default function UserVideoComponent(props) {
       console.log(props.fullScreenLayoutMode);
       setScreenMode(1280);
     } else {
-      setScreenMode(960);
+      setScreenMode(800);
     }
   }, [props.fullScreenLayoutMode, props.main]);
   return (

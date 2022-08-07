@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const Video = styled.video`
-
-  width: ${(props) => (props.main ? `100%` : "360px")};
+  width: 100%;
+  /* width: ${(props) => (props.main ? `100%` : "360px")}; */
   position: relative;
+  z-index: 1;
 `;
 
 export default function OpenViduVideoComponent(props) {

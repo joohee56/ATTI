@@ -14,6 +14,7 @@ import FaceIcon from "@mui/icons-material/Face";
 import BorderAllIcon from "@mui/icons-material/BorderAll";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import Modal from "../Modal";
 import {
   LayoutButton,
   PeopleBox,
@@ -40,6 +41,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
 import FaceRetouchingOffIcon from "@mui/icons-material/FaceRetouchingOff";
+import StudentAnonymouse from "./StudentAnonymous";
+import zIndex from "@mui/material/styles/zIndex";
 
 const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -47,11 +50,15 @@ const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 // const OPENVIDU_SERVER_SECRET = "atti";
 // 도메인: https://i7b107.p.ssafy.io
 
+const STUDENT = "student";
+const PROFESSOR = "professor";
+
 const OpenViduTest = () => {
   const navigate = useNavigate();
   const [state, setState] = useState({
     mySessionId: "SessionA",
     myUserName: "Participant" + Math.floor(Math.random() * 100),
+    myRole: STUDENT,
     session: undefined,
     mainStreamManager: undefined,
     publisher: undefined,
@@ -70,7 +77,8 @@ const OpenViduTest = () => {
   const [fullScreenLayoutMode, setFullScreenLayoutMode] = useState(false);
   const [layout, setLayout] = useState(false);
   const messageRef = useRef();
-
+  const [onClickToggleModal, setOnClickToggleModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   function setChattingInfo({ data, connectionId }) {
     setSendToUser(data);
     setSendToClientId(connectionId);
@@ -221,13 +229,24 @@ const OpenViduTest = () => {
           return !anonymousMode;
         });
       });
+      state.session.on("signal:requestAnonymous", (event) => {
+        if (state.myRole === PROFESSOR) {
+          setOpenModal(true);
+        }
+      });
       // state.session.on("signal:disconnectUser", (event) => {
       //   let disconnect = disconnectUser;
       //   disconnect.push(event.from.connectionId);
       //   setDisconnectUser(disconnect);
       // });
     }
-  }, [anonymousMode, state.publisher, state.session, state.subscribers]);
+  }, [
+    anonymousMode,
+    state.myRole,
+    state.publisher,
+    state.session,
+    state.subscribers,
+  ]);
   useEffect(() => {
     if (state.session !== undefined) {
       state.session
@@ -569,6 +588,43 @@ const OpenViduTest = () => {
     setSendToUser("");
   }
   function requestAnonymous() {
+    if (state.myRole === STUDENT) {
+      setOnClickToggleModal(true);
+    } else {
+      turnOnAnonymous();
+    }
+  }
+  function sendToAnonymouseMode() {
+    state.session
+      .signal({
+        data: state.myUserName,
+        to: [],
+        type: "requestAnonymous",
+      })
+      .then(() => {
+        console.log("메시지 전송 성공");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  function anonymousOK() {
+    if (onClickToggleModal) {
+      sendToAnonymouseMode();
+      setOnClickToggleModal(false);
+    } else {
+      turnOnAnonymous();
+      setOpenModal(false);
+    }
+  }
+  function turnOnModal() {
+    if (state.myRole === PROFESSOR) {
+      setOpenModal(false);
+    } else {
+      setOnClickToggleModal(false);
+    }
+  }
+  function turnOnAnonymous() {
     state.session
       .signal({
         data: "익명모드활성화",
@@ -595,6 +651,14 @@ const OpenViduTest = () => {
       return false;
     });
   }
+
+  const handlerChange = (e) => {
+    console.log(e.target.value);
+    setState((prev) => ({
+      ...prev,
+      myRole: e.target.value,
+    }));
+  };
   return (
     <MeetingRoom id="test">
       {state.session === undefined ? (
@@ -612,11 +676,50 @@ const OpenViduTest = () => {
             value={state.mySessionId}
             onChange={handleChangeSessionId}
           />
+          <select onChange={handlerChange}>
+            <option key={PROFESSOR} value={PROFESSOR} defaultChecked>
+              교수
+            </option>
+            <option key={STUDENT} value={STUDENT}>
+              학생
+            </option>
+          </select>
           <button onClick={joinSession}>입장하기</button>
         </div>
       ) : null}
       {state.session !== undefined ? (
         <>
+          <div style={{ zIndex: 10000 }}>
+            {onClickToggleModal && (
+              <Modal
+                onClickToggleModal={() => {
+                  setOnClickToggleModal(false);
+                }}
+              >
+                <StudentAnonymouse
+                  detail="호스트에게 익명 발표를 요청하시겠습니까?"
+                  detail2="(익명 발표는 카메라와 오디오가 전부 꺼지게 되며 채팅을 치면 TTS가
+        읽어주는 기능입니다.)"
+                  anonymousOK={anonymousOK}
+                  setOnClickToggleModal={turnOnModal}
+                />
+              </Modal>
+            )}
+            {openModal && (
+              <Modal
+                onClickToggleModal={() => {
+                  setOpenModal(false);
+                }}
+              >
+                <StudentAnonymouse
+                  detail={`${state.myUserName}님이 익명 모드로 발표를 요청했습니다. 수락하시겠습니까?`}
+                  detail2=""
+                  anonymousOK={anonymousOK}
+                  setOnClickToggleModal={turnOnModal}
+                />
+              </Modal>
+            )}
+          </div>
           <div>
             <OpenviduBox id="OpenViduBox">
               {state.mainStreamManager !== undefined ? (
@@ -682,7 +785,7 @@ const OpenViduTest = () => {
                   </SubStream>
                 )}
 
-                <div>
+                <div style={{ zIndex: 1, position: "relative" }}>
                   {state.mainStreamManager !== undefined ? (
                     <div
                       onClick={() => {
@@ -691,6 +794,7 @@ const OpenViduTest = () => {
                           mainStreamManager: undefined,
                         }));
                       }}
+                      style={{ zIndex: 1, position: "relative" }}
                     >
                       <UserVideoComponent
                         streamManager={state.mainStreamManager}
@@ -740,6 +844,7 @@ const OpenViduTest = () => {
                       )}
                     </MeetingButton>
 
+                    <span>당신은 {state.myRole} 입니다!</span>
                     <MeetingButton
                       onClick={() => {
                         state.publisher.publishVideo(!turnOnCamera);
