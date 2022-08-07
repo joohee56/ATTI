@@ -1,16 +1,18 @@
 import { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 import HomeIcon from "@mui/icons-material/Home";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlue } from "../components/ButtonStyled";
 import { ButtonPurple } from "../components/ButtonStyled";
-import InputWithLable from "../components/InputWithLabel"
+import InputWithLabel from '../components/InputWithLabel';
 import Modal from "../components/Modal";
 import axios, { AxiosError } from "axios";
 import { BACKEND_URL } from "../constant/index";
 import { KAKAO_AUTH_URL } from "../constant/index";
+import InputWithPhone from '../components/account/InputWithPhone';
 
 interface userLoginInfo {
   userId: string;
@@ -39,6 +41,8 @@ function LoginPage() {
     findId_name: "",
     findId_email: "",
   });
+
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
 
   // const [findPwInfo, setFindPwInfo] = useState<findPwInfo>({
   //   findPw_Id: "",
@@ -98,9 +102,7 @@ function LoginPage() {
   const kakaoLogin = () => {
     window.location.replace(KAKAO_AUTH_URL);
 
-    let AuthorizationCode = new URL(window.location.href).searchParams.get(
-      "code"
-    );
+    let AuthorizationCode = new URL(window.location.href).searchParams.get("code");
     console.log(AuthorizationCode);
   };
 
@@ -121,13 +123,12 @@ function LoginPage() {
           }
         )
         .then((res) => {
-          setFindID("는 \""+res.data.userId+"\" 입니다.");
+          setFindID('는 "' + res.data.userId + '" 입니다.');
         });
     } catch (err) {
       const { response } = err as unknown as AxiosError;
       setFindID("가 존재하지 않습니다");
     }
- 
   };
 
   // 아이디 찾기, 비밀번호 찾기
@@ -148,7 +149,15 @@ function LoginPage() {
 
   return (
     <>
-      <HomeIcon />
+       <NavLink to="/">
+          <HomeIcon /> Home
+        </NavLink>
+        {" | "}
+        <NavLink to="/signup">
+          <PersonOutlineOutlinedIcon /> Signup
+        </NavLink>
+
+      <HeaderDiv>회원가입</HeaderDiv>
       <HeaderDiv>로그인</HeaderDiv>
       <StyledPage>
         <StyledContent>
@@ -160,12 +169,7 @@ function LoginPage() {
         </StyledContent>
         <StyledContent>
           <div>최근에 로그인한 서비스</div>
-          <img
-            src={
-              "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
-            }
-            alt="네이버로 로그인"
-          />
+          <img src={"https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"} alt="네이버로 로그인" />
           <hr />
           <div>
             자동로그인
@@ -174,17 +178,8 @@ function LoginPage() {
 
           <div>
             <div>
-              <InputWithLable
-                name="userId"
-                placeholder="ID"
-                onChange={onChangeLogin}
-              />
-              <InputWithLable
-                name="password"
-                placeholder="Password"
-                type="password"
-                onChange={onChangeLogin}
-              />
+              <InputWithLabel name="userId" placeholder="ID" onChange={onChangeLogin} />
+              <InputWithLabel name="password" placeholder="Password" type="password" onChange={onChangeLogin} />
             </div>
 
             <p>
@@ -211,30 +206,14 @@ function LoginPage() {
 
           <p>다른 서비스를 이용한 로그인</p>
           <div>
-            <img
-              src={
-                "https://pbs.twimg.com/profile_images/738200195578494976/CuZ9yUAT_400x400.jpg"
-              }
-              alt="카카오로 로그인"
-              width={"50px"}
-              onClick={kakaoLogin}
-            />
-            <img
-              src={
-                "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
-              }
-              alt="네이버로 로그인"
-            />
+            <img src={"https://pbs.twimg.com/profile_images/738200195578494976/CuZ9yUAT_400x400.jpg"} alt="카카오로 로그인" width={"50px"} onClick={kakaoLogin} />
+            <img src={"https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"} alt="네이버로 로그인" />
           </div>
         </StyledContent>
 
         {/* 모달 생성 */}
         {findInfoModal && (
-          <Modal
-            onClickToggleModal={onClickToggleModal}
-            width="600px"
-            height="400px"
-          >
+          <Modal onClickToggleModal={onClickToggleModal} width="600px" height="400px">
             <ModalDiv>
               <StyledPage>
                 <LeftTextDiv>
@@ -261,32 +240,18 @@ function LoginPage() {
                 {/*아이디 찾기 모달*/}
                 {findValue == "findID" && (
                   <>
-                    <InputWithLable
-                      name="findId_name"
-                      placeholder="Name"
-                      onChange={onChangeFindID}
-                    />
-                    <InputWithLable
-                      name="findId_email"
-                      placeholder="email"
-                      type="email"
-                      onChange={onChangeFindID}
-                    />
-                    {clickFindID && (
-                      <p>
-                        아이디{clickFindID}
-                      </p>
-                    )}
+                    <InputWithLabel name="findId_name" placeholder="Name" onChange={onChangeFindID} />
+                    <InputWithLabel name="findId_email" placeholder="email" type="email" onChange={onChangeFindID} />
+                    {clickFindID && <p>아이디{clickFindID}</p>}
                     <ButtonPurple onClick={clickFindId}>찾기</ButtonPurple>
                   </>
                 )}
                 {/*비밀번호 찾기 모달*/}
                 {findValue == "findPW" && (
                   <>
-                    <InputWithLable
-                      name="id"
-                      placeholder="ID"
-                    />
+                    <InputWithLabel name="id" placeholder="ID" />
+                    <InputWithLabel name="name" placeholder="Name" />
+                    <InputWithPhone name="phoneNumber" placeholder="폰 번호" phonNumber={phoneNumber} />
                     <ButtonPurple>보내기</ButtonPurple>
                     <p>
                       가입하신 이메일(xxx@naver.com)으로

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 import HomeIcon from "@mui/icons-material/Home";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlue } from "../components/ButtonStyled";
 import InputWithLabel from "../components/InputWithLabel";
@@ -194,7 +194,7 @@ function SignupPage() {
         </NavLink>
         {" | "}
         <NavLink to="/login">
-          <PersonOutlineOutlinedIcon /> Login
+          <PersonAddAlt1Icon /> Login
         </NavLink>
       </div>
       <HeaderDiv>회원가입</HeaderDiv>
@@ -213,53 +213,14 @@ function SignupPage() {
         </StyledContent>
         <StyledContent>
           <>
-            <InputWithLabel
-              name="name"
-              placeholder="이름"
-              value={name}
-              onChange={onChangeName}
-            />
-            {name.length > 0 && !isName && (
-              <span className={`message ${isName ? "success" : "error"}`}>
-                {nameMessage}
-              </span>
-            )}
-            <InputWithLabel
-              name="id"
-              placeholder="아이디"
-              value={id}
-              onChange={onChangeId}
-            />
-            {id.length > 0 && !isId && (
-              <span className={`message ${isId ? "success" : "error"}`}>
-                {idMessage}
-              </span>
-            )}
-            <InputPassword
-              name="password"
-              placeholder="비밀번호"
-              value={password}
-              onChange={onChangePassword}
-            />
-            {password.length > 0 && !isPassword && (
-              <span className={`message ${isPassword ? "success" : "error"}`}>
-                {passwordMessage}
-              </span>
-            )}
-            <InputWithLabel
-              name="password2"
-              placeholder="비밀번호 확인"
-              type="password"
-              value={passwordConfirm}
-              onChange={onChangePasswordConfirm}
-            />
-            {passwordConfirm.length > 0 && !isPasswordConfirm && (
-              <span
-                className={`message ${isPasswordConfirm ? "success" : "error"}`}
-              >
-                {passwordConfirmMessage}
-              </span>
-            )}
+            <InputWithLabel name="name" placeholder="이름" value={name} onChange={onChangeName} />
+            {name.length > 0 && !isName && <span className={`message ${isName ? "success" : "error"}`}>{nameMessage}</span>}
+            <InputWithLabel name="id" placeholder="아이디" value={id} onChange={onChangeId} />
+            {id.length > 0 && !isId && <span className={`message ${isId ? "success" : "error"}`}>{idMessage}</span>}
+            <InputPassword name="password" placeholder="비밀번호" value={password} onChange={onChangePassword} />
+            {password.length > 0 && !isPassword && <span className={`message ${isPassword ? "success" : "error"}`}>{passwordMessage}</span>}
+            <InputWithLabel name="password2" placeholder="비밀번호 확인" type="password" value={passwordConfirm} onChange={onChangePasswordConfirm} />
+            {passwordConfirm.length > 0 && !isPasswordConfirm && <span className={`message ${isPasswordConfirm ? "success" : "error"}`}>{passwordConfirmMessage}</span>}
             <div>
               <select name="yy" value={birthState.yy} onChange={onChangeBirth}>
                 {years.map((item) => (
@@ -284,24 +245,9 @@ function SignupPage() {
               </select>
             </div>
 
-            <InputWithLabel
-              name="email"
-              placeholder="이메일"
-              type="email"
-              value={email}
-              onChange={onChangeEmail}
-            />
-            {email.length > 0 && !isEmail && (
-              <span className={`message ${isEmail ? "success" : "error"}`}>
-                {emailMessage}
-              </span>
-            )}
-            <InputWithPhone
-              name="phoneNumber"
-              placeholder="폰 번호"
-              phonNumber={phoneNumber}
-              onChange={onChangePhonNumber}
-            />
+            <InputWithLabel name="email" placeholder="이메일" type="email" value={email} onChange={onChangeEmail} />
+            {email.length > 0 && !isEmail && <span className={`message ${isEmail ? "success" : "error"}`}>{emailMessage}</span>}
+            <InputWithPhone name="phoneNumber" placeholder="폰 번호" phonNumber={phoneNumber} onChange={onChangePhonNumber} />
 
             {/* {phoneNumber.length > 0 && !isPhoneNumber && (
                 <span
@@ -327,28 +273,13 @@ function SignupPage() {
               (isName && isId && isPassword && isPasswordConfirm && isEmail)
               // &&
               // isPhoneNumber
-            ) && (
-              <p style={{ color: `${palette.red}` }}>
-                가입하려면 모두 입력해주세요.
-              </p>
-            )}
+            ) && <p style={{ color: `${palette.red}` }}>가입하려면 모두 입력해주세요.</p>}
           </>
 
           <p>------- 회원가입 없이 소셜로 로그인하기 -------</p>
           <div>
-            <img
-              src={
-                "https://pbs.twimg.com/profile_images/738200195578494976/CuZ9yUAT_400x400.jpg"
-              }
-              alt="카카오로 회원가입"
-              width={"50px"}
-            />
-            <img
-              src={
-                "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
-              }
-              alt="네이버로 회원가입"
-            />
+            <img src={"https://pbs.twimg.com/profile_images/738200195578494976/CuZ9yUAT_400x400.jpg"} alt="카카오로 회원가입" width={"50px"} />
+            <img src={"https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"} alt="네이버로 회원가입" />
           </div>
         </StyledContent>
       </StyledPage>
