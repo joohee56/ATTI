@@ -9,13 +9,15 @@ import Modal from "../Modal";
 import SearchBar from "./SearchBar";
 import { ButtonBlue } from "../ButtonStyled";
 import { palette } from "../../styles/palette";
+import Pagination from "./pagenation";
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
 
-function PostList({handleModal2}) {
+function PostList({handleModal2, limit, page}) {
+
   const dummyPost = {
     post: [
       {
@@ -57,40 +59,153 @@ function PostList({handleModal2}) {
         post_upd_date : "2022-07-28 11:15",
         post_ano_info : 0,
         post_com_ban_info : 0,
-    }
+    },
+    {
+      user_id : '이현태',
+      post_id : 1,
+      post_title : "아아아아아아아아아아",
+      post_content : "222222222222222222222222",
+      post_req_date : "2022-07-28 11:14",
+      post_upd_date : "2022-07-28 11:15",
+      post_ano_info : 0,
+      post_com_ban_info : 0,
+    },
+    {
+      user_id : '이현태',
+      post_id : 1,
+      post_title : "아아아아아아아아아아",
+      post_content : "222222222222222222222222",
+      post_req_date : "2022-07-28 11:14",
+      post_upd_date : "2022-07-28 11:15",
+      post_ano_info : 0,
+      post_com_ban_info : 0,
+   },
+   {
+    user_id : '이현태',
+    post_id : 1,
+    post_title : "아아아아아아아아아아",
+    post_content : "222222222222222222222222",
+    post_req_date : "2022-07-28 11:14",
+    post_upd_date : "2022-07-28 11:15",
+    post_ano_info : 0,
+    post_com_ban_info : 0,
+    },
+    {
+      user_id : '이현태',
+      post_id : 1,
+      post_title : "아아아아아아아아아아",
+      post_content : "222222222222222222222222",
+      post_req_date : "2022-07-28 11:14",
+      post_upd_date : "2022-07-28 11:15",
+      post_ano_info : 0,
+      post_com_ban_info : 0,
+      },
+      {
+        user_id : '이현태',
+        post_id : 1,
+        post_title : "아아아아아아아아아아",
+        post_content : "222222222222222222222222",
+        post_req_date : "2022-07-28 11:14",
+        post_upd_date : "2022-07-28 11:15",
+        post_ano_info : 0,
+        post_com_ban_info : 0,
+      },
+      {
+        user_id : '이현태',
+        post_id : 1,
+        post_title : "아아아아아아아아아아",
+        post_content : "222222222222222222222222",
+        post_req_date : "2022-07-28 11:14",
+        post_upd_date : "2022-07-28 11:15",
+        post_ano_info : 0,
+        post_com_ban_info : 0,
+      },
+      {
+        user_id : '이현태',
+        post_id : 1,
+        post_title : "아아아아아아아아아아",
+        post_content : "222222222222222222222222",
+        post_req_date : "2022-07-28 11:14",
+        post_upd_date : "2022-07-28 11:15",
+        post_ano_info : 0,
+        post_com_ban_info : 0,
+    },
+    {
+        user_id : '정진',
+        post_id : 2,
+        post_title : "오오오오오옹오옹오오오옹오",
+        post_content : "3333333333333333333333333333",
+        post_req_date : "2022-07-28 11:14",
+        post_upd_date : "2022-07-28 11:15",
+        post_ano_info : 0,
+        post_com_ban_info : 0,
+    },
+    {
+        user_id : '김연수',
+        post_id : 3,
+        post_title : "이이이잉이이이이이이이이이이이이이이",
+        post_content : "44444444444444444444444444444",
+        post_req_date : "2022-07-28 11:14",
+        post_upd_date : "2022-07-28 11:15",
+        post_ano_info : 0,
+        post_com_ban_info : 0,
+    },
+    {
+      user_id : '김연수',
+      post_id : 3,
+      post_title : "이이이잉이이이이이이이이이이이이이이",
+      post_content : "44444444444444444444444444444",
+      post_req_date : "2022-07-28 11:14",
+      post_upd_date : "2022-07-28 11:15",
+      post_ano_info : 0,
+      post_com_ban_info : 0,
+  },
+  {
+    user_id : '이현태',
+    post_id : 1,
+    post_title : "아아아아아아아아아아",
+    post_content : "222222222222222222222222",
+    post_req_date : "2022-07-28 11:14",
+    post_upd_date : "2022-07-28 11:15",
+    post_ano_info : 0,
+    post_com_ban_info : 0,
+  }
     ],
   };
 
-  const postTitle = useSelector((state) => state.normalPost.post_title);
-  const postContent = useSelector((state) => state.normalPost.post_content);
-  const postUpdDate = useSelector((state) => state.normalPost.post_upd_date);
+  // const postTitle = useSelector((state) => state.normalPost.post_title);
+  // const postContent = useSelector((state) => state.normalPost.post_content);
+  // const postUpdDate = useSelector((state) => state.normalPost.post_upd_date);
 
-  dummyPost.post.push({
-    post_title: postTitle,
-    post_content: postContent,
-    post_upd_date: postUpdDate,
-  });
+  // dummyPost.post.push({
+  //   post_title: postTitle,
+  //   post_content: postContent,
+  //   post_upd_date: postUpdDate,
+  // });
   return (
     <>
-      <Rendering dummyPost={dummyPost} handleModal2={handleModal2} />
+      <Rendering dummyPost={dummyPost} handleModal2={handleModal2} limit={limit} page={page} />
     </>
   );
 }
-const Rendering = ({ dummyPost, handleModal2 }) => {
+const Rendering = ({ dummyPost, handleModal2, limit, page }) => {
 
   console.log(dummyPost);
-    const result = [];
-    const postStyle = {
-      borderRadius: "30px",
-      backgroundColor: palette.gray_1,
-      width: "1150px",
-      height: "90px",
-      margin: "15px 0 0 50px",
-      boxShadow: "2px 2px 2px grey"
+  console.log(limit)
+  console.log(page)
+  const offset = (page - 1) * limit;
+  console.log(offset)
+  const postStyle = {
+    borderRadius: "30px",
+    backgroundColor: palette.gray_1,
+    width: "1150px",
+    height: "90px",
+    margin: "15px 0 0 50px",
+    boxShadow: "2px 2px 2px grey"
   };
   return (
     <>
-      {Object.keys(dummyPost.post).map((e, i) => (
+      {Object.keys(dummyPost.post).slice(offset, offset + limit).map((e, i) => (
         // <div key={i}>{dummyPost.post[e].user_id}</div>
       <IndividualPost key={i}>
         <div style={postStyle} onClick={handleModal2}>
@@ -128,20 +243,28 @@ const Rendering = ({ dummyPost, handleModal2 }) => {
     )
   };
 function NormalPostFrame() {
+  
   const [isOpenModal2, setOpenModal2] = useState(false);
   const onClickToggleModal2 = useCallback(() => {
     setOpenModal2(!isOpenModal2);
     }, [isOpenModal2]);
-  const [isOpenModal1, setOpenModal1] = useState(false);
-  const onClickToggleModal1 = useCallback(() => {
-    setOpenModal1(!isOpenModal1);
-  }, [isOpenModal1]);
+    
   const handleModal2 = () => {
     setOpenModal2((prev) => {
       return !prev
     }
     );
   }
+
+  const [isOpenModal1, setOpenModal1] = useState(false);
+  const onClickToggleModal1 = useCallback(() => {
+    setOpenModal1(!isOpenModal1);
+  }, [isOpenModal1]);
+
+  const [limit, setLimit] = useState(5);
+  const [page, setPage] = useState(1);
+  
+
   return (
     <>
       <PostContainer>
@@ -155,9 +278,18 @@ function NormalPostFrame() {
           </div>
         </div>
         <div id="1234">
-          <PostList handleModal2={handleModal2} />
+          <PostList handleModal2={handleModal2} limit={limit} page={page} />
         </div>
+        <footer>
+        <Pagination
+          total={"15"}
+          limit={limit}
+          page={page}
+          setPage={setPage}
+        />
+      </footer>
       </PostContainer>
+      
       {isOpenModal2 && (
         <Modal
           onClickToggleModal={onClickToggleModal2}
@@ -188,7 +320,7 @@ color: transparent;
 `;
 const PostContainer = styled.div`
   width: 1300px;
-  height: 661px;
+  height: 671px;
   margin: 15px 0;
  
   border-radius: 20px;

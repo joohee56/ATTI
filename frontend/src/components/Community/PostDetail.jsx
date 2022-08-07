@@ -92,13 +92,20 @@ function PostDetail(){
                 </div>
             </div>
             <br />
-            <div style={{margin: "0 0 0 25px"}}>
+            <div style={{margin: "0 0 0 25px", overflow: "auto"}}>
                 {/* {ReactHtmlParser(postContent)} */}
-                postContent가 들어갑니다. 이렇게 많은 것들이 들어갈 수 잇습니다.....
+                postContent가 들어갑니다. 이렇게 많은 것들이 들어갈 수 잇습니다.
                 <br />
                 <br />
                 많이많이
                 아주 많이
+                <br />
+                sdfsfgeqwrwt
+                <br />
+                gdsgwerqet
+                <br />
+                brfsfdsf
+                <br />  
             </div>
             <hr style={hrStyle} />
             <br />

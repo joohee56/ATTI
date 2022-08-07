@@ -24,6 +24,7 @@ class Calendar extends Component {
       durationBarVisible: false,
       timeRangeSelectedHandling: "Enabled",
       onTimeRangeSelected: async args => {
+        console.log(this.calendar)
         const dp = this.calendar;
         const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
         dp.clearSelection();
@@ -93,7 +94,7 @@ class Calendar extends Component {
     return (
       <div style={styles.wrap}>
         <div style={styles.left}>
-          <DayPilotNavigator
+          {/* <DayPilotNavigator
             selectMode={"week"}
             showMonths={3}
             skipMonths={3}
@@ -104,7 +105,7 @@ class Calendar extends Component {
                 startDate: args.day
               });
             }}
-          />
+          /> */}
         </div>
         <div style={styles.main}>
           <DayPilotCalendar
