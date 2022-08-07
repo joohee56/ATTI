@@ -12,20 +12,18 @@ interface inputInfo {
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
 }
 
-export default function InputWithPhone({
-  placeholder,
-  phonNumber,
-  ...rest
-}: inputInfo) {
+export default function InputWithPhone({ placeholder, phonNumber, ...rest }: inputInfo) {
   const [isPhoneNumber, setIsPhoneNumber] = React.useState<boolean>(false);
+  const [phoneNumberMessage, setPhoneNumberMessage] = React.useState<boolean>(true);
   const [isSuccess, setIsSuccess] = React.useState<boolean>(false);
-  const [isCode,setIsCode] = React.useState<string>("");
+  const [isCode, setIsCode] = React.useState<string>("");
 
   const accreditPhone = async () => {
     const value = phonNumber.replace(/[^0-9]/g, "");
     const regex = /^[0-9]{11}$/;
     if (regex.test(value)) {
       setIsPhoneNumber(true);
+      setPhoneNumberMessage(true);
       await axios
         .post(
           BACKEND_URL + "/api/auth/phone",
@@ -47,6 +45,7 @@ export default function InputWithPhone({
         });
     } else {
       setIsPhoneNumber(false);
+      setPhoneNumberMessage(false);
     }
   };
 
@@ -93,9 +92,7 @@ export default function InputWithPhone({
           value={phonNumber}
           {...rest}
         />
-        {!isPhoneNumber && (
-          <FormHelperText error>번호를 다시 확인해 주세요</FormHelperText>
-        )}
+        {!phoneNumberMessage && <FormHelperText error>번호를 다시 확인해 주세요</FormHelperText>}
         {isPhoneNumber && (
           <div>
             <OutlinedInput

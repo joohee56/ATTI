@@ -22,28 +22,27 @@ interface inputInfo {
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
 }
 
-const InputStyle =styled(TextField)(({ theme }) => ({
+const InputStyle = styled(TextField)(({ theme }) => ({
   backgroundColor: palette.gray_1,
 }));
 
 // rest 쪽에는 onChange, type, name, value, placeholder 등의 input 에서 사용 하는 값들을 넣어줄수 있다.
-const InputWithIcon = ({ icon,placeholder, ...rest }: inputInfo) => (
+const InputWithIcon = ({ icon, placeholder, ...rest }: inputInfo) => (
   <Wrapper>
-     <FormControl sx={{ m: 1, width: "54%" }}>
-        <InputStyle
-          InputProps={{
-            startAdornment: icon && (
-              <InputAdornment position="start">
-                <SvgIcon component={icon} inheritViewBox />
-              </InputAdornment>
-            )
-          }}
-          size="small"
-          placeholder={placeholder}
-          {...rest}
-        />
-        
-      </FormControl>
+    <FormControl sx={{ m: 1, width: "54%" }}>
+      <InputStyle
+        InputProps={{
+          startAdornment: icon && (
+            <InputAdornment position="start">
+              <SvgIcon component={icon} inheritViewBox />
+            </InputAdornment>
+          ),
+        }}
+        size="small"
+        placeholder={placeholder}
+        {...rest}
+      />
+    </FormControl>
   </Wrapper>
 );
 
