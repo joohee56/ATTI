@@ -27,7 +27,7 @@ public class DepartController {
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	
-	@GetMapping("/{departCode}") // 채널 입장
+	@GetMapping("/{departCode}") // 채널 입장 
 	public ResponseEntity<Depart> joinChannel(@PathVariable String departCode) {
 		return new ResponseEntity<Depart>(departService.joinChannel(departCode), HttpStatus.OK);
 	}
