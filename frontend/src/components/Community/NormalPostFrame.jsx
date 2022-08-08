@@ -1,8 +1,11 @@
-import React, { PropsWithChildren, useState, useCallback , Component } from "react";
+import React, { PropsWithChildren, useState, useCallback , Component, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import ReactHtmlParser from "react-html-parser";
+import axios from 'axios';
 
+
+import { BACKEND_URL } from "../../constant";
 import PostDetail from "./PostDetail";
 import PostEditor from "./PostEditor";
 import Modal from "../Modal";
@@ -17,177 +20,41 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
 function PostList({handleModal2, limit, page}) {
+  const [post,setPost] = useState([])
+  useEffect(() => {
+    async function getPosts(){
+      axios.get(
+        BACKEND_URL + "/post",
+        {
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      ).then((res) => {
+        console.log(res.data)
+        setPost(res.data)
+      })
+    }
+    getPosts();
+  },[]);
+  return (
+    <>
+      <Rendering dummyPost={post} handleModal2={handleModal2} limit={limit} page={page} />
+    </>
+  );
+  
+};
 
-  const dummyPost = {
-    post: [
-      {
-          user_id : '이현태',
-          post_id : 1,
-          post_title : "아아아아아아아아아아",
-          post_content : "222222222222222222222222",
-          post_req_date : "2022-07-28 11:14",
-          post_upd_date : "2022-07-28 11:15",
-          post_ano_info : 0,
-          post_com_ban_info : 0,
-      },
-      {
-          user_id : '정진',
-          post_id : 2,
-          post_title : "오오오오오옹오옹오오오옹오",
-          post_content : "3333333333333333333333333333",
-          post_req_date : "2022-07-28 11:14",
-          post_upd_date : "2022-07-28 11:15",
-          post_ano_info : 0,
-          post_com_ban_info : 0,
-      },
-      {
-          user_id : '김연수',
-          post_id : 3,
-          post_title : "이이이잉이이이이이이이이이이이이이이",
-          post_content : "44444444444444444444444444444",
-          post_req_date : "2022-07-28 11:14",
-          post_upd_date : "2022-07-28 11:15",
-          post_ano_info : 0,
-          post_com_ban_info : 0,
-      },
-      {
-        user_id : '김연수',
-        post_id : 3,
-        post_title : "이이이잉이이이이이이이이이이이이이이",
-        post_content : "44444444444444444444444444444",
-        post_req_date : "2022-07-28 11:14",
-        post_upd_date : "2022-07-28 11:15",
-        post_ano_info : 0,
-        post_com_ban_info : 0,
-    },
-    {
-      user_id : '이현태',
-      post_id : 1,
-      post_title : "아아아아아아아아아아",
-      post_content : "222222222222222222222222",
-      post_req_date : "2022-07-28 11:14",
-      post_upd_date : "2022-07-28 11:15",
-      post_ano_info : 0,
-      post_com_ban_info : 0,
-    },
-    {
-      user_id : '이현태',
-      post_id : 1,
-      post_title : "아아아아아아아아아아",
-      post_content : "222222222222222222222222",
-      post_req_date : "2022-07-28 11:14",
-      post_upd_date : "2022-07-28 11:15",
-      post_ano_info : 0,
-      post_com_ban_info : 0,
-   },
-   {
-    user_id : '이현태',
-    post_id : 1,
-    post_title : "아아아아아아아아아아",
-    post_content : "222222222222222222222222",
-    post_req_date : "2022-07-28 11:14",
-    post_upd_date : "2022-07-28 11:15",
-    post_ano_info : 0,
-    post_com_ban_info : 0,
-    },
-    {
-      user_id : '이현태',
-      post_id : 1,
-      post_title : "아아아아아아아아아아",
-      post_content : "222222222222222222222222",
-      post_req_date : "2022-07-28 11:14",
-      post_upd_date : "2022-07-28 11:15",
-      post_ano_info : 0,
-      post_com_ban_info : 0,
-      },
-      {
-        user_id : '이현태',
-        post_id : 1,
-        post_title : "아아아아아아아아아아",
-        post_content : "222222222222222222222222",
-        post_req_date : "2022-07-28 11:14",
-        post_upd_date : "2022-07-28 11:15",
-        post_ano_info : 0,
-        post_com_ban_info : 0,
-      },
-      {
-        user_id : '이현태',
-        post_id : 1,
-        post_title : "아아아아아아아아아아",
-        post_content : "222222222222222222222222",
-        post_req_date : "2022-07-28 11:14",
-        post_upd_date : "2022-07-28 11:15",
-        post_ano_info : 0,
-        post_com_ban_info : 0,
-      },
-      {
-        user_id : '이현태',
-        post_id : 1,
-        post_title : "아아아아아아아아아아",
-        post_content : "222222222222222222222222",
-        post_req_date : "2022-07-28 11:14",
-        post_upd_date : "2022-07-28 11:15",
-        post_ano_info : 0,
-        post_com_ban_info : 0,
-    },
-    {
-        user_id : '정진',
-        post_id : 2,
-        post_title : "오오오오오옹오옹오오오옹오",
-        post_content : "3333333333333333333333333333",
-        post_req_date : "2022-07-28 11:14",
-        post_upd_date : "2022-07-28 11:15",
-        post_ano_info : 0,
-        post_com_ban_info : 0,
-    },
-    {
-        user_id : '김연수',
-        post_id : 3,
-        post_title : "이이이잉이이이이이이이이이이이이이이",
-        post_content : "44444444444444444444444444444",
-        post_req_date : "2022-07-28 11:14",
-        post_upd_date : "2022-07-28 11:15",
-        post_ano_info : 0,
-        post_com_ban_info : 0,
-    },
-    {
-      user_id : '김연수',
-      post_id : 3,
-      post_title : "이이이잉이이이이이이이이이이이이이이",
-      post_content : "44444444444444444444444444444",
-      post_req_date : "2022-07-28 11:14",
-      post_upd_date : "2022-07-28 11:15",
-      post_ano_info : 0,
-      post_com_ban_info : 0,
-  },
-  {
-    user_id : '이현태',
-    post_id : 1,
-    post_title : "아아아아아아아아아아",
-    post_content : "222222222222222222222222",
-    post_req_date : "2022-07-28 11:14",
-    post_upd_date : "2022-07-28 11:15",
-    post_ano_info : 0,
-    post_com_ban_info : 0,
-  }
-    ],
-  };
+  // const postTitle = useSelector((state) => state.normalPost_title);
+  // const postContent = useSelector((state) => state.normalPost_content);
+  // const postUpdDate = useSelector((state) => state.normalPost_upd_date);
 
-  // const postTitle = useSelector((state) => state.normalPost.post_title);
-  // const postContent = useSelector((state) => state.normalPost.post_content);
-  // const postUpdDate = useSelector((state) => state.normalPost.post_upd_date);
-
-  // dummyPost.post.push({
+  // dummyPost.push({
   //   post_title: postTitle,
   //   post_content: postContent,
   //   post_upd_date: postUpdDate,
   // });
-  return (
-    <>
-      <Rendering dummyPost={dummyPost} handleModal2={handleModal2} limit={limit} page={page} />
-    </>
-  );
-}
+
 const Rendering = ({ dummyPost, handleModal2, limit, page }) => {
 
   console.log(dummyPost);
@@ -205,9 +72,10 @@ const Rendering = ({ dummyPost, handleModal2, limit, page }) => {
   };
   return (
     <>
-      {Object.keys(dummyPost.post).slice(offset, offset + limit).map((e, i) => (
-        // <div key={i}>{dummyPost.post[e].user_id}</div>
+      {dummyPost.slice(offset, offset + limit).map((e, i) => (
+        // <div key={i}>{dummyPost[e].user_id}</div>
       <IndividualPost key={i}>
+        {console.log(e)}
         <div style={postStyle} onClick={handleModal2}>
              <div
               style={{
@@ -218,15 +86,15 @@ const Rendering = ({ dummyPost, handleModal2, limit, page }) => {
               }}
             >
               <UserIdDiv>
-                작성자: {dummyPost.post[e].user_id}
+                작성자: {e.user}
               </UserIdDiv>
-              {dummyPost.post[e].post_upd_date}
+              {e.postUpdDate}
             </div>
             <hr style={{width: "95%"}} />
 
             <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0 20px" }}>
               <div style={{fontSize: "20px", fontWeight: "bold"}}>
-                {dummyPost.post[e].post_title}   
+                {e.postTitle}   
               </div>
               <div>
               <FavoriteBorderIcon/> 24
@@ -243,7 +111,21 @@ const Rendering = ({ dummyPost, handleModal2, limit, page }) => {
     )
   };
 function NormalPostFrame() {
-  
+//   useEffect(() => {
+//     async function getPosts(){
+//       const result = await axios.get(
+//         BACKEND_URL + "/post",
+//         {
+//           headers: {
+//             "Content-type": "application/json",
+//           },
+//         }
+//       ).then((res) => {
+//         console.log(res.data)
+//       })
+//     }
+// getPosts();
+// });
   const [isOpenModal2, setOpenModal2] = useState(false);
   const onClickToggleModal2 = useCallback(() => {
     setOpenModal2(!isOpenModal2);

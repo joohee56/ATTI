@@ -8,6 +8,7 @@ import ClassMeeting from "./pages/ClassMeeting";
 import Community from "./pages/Community";
 import WelcomePage from "./pages/Welcome";
 import ModalTest from "./pages/ModalTest";
+import OAuth2RedirectHandler from "./components/account/OAuth2RedirectHandler";
 
 function App() {
   return (
