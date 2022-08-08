@@ -21,7 +21,7 @@ public class DepartRepository {
 	}
 	
 	// 채널 입장
-	public Depart joinChannel(Long departCode) {
+	public Depart joinChannel(String departCode) {
 		Depart channel = em.createQuery("select d from Depart d where d.departCode = :departCode", Depart.class)
 				.setParameter("departCode", departCode)
 				.getSingleResult();
