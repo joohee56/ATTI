@@ -18,7 +18,7 @@ public class CommentRepository {
 	@PersistenceContext
 	private EntityManager em;
 	
-	// 댓글 조회(맞나...?)
+	// 댓글 조회(맞나...? -> 맞았음)
 	public List<Comment> findComment(Long postId) {
 		System.out.println("================" + postId + "=================");
 		List<Comment> result = em.createQuery("select c from Comment as c join Post as p on c.post = p.postId where c.postId = :postId", Comment.class)

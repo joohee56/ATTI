@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 public class UserRepository {
 	private final EntityManager em;
 	
+	
+	
 	public void signUp(User user) {
 		em.persist(user);
 	}

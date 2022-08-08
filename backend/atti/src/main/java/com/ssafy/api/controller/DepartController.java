@@ -21,8 +21,8 @@ public class DepartController {
 	private DepartService departService;
 	
 	@PostMapping("/create") // 채널 생성
-	public ResponseEntity<String> createChannel(@RequestBody Depart depart) {
-		departService.createChannel(depart);
+	public ResponseEntity<String> createChannel(@RequestBody Depart depart) { //DepartReq departReq
+		departService.createChannel(depart); //, userId
 		System.out.println(depart);
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}

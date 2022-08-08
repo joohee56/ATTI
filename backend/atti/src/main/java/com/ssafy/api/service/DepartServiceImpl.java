@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.repository.DepartRepository;
+import com.ssafy.db.repository.UserRepository;
 
 @Service
 @Transactional
@@ -16,9 +17,11 @@ public class DepartServiceImpl implements DepartService {
 	
 	@Autowired
 	private DepartRepository departRepository;
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Override // 채널 생성
-	public void createChannel(Depart depart) {
+	public void createChannel(Depart depart) { //, String userId
 		departRepository.createChannel(depart);
 
 		int leftLimit = 48; // numeral '0'
@@ -31,8 +34,9 @@ public class DepartServiceImpl implements DepartService {
 		  .limit(targetStringLength)
 		  .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 		  .toString();
-		
+	
 		depart.setDepartCode(generatedString);
+//		depart.setUser(userRepository.findById(userId));
 	}
 
 	@Override // 채널 입장
