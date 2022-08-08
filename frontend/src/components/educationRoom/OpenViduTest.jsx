@@ -37,6 +37,16 @@ import {
   MeetingButtonControl,
   FullscreenButton,
   NotFullScreenButton,
+  AllMicAndCamOff,
+  ChattingAndCancleButtonWrapper,
+  ChattingAndQnASelect,
+  ChattingAndQnAWrapper,
+  QnAWrapper,
+  QnABox,
+  QnATitle,
+  QnAMessage,
+  QnAButton,
+  QnAButtonWrapper,
 } from "./OpenViduTestStyled";
 import { useNavigate } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
@@ -51,6 +61,9 @@ const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 const STUDENT = "student";
 const PROFESSOR = "professor";
+
+export const CHATTING = "chatting";
+export const QnA = "QnA";
 
 const OpenViduTest = () => {
   const navigate = useNavigate();
@@ -81,6 +94,10 @@ const OpenViduTest = () => {
   const messageRef = useRef();
   const [onClickToggleModal, setOnClickToggleModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  // QnA인지 채팅인지 선택
+  const [chattingSelect, setChattingSelect] = useState(CHATTING);
+  const [QnAState, setQnAState] = useState(undefined);
+
   function setChattingInfo({ data, connectionId }) {
     setSendToUser(data);
     setSendToClientId(connectionId);
@@ -218,6 +235,12 @@ const OpenViduTest = () => {
       state.session.on("signal:reqeustPresent", (event) => {
         setReceivePresent(true);
         setSaveSubscriber(event.from);
+      });
+      state.session.on("signal:QnA", (event) => {
+        setQnAState({
+          message: event.data,
+          from: JSON.parse(event.from.data).clientData,
+        });
       });
       state.session.on("signal:my-chat", (event) => {
         console.log(JSON.parse(event.from.data).clientData);
@@ -583,44 +606,64 @@ const OpenViduTest = () => {
   }
   function sendMessage() {
     const mySession = state.session;
-    if (sendToUser !== "") {
-      console.log("test", sendToClientId);
-      let people = peopleList;
-      const sendTo = people.filter((e) => {
-        return e.connectionId === sendToClientId;
-      });
-      console.log(sendTo);
-      const message = messageRef.current.value;
-      mySession
-        .signal({
-          data: messageRef.current.value,
-          to: [sendTo[0]],
-          type: "secret-chat",
-        })
-        .then(() => {
-          console.log("secret Message send success");
-          setChatList({
-            message,
-            from: state.myUserName,
-            type: "private",
+    if (
+      messageRef.current.value.length > 0 &&
+      messageRef.current.value.trim() !== ""
+    ) {
+      if (sendToUser !== "") {
+        console.log("test", sendToClientId);
+        let people = peopleList;
+        const sendTo = people.filter((e) => {
+          return e.connectionId === sendToClientId;
+        });
+        console.log(sendTo);
+        const message = messageRef.current.value;
+        mySession
+          .signal({
+            data: messageRef.current.value,
+            to: [sendTo[0]],
+            type: "secret-chat",
+          })
+          .then(() => {
+            console.log("secret Message send success");
+            setChatList({
+              message,
+              from: state.myUserName,
+              type: "private",
+            });
+          })
+          .catch((error) => {
+            console.log(error);
           });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      mySession
-        .signal({
-          data: messageRef.current.value,
-          to: [],
-          type: "my-chat",
-        })
-        .then(() => {
-          console.log("Message send success");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      } else {
+        if (chattingSelect === CHATTING) {
+          mySession
+            .signal({
+              data: messageRef.current.value,
+              to: [],
+              type: "my-chat",
+            })
+            .then(() => {
+              console.log("Message send success");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          mySession
+            .signal({
+              data: messageRef.current.value,
+              to: [],
+              type: "QnA",
+            })
+            .then(() => {
+              console.log("QnA 질문 끝!");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      }
     }
 
     messageRef.current.value = "";
@@ -743,6 +786,16 @@ const OpenViduTest = () => {
       ...prev,
       myRole: e.target.value,
     }));
+  };
+  function handleChangeChatting(e) {
+    setChattingSelect((prev) => {
+      return e.target.value;
+    });
+  }
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
   };
   return (
     <MeetingRoom id="test">
@@ -1062,10 +1115,14 @@ const OpenViduTest = () => {
                   />
                 ) : null}
                 {state.myRole === PROFESSOR ? (
-                  <div>
-                    <button onClick={allMicOff}>전체 마이크 끄기</button>
-                    <button onClick={allCamOff}>전체 카메라 끄기</button>
-                  </div>
+                  <MeetingAttendAndChattingWrapper>
+                    <AllMicAndCamOff onClick={allMicOff}>
+                      전체 마이크 끄기
+                    </AllMicAndCamOff>
+                    <AllMicAndCamOff onClick={allCamOff}>
+                      전체 카메라 끄기
+                    </AllMicAndCamOff>
+                  </MeetingAttendAndChattingWrapper>
                 ) : null}
 
                 {openChattingList ? (
@@ -1075,25 +1132,87 @@ const OpenViduTest = () => {
                         <ChatIcon />
                         채팅
                       </ChattingName>
+                      {QnAState !== undefined && (
+                        <QnAWrapper>
+                          <QnABox>
+                            <QnATitle>{`Q&A - ${QnAState.from}님`}</QnATitle>
+                            <QnAMessage>{QnAState.message}</QnAMessage>
+                            {state.myRole === PROFESSOR ? (
+                              <QnAButtonWrapper>
+                                <QnAButton>답변</QnAButton>
+                                <QnAButton
+                                  onClick={() => {
+                                    setQnAState(undefined);
+                                  }}
+                                >
+                                  닫기
+                                </QnAButton>
+                              </QnAButtonWrapper>
+                            ) : (
+                              <QnAButtonWrapper>
+                                <QnAButton
+                                  onClick={() => {
+                                    setQnAState(undefined);
+                                  }}
+                                >
+                                  닫기
+                                </QnAButton>
+                              </QnAButtonWrapper>
+                            )}
+                          </QnABox>
+                        </QnAWrapper>
+                      )}
                       <ChattingWrapper
                         chatList={chatList}
                         anonymousMode={anonymousMode}
+                        QnAState={QnAState}
                       />
                     </ChattinBoxgWrapper>
-                    <ChattingInputBox>
-                      <div>
-                        <span>채팅</span>
-                        <span>{sendToUser}</span>
-                      </div>
+                    <ChattingInputBox chattingSelect={chattingSelect}>
+                      <ChattingAndQnAWrapper>
+                        {sendToUser !== "" ? (
+                          <span>{sendToUser}님에게 1대1 메시지 전송</span>
+                        ) : (
+                          <ChattingAndQnASelect
+                            onChange={handleChangeChatting}
+                            chattingSelect={chattingSelect}
+                          >
+                            <option key={CHATTING} value={CHATTING}>
+                              #채팅
+                            </option>
+                            <option key={QnA} value={QnA}>
+                              #QnA
+                            </option>
+                          </ChattingAndQnASelect>
+                        )}
+                      </ChattingAndQnAWrapper>
                       <ChattingInput
                         type="text"
                         id="message"
                         ref={messageRef}
+                        onKeyPress={onKeyPress}
+                        chattingSelect={chattingSelect}
                       />
 
-                      <ChattingSendButton onClick={sendMessage}>
-                        전송
-                      </ChattingSendButton>
+                      {sendToUser !== "" ? (
+                        <ChattingAndCancleButtonWrapper>
+                          <ChattingSendButton
+                            onClick={() => {
+                              setSendToUser("");
+                            }}
+                          >
+                            취소
+                          </ChattingSendButton>
+                          <ChattingSendButton onClick={sendMessage}>
+                            전송
+                          </ChattingSendButton>
+                        </ChattingAndCancleButtonWrapper>
+                      ) : (
+                        <ChattingSendButton onClick={sendMessage}>
+                          전송
+                        </ChattingSendButton>
+                      )}
+
                       {/* <button onClick={testSpeech}>메시지 읽어주기</button> */}
                     </ChattingInputBox>
                   </ChattingBox>

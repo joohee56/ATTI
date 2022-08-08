@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { QnA } from "./OpenViduTest";
 
 export const PeopleBox = styled.div`
   display: flex;
@@ -33,15 +34,56 @@ export const VideoBox = styled.div`
   /* margin-left: auto; */
   /* background-color: #333333; */
 `;
+export const QnAWrapper = styled.div`
+  width: 100%;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+export const QnABox = styled.div`
+  width: 90%;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: #fffce1;
+`;
+
+export const QnATitle = styled.div`
+  margin-top: 7px;
+  margin-left: 15px;
+  height: 10%;
+`;
+
+export const QnAButtonWrapper = styled.span`
+  display: flex;
+`;
+
+export const QnAMessage = styled.div`
+  margin-left: 3px;
+  min-height: 70%;
+`;
+export const QnAButton = styled.button`
+  margin-left: auto;
+  margin-right: 5px;
+  margin-top: auto;
+  background-color: #d9d9d9;
+  border: none;
+  width: 45%;
+  height: 25px;
+  border-radius: 3px;
+`;
+
 export const ChatBox = styled.div`
   width: 100%;
-  height: 85%;
+  height: ${(props) => (props.QnAState !== undefined ? "40%" : "85%")};
   background-color: white;
   margin-top: 15px;
   margin-bottom: 15px;
   border-radius: 10px;
   overflow-y: scroll;
   overflow-x: hidden;
+
   &::-webkit-scrollbar {
     padding-right: 15px;
     width: 8px;
@@ -92,18 +134,21 @@ export const ChattingInputBox = styled.div`
   border-radius: 15px;
   width: 100%;
   height: 30%;
-  background-color: white;
+  background-color: ${(props) =>
+    props.chattingSelect === QnA ? "#FFFCE0" : "white"};
   align-items: center;
 `;
 export const ChattingName = styled.div`
   display: flex;
   margin-left: 10px;
 `;
-export const ChattingInput = styled.input`
+export const ChattingInput = styled.textarea`
   width: 95%;
   height: 45%;
   border-radius: 10px;
   border: none;
+  background-color: ${(props) =>
+    props.chattingSelect === QnA ? "#FFFCE0" : "white"};
 `;
 
 export const ChattinBoxgWrapper = styled.div`
@@ -127,8 +172,25 @@ export const ChattingSendButton = styled.button`
   margin-bottom: 4px;
 `;
 
+export const ChattingAndCancleButtonWrapper = styled.span`
+  margin-left: auto;
+  margin-top: auto;
+`;
+export const ChattingAndQnAWrapper = styled.div`
+  margin-top: 5px;
+  width: 100%;
+`;
+export const ChattingAndQnASelect = styled.select`
+  margin-right: auto;
+  margin-left: 5px;
+  border: none;
+  width: 30%;
+  border-bottom: 1px solid;
+  background-color: ${(props) =>
+    props.chattingSelect === QnA ? "#FFFCE0" : "white"};
+`;
+
 export const ChattingBox = styled.div`
-  margin-top: 20px;
   width: 95%;
   height: ${(props) => (props.openAttentList ? "45%" : "80%")};
 `;
@@ -189,7 +251,7 @@ export const MeetingButton = styled.button`
 `;
 export const MeetingAttendAndChattingWrapper = styled.span`
   width: 100%;
-  height: 8%;
+  height: 6%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -206,4 +268,17 @@ export const MeetingAttendAndChattingButton = styled.button`
   margin-left: 3px;
   background-color: ${(props) => (props.isClick ? "#DBEAFE" : "#7A7C87")};
   /*  inset,0px 0px 5px rgba(200,200,200,0.5);  */
+`;
+
+export const AllMicAndCamOff = styled.button`
+  border: none;
+  border-radius: 8px;
+  /* background-color: #cfd1dc; */
+  color: black;
+  text-align: center;
+  width: 40%;
+  height: 60%;
+  margin-right: 3px;
+  margin-left: 3px;
+  background-color: "#7A7C87";
 `;
