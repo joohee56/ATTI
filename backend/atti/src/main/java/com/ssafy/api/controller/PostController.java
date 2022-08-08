@@ -20,7 +20,7 @@ import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.repository.PostRepository;
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/post")
 public class PostController {
 	
 	@Autowired

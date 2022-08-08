@@ -16,7 +16,7 @@ import com.ssafy.api.service.AdminService;
 import com.ssafy.db.entity.depart.Post;
 
 @RestController
-@RequestMapping("/api/admin/post")
+@RequestMapping("/admin/post")
 public class AdminController {
 	
 	@Autowired

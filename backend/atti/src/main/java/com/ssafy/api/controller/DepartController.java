@@ -14,7 +14,7 @@ import com.ssafy.api.service.DepartService;
 import com.ssafy.db.entity.depart.Depart;
 
 @RestController
-@RequestMapping("/api/depart")
+@RequestMapping("/depart")
 public class DepartController {
 	
 	@Autowired
