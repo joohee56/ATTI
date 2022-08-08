@@ -1,5 +1,5 @@
 // 백엔드 통신
-export const BACKEND_URL = "http://localhost:8081";
+export const BACKEND_URL = "http://localhost:8081/api";
 
 // 소셜 로그인 - 카카오톡
 const CLIENT_ID = "77d4d4d9513fb3ed1863a05635d58fd8";

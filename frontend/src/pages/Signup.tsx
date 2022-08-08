@@ -64,7 +64,7 @@ function SignupPage() {
       setIsId(false);
     } else {
       await axios
-        .get(BACKEND_URL + "/api/user/idcheck", {
+        .get(BACKEND_URL + "/user/idcheck", {
           params: {
             ckid: e.target.value,
           },
@@ -153,7 +153,7 @@ function SignupPage() {
     try {
       await axios
         .post(
-          BACKEND_URL + "/api/user/signup/normal",
+          BACKEND_URL + "/user/signup/normal",
           {
             userId: id,
             password: password,

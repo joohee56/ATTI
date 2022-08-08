@@ -26,7 +26,7 @@ export default function InputWithPhone({ placeholder, phonNumber, ...rest }: inp
       setPhoneNumberMessage(true);
       await axios
         .post(
-          BACKEND_URL + "/api/auth/phone",
+          BACKEND_URL + "/auth/phone",
           {
             phoneNumber: value,
           },
@@ -59,7 +59,7 @@ export default function InputWithPhone({ placeholder, phonNumber, ...rest }: inp
     if (value.length >= 6) {
       setIsSuccess(true);
       await axios
-        .get(BACKEND_URL + "/api/auth/phone/authCode", {
+        .get(BACKEND_URL + "/auth/phone/authCode", {
           params: {
             code: value,
           },

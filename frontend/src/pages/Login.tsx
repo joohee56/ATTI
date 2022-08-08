@@ -73,7 +73,7 @@ function LoginPage() {
       try {
         await axios
           .post(
-            BACKEND_URL + "/api/auth/login/normal",
+            BACKEND_URL + "/auth/login/normal",
             {
               userId: loginInfo.userId,
               password: loginInfo.password,
@@ -85,9 +85,10 @@ function LoginPage() {
             }
           )
           .then((res) => {
-            console.log("response:", res);
+            
             if (res.status === 200) {
               document.location.href = "/welcome";
+              console.log("response:", res);
             }
           });
       } catch (err) {
@@ -100,7 +101,7 @@ function LoginPage() {
 
   // 카카오 로그인
   const kakaoLogin = () => {
-    window.location.replace(KAKAO_AUTH_URL);
+    window.location.href=KAKAO_AUTH_URL;
 
     let AuthorizationCode = new URL(window.location.href).searchParams.get("code");
     console.log(AuthorizationCode);
@@ -111,7 +112,7 @@ function LoginPage() {
     try {
       await axios
         .post(
-          BACKEND_URL + "/api/user/findId",
+          BACKEND_URL + "/user/findId",
           {
             name: findIdInfo.findId_name,
             email: findIdInfo.findId_email,
@@ -156,8 +157,6 @@ function LoginPage() {
         <NavLink to="/signup">
           <PersonOutlineOutlinedIcon /> Signup
         </NavLink>
-
-      <HeaderDiv>회원가입</HeaderDiv>
       <HeaderDiv>로그인</HeaderDiv>
       <StyledPage>
         <StyledContent>

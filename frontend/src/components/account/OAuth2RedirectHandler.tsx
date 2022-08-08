@@ -8,7 +8,7 @@ function OAuth2RedirectHandler() {
   console.log(Authcode);
 
   axios
-    .get(BACKEND_URL + "/api/auth/login/kakao", {
+    .get(BACKEND_URL + "/auth/login/kakao", {
       params: {
         code: Authcode,
       },
