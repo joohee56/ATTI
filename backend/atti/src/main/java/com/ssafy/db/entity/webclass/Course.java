@@ -18,14 +18,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.ssafy.db.entity.chat.Chat;
-import com.ssafy.db.entity.chat.ChatRoom;
-import com.ssafy.db.entity.depart.Comment;
-import com.ssafy.db.entity.depart.Post;
-import com.ssafy.db.entity.message.UserMessage;
-import com.ssafy.db.entity.user.Profile;
+import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.user.User;
-import com.ssafy.db.entity.user.UserRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -66,6 +60,10 @@ public class Course {
 	@OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "make_user_id")
 	private User make_user;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="depart_course")
+	private Depart depart;
 	
 	@OneToOne(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private WebClass webclass;

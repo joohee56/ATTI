@@ -25,9 +25,9 @@ public class AttiUserDetailService implements UserDetailsService{
 	
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    		User user = userService.getUserByUserName(username);
-    		if(user != null) {
-    			AttiUserDetails userDetails = new AttiUserDetails(user);
+    		User user = userService.getUserByUserName(username);	// 이름으로 유저 찾기
+    		if(user != null) {		// 있다면
+    			AttiUserDetails userDetails = new AttiUserDetails(user);	// 새 객체 생성
     			return userDetails;
     		}
     		return null;

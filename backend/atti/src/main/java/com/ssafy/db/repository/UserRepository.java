@@ -7,11 +7,14 @@ import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.ssafy.api.request.KakaoUser;
 import com.ssafy.api.request.UserFindIdReq;
+import com.ssafy.api.request.UserUpdateReq;
 import com.ssafy.db.entity.user.User;
 
 import lombok.RequiredArgsConstructor;
@@ -66,6 +69,21 @@ public class UserRepository {
 	
 	public List<User> phoneCheck(String phoneNumber) {
 		return em.createQuery("select u from User u where u.phone = :phoneNumber", User.class).setParameter("phoneNumber", phoneNumber).getResultList();
+	}
+	
+	// 회원 정보 수정
+	@Modifying
+	public int updateUser(UserUpdateReq userUpdateInfo) {
+		
+		int resultCount = em.createQuery("UPDATE User u set u.password =:password, u.userName =:userName, u.email =:email, u.birth =:birth, u.phone =:phone where u.userId =:userId ")
+		.setParameter("password", userUpdateInfo.getPassword())
+		.setParameter("userName", userUpdateInfo.getUserName())
+		.setParameter("email", userUpdateInfo.getEmail())
+		.setParameter("birth", userUpdateInfo.getBirth())
+		.setParameter("phone", userUpdateInfo.getPhone())
+		.setParameter("userId", userUpdateInfo.getUserId()).executeUpdate(); 
+		
+		return resultCount;
 	}
 		
 //	public User findOne(String id) {

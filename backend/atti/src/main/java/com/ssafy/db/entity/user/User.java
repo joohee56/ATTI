@@ -1,7 +1,6 @@
 package com.ssafy.db.entity.user;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -59,8 +58,8 @@ public class User {
 	private String userName;
 	private String email;
 
-	@Temporal(TemporalType.DATE)
-	private Date birth;
+//	@Temporal(TemporalType.DATE)
+	private String birth;
 	private String phone;
 	private String social;
 	private Long uid;
