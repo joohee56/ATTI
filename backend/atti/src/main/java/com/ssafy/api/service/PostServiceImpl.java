@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -15,13 +16,14 @@ import com.ssafy.db.repository.PostRepository;
 @Transactional(readOnly = true) // readOnly true를 사용하면 읽기 최적화
 public class PostServiceImpl implements PostService {
 	
-	
 	@Autowired
 	private PostRepository postRepository;
 
 	@Override // 글쓰기
 	@Transactional // 쓰기가 필요할땐 그냥 Transactional
 	public void createWriting(Post post) {
+		post.setPostRegDate(LocalDateTime.now());
+//		post.setUser(user);
 		postRepository.insertWriting(post);
 	}
 
@@ -55,6 +57,7 @@ public class PostServiceImpl implements PostService {
 	@Override // 단일 게시글 수정
 	@Transactional
 	public void editPost(Post editPost) {
+		editPost.setPostUpdDate(LocalDateTime.now());
 		postRepository.updateOne(editPost);
 	}
 }
