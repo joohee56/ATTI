@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import Logo from "../assets/images/logoComputer.png";
-import ButtonBlue from "../components/ButtonBlue";
+import {ButtonBlue} from "../components/ButtonStyled";
+import { palette } from "../styles/palette";
 
 function HomePage() {
   return (
@@ -10,6 +11,7 @@ function HomePage() {
       <StyledContent>
         <p>아띠</p>
         <img src={Logo} style={logoStyle} alt="Logo Cumputer Img" />
+        <div style={{ background:`${palette.gray_1}`, opacity:0.9,  borderRadius:`1rem`, width:`90%` }}><p>자체 커뮤니티와 함께 화상 회의가 가능한 교육 플랫폼</p> </div>
         <div>
           <Link to="/login">
             <ButtonBlue>로그인</ButtonBlue>
@@ -35,9 +37,8 @@ const StyledPage = styled.div`
 `;
 
 const StyledContent = styled.div`
-max-width: 500px;
-min-width: 500px;
-height: 300px;
+width: 500px;
+height: auto;
 padding: 3rem;
 text-align: center;
 border-radius: 1rem;
