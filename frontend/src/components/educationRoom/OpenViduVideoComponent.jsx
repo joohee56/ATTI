@@ -5,7 +5,6 @@ const Video = styled.video`
   width: 100%;
   /* width: ${(props) => (props.main ? `100%` : "360px")}; */
   position: relative;
-  z-index: 1;
 `;
 
 export default function OpenViduVideoComponent(props) {

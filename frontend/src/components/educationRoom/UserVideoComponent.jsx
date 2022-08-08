@@ -5,7 +5,7 @@ import styled from "styled-components";
 const UserVideo = styled.div`
   /* width: 500px;
   height: 420px; */
-  margin-top: ${(props) => (props.main ? `5%` : "3px")};
+  margin-top: ${(props) => (props.main ? `5px` : "3px")};
   margin-left: 3px;
   margin-right: 3px;
   margin-bottom: 3px;
@@ -19,7 +19,6 @@ const UserVideo = styled.div`
     0 14px 19px 0 rgba(0, 0, 0, 0.07);
   overflow: hidden;
   position: relative;
-  z-index: 1;
 `;
 const VideoAndNickNameParentDiv = styled.div`
   position: relative;
