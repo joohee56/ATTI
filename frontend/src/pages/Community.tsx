@@ -1,6 +1,9 @@
 import React, { useState, useCallback, PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
+import React, { useState, useCallback, PropsWithChildren } from 'react';
+import styled from 'styled-components';
+
 import NormalPostFrame from '../components/Community/NormalPostFrame';
 import Category from '../components/Community/Category';
 import Calendar from '../components/Community/Calendar';
