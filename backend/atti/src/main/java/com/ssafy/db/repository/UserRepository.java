@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.ssafy.api.request.KakaoUser;
 import com.ssafy.api.request.UserFindIdReq;
 import com.ssafy.db.entity.user.User;
 
@@ -28,6 +29,13 @@ public class UserRepository {
 		em.persist(user);
 	}
 	
+	// 카카오로 회원가입
+	// User 엔티티말고 기본 유저 req 만들어서 상속받아 사용했으면 한 개만 만들어도 됐을 것 같음
+	public void signUpKakao(KakaoUser user) {
+//		
+//		em.persist(user);
+	}
+	
 	public List<User> findById(String userId){
 //		String jpql = "SELECT b FROM Book b ";
 //		TypedQuery<Book> query = em.createQuery(jpql, Book.class);
@@ -36,19 +44,28 @@ public class UserRepository {
 	}
 	
 	public List<User> findByName(String name){
-		return em.createQuery("select u from User u where u.user_name = :name", User.class).setParameter("name", name).getResultList();
+		return em.createQuery("select u from User u where u.userName = :name", User.class).setParameter("name", name).getResultList();
 	}
 	
+	// 아이디 찾기
 	public List<User> findId(UserFindIdReq findIdInfo){
 		String name = findIdInfo.getName();
 		String email = findIdInfo.getEmail();
-		Date birth = findIdInfo.getBirth();
 		
-		return em.createQuery("select u from User u where u.name = :name and u.email = :email and u.birth = birth", User.class).setParameter("name", name).setParameter("email", email).setParameter("birth", birth).getResultList();
+		return em.createQuery("select u from User u where u.userName = :name and u.email = :email", User.class).setParameter("name", name).setParameter("email", email).getResultList();
+	}
+	
+	// 카카오 아이디 찾기
+	public List<User> findKakaoId(String userId){
+		return em.createQuery("select u from User u where u.social = :userId", User.class).setParameter("userId", userId).getResultList();
 	}
 	
 	public User IdCheck(String userId) {
 		return em.find(User.class, userId);
+	}
+	
+	public List<User> phoneCheck(String phoneNumber) {
+		return em.createQuery("select u from User u where u.phone = :phoneNumber", User.class).setParameter("phoneNumber", phoneNumber).getResultList();
 	}
 		
 //	public User findOne(String id) {
