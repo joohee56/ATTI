@@ -19,17 +19,15 @@ const Main = styled.div`
   align-items: center;
   width: 100%;
   max-width: 1500px;
-  height: 560px;
-  position: relative;
+  height: 650px;
   text-align: center;
-
   ::after {
     width: 100%;
-    height: 560px;
+    height: 700px;
     content: "";
     background: url(${mainBG});
     /* background-size: cover; */
-    background-size: 100% 560px;
+    background-size: 100% 700px;
     position: absolute;
     top: 0;
     left: 0;
@@ -46,10 +44,10 @@ const StyledContent = styled.div`
 `;
 
 const logoStyle = {
-  width: "50%",
+  width: "60%",
   maxWidth: "500px",
   height: "auto",
-  paddingTop: "30px",
+  paddingBottom: "30px",
   filter: "drop-shadow(5px 5px #67676761)",
 };
 

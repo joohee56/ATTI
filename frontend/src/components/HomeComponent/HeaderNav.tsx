@@ -11,18 +11,16 @@ import { IconButton } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
 
 const Header = styled.header`
-  position: fixed;
   width: 90%;
   height: 30px;
   max-width: 1600px;
-  padding: 1rem 5rem;
-  background: #ffffff8d;
+  padding: 10px 5rem;
   font-weight: bold;
   display: flex;
+  background-color:transparent;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid gray;
-  z-index: 2;
+  background-color: white;
 `;
 
 const LogoImg = styled.img`

@@ -74,10 +74,7 @@ function LoginPage() {
         await axios
           .post(
             BACKEND_URL + "/auth/login/normal",
-            {
-              userId: loginInfo.userId,
-              password: loginInfo.password,
-            },
+
             {
               headers: {
                 "Content-type": "application/json",
@@ -85,9 +82,15 @@ function LoginPage() {
             }
           )
           .then((res) => {
+            // localStorage.setItem("Response request",res.request); 
+            // localStorage.setItem("Response config"," "+res.config); 
+            // localStorage.setItem("Response headers"," "+res.headers); 
+            // localStorage.setItem("Response status"," "+res.status); 
+            // localStorage.setItem("Response statusText",res.statusText);
+            console.log(res);
             
             if (res.status === 200) {
-              document.location.href = "/welcome";
+              //document.location.href = "/welcome";
               console.log("response:", res);
             }
           });
@@ -120,6 +123,7 @@ function LoginPage() {
           {
             headers: {
               "Content-type": "application/json",
+              
             },
           }
         )
