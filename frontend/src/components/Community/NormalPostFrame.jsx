@@ -56,28 +56,14 @@ function PostList({handleModal2, limit, page, getLength, getSinglePost}) {
   //   post_upd_date: postUpdDate,
   // });
 
-const Rendering = ({ post, handleModal2, limit, page, getSinglePost }) => {
+const Rendering = ({ post, handleModal2, limit, page}) => {
   
   // const result = post.filter(single => single.postId === 2)
   // console.log(result[0].postContent)
-  const Single = useEffect(() => {
-       async function singlePost(){
-         const postId = 13
-         axios.get(
-           BACKEND_URL + `/post/read/${postId}`,
-           {
-             headers: {
-               "Content-type": "application/json",
-             },
-           }
-         ).then((res) => {
-           console.log(res.data)
-           getSinglePost(res.data)
-         })
-       }
-       singlePost();
-      },[]);
-  
+  const [postId, setPostId] = useState([])
+  const getPostId = (id) => {
+    setPostId(id)
+  }
   const offset = (page - 1) * limit;
   const postStyle = {
     borderRadius: "30px",
@@ -90,7 +76,6 @@ const Rendering = ({ post, handleModal2, limit, page, getSinglePost }) => {
   return (
     <>
       {post.slice(offset, offset + limit).map((e, i) => (
-        // <div key={i}>{post[e].user_id}</div>
       <IndividualPost key={i}>
         {console.log(e)}
         {console.log('-----')}
@@ -125,6 +110,7 @@ const Rendering = ({ post, handleModal2, limit, page, getSinglePost }) => {
           </div>
       </IndividualPost>
       ))}
+      {console.log(postId)}
     </>
     )
   };
