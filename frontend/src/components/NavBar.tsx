@@ -12,7 +12,7 @@ function NavBar(){
 
 const NavDiv = styled.div`
 width: 100%;
-height: 60px;
+height: 50px;
 border: 1px solid;
 `;
 export default NavBar

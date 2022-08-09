@@ -9,10 +9,9 @@ import PostDetail from '../components/Community/PostDetail';
 import Modal from '../components/Modal';
 import NavBar from '../components/NavBar';
 import CommunityBg from '../assets/images/communityBG.png'
+
+
 function Community(){
-
-
-
   return(
     <CommunityDiv>
         <NavBar/>

@@ -1,5 +1,6 @@
 package com.ssafy.db.entity.depart;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,13 +26,16 @@ import com.ssafy.db.entity.user.UserRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Data
 @Entity
 @Getter
+@Setter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -43,8 +47,8 @@ public class Comment {
 	private Long commentId;
 	
 	@Column(name="comment_reg_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date commnetRegDate;
+//	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime commnetRegDate;
 	
 	@Column(name="comment_delete_info")
 	private boolean commentDeleteInfo;
@@ -66,6 +70,7 @@ public class Comment {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
+	@JsonIgnore
 	private User user;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -85,7 +90,8 @@ public class Comment {
 	
 	public void setPost(Post post) {
 		this.post = post;
-		user.getComments().add(this);
+		post.getComments().add(this);
+//		user.getComments().add(this);
 	}
 	
 	
