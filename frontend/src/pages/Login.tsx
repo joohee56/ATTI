@@ -1,3 +1,4 @@
+import { api } from "../utils/api";
 import { useState, useCallback } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -7,12 +8,10 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlue } from "../components/ButtonStyled";
 import { ButtonPurple } from "../components/ButtonStyled";
-import InputWithLabel from '../components/InputWithLabel';
+import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
-import axios, { AxiosError } from "axios";
-import { BACKEND_URL } from "../constant/index";
 import { KAKAO_AUTH_URL } from "../constant/index";
-import InputWithPhone from '../components/account/InputWithPhone';
+import InputWithPhone from "../components/account/InputWithPhone";
 
 interface userLoginInfo {
   userId: string;
@@ -68,72 +67,49 @@ function LoginPage() {
   };
 
   // 일반 로그인
-  const loginClick = useCallback(
-    async (e: any) => {
-      try {
-        await axios
-          .post(
-            BACKEND_URL + "/auth/login/normal",
-
-            {
-              headers: {
-                "Content-type": "application/json",
-              },
-            }
-          )
-          .then((res) => {
-            // localStorage.setItem("Response request",res.request); 
-            // localStorage.setItem("Response config"," "+res.config); 
-            // localStorage.setItem("Response headers"," "+res.headers); 
-            // localStorage.setItem("Response status"," "+res.status); 
-            // localStorage.setItem("Response statusText",res.statusText);
-            console.log(res);
-            
-            if (res.status === 200) {
-              //document.location.href = "/welcome";
-              console.log("response:", res);
-            }
-          });
-      } catch (err) {
-        const { response } = err as unknown as AxiosError;
+  const loginClick = async (e: any) => {
+    e.preventDefault();
+    await api
+      .post("/auth/login/normal", {
+        userId: loginInfo.userId,
+        password: loginInfo.password,
+      })
+      .then(function (response) {
         console.log(response);
-      }
-    },
-    [loginInfo.userId, loginInfo.password]
-  );
+        if (response.status === 200) {
+          //document.location.href = "/welcome";
+          console.log("response:", response);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   // 카카오 로그인
   const kakaoLogin = () => {
-    window.location.href=KAKAO_AUTH_URL;
+    window.location.href = KAKAO_AUTH_URL;
 
-    let AuthorizationCode = new URL(window.location.href).searchParams.get("code");
+    let AuthorizationCode = new URL(window.location.href).searchParams.get(
+      "code"
+    );
     console.log(AuthorizationCode);
   };
 
   // 아이디 찾기
   const clickFindId = async (e: any) => {
-    try {
-      await axios
-        .post(
-          BACKEND_URL + "/user/findId",
-          {
-            name: findIdInfo.findId_name,
-            email: findIdInfo.findId_email,
-          },
-          {
-            headers: {
-              "Content-type": "application/json",
-              
-            },
-          }
-        )
-        .then((res) => {
-          setFindID('는 "' + res.data.userId + '" 입니다.');
-        });
-    } catch (err) {
-      const { response } = err as unknown as AxiosError;
-      setFindID("가 존재하지 않습니다");
-    }
+    e.preventDefault();
+    await api
+      .post("/user/findId", {
+        name: findIdInfo.findId_name,
+        email: findIdInfo.findId_email,
+      })
+      .then(function (response) {
+        setFindID('는 "' + response.data.userId + '" 입니다.');
+      })
+      .catch(function (error) {
+        setFindID("가 존재하지 않습니다");
+      });
   };
 
   // 아이디 찾기, 비밀번호 찾기
@@ -154,13 +130,13 @@ function LoginPage() {
 
   return (
     <>
-       <NavLink to="/">
-          <HomeIcon /> Home
-        </NavLink>
-        {" | "}
-        <NavLink to="/signup">
-          <PersonOutlineOutlinedIcon /> Signup
-        </NavLink>
+      <NavLink to="/">
+        <HomeIcon /> Home
+      </NavLink>
+      {" | "}
+      <NavLink to="/signup">
+        <PersonOutlineOutlinedIcon /> Signup
+      </NavLink>
       <HeaderDiv>로그인</HeaderDiv>
       <StyledPage>
         <StyledContent>
@@ -172,7 +148,12 @@ function LoginPage() {
         </StyledContent>
         <StyledContent>
           <div>최근에 로그인한 서비스</div>
-          <img src={"https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"} alt="네이버로 로그인" />
+          <img
+            src={
+              "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
+            }
+            alt="네이버로 로그인"
+          />
           <hr />
           <div>
             자동로그인
@@ -181,8 +162,17 @@ function LoginPage() {
 
           <div>
             <div>
-              <InputWithLabel name="userId" placeholder="ID" onChange={onChangeLogin} />
-              <InputWithLabel name="password" placeholder="Password" type="password" onChange={onChangeLogin} />
+              <InputWithLabel
+                name="userId"
+                placeholder="ID"
+                onChange={onChangeLogin}
+              />
+              <InputWithLabel
+                name="password"
+                placeholder="Password"
+                type="password"
+                onChange={onChangeLogin}
+              />
             </div>
 
             <p>
@@ -209,14 +199,30 @@ function LoginPage() {
 
           <p>다른 서비스를 이용한 로그인</p>
           <div>
-            <img src={"https://pbs.twimg.com/profile_images/738200195578494976/CuZ9yUAT_400x400.jpg"} alt="카카오로 로그인" width={"50px"} onClick={kakaoLogin} />
-            <img src={"https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"} alt="네이버로 로그인" />
+            <img
+              src={
+                "https://pbs.twimg.com/profile_images/738200195578494976/CuZ9yUAT_400x400.jpg"
+              }
+              alt="카카오로 로그인"
+              width={"50px"}
+              onClick={kakaoLogin}
+            />
+            <img
+              src={
+                "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
+              }
+              alt="네이버로 로그인"
+            />
           </div>
         </StyledContent>
 
         {/* 모달 생성 */}
         {findInfoModal && (
-          <Modal onClickToggleModal={onClickToggleModal} width="600px" height="400px">
+          <Modal
+            onClickToggleModal={onClickToggleModal}
+            width="600px"
+            height="400px"
+          >
             <ModalDiv>
               <StyledPage>
                 <LeftTextDiv>
@@ -243,8 +249,17 @@ function LoginPage() {
                 {/*아이디 찾기 모달*/}
                 {findValue == "findID" && (
                   <>
-                    <InputWithLabel name="findId_name" placeholder="Name" onChange={onChangeFindID} />
-                    <InputWithLabel name="findId_email" placeholder="email" type="email" onChange={onChangeFindID} />
+                    <InputWithLabel
+                      name="findId_name"
+                      placeholder="Name"
+                      onChange={onChangeFindID}
+                    />
+                    <InputWithLabel
+                      name="findId_email"
+                      placeholder="email"
+                      type="email"
+                      onChange={onChangeFindID}
+                    />
                     {clickFindID && <p>아이디{clickFindID}</p>}
                     <ButtonPurple onClick={clickFindId}>찾기</ButtonPurple>
                   </>
@@ -254,7 +269,11 @@ function LoginPage() {
                   <>
                     <InputWithLabel name="id" placeholder="ID" />
                     <InputWithLabel name="name" placeholder="Name" />
-                    <InputWithPhone name="phoneNumber" placeholder="폰 번호" phonNumber={phoneNumber} />
+                    <InputWithPhone
+                      name="phoneNumber"
+                      placeholder="폰 번호"
+                      phonNumber={phoneNumber}
+                    />
                     <ButtonPurple>보내기</ButtonPurple>
                     <p>
                       가입하신 이메일(xxx@naver.com)으로
