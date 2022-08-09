@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 
 @Api(value = "유저 API", tags = {"User"})
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
