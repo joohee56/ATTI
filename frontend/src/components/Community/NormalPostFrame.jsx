@@ -6,6 +6,7 @@ import axios from 'axios';
 
 
 import { BACKEND_URL } from "../../constant";
+import PostUpdate  from "./PostUpdate";
 import PostDetail from "./PostDetail";
 import PostEditor from "./PostEditor";
 import Modal from "../Modal";
@@ -80,7 +81,7 @@ const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
       <IndividualPost key={i}>
         {console.log(e)}
         {console.log('-----')}
-        {console.log(e.postId)}
+        {/* {console.log(e.postId)} */}
         {/* {console.log('postId :',  postId)} */}
         <div style={postStyle} onClick={() => {twofunctions(e.postId)}}>
              <div
@@ -137,6 +138,11 @@ function NormalPostFrame() {
     setOpenModal1(!isOpenModal1);
   }, [isOpenModal1]);
 
+  const [isOpenModal3, setOpenModal3] = useState(false);
+  const onClickToggleModal3 = useCallback(() => {
+    setOpenModal3(!isOpenModal3);
+  }, [isOpenModal3]);
+
   const [length,setLength] = useState([])
   const getLength = (length) => {
     setLength(length)
@@ -149,6 +155,7 @@ function NormalPostFrame() {
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(1);
   
+  const [singlePost, setSinglePost] = useState([])
 
   return (
     <>
@@ -176,14 +183,23 @@ function NormalPostFrame() {
         />
       </StickyFooter>
       </PostContainer>
-      
+
+      {isOpenModal3 && (
+        <Modal
+          onClickToggleModal={onClickToggleModal3}
+          width="1000px"
+          height="680px"
+        >
+          <PostUpdate singlePost={singlePost} />
+        </Modal>
+      )}
       {isOpenModal2 && (
         <Modal
           onClickToggleModal={onClickToggleModal2}
           width="1000px"
           height="680px"
         >
-          <PostDetail postId={postId} />
+          <PostDetail postId={postId} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
         </Modal>
       )}
       {isOpenModal1 && (

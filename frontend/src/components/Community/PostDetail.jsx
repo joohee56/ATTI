@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {useSelector, useDispatch} from 'react-redux';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -21,11 +21,8 @@ import { palette } from '../../styles/palette';
 
 import ReactHtmlParser from 'react-html-parser'
 
-function PostDetail({postId}){
-    // const postTitle = useSelector(state => state.normalPost.post_title)
-    // const postContent = useSelector(state => state.normalPost.post_content)
-    // const postUpdDate = useSelector(state => state.normalPost.post_upd_date)
-
+function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
+    const [single, setSingle] = useState([])
     useEffect(() => {
         async function singlePost(){
           axios.get(
@@ -37,30 +34,105 @@ function PostDetail({postId}){
             }
           ).then((res) => {
             console.log("개별 글 list : ", res.data)
+            setSingle(res.data)
+            setSinglePost(res.data)
           })
         }
         singlePost();
        },[]);
-
+    
+    function modalEvent(){
+        onClickToggleModal2()
+        onClickToggleModal3()
+    }
     const [comment, setComment] = useState({
-        comment_content: "",
+        commentId: "",
+        postId: "",
+        categoryId: "",
+        departId: "",
+        userId: "",
+        commentRegDate: "",
+        commentDeleteInto: "",
+        commentAnoInfo: "",
+        commentContent: "",
+        commentGroup: "",
+        commentLevel: "",
+        seq: ""
     })
     const getValue = e => {
-        const {name,value} = e.target;
-       
-        setComment((prev) => ({
-            ...prev,
-            [name] : value,
-        }));
-    };
+            const {name,value} = e.target;
+        
+            setComment((prev) => ({
+                ...prev,
+                [name] : value,
+            }));
+        };
+    const writeComment = useCallback(
+        async (e) => {
+        e.preventDefault();
+        try {
+            await axios
+            .post(
+                BACKEND_URL + "/post/comment/write",
+                {
+                    commentId: comment.commentId,
+                    postId: comment.postId,
+                    categoryId: comment.categoryId,
+                    departId: comment.departId,
+                    userId: comment.userId,
+                    commentRegDate: comment.commentRegDate,
+                    commentDeleteInto: comment.commentDeleteInto,
+                    commentAnoInfo: comment.commentAnoInfo,
+                    commentContent: comment.commentContent,
+                    commentGroup: comment.commentGroup,
+                    commentLevel: comment.commentLevel,
+                    seq: comment.seq
+                },
+                {
+                headers: {
+                    "Content-type": "application/json",
+                },
+                }
+            )
+            .then((res) => {
+                console.log("response:", res);
+    
+            });
+        } catch (err) {
+            console.log(err)
+        }
+        },
+        [
+        comment.commentId,
+        comment.postId,
+        comment.categoryId,
+        comment.departId,
+        comment.userId,
+        comment.commentRegDate,
+        comment.commentAnoInfo,
+        comment.commentContent,
+        comment.commentGroup,
+        comment.commentLevel,
+        comment.seq
+        ]
+    );
 
-    const dispatch = useDispatch();
-    const commentHandler = (event) => {
-        event.preventDefault();
-        dispatch(commentActions.saveComment({comment_content: comment.comment_content}))
-        setComment({comment_content: ""})
-    }
+    const deletePost = () => {
+        axios.delete(
+                BACKEND_URL + `/post/delete/${single.postId}`,
+                {
+                headers: {
+                    "Content-type": "application/json",
+                },
+                }
+            )
+            .then((res) => {
+                console.log("response:", res);
+    
+            });
+        }
 
+///////////////////////////////////////////////////////////////////
     const detailStyle = {
         width: "1000px",
         height: "700px",
@@ -68,20 +140,18 @@ function PostDetail({postId}){
         // flexDirection: "column",
         // justifyContent: "space-between",
     }
-    
     const hrStyle = {
         height: "0.1px",
         backgroundColor: "gray",
         width: "95%",
         
     }
-
     return(
         <div style={detailStyle}>
             <div>
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between"}}>
                     <div style={{margin: "10px 0 0 40px", fontWeight: "bold"}}>
-                        제목이 들어갑니다.
+                        {single.postTitle}
                     </div>
                     <div style={{display: "flex", margin: "0 35px 0 0"}}>
                         <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
@@ -97,38 +167,28 @@ function PostDetail({postId}){
                     <Avatar sx={{ width: 50, height: 50 }}>BS</Avatar>
                     <div style={{display: "flex", flexDirection: "column", margin: "0 0 0 20px"}}>
                         <div style={{margin: "0 0 10px 0"}}>
-                            사용자 이름
+                            사용자 이름 이 나와야함...아직 데이터가 없어서 못 나옴
                         </div>
                         <div>
-                            postUpdDate가 나올 예정, postRegDate도 같이 나올 예정
+                            <span>
+                               작성: {single.postRegDate} /  
+                            </span>
+                            <span>
+                                {single.postUpdDate}
+                            </span>
                         </div>
                     </div>
                 </div>
                 <div style={{display: "flex", flexDirection: "row" , margin: "0 10px 0 0"}}>
-                    <CustomEditOutlinedIcon/>
+                    <CustomEditOutlinedIcon onClick={modalEvent}/>
                     &nbsp; &nbsp;
-                    <CustomDeleteIcon/>
+                    <CustomDeleteIcon onClick={deletePost}/>
                 </div>
             </div>
             <br />
             <ContentDiv>
-                {/* {ReactHtmlParser(postContent)} */}
-                postContent가 들어갑니다. 이렇게 많은 것들이 들어갈 수 잇습니다.
-                <br />
-                <br />
-                많이많이
-                아주 많이
-                <br />
-                sdfsfgeqwrwt
-                <br />
-                gdsgwerqet
-                <br />
-                brfsfdsf
-                <br />  
-                <br />
-                sddddddddddddddddd
-                <br />
-                ssssssssssssssssssss
+                {ReactHtmlParser(single.postContent)}
+                
             </ContentDiv>
             <hr style={{ height: "0.1px", backgroundColor: "gray", width: "95%", marginBottom: "0"}} />
             <br />
@@ -144,9 +204,9 @@ function PostDetail({postId}){
                     </SwitchDiv>
                 </div>
                 <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
-                    <CustomInputWithLabel name='comment_content' placeholder='댓글을 작성해 주세요' onChange={getValue} value={comment.comment_content}/>
+                    <CustomInputWithLabel name='commentContent' placeholder='댓글을 작성해 주세요' onChange={getValue} value={comment.commentContent}/>
                     {/* <CommentInput name='comment_content' onChange={getValue} value={comment.comment_content}/> */}
-                    <CustomButtonBlue onClick={commentHandler}>댓글 작성</CustomButtonBlue>
+                    <CustomButtonBlue onClick={writeComment}>댓글 작성</CustomButtonBlue>
                 </div>
             </div>
         </div>

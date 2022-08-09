@@ -88,3 +88,8 @@ export const normalPostActions = normalPostSlice.actions;
 export const commentActions = commentSlice.actions;
 
 export default communityStore
+
+
+ // const postTitle = useSelector(state => state.normalPost.post_title)
+    // const postContent = useSelector(state => state.normalPost.post_content)
+    // const postUpdDate = useSelector(state => state.normalPost.post_upd_date)
