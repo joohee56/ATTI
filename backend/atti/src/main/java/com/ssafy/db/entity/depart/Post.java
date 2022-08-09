@@ -1,7 +1,7 @@
 package com.ssafy.db.entity.depart;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,18 +15,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.db.entity.user.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Data
 @Entity
 @Setter
 @Getter
@@ -40,17 +41,18 @@ public class Post {
 	@Column(name="post_id")
 	private Long postId;
 	
+	@Column(name="post_title")
+	private String postTitle;
+	
 	@Lob
 	@Column(name="post_content")
 	private String postContent;
 	
 	@Column(name="post_reg_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date postRegDate;
+	private LocalDateTime postRegDate;
 	
 	@Column(name="post_upd_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date postUpdDate;
+	private LocalDateTime postUpdDate;
 	
 	@Column(name="post_ano_info")
 	private boolean postAnoInfo;
@@ -60,6 +62,7 @@ public class Post {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
+	@JsonIgnore
 	private User user;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -67,6 +70,7 @@ public class Post {
 	private Category category;
 	
 	@OneToMany(mappedBy = "post")
+	@JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)

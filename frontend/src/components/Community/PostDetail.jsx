@@ -54,7 +54,8 @@ function PostDetail(){
     const hrStyle = {
         height: "0.1px",
         backgroundColor: "gray",
-        width: "95%"
+        width: "95%",
+        
     }
 
     return(
@@ -92,19 +93,30 @@ function PostDetail(){
                 </div>
             </div>
             <br />
-            <div style={{margin: "0 0 0 25px"}}>
+            <ContentDiv>
                 {/* {ReactHtmlParser(postContent)} */}
-                postContent가 들어갑니다. 이렇게 많은 것들이 들어갈 수 잇습니다.....
+                postContent가 들어갑니다. 이렇게 많은 것들이 들어갈 수 잇습니다.
                 <br />
                 <br />
                 많이많이
                 아주 많이
-            </div>
-            <hr style={hrStyle} />
+                <br />
+                sdfsfgeqwrwt
+                <br />
+                gdsgwerqet
+                <br />
+                brfsfdsf
+                <br />  
+                <br />
+                sddddddddddddddddd
+                <br />
+                ssssssssssssssssssss
+            </ContentDiv>
+            <hr style={{ height: "0.1px", backgroundColor: "gray", width: "95%", marginBottom: "0"}} />
             <br />
             <CommentList/>
             
-            <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-end", alignContent: "flex-end", margin: "210px 0 0 0"}}>
+            <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-end", alignContent: "flex-end", margin: "10px 0 0 0"}}>
                 <div style={{display: "flex", flexDirection: "row"}}>
                     <SwitchDiv>
                         <span style={{textAlign: "center" ,fontSize: "15px", marginBottom: "5px"}}>
@@ -133,9 +145,8 @@ width: 800px;
 height: 60px;
 margin: 0 20px 0 30px;
 font-size: 18px;
-background-color: ${palette.gray_1}
+background-color: ${palette.gray_1};
 border: none;
-
 `
 const CustomEditOutlinedIcon = styled(EditOutlinedIcon)`
 &:hover{
@@ -161,5 +172,19 @@ align-items: center;
 justify-content: center;
 font-weight: bold;
 margin: 0 0 0 30px;
+`;
+
+const ContentDiv = styled.div`
+height: 170px;
+margin: 0 0 0 25px;
+overflow: auto;
+&::-webkit-scrollbar {
+    width: 6px;
+    background: ${palette.white};
+  }
+&::-webkit-scrollbar-thumb {
+border-radius: 10px;
+background: ${palette.main_grBlue};
+}
 `;
 ;export default PostDetail

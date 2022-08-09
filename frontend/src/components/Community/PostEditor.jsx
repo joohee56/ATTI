@@ -6,6 +6,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios from 'axios';
 
+
+import { BACKEND_URL } from "../../constant";
 import { ButtonBlue } from '../ButtonStyled';
 import { normalPostActions } from '../../store/community/index'
 import { palette } from "../../styles/palette";
@@ -39,7 +41,7 @@ export function PostEditor() {
           try {
             await axios
               .post(
-                "http://localhost:8081/post/write",
+                BACKEND_URL + "/post/write",
                 {
                   postId : post.postId,
                   postTitle : post.postTitle,

@@ -1,98 +1,98 @@
-import React, { PropsWithChildren, useState, useCallback , Component } from "react";
+import React, { PropsWithChildren, useState, useCallback , Component, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import ReactHtmlParser from "react-html-parser";
+import axios from 'axios';
 
+
+import { BACKEND_URL } from "../../constant";
 import PostDetail from "./PostDetail";
 import PostEditor from "./PostEditor";
 import Modal from "../Modal";
 import SearchBar from "./SearchBar";
 import { ButtonBlue } from "../ButtonStyled";
 import { palette } from "../../styles/palette";
+import Pagination from "./pagenation";
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
 
-function PostList({handleModal2}) {
-  const dummyPost = {
-    post: [
-      {
-          user_id : '이현태',
-          post_id : 1,
-          post_title : "아아아아아아아아아아",
-          post_content : "222222222222222222222222",
-          post_req_date : "2022-07-28 11:14",
-          post_upd_date : "2022-07-28 11:15",
-          post_ano_info : 0,
-          post_com_ban_info : 0,
-      },
-      {
-          user_id : '정진',
-          post_id : 2,
-          post_title : "오오오오오옹오옹오오오옹오",
-          post_content : "3333333333333333333333333333",
-          post_req_date : "2022-07-28 11:14",
-          post_upd_date : "2022-07-28 11:15",
-          post_ano_info : 0,
-          post_com_ban_info : 0,
-      },
-      {
-          user_id : '김연수',
-          post_id : 3,
-          post_title : "이이이잉이이이이이이이이이이이이이이",
-          post_content : "44444444444444444444444444444",
-          post_req_date : "2022-07-28 11:14",
-          post_upd_date : "2022-07-28 11:15",
-          post_ano_info : 0,
-          post_com_ban_info : 0,
-      },
-      {
-        user_id : '김연수',
-        post_id : 3,
-        post_title : "이이이잉이이이이이이이이이이이이이이",
-        post_content : "44444444444444444444444444444",
-        post_req_date : "2022-07-28 11:14",
-        post_upd_date : "2022-07-28 11:15",
-        post_ano_info : 0,
-        post_com_ban_info : 0,
+function PostList({handleModal2, limit, page, getLength, getSinglePost}) {
+  const [post,setPost] = useState([])
+  useEffect(() => {
+    async function getPosts(){
+      axios.get(
+        BACKEND_URL + "/post",
+        {
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      ).then((res) => {
+        console.log(res.data)
+        setPost(res.data)
+        getLength(res.data.length)
+      })
     }
-    ],
-  };
-
-  const postTitle = useSelector((state) => state.normalPost.post_title);
-  const postContent = useSelector((state) => state.normalPost.post_content);
-  const postUpdDate = useSelector((state) => state.normalPost.post_upd_date);
-
-  dummyPost.post.push({
-    post_title: postTitle,
-    post_content: postContent,
-    post_upd_date: postUpdDate,
-  });
+    getPosts();
+  },[]);
   return (
     <>
-      <Rendering dummyPost={dummyPost} handleModal2={handleModal2} />
+      <Rendering post={post} handleModal2={handleModal2} limit={limit} page={page} getSinglePost={getSinglePost} />
     </>
   );
-}
-const Rendering = ({ dummyPost, handleModal2 }) => {
+  
+};
 
-  console.log(dummyPost);
-    const result = [];
-    const postStyle = {
-      borderRadius: "30px",
-      backgroundColor: palette.gray_1,
-      width: "1150px",
-      height: "90px",
-      margin: "15px 0 0 50px",
-      boxShadow: "2px 2px 2px grey"
+  // const postTitle = useSelector((state) => state.normalPost_title);
+  // const postContent = useSelector((state) => state.normalPost_content);
+  // const postUpdDate = useSelector((state) => state.normalPost_upd_date);
+
+  // post.push({
+  //   post_title: postTitle,
+  //   post_content: postContent,
+  //   post_upd_date: postUpdDate,
+  // });
+
+const Rendering = ({ post, handleModal2, limit, page, getSinglePost }) => {
+  
+  // const result = post.filter(single => single.postId === 2)
+  // console.log(result[0].postContent)
+  const Single = useEffect(() => {
+       async function singlePost(){
+         const postId = 13
+         axios.get(
+           BACKEND_URL + `/post/read/${postId}`,
+           {
+             headers: {
+               "Content-type": "application/json",
+             },
+           }
+         ).then((res) => {
+           console.log(res.data)
+           getSinglePost(res.data)
+         })
+       }
+       singlePost();
+      },[]);
+  
+  const offset = (page - 1) * limit;
+  const postStyle = {
+    borderRadius: "30px",
+    backgroundColor: palette.gray_1,
+    width: "1150px",
+    height: "90px",
+    margin: "15px 0 0 50px",
+    boxShadow: "2px 2px 2px grey"
   };
   return (
     <>
-      {Object.keys(dummyPost.post).map((e, i) => (
-        // <div key={i}>{dummyPost.post[e].user_id}</div>
+      {post.slice(offset, offset + limit).map((e, i) => (
+        // <div key={i}>{post[e].user_id}</div>
       <IndividualPost key={i}>
+        {console.log(e)}
         <div style={postStyle} onClick={handleModal2}>
              <div
               style={{
@@ -103,15 +103,15 @@ const Rendering = ({ dummyPost, handleModal2 }) => {
               }}
             >
               <UserIdDiv>
-                작성자: {dummyPost.post[e].user_id}
+                작성자: {e.user}
               </UserIdDiv>
-              {dummyPost.post[e].post_upd_date}
+              {e.postRegDate}
             </div>
             <hr style={{width: "95%"}} />
 
             <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0 20px" }}>
               <div style={{fontSize: "20px", fontWeight: "bold"}}>
-                {dummyPost.post[e].post_title}   
+                {e.postTitle}   
               </div>
               <div>
               <FavoriteBorderIcon/> 24
@@ -128,36 +128,64 @@ const Rendering = ({ dummyPost, handleModal2 }) => {
     )
   };
 function NormalPostFrame() {
+
   const [isOpenModal2, setOpenModal2] = useState(false);
   const onClickToggleModal2 = useCallback(() => {
     setOpenModal2(!isOpenModal2);
     }, [isOpenModal2]);
-  const [isOpenModal1, setOpenModal1] = useState(false);
-  const onClickToggleModal1 = useCallback(() => {
-    setOpenModal1(!isOpenModal1);
-  }, [isOpenModal1]);
+    
   const handleModal2 = () => {
     setOpenModal2((prev) => {
       return !prev
     }
     );
   }
+
+  const [isOpenModal1, setOpenModal1] = useState(false);
+  const onClickToggleModal1 = useCallback(() => {
+    setOpenModal1(!isOpenModal1);
+  }, [isOpenModal1]);
+
+  const [length,setLength] = useState([])
+  const getLength = (length) => {
+    setLength(length)
+  }
+  const [singlePost, setSinglePost] = useState([])
+  const getSinglePost = (singlePost) => {
+    setSinglePost(singlePost)
+  }
+
+  const [limit, setLimit] = useState(5);
+  const [page, setPage] = useState(1);
+  
+
   return (
     <>
       <PostContainer>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Title> 공지사항 or 질문 or 자유게시판 </Title>
-          <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
-            <SearchBar />
-            <WriteButton onClick={onClickToggleModal1}>
-              글쓰기
-            </WriteButton>
+        <div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Title> 공지사항 or 질문 or 자유게시판 </Title>
+            <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
+              <SearchBar />
+              <WriteButton onClick={onClickToggleModal1}>
+                글쓰기
+              </WriteButton>
+            </div>
+          </div>
+          <div>
+            <PostList handleModal2={handleModal2} limit={limit} page={page} getLength={getLength} getSinglePost={getSinglePost} />
           </div>
         </div>
-        <div id="1234">
-          <PostList handleModal2={handleModal2} />
-        </div>
+        <StickyFooter>
+        <Pagination
+          total={length}
+          limit={limit}
+          page={page}
+          setPage={setPage}
+        />
+      </StickyFooter>
       </PostContainer>
+      
       {isOpenModal2 && (
         <Modal
           onClickToggleModal={onClickToggleModal2}
@@ -179,6 +207,7 @@ function NormalPostFrame() {
     </>
   );
 }
+
 const UserIdDiv = styled.div`
 font-size: 20px;
 font-weight: bold;
@@ -188,12 +217,20 @@ color: transparent;
 `;
 const PostContainer = styled.div`
   width: 1300px;
-  height: 661px;
+  height: 671px;
   margin: 15px 0;
- 
   border-radius: 20px;
   background-color: white;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: space-around; */
 `;
+
+const StickyFooter = styled.footer`
+position: fixed; 
+bottom: 0; 
+width: 83%; 
+`
 
 const Title = styled.p`
   font-size: 30px;
