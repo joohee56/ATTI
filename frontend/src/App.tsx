@@ -8,7 +8,11 @@ import ClassMeeting from "./pages/ClassMeeting";
 import Community from "./pages/Community";
 import WelcomePage from "./pages/Welcome";
 import ModalTest from "./pages/ModalTest";
+
+// import Test from "./pages/Test";
+
 import OAuth2RedirectHandler from "./components/account/OAuth2RedirectHandler";
+
 
 function App() {
   return (
@@ -20,7 +24,11 @@ function App() {
     <Route path="/classmeeting" element={ <ClassMeeting />} />
     <Route path="/welcome" element={ <WelcomePage />} />
     <Route path="/modaltest" element={ <ModalTest />} />
+
+    {/* <Route path="/test" element={ <Test />} /> */}
+
     <Route path="/oauth/callback/kakao" element={<OAuth2RedirectHandler/>}/>
+
     </Routes>
   );
 }
