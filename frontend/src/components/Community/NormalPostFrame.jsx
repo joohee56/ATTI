@@ -93,6 +93,7 @@ const Rendering = ({ post, handleModal2, limit, page, getSinglePost }) => {
         // <div key={i}>{post[e].user_id}</div>
       <IndividualPost key={i}>
         {console.log(e)}
+        {console.log('-----')}
         <div style={postStyle} onClick={handleModal2}>
              <div
               style={{
