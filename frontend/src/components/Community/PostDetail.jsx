@@ -145,9 +145,8 @@ width: 800px;
 height: 60px;
 margin: 0 20px 0 30px;
 font-size: 18px;
-background-color: ${palette.gray_1}
+background-color: ${palette.gray_1};
 border: none;
-
 `
 const CustomEditOutlinedIcon = styled(EditOutlinedIcon)`
 &:hover{

@@ -19,7 +19,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
 
-function PostList({handleModal2, limit, page}) {
+function PostList({handleModal2, limit, page, getLength, getSinglePost}) {
   const [post,setPost] = useState([])
   useEffect(() => {
     async function getPosts(){
@@ -33,13 +33,14 @@ function PostList({handleModal2, limit, page}) {
       ).then((res) => {
         console.log(res.data)
         setPost(res.data)
+        getLength(res.data.length)
       })
     }
     getPosts();
   },[]);
   return (
     <>
-      <Rendering dummyPost={post} handleModal2={handleModal2} limit={limit} page={page} />
+      <Rendering post={post} handleModal2={handleModal2} limit={limit} page={page} getSinglePost={getSinglePost} />
     </>
   );
   
@@ -49,19 +50,35 @@ function PostList({handleModal2, limit, page}) {
   // const postContent = useSelector((state) => state.normalPost_content);
   // const postUpdDate = useSelector((state) => state.normalPost_upd_date);
 
-  // dummyPost.push({
+  // post.push({
   //   post_title: postTitle,
   //   post_content: postContent,
   //   post_upd_date: postUpdDate,
   // });
 
-const Rendering = ({ dummyPost, handleModal2, limit, page }) => {
-
-  console.log(dummyPost);
-  console.log(limit)
-  console.log(page)
+const Rendering = ({ post, handleModal2, limit, page, getSinglePost }) => {
+  
+  // const result = post.filter(single => single.postId === 2)
+  // console.log(result[0].postContent)
+  const Single = useEffect(() => {
+       async function singlePost(){
+         const postId = 13
+         axios.get(
+           BACKEND_URL + `/post/read/${postId}`,
+           {
+             headers: {
+               "Content-type": "application/json",
+             },
+           }
+         ).then((res) => {
+           console.log(res.data)
+           getSinglePost(res.data)
+         })
+       }
+       singlePost();
+      },[]);
+  
   const offset = (page - 1) * limit;
-  console.log(offset)
   const postStyle = {
     borderRadius: "30px",
     backgroundColor: palette.gray_1,
@@ -72,8 +89,8 @@ const Rendering = ({ dummyPost, handleModal2, limit, page }) => {
   };
   return (
     <>
-      {dummyPost.slice(offset, offset + limit).map((e, i) => (
-        // <div key={i}>{dummyPost[e].user_id}</div>
+      {post.slice(offset, offset + limit).map((e, i) => (
+        // <div key={i}>{post[e].user_id}</div>
       <IndividualPost key={i}>
         {console.log(e)}
         <div style={postStyle} onClick={handleModal2}>
@@ -88,7 +105,7 @@ const Rendering = ({ dummyPost, handleModal2, limit, page }) => {
               <UserIdDiv>
                 작성자: {e.user}
               </UserIdDiv>
-              {e.postUpdDate}
+              {e.postRegDate}
             </div>
             <hr style={{width: "95%"}} />
 
@@ -111,21 +128,7 @@ const Rendering = ({ dummyPost, handleModal2, limit, page }) => {
     )
   };
 function NormalPostFrame() {
-//   useEffect(() => {
-//     async function getPosts(){
-//       const result = await axios.get(
-//         BACKEND_URL + "/post",
-//         {
-//           headers: {
-//             "Content-type": "application/json",
-//           },
-//         }
-//       ).then((res) => {
-//         console.log(res.data)
-//       })
-//     }
-// getPosts();
-// });
+
   const [isOpenModal2, setOpenModal2] = useState(false);
   const onClickToggleModal2 = useCallback(() => {
     setOpenModal2(!isOpenModal2);
@@ -143,6 +146,15 @@ function NormalPostFrame() {
     setOpenModal1(!isOpenModal1);
   }, [isOpenModal1]);
 
+  const [length,setLength] = useState([])
+  const getLength = (length) => {
+    setLength(length)
+  }
+  const [singlePost, setSinglePost] = useState([])
+  const getSinglePost = (singlePost) => {
+    setSinglePost(singlePost)
+  }
+
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(1);
   
@@ -150,26 +162,28 @@ function NormalPostFrame() {
   return (
     <>
       <PostContainer>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Title> 공지사항 or 질문 or 자유게시판 </Title>
-          <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
-            <SearchBar />
-            <WriteButton onClick={onClickToggleModal1}>
-              글쓰기
-            </WriteButton>
+        <div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Title> 공지사항 or 질문 or 자유게시판 </Title>
+            <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
+              <SearchBar />
+              <WriteButton onClick={onClickToggleModal1}>
+                글쓰기
+              </WriteButton>
+            </div>
+          </div>
+          <div>
+            <PostList handleModal2={handleModal2} limit={limit} page={page} getLength={getLength} getSinglePost={getSinglePost} />
           </div>
         </div>
-        <div id="1234">
-          <PostList handleModal2={handleModal2} limit={limit} page={page} />
-        </div>
-        <footer>
+        <StickyFooter>
         <Pagination
-          total={"15"}
+          total={length}
           limit={limit}
           page={page}
           setPage={setPage}
         />
-      </footer>
+      </StickyFooter>
       </PostContainer>
       
       {isOpenModal2 && (
@@ -193,6 +207,7 @@ function NormalPostFrame() {
     </>
   );
 }
+
 const UserIdDiv = styled.div`
 font-size: 20px;
 font-weight: bold;
@@ -204,10 +219,18 @@ const PostContainer = styled.div`
   width: 1300px;
   height: 671px;
   margin: 15px 0;
- 
   border-radius: 20px;
   background-color: white;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: space-around; */
 `;
+
+const StickyFooter = styled.footer`
+position: fixed; 
+bottom: 0; 
+width: 83%; 
+`
 
 const Title = styled.p`
   font-size: 30px;
