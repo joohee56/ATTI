@@ -3,9 +3,7 @@ import Chatting from "./chatting";
 import styled from "styled-components";
 import { ChatBox } from "./OpenViduTestStyled";
 
-
-
-const ChattingWrapper = ({ chatList, anonymouseMode }) => {
+const ChattingWrapper = ({ chatList, anonymouseMode, QnAState }) => {
   const [chatting, setChatting] = useState([]);
   // console.log(chatList);
   const chattingScroll = useRef(null);
@@ -20,7 +18,7 @@ const ChattingWrapper = ({ chatList, anonymouseMode }) => {
   }, [chatting]);
   console.log(chatting);
   return (
-    <ChatBox ref={chattingScroll}>
+    <ChatBox ref={chattingScroll} QnAState={QnAState}>
       {chatting.map((e, i) => (
         <div key={i}>
           <Chatting

@@ -12,14 +12,15 @@ export const ButtonBlue = styled.button`
   cursor: pointer;
 
   &:active,
-  &:focus {
+  &:hover {
     filter: brightness(90%);
     background: ${palette.main_grBlue};
   }
 
   &:disabled {
-    filter: brightness(80%);
+    opacity: 0.5;
     background: ${palette.main_grBlue};
+    cursor: auto;
   }
 `;
 
@@ -34,8 +35,14 @@ export const ButtonPurple = styled.button`
   cursor: pointer;
 
   &:active,
-  &:focus {
+  &:hover {
     filter: brightness(90%);
     background: ${palette.main_grPurple};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    background: ${palette.main_grPurple};
+    cursor: auto;
   }
 `;

@@ -4,7 +4,19 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./UserVideoComponent";
 import AttendeesList from "./AttendeesList";
 import ChattingWrapper from "./ChattingWrapper";
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+import ScreenShareIcon from "@mui/icons-material/ScreenShare";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import FaceIcon from "@mui/icons-material/Face";
+import BorderAllIcon from "@mui/icons-material/BorderAll";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import Modal from "../Modal";
 import {
+  LayoutButton,
   PeopleBox,
   OpenviduBox,
   VideoBox,
@@ -21,9 +33,25 @@ import {
   MeetingAttendAndChattingWrapper,
   ChattinBoxgWrapper,
   ChattingName,
+  ChattingSendButton,
+  MeetingButtonControl,
+  FullscreenButton,
+  NotFullScreenButton,
+  AllMicAndCamOff,
+  ChattingAndCancleButtonWrapper,
+  ChattingAndQnASelect,
+  ChattingAndQnAWrapper,
+  QnAWrapper,
+  QnABox,
+  QnATitle,
+  QnAMessage,
+  QnAButton,
+  QnAButtonWrapper,
 } from "./OpenViduTestStyled";
 import { useNavigate } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
+import FaceRetouchingOffIcon from "@mui/icons-material/FaceRetouchingOff";
+import StudentAnonymouse from "./StudentAnonymous";
 
 const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -31,16 +59,26 @@ const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 // const OPENVIDU_SERVER_SECRET = "atti";
 // 도메인: https://i7b107.p.ssafy.io
 
+const STUDENT = "student";
+const PROFESSOR = "professor";
+
+export const CHATTING = "chatting";
+export const QnA = "QnA";
+
 const OpenViduTest = () => {
   const navigate = useNavigate();
   const [state, setState] = useState({
     mySessionId: "SessionA",
     myUserName: "Participant" + Math.floor(Math.random() * 100),
+    myRole: STUDENT,
     session: undefined,
     mainStreamManager: undefined,
     publisher: undefined,
     subscribers: [],
   });
+  const [reqeustPresent, setReqeustPresent] = useState(false);
+  const [receivePresent, setReceivePresent] = useState(false);
+  const [saveSubscriber, setSaveSubscriber] = useState(undefined);
   const [sendToUser, setSendToUser] = useState("");
   // const [disconnectUser, setDisconnectUser] = useState([]);
   const [sendToClientId, setSendToClientId] = useState("");
@@ -51,7 +89,14 @@ const OpenViduTest = () => {
   const [anonymousMode, setAnonymousMode] = useState(false);
   const [openAttentList, setOpenAttentList] = useState(true);
   const [openChattingList, setOpenChattingList] = useState(true);
+  const [fullScreenLayoutMode, setFullScreenLayoutMode] = useState(false);
+  const [layout, setLayout] = useState(false);
   const messageRef = useRef();
+  const [onClickToggleModal, setOnClickToggleModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  // QnA인지 채팅인지 선택
+  const [chattingSelect, setChattingSelect] = useState(CHATTING);
+  const [QnAState, setQnAState] = useState(undefined);
 
   function setChattingInfo({ data, connectionId }) {
     setSendToUser(data);
@@ -78,6 +123,15 @@ const OpenViduTest = () => {
         ...prevState,
         mainStreamManager: stream,
       }));
+    }
+    if (
+      state.publisher.stream.connection.data !==
+        stream.stream.connection.data &&
+      state.myRole === PROFESSOR
+    ) {
+      setSaveSubscriber(stream.stream.connection);
+      setReqeustPresent(true);
+      console.log(stream.stream.connection);
     }
   }
 
@@ -141,7 +195,30 @@ const OpenViduTest = () => {
     }
   }, [anonymousMode, chatList.message]);
   useEffect(() => {
+    if (state.session !== undefined && state.publisher !== undefined) {
+      state.session.on("signal:requestAllCamOff", (event) => {
+        if (
+          event.from.connectionId !== state.publisher.stream.connection.data
+        ) {
+          state.publisher.publishVideo(false);
+          setTurnOnCamera(false);
+        }
+      });
+      state.session.on("signal:requestAllMicOff", (event) => {
+        console.log(peopleList);
+        if (
+          event.from.connectionId !== state.publisher.stream.connection.data
+        ) {
+          state.publisher.publishAudio(false);
+          setTurnOnAudio(false);
+        }
+      });
+    }
+  }, [peopleList, state.publisher, state.session]);
+  useEffect(() => {
     if (state.session !== undefined) {
+      console.log(peopleList);
+
       state.session.on("signal:audioAndVideo", (event) => {
         console.log(event);
         let subscribers = state.subscribers;
@@ -154,6 +231,16 @@ const OpenViduTest = () => {
           ...prev,
           subscribers: subscribers,
         }));
+      });
+      state.session.on("signal:reqeustPresent", (event) => {
+        setReceivePresent(true);
+        setSaveSubscriber(event.from);
+      });
+      state.session.on("signal:QnA", (event) => {
+        setQnAState({
+          message: event.data,
+          from: JSON.parse(event.from.data).clientData,
+        });
       });
       state.session.on("signal:my-chat", (event) => {
         console.log(JSON.parse(event.from.data).clientData);
@@ -203,13 +290,28 @@ const OpenViduTest = () => {
           return !anonymousMode;
         });
       });
+      state.session.on("signal:requestAnonymous", (event) => {
+        if (state.myRole === PROFESSOR) {
+          setOpenModal(true);
+        }
+      });
       // state.session.on("signal:disconnectUser", (event) => {
       //   let disconnect = disconnectUser;
       //   disconnect.push(event.from.connectionId);
       //   setDisconnectUser(disconnect);
       // });
     }
-  }, [anonymousMode, state.publisher, state.session, state.subscribers]);
+  }, [
+    anonymousMode,
+    peopleList,
+    state,
+    state.myRole,
+    state.publisher,
+    state.session,
+    state.subscribers,
+    turnOnAudio,
+    turnOnCamera,
+  ]);
   useEffect(() => {
     if (state.session !== undefined) {
       state.session
@@ -228,7 +330,6 @@ const OpenViduTest = () => {
   }, [turnOnCamera, turnOnAudio, state.session]);
   useEffect(() => {
     if (state.publisher !== undefined) {
-      console.log("퍼블리셔", state.publisher);
       let people = state.publisher.stream.connection;
       let peoples = state.subscribers.map((e) => {
         console.log(e);
@@ -505,52 +606,135 @@ const OpenViduTest = () => {
   }
   function sendMessage() {
     const mySession = state.session;
-    if (sendToUser !== "") {
-      console.log("test", sendToClientId);
-      let people = peopleList;
-      const sendTo = people.filter((e) => {
-        return e.connectionId === sendToClientId;
-      });
-      console.log(sendTo);
-      const message = messageRef.current.value;
-      mySession
-        .signal({
-          data: messageRef.current.value,
-          to: [sendTo[0]],
-          type: "secret-chat",
-        })
-        .then(() => {
-          console.log("secret Message send success");
-          setChatList({
-            message,
-            from: state.myUserName,
-            type: "private",
+    if (
+      messageRef.current.value.length > 0 &&
+      messageRef.current.value.trim() !== ""
+    ) {
+      if (sendToUser !== "") {
+        console.log("test", sendToClientId);
+        let people = peopleList;
+        const sendTo = people.filter((e) => {
+          return e.connectionId === sendToClientId;
+        });
+        console.log(sendTo);
+        const message = messageRef.current.value;
+        mySession
+          .signal({
+            data: messageRef.current.value,
+            to: [sendTo[0]],
+            type: "secret-chat",
+          })
+          .then(() => {
+            console.log("secret Message send success");
+            setChatList({
+              message,
+              from: state.myUserName,
+              type: "private",
+            });
+          })
+          .catch((error) => {
+            console.log(error);
           });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      console.log(state.subscribers);
-      console.log(state.publisher);
-      mySession
-        .signal({
-          data: messageRef.current.value,
-          to: [],
-          type: "my-chat",
-        })
-        .then(() => {
-          console.log("Message send success");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      } else {
+        if (chattingSelect === CHATTING) {
+          mySession
+            .signal({
+              data: messageRef.current.value,
+              to: [],
+              type: "my-chat",
+            })
+            .then(() => {
+              console.log("Message send success");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          mySession
+            .signal({
+              data: messageRef.current.value,
+              to: [],
+              type: "QnA",
+            })
+            .then(() => {
+              console.log("QnA 질문 끝!");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      }
     }
 
     messageRef.current.value = "";
     setSendToUser("");
   }
   function requestAnonymous() {
+    if (state.myRole === STUDENT) {
+      setOnClickToggleModal(true);
+    } else {
+      turnOnAnonymous();
+    }
+  }
+  function sendToAnonymouseMode() {
+    state.session
+      .signal({
+        data: state.myUserName,
+        to: [],
+        type: "requestAnonymous",
+      })
+      .then(() => {
+        console.log("메시지 전송 성공");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  function allMicOff() {
+    state.session
+      .signal({
+        data: state.myUserName,
+        to: [],
+        type: "requestAllMicOff",
+      })
+      .then(() => {
+        console.log("메시지 전송 성공");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  function allCamOff() {
+    state.session
+      .signal({
+        data: state.myUserName,
+        to: [],
+        type: "requestAllCamOff",
+      })
+      .then(() => {
+        console.log("메시지 전송 성공");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  function anonymousOK() {
+    if (onClickToggleModal) {
+      sendToAnonymouseMode();
+      setOnClickToggleModal(false);
+    } else {
+      turnOnAnonymous();
+      setOpenModal(false);
+    }
+  }
+  function turnOnModal() {
+    if (state.myRole === PROFESSOR) {
+      setOpenModal(false);
+    } else {
+      setOnClickToggleModal(false);
+    }
+  }
+  function turnOnAnonymous() {
     state.session
       .signal({
         data: "익명모드활성화",
@@ -564,7 +748,55 @@ const OpenViduTest = () => {
         console.log(error);
       });
   }
-
+  function layoutButton() {
+    setLayout((prev) => {
+      return !prev;
+    });
+  }
+  function fullScreenMode() {
+    setFullScreenLayoutMode((prev) => {
+      return !prev;
+    });
+    setLayout((prev) => {
+      return false;
+    });
+  }
+  function sendReqeustPresent() {
+    sendToPresent(saveSubscriber);
+    setReqeustPresent(false);
+  }
+  const sendToPresent = (sub) => {
+    state.session
+      .signal({
+        data: "발표 요청하기",
+        to: [sub],
+        type: "reqeustPresent",
+      })
+      .then(() => {
+        console.log("secret Message send success");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    setSaveSubscriber(undefined);
+  };
+  const handlerChange = (e) => {
+    console.log(e.target.value);
+    setState((prev) => ({
+      ...prev,
+      myRole: e.target.value,
+    }));
+  };
+  function handleChangeChatting(e) {
+    setChattingSelect((prev) => {
+      return e.target.value;
+    });
+  }
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  };
   return (
     <MeetingRoom id="test">
       {state.session === undefined ? (
@@ -582,70 +814,204 @@ const OpenViduTest = () => {
             value={state.mySessionId}
             onChange={handleChangeSessionId}
           />
+          <select onChange={handlerChange}>
+            <option key={STUDENT} value={STUDENT} defaultChecked>
+              학생
+            </option>
+            <option key={PROFESSOR} value={PROFESSOR}>
+              교수
+            </option>
+          </select>
           <button onClick={joinSession}>입장하기</button>
         </div>
       ) : null}
       {state.session !== undefined ? (
         <>
           <div>
+            {receivePresent && (
+              <Modal
+                onClickToggleModal={() => {
+                  setReceivePresent(false);
+                }}
+              >
+                <StudentAnonymouse
+                  detail={`교수님께서 발표를 요청하셨습니다.`}
+                  detail2="(확인 버튼을 누르면 카메라와 마이크가 자동으로 켜지게 됩니다.)"
+                  anonymousOK={() => {
+                    state.publisher.publishAudio(true);
+                    setTurnOnAudio(true);
+                    state.publisher.publishVideo(true);
+                    setTurnOnCamera(true);
+                    setReceivePresent(false);
+                  }}
+                  setOnClickToggleModal={() => {
+                    setReceivePresent(false);
+                  }}
+                ></StudentAnonymouse>
+              </Modal>
+            )}
+            {reqeustPresent && (
+              <Modal
+                onClickToggleModal={() => {
+                  setReqeustPresent(false);
+                }}
+              >
+                <StudentAnonymouse
+                  detail={`${
+                    JSON.parse(saveSubscriber.data).clientData
+                  }발표를 요청하시겠습니까?`}
+                  detail2=""
+                  setOnClickToggleModal={() => {
+                    setReqeustPresent(false);
+                  }}
+                  anonymousOK={sendReqeustPresent}
+                />
+              </Modal>
+            )}
+            {onClickToggleModal && (
+              <Modal
+                onClickToggleModal={() => {
+                  setOnClickToggleModal(false);
+                }}
+              >
+                <StudentAnonymouse
+                  detail="호스트에게 익명 발표를 요청하시겠습니까?"
+                  detail2="(익명 발표는 카메라와 오디오가 전부 꺼지게 되며 채팅을 치면 TTS가
+        읽어주는 기능입니다.)"
+                  anonymousOK={anonymousOK}
+                  setOnClickToggleModal={turnOnModal}
+                />
+              </Modal>
+            )}
+            {openModal && (
+              <Modal
+                onClickToggleModal={() => {
+                  setOpenModal(false);
+                }}
+              >
+                <StudentAnonymouse
+                  detail={`${state.myUserName}님이 익명 모드로 발표를 요청했습니다. 수락하시겠습니까?`}
+                  detail2=""
+                  anonymousOK={anonymousOK}
+                  setOnClickToggleModal={turnOnModal}
+                />
+              </Modal>
+            )}
+          </div>
+          <div>
             <OpenviduBox id="OpenViduBox">
-              <VideoBox id="VideoBox">
-                <SubStream
-                  mainStream={
-                    state.mainStreamManager !== undefined ? true : false
-                  }
-                >
-                  {state.publisher !== undefined ? (
-                    <div onClick={() => handleMainVideoStream(state.publisher)}>
-                      <UserVideoComponent
-                        streamManager={state.publisher}
-                        main="sub"
-                      />
+              {state.mainStreamManager !== undefined ? (
+                <span>
+                  <LayoutButton onClick={layoutButton}>
+                    <MeetingButtonControl>
+                      <DashboardIcon />
+                      레이아웃
+                    </MeetingButtonControl>
+                  </LayoutButton>
+                  {layout ? (
+                    <div>
+                      <NotFullScreenButton
+                        onClick={fullScreenMode}
+                        fullScreenLayoutMode={fullScreenLayoutMode}
+                      >
+                        <MeetingButtonControl>
+                          <BorderAllIcon />
+                          참여자 영상 함께 보기
+                        </MeetingButtonControl>
+                      </NotFullScreenButton>
+                      <FullscreenButton
+                        onClick={fullScreenMode}
+                        fullScreenLayoutMode={fullScreenLayoutMode}
+                      >
+                        <MeetingButtonControl>
+                          <FullscreenIcon />
+                          전체보기
+                        </MeetingButtonControl>
+                      </FullscreenButton>
                     </div>
                   ) : null}
-                  {state.subscribers &&
-                    state.subscribers.map((sub, i) => (
-                      <div
-                        className="col-md-6"
-                        key={i}
-                        onClick={() => handleMainVideoStream(sub)}
-                      >
-                        <UserVideoComponent streamManager={sub} main="sub" />
-                      </div>
-                    ))}
-                </SubStream>
-                {state.mainStreamManager !== undefined ? (
-                  <div
-                    onClick={() => {
-                      setState((prev) => ({
-                        ...prev,
-                        mainStreamManager: undefined,
-                      }));
-                    }}
+                </span>
+              ) : null}
+              <VideoBox id="VideoBox">
+                {state.mainStreamManager !== undefined &&
+                fullScreenLayoutMode &&
+                !openModal &&
+                !onClickToggleModal &&
+                !reqeustPresent &&
+                !receivePresent ? null : (
+                  <SubStream
+                    mainStream={
+                      state.mainStreamManager !== undefined ? true : false
+                    }
                   >
-                    <UserVideoComponent
-                      streamManager={state.mainStreamManager}
-                      main="main"
-                    />
-                    <ScreenText>
-                      {
-                        JSON.parse(
-                          state.mainStreamManager.stream.connection.data
-                        ).clientData
-                      }
-                      님의 화면을 보고 있습니다.
-                    </ScreenText>
-                    {/* <button onClick={switchCamera}> 카메라 변경 </button> */}
-                  </div>
-                ) : null}
+                    {state.publisher !== undefined ? (
+                      <div
+                        onClick={() => handleMainVideoStream(state.publisher)}
+                      >
+                        <UserVideoComponent
+                          streamManager={state.publisher}
+                          main="sub"
+                        />
+                      </div>
+                    ) : null}
+                    {state.subscribers &&
+                      !fullScreenLayoutMode &&
+                      !openModal &&
+                      !onClickToggleModal &&
+                      !reqeustPresent &&
+                      !receivePresent &&
+                      state.subscribers.map((sub, i) => (
+                        <div
+                          className="col-md-6"
+                          key={i}
+                          onClick={() => handleMainVideoStream(sub)}
+                        >
+                          <UserVideoComponent streamManager={sub} main="sub" />
+                        </div>
+                      ))}
+                  </SubStream>
+                )}
+
                 <div>
-                  {anonymousMode ? (
-                    <ScreenText>
-                      익명 모드가 활성화 되었습니다. 마이크와 오디오를 제어할 수
-                      없습니다.
-                    </ScreenText>
+                  {state.mainStreamManager !== undefined &&
+                  !openModal &&
+                  !onClickToggleModal &&
+                  !reqeustPresent &&
+                  !receivePresent ? (
+                    <div
+                      onClick={() => {
+                        setState((prev) => ({
+                          ...prev,
+                          mainStreamManager: undefined,
+                        }));
+                      }}
+                    >
+                      <UserVideoComponent
+                        streamManager={state.mainStreamManager}
+                        main="main"
+                        fullScreenLayoutMode={fullScreenLayoutMode}
+                      />
+                      <ScreenText>
+                        {
+                          JSON.parse(
+                            state.mainStreamManager.stream.connection.data
+                          ).clientData
+                        }
+                        님의 화면을 보고 있습니다.
+                      </ScreenText>
+                      {/* <button onClick={switchCamera}> 카메라 변경 </button> */}
+                    </div>
                   ) : null}
+                  <div>
+                    {anonymousMode ? (
+                      <ScreenText>
+                        익명 모드가 활성화 되었습니다. 마이크와 오디오를 제어할
+                        수 없습니다.
+                      </ScreenText>
+                    ) : null}
+                  </div>
                 </div>
+
                 <MeetingButtonWrapper>
                   <MeetingButtons>
                     <MeetingButton
@@ -655,9 +1021,20 @@ const OpenViduTest = () => {
                         setTurnOnAudio(!turnOnAudio);
                       }}
                     >
-                      {turnOnAudio ? "마이크 종료하기" : "마이크 켜기"}
+                      {turnOnAudio ? (
+                        <MeetingButtonControl>
+                          <MicIcon />
+                          마이크 종료하기
+                        </MeetingButtonControl>
+                      ) : (
+                        <MeetingButtonControl>
+                          <MicOffIcon />
+                          마이크 켜기
+                        </MeetingButtonControl>
+                      )}
                     </MeetingButton>
 
+                    <span>당신은 {state.myRole} 입니다!</span>
                     <MeetingButton
                       onClick={() => {
                         state.publisher.publishVideo(!turnOnCamera);
@@ -665,20 +1042,42 @@ const OpenViduTest = () => {
                       }}
                       disabled={anonymousMode}
                     >
-                      {turnOnCamera ? "카메라 종료하기" : "카메라 켜기"}
+                      {turnOnCamera ? (
+                        <MeetingButtonControl>
+                          <VideocamIcon /> 카메라 종료하기
+                        </MeetingButtonControl>
+                      ) : (
+                        <MeetingButtonControl>
+                          <VideocamOffIcon /> 카메라 켜기
+                        </MeetingButtonControl>
+                      )}
                     </MeetingButton>
                     <MeetingButton onClick={screenShare}>
-                      화면 공유 하기
+                      <MeetingButtonControl>
+                        <ScreenShareIcon />
+                        화면 공유 하기
+                      </MeetingButtonControl>
                     </MeetingButton>
                     {/* <div>{state.mySessionId}</div> */}
 
                     <MeetingButton onClick={requestAnonymous}>
-                      {anonymousMode
-                        ? "익명 모드 비활성화"
-                        : "익명 모드 활성화"}
+                      {anonymousMode ? (
+                        <MeetingButtonControl>
+                          <FaceIcon />
+                          익명 모드 비활성화
+                        </MeetingButtonControl>
+                      ) : (
+                        <MeetingButtonControl>
+                          <FaceRetouchingOffIcon />
+                          익명 모드 활성화
+                        </MeetingButtonControl>
+                      )}
                     </MeetingButton>
                     <MeetingButton onClick={leaveSession}>
-                      세션 나가기
+                      <MeetingButtonControl>
+                        <MeetingRoomIcon />
+                        세션 나가기
+                      </MeetingButtonControl>
                     </MeetingButton>
                   </MeetingButtons>
                 </MeetingButtonWrapper>
@@ -696,6 +1095,7 @@ const OpenViduTest = () => {
                   >
                     참가자({peopleList.length})
                   </MeetingAttendAndChattingButton>
+
                   <MeetingAttendAndChattingButton
                     onClick={() => {
                       setOpenChattingList((prev) => {
@@ -714,6 +1114,17 @@ const OpenViduTest = () => {
                     openChattingList={openChattingList}
                   />
                 ) : null}
+                {state.myRole === PROFESSOR ? (
+                  <MeetingAttendAndChattingWrapper>
+                    <AllMicAndCamOff onClick={allMicOff}>
+                      전체 마이크 끄기
+                    </AllMicAndCamOff>
+                    <AllMicAndCamOff onClick={allCamOff}>
+                      전체 카메라 끄기
+                    </AllMicAndCamOff>
+                  </MeetingAttendAndChattingWrapper>
+                ) : null}
+
                 {openChattingList ? (
                   <ChattingBox id="ChattingBox" openAttentList={openAttentList}>
                     <ChattinBoxgWrapper>
@@ -721,20 +1132,87 @@ const OpenViduTest = () => {
                         <ChatIcon />
                         채팅
                       </ChattingName>
+                      {QnAState !== undefined && (
+                        <QnAWrapper>
+                          <QnABox>
+                            <QnATitle>{`Q&A - ${QnAState.from}님`}</QnATitle>
+                            <QnAMessage>{QnAState.message}</QnAMessage>
+                            {state.myRole === PROFESSOR ? (
+                              <QnAButtonWrapper>
+                                <QnAButton>답변</QnAButton>
+                                <QnAButton
+                                  onClick={() => {
+                                    setQnAState(undefined);
+                                  }}
+                                >
+                                  닫기
+                                </QnAButton>
+                              </QnAButtonWrapper>
+                            ) : (
+                              <QnAButtonWrapper>
+                                <QnAButton
+                                  onClick={() => {
+                                    setQnAState(undefined);
+                                  }}
+                                >
+                                  닫기
+                                </QnAButton>
+                              </QnAButtonWrapper>
+                            )}
+                          </QnABox>
+                        </QnAWrapper>
+                      )}
                       <ChattingWrapper
                         chatList={chatList}
                         anonymousMode={anonymousMode}
+                        QnAState={QnAState}
                       />
                     </ChattinBoxgWrapper>
-                    <ChattingInputBox>
-                      <span>{sendToUser}</span>
+                    <ChattingInputBox chattingSelect={chattingSelect}>
+                      <ChattingAndQnAWrapper>
+                        {sendToUser !== "" ? (
+                          <span>{sendToUser}님에게 1대1 메시지 전송</span>
+                        ) : (
+                          <ChattingAndQnASelect
+                            onChange={handleChangeChatting}
+                            chattingSelect={chattingSelect}
+                          >
+                            <option key={CHATTING} value={CHATTING}>
+                              #채팅
+                            </option>
+                            <option key={QnA} value={QnA}>
+                              #QnA
+                            </option>
+                          </ChattingAndQnASelect>
+                        )}
+                      </ChattingAndQnAWrapper>
                       <ChattingInput
                         type="text"
                         id="message"
                         ref={messageRef}
+                        onKeyPress={onKeyPress}
+                        chattingSelect={chattingSelect}
                       />
 
-                      <button onClick={sendMessage}>메시지 보내기</button>
+                      {sendToUser !== "" ? (
+                        <ChattingAndCancleButtonWrapper>
+                          <ChattingSendButton
+                            onClick={() => {
+                              setSendToUser("");
+                            }}
+                          >
+                            취소
+                          </ChattingSendButton>
+                          <ChattingSendButton onClick={sendMessage}>
+                            전송
+                          </ChattingSendButton>
+                        </ChattingAndCancleButtonWrapper>
+                      ) : (
+                        <ChattingSendButton onClick={sendMessage}>
+                          전송
+                        </ChattingSendButton>
+                      )}
+
                       {/* <button onClick={testSpeech}>메시지 읽어주기</button> */}
                     </ChattingInputBox>
                   </ChattingBox>

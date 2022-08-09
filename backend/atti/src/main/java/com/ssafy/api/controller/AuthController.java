@@ -89,6 +89,7 @@ public class AuthController {
 
         // 접속토큰 get
         String kakaoToken = authService.getReturnAccessToken(code);
+        System.out.println("kakaoToken: " + kakaoToken);
         
         // 접속자 정보 get
         Map<String, Object> result = authService.getUserInfo(kakaoToken);
@@ -155,14 +156,12 @@ public class AuthController {
 			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "이미 가입된 아이디가 있습니다. 아이디를 찾고 싶으시면 아이디 찾기를 진행해 주세요."));
 		}
 			
-		String fromNumber = "";
+		String fromNumber = "01059368015";
 		String verifyCode = makeVerifyCode();  // 인증 키 생성
 		
-		if(fromNumber.equals(""))
-			return ResponseEntity.status(500).body(BaseResponseBody.of(500, "발신번호가 막혔습니다."));
 		// service 로 넘김
 		userService.sendSMS(phoneNumber, fromNumber, verifyCode);
-		
+		System.out.println("세션에 코드 저장하기 : "+ verifyCode);
 		//code session 에 저장
 		session.setAttribute("code", verifyCode);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "인증번호가 전송되었습니다. 받으신 인증번호를 입력하고 확인 버튼을 눌러 주세요."));
@@ -172,7 +171,8 @@ public class AuthController {
 	@GetMapping("/phone/authCode")
 	private ResponseEntity<?> authPhoneCode(@RequestParam("code") String code, HttpSession session) {
 		String correctCode = (String)session.getAttribute("code");
-		
+		System.out.println("세션 저장 코드 가져오기 : "+correctCode);
+		System.out.println("전송 코드 : "+code);
 		// 인증번호가 일치하는지 검증
 		if(code.equals(correctCode)) {
 			session.removeAttribute("code");

@@ -1,16 +1,17 @@
-import React, { useCallback, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 import HomeIcon from "@mui/icons-material/Home";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlue } from "../components/ButtonStyled";
-import { ButtonPurple } from "../components/ButtonStyled";
 import InputWithLabel from "../components/InputWithLabel";
+import InputPassword from "../components/account/InputPassword";
 import { palette } from "../styles/palette";
 import axios, { AxiosError } from "axios";
 import { BACKEND_URL } from "../constant/index";
+import InputWithPhone from "../components/account/InputWithPhone";
 
 function SignupPage() {
   //이름, 이메일, 비밀번호, 비밀번호 확인
@@ -33,7 +34,7 @@ function SignupPage() {
   const [passwordConfirmMessage, setPasswordConfirmMessage] =
     useState<string>("");
   const [emailMessage, setEmailMessage] = useState<string>("");
-  const [phoneNumberMessage, setPhoneNumberMessage] = useState<string>("");
+  //const [phoneNumberMessage, setPhoneNumberMessage] = useState<string>("");
 
   // 유효성 검사
   const [isName, setIsName] = useState<boolean>(false);
@@ -41,10 +42,9 @@ function SignupPage() {
   const [isPassword, setIsPassword] = useState<boolean>(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(false);
   const [isEmail, setIsEmail] = useState<boolean>(false);
-  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
+  // const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
 
   // 회원가입 성공여부
-
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
     const regex = /^[a-z|A-Z|가-힣|ㄱ-ㅎ|ㅏ-ㅣ][^0-9\s/g]{1,24}$/;
@@ -58,36 +58,38 @@ function SignupPage() {
 
   const onChangeId = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setId(e.target.value);
-    const regex = /^[0-9a-z][^\s/g]{6,16}$/;
+    const regex = /^[a-z0-9][^\s]{5,16}$/;
     if (!regex.test(e.target.value)) {
       setIdMessage("ID는 영소문자, 숫자를 조합한 6~16자만 가능합니다.");
       setIsId(false);
     } else {
-      await axios.get(BACKEND_URL+"/api/user/idcheck", {
-        params: {
-          ckid: e.target.value,
-        }
-      })
-      .then(function (response) {
-       let data:boolean = response.data;
-       if(data) setIsId(true);
-       else {
-        setIdMessage("중복된 ID입니다");
-        setIsId(false);
-       }
-      }).catch(function (error) {
-        console.log(error);
-      })
+      await axios
+        .get(BACKEND_URL + "/user/idcheck", {
+          params: {
+            ckid: e.target.value,
+          },
+        })
+        .then(function (response) {
+          let data: boolean = response.data;
+          if (data) setIsId(true);
+          else {
+            setIdMessage("중복된 ID입니다");
+            setIsId(false);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   };
 
   const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\~!@#$%^&*])[^\s/g]{6,12}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\~!@#$%^&*])[^\s]{6,12}$/;
     if (!regex.test(e.target.value)) {
       setPasswordMessage(
-        "영문자, 숫자, 특수문자(~!@#$%^&*) 1개 이상을 포함한 비밀번호 6~12자만 가능합니다."
+        "영어 대문자, 영어 소문자, 숫자, 특수문자(~!@#$%^&*)를 모두 1개 이상을 포함한 비밀번호 6~12자만 가능합니다."
       );
       setIsPassword(false);
     } else setIsPassword(true);
@@ -128,7 +130,7 @@ function SignupPage() {
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regex =
-      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+      /^[0-9a-zA-Z]([_]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
     setEmail(e.target.value);
     if (!regex.test(e.target.value)) {
       setEmailMessage("이메일 형식이 아닙니다");
@@ -137,61 +139,52 @@ function SignupPage() {
   };
 
   const onChangePhonNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const regex = /[0-9]{11}$/; // 010-0000-0000 형식 : /010-[0-9]{4}-[0-9]{4}$/
-    setPhoneNumber(e.target.value);
-    if (!regex.test(e.target.value)) {
-      setPhoneNumberMessage("폰번호 형식이 아닙니다");
-      setIsPhoneNumber(false);
-    } else setIsPhoneNumber(true);
+    let value = e.target.value;
+    setPhoneNumber(
+      value
+        .replace(/[^0-9]/g, "")
+        .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
+        .replace(/(\-{1,2})$/g, "")
+    );
   };
 
-  const signSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      try {
-        await axios
-          .post(
-            BACKEND_URL+"/api/user/signup/normal",
-            {
-              userId: id,
-              password: password,
-              userName: name,
-              email: email,
-              birth: new Date(birthState.yy, birthState.mm, birthState.dd),
-              phone: phoneNumber,
-              social: "none",
-              uid: 1111111,
-              userDeleteInfo: false,
-              userRole: "STUDENT",
+  const signSubmit = async (e: any) => {
+    e.preventDefault();
+    try {
+      await axios
+        .post(
+          BACKEND_URL + "/user/signup/normal",
+          {
+            userId: id,
+            password: password,
+            userName: name,
+            email: email,
+            birth: new Date(birthState.yy, birthState.mm - 1, birthState.dd),
+            phone: phoneNumber,
+            social: "none",
+            uid: 1111111,
+            userDeleteInfo: false,
+            userRole: "STUDENT",
+          },
+          {
+            headers: {
+              "Content-type": "application/json",
             },
-            {
-              headers: {
-                "Content-type": "application/json",
-              },
-            }
-          )
-          .then((res) => {
-            console.log("response:", res);
-            if (res.status === 200) {
-              document.location.href = "/login";
-            }
-          });
-      } catch (err) {
-        const { response } = err as unknown as AxiosError;
-        if (response?.status === 500) {
-          console.log("ID중복 오류 입니다.");
-        }
+          }
+        )
+        .then((res) => {
+          console.log("response:", res);
+          if (res.status === 200) {
+            document.location.href = "/login";
+          }
+        });
+    } catch (err) {
+      const { response } = err as unknown as AxiosError;
+      if (response?.status === 500) {
+        console.log("ID중복 오류 입니다.");
       }
-    },
-    [
-      id,
-      password,
-      name,
-      email,
-      new Date(birthState.yy, birthState.mm, birthState.dd),
-      phoneNumber,
-    ]
-  );
+    }
+  };
 
   return (
     <>
@@ -201,7 +194,7 @@ function SignupPage() {
         </NavLink>
         {" | "}
         <NavLink to="/login">
-          <PersonOutlineOutlinedIcon /> Login
+          <PersonAddAlt1Icon /> Login
         </NavLink>
       </div>
       <HeaderDiv>회원가입</HeaderDiv>
@@ -210,7 +203,7 @@ function SignupPage() {
           <div>
             <p>아띠</p>
             <img src={Logo} style={logoStyle} alt="Logo Cumputer Img" />
-            <p>커뮤니티와 화상회의가 가능한 교육 플랫폼</p>
+            <p>자체 커뮤니티와 함께 화상 회의가 가능한 교육 플랫폼</p>
           </div>
           <p>개인 정보 처리 방침</p>
           <div style={InfoPolicyStyle}>assets/infoPolicy.html 확인</div>
@@ -219,63 +212,16 @@ function SignupPage() {
           </div>
         </StyledContent>
         <StyledContent>
-          <div>
-            <form onSubmit={signSubmit}>
-              <InputWithLabel
-                label="Name"
-                name="name"
-                placeholder="닉네임"
-                value={name}
-                onChange={onChangeName}
-              />
-              {name.length > 0 && !isName && (
-                <span className={`message ${isName ? "success" : "error"}`}>
-                  {nameMessage}
-                </span>
-              )}
-              <InputWithLabel
-                label="Id"
-                name="id"
-                placeholder="아이디"
-                value={id}
-                onChange={onChangeId}
-              />
-              {id.length > 0 && !isId && (
-                <span className={`message ${isId ? "success" : "error"}`}>
-                  {idMessage}
-                </span>
-              )}
-              <InputWithLabel
-                label="Password"
-                name="password"
-                placeholder="비밀번호"
-                type="password"
-                value={password}
-                onChange={onChangePassword}
-              />
-              {password.length > 0 && !isPassword && (
-                <span className={`message ${isPassword ? "success" : "error"}`}>
-                  {passwordMessage}
-                </span>
-              )}
-              <InputWithLabel
-                label="Password"
-                name="password2"
-                placeholder="비밀번호 확인"
-                type="password"
-                value={passwordConfirm}
-                onChange={onChangePasswordConfirm}
-              />
-              {passwordConfirm.length > 0 && !isPasswordConfirm && (
-                <span
-                  className={`message ${
-                    isPasswordConfirm ? "success" : "error"
-                  }`}
-                >
-                  {passwordConfirmMessage}
-                </span>
-              )}
-
+          <>
+            <InputWithLabel name="name" placeholder="이름" value={name} onChange={onChangeName} />
+            {name.length > 0 && !isName && <span className={`message ${isName ? "success" : "error"}`}>{nameMessage}</span>}
+            <InputWithLabel name="id" placeholder="아이디" value={id} onChange={onChangeId} />
+            {id.length > 0 && !isId && <span className={`message ${isId ? "success" : "error"}`}>{idMessage}</span>}
+            <InputPassword name="password" placeholder="비밀번호" value={password} onChange={onChangePassword} />
+            {password.length > 0 && !isPassword && <span className={`message ${isPassword ? "success" : "error"}`}>{passwordMessage}</span>}
+            <InputWithLabel name="password2" placeholder="비밀번호 확인" type="password" value={passwordConfirm} onChange={onChangePasswordConfirm} />
+            {passwordConfirm.length > 0 && !isPasswordConfirm && <span className={`message ${isPasswordConfirm ? "success" : "error"}`}>{passwordConfirmMessage}</span>}
+            <div>
               <select name="yy" value={birthState.yy} onChange={onChangeBirth}>
                 {years.map((item) => (
                   <option value={item} key={item}>
@@ -297,83 +243,43 @@ function SignupPage() {
                   </option>
                 ))}
               </select>
+            </div>
 
-              <InputWithLabel
-                label="email"
-                name="email"
-                placeholder="이메일"
-                type="email"
-                value={email}
-                onChange={onChangeEmail}
-              />
-              {email.length > 0 && !isEmail && (
-                <span className={`message ${isEmail ? "success" : "error"}`}>
-                  {emailMessage}
-                </span>
-              )}
-              <InputWithLabel
-                label="PhoneNumber"
-                name="phoneNumber"
-                placeholder="폰 번호"
-                type="text"
-                value={phoneNumber}
-                onChange={onChangePhonNumber}
-              />
-              {phoneNumber.length > 0 && !isPhoneNumber && (
+            <InputWithLabel name="email" placeholder="이메일" type="email" value={email} onChange={onChangeEmail} />
+            {email.length > 0 && !isEmail && <span className={`message ${isEmail ? "success" : "error"}`}>{emailMessage}</span>}
+            <InputWithPhone name="phoneNumber" placeholder="폰 번호" phonNumber={phoneNumber} onChange={onChangePhonNumber} />
+
+            {/* {phoneNumber.length > 0 && !isPhoneNumber && (
                 <span
                   className={`message ${isPhoneNumber ? "success" : "error"}`}
                 >
                   {phoneNumberMessage}
                 </span>
-              )}
+              )} */}
 
-              <ButtonPurple>폰 인증</ButtonPurple>
+            <ButtonBlue
+              onClick={signSubmit}
+              disabled={
+                !(
+                  (isName && isId && isPassword && isPasswordConfirm && isEmail)
+                  // &&
+                  // isPhoneNumber
+                )
+              }
+            >
+              가입하기
+            </ButtonBlue>
+            {!(
+              (isName && isId && isPassword && isPasswordConfirm && isEmail)
+              // &&
+              // isPhoneNumber
+            ) && <p style={{ color: `${palette.red}` }}>가입하려면 모두 입력해주세요.</p>}
+          </>
 
-              <ButtonBlue
-                type="submit"
-                disabled={
-                  !(
-                    isName &&
-                    isId &&
-                    isPassword &&
-                    isPasswordConfirm &&
-                    isEmail &&
-                    isPhoneNumber
-                  )
-                }
-              >
-                가입하기
-              </ButtonBlue>
-              {!(
-                isName &&
-                isId &&
-                isPassword &&
-                isPasswordConfirm &&
-                isEmail &&
-                isPhoneNumber
-              ) && (
-                <p style={{ color: `${palette.red}` }}>
-                  가입하려면 모두 입력해주세요.
-                </p>
-              )}
-            </form>
-          </div>
-
-          <p>------- 다른 서비스를 이용한 회원가입 -------</p>
+          <p>------- 회원가입 없이 소셜로 로그인하기 -------</p>
           <div>
-            <img
-              src={
-                "https://pbs.twimg.com/profile_images/738200195578494976/CuZ9yUAT_400x400.jpg"
-              }
-              alt="카카오로 회원가입"
-              width={"50px"}
-            />
-            <img
-              src={
-                "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
-              }
-              alt="네이버로 회원가입"
-            />
+            <img src={"https://pbs.twimg.com/profile_images/738200195578494976/CuZ9yUAT_400x400.jpg"} alt="카카오로 회원가입" width={"50px"} />
+            <img src={"https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"} alt="네이버로 회원가입" />
           </div>
         </StyledContent>
       </StyledPage>
@@ -395,7 +301,7 @@ const StyledPage = styled.div`
 const StyledContent = styled.div`
   max-width: 500px;
   min-width: 500px;
-  height: 400px;
+  height: 500px;
   padding: 3rem;
   text-align: center;
   border-radius: 1rem;
