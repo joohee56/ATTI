@@ -15,6 +15,7 @@ import BorderAllIcon from "@mui/icons-material/BorderAll";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import Modal from "../Modal";
+import { BACKEND_URL } from "../../constant";
 import {
   LayoutButton,
   PeopleBox,
@@ -97,6 +98,18 @@ const OpenViduTest = () => {
   // QnA인지 채팅인지 선택
   const [chattingSelect, setChattingSelect] = useState(CHATTING);
   const [QnAState, setQnAState] = useState(undefined);
+  const reactionRef = useRef(null);
+  const [receiveReaction, setReceiveReaction] = useState(null);
+
+
+
+  useEffect(() => {
+    if (state.session !== undefined) {
+      state.session.on("signal:sendToReaction", (event) => {
+        setReceiveReaction({ data: event.data, from: event.from });
+      });
+    }
+  }, [state.publisher, state.session]);
 
   function setChattingInfo({ data, connectionId }) {
     setSendToUser(data);
@@ -650,17 +663,51 @@ const OpenViduTest = () => {
               console.log(error);
             });
         } else {
-          mySession
-            .signal({
-              data: messageRef.current.value,
-              to: [],
-              type: "QnA",
-            })
-            .then(() => {
-              console.log("QnA 질문 끝!");
-            })
-            .catch((error) => {
-              console.log(error);
+          let today = new Date();
+          const year = today.getFullYear();
+          const month = ("0" + (today.getMonth() + 1)).slice(-2);
+          const day = ("0" + today.getDate()).slice(-2);
+
+          const dateString = year + "년" + month + "월" + day + "일";
+
+          const hours = ("0" + today.getHours()).slice(-2);
+          const minutes = ("0" + today.getMinutes()).slice(-2);
+          const seconds = ("0" + today.getSeconds()).slice(-2);
+
+          const timeString = hours + "시" + minutes + "분" + seconds + "초";
+          const message = messageRef.current.value;
+          axios
+            .post(
+              BACKEND_URL + "/post/write",
+              {
+                postAnoInfo: 0,
+                postComBanInfo: 1,
+                postContent:
+                  dateString + " " + timeString + " 에 작성된 게시물입니다.",
+                postTitle: message,
+                category_id: "1",
+                user_id: "password123",
+              },
+              {
+                headers: {
+                  "Content-type": "application/json",
+                },
+              }
+            )
+            .then((res) => {
+              console.log(res);
+              mySession
+                .signal({
+                  data: message,
+                  to: [],
+                  type: "QnA",
+                })
+                .then(() => {
+                  console.log("QnA 질문 끝!");
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
             });
         }
       }
@@ -966,7 +1013,17 @@ const OpenViduTest = () => {
                           key={i}
                           onClick={() => handleMainVideoStream(sub)}
                         >
-                          <UserVideoComponent streamManager={sub} main="sub" />
+                          <UserVideoComponent
+                            streamManager={sub}
+                            main="sub"
+                            receiveReaction={
+                              receiveReaction !== null &&
+                              receiveReaction.connectionId ===
+                                sub.stream.connection.data
+                                ? receiveReaction
+                                : null
+                            }
+                          />
                         </div>
                       ))}
                   </SubStream>

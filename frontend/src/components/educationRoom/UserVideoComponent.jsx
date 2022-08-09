@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import OpenViduVideoComponent from "./OpenViduVideoComponent";
 import styled from "styled-components";
 
@@ -41,6 +41,7 @@ export default function UserVideoComponent(props) {
     return JSON.parse(props.streamManager.stream.connection.data).clientData;
   }
   const [main, setMain] = useState(false);
+
   useEffect(() => {
     if (props.main === "main") {
       setMain(true);

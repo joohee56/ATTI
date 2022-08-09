@@ -47,6 +47,17 @@ export const QnABox = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: #fffce1;
+  &::-webkit-scrollbar {
+    padding-right: 15px;
+    width: 8px;
+    height: 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+  }
 `;
 
 export const QnATitle = styled.div`
@@ -60,8 +71,9 @@ export const QnAButtonWrapper = styled.span`
 `;
 
 export const QnAMessage = styled.div`
+  margin-top: 7px;
   margin-left: 3px;
-  min-height: 70%;
+  min-height: 50%;
 `;
 export const QnAButton = styled.button`
   margin-left: auto;
@@ -281,4 +293,19 @@ export const AllMicAndCamOff = styled.button`
   margin-right: 3px;
   margin-left: 3px;
   background-color: "#7A7C87";
+`;
+
+export const ReactionButton = styled.button`
+  border: none;
+  border-right: 2px solid;
+  border-left: 2px solid;
+  background: none;
+`;
+
+export const ReactionWrapper = styled.div`
+  position: fixed;
+  background-color: #dbeafe;
+
+  top: ${(props) => `${props.y}px`};
+  left: ${(props) => `${props.x}px`};
 `;
