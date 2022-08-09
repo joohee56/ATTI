@@ -19,7 +19,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
 
-function PostList({handleModal2, limit, page, getLength, getSinglePost}) {
+function PostList({handleModal2, limit, page, getLength, getPostId}) {
   const [post,setPost] = useState([])
   useEffect(() => {
     async function getPosts(){
@@ -40,7 +40,7 @@ function PostList({handleModal2, limit, page, getLength, getSinglePost}) {
   },[]);
   return (
     <>
-      <Rendering post={post} handleModal2={handleModal2} limit={limit} page={page} getSinglePost={getSinglePost} />
+      <Rendering post={post} handleModal2={handleModal2} limit={limit} page={page} getPostId={getPostId} />
     </>
   );
   
@@ -56,14 +56,11 @@ function PostList({handleModal2, limit, page, getLength, getSinglePost}) {
   //   post_upd_date: postUpdDate,
   // });
 
-const Rendering = ({ post, handleModal2, limit, page}) => {
+const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
   
   // const result = post.filter(single => single.postId === 2)
   // console.log(result[0].postContent)
-  const [postId, setPostId] = useState([])
-  const getPostId = (id) => {
-    setPostId(id)
-  }
+  
   const offset = (page - 1) * limit;
   const postStyle = {
     borderRadius: "30px",
@@ -73,13 +70,19 @@ const Rendering = ({ post, handleModal2, limit, page}) => {
     margin: "15px 0 0 50px",
     boxShadow: "2px 2px 2px grey"
   };
+ function twofunctions(id){
+  handleModal2();
+  getPostId(id);
+ }
   return (
     <>
       {post.slice(offset, offset + limit).map((e, i) => (
       <IndividualPost key={i}>
         {console.log(e)}
         {console.log('-----')}
-        <div style={postStyle} onClick={handleModal2}>
+        {console.log(e.postId)}
+        {/* {console.log('postId :',  postId)} */}
+        <div style={postStyle} onClick={() => {twofunctions(e.postId)}}>
              <div
               style={{
                 display: "flex",
@@ -108,9 +111,10 @@ const Rendering = ({ post, handleModal2, limit, page}) => {
             </div>
             
           </div>
+          
       </IndividualPost>
       ))}
-      {console.log(postId)}
+        
     </>
     )
   };
@@ -137,9 +141,9 @@ function NormalPostFrame() {
   const getLength = (length) => {
     setLength(length)
   }
-  const [singlePost, setSinglePost] = useState([])
-  const getSinglePost = (singlePost) => {
-    setSinglePost(singlePost)
+  const [postId, setPostId] = useState(null)
+  const getPostId = (postId) => {
+    setPostId(postId)
   }
 
   const [limit, setLimit] = useState(5);
@@ -160,7 +164,7 @@ function NormalPostFrame() {
             </div>
           </div>
           <div>
-            <PostList handleModal2={handleModal2} limit={limit} page={page} getLength={getLength} getSinglePost={getSinglePost} />
+            <PostList handleModal2={handleModal2} limit={limit} page={page} getLength={getLength} getPostId={getPostId} />
           </div>
         </div>
         <StickyFooter>
@@ -179,7 +183,7 @@ function NormalPostFrame() {
           width="1000px"
           height="680px"
         >
-          <PostDetail />
+          <PostDetail postId={postId} />
         </Modal>
       )}
       {isOpenModal1 && (
@@ -191,6 +195,7 @@ function NormalPostFrame() {
           <PostEditor />
         </Modal>
       )}
+      {console.log('postId : ' , postId)}
     </>
   );
 }

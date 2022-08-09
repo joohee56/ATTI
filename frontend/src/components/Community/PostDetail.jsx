@@ -1,6 +1,9 @@
-import {useState} from 'react'
+import { useState, useEffect } from 'react'
 import {useSelector, useDispatch} from 'react-redux';
 import styled from 'styled-components';
+import axios from 'axios';
+import { BACKEND_URL } from "../../constant";
+
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
@@ -18,11 +21,26 @@ import { palette } from '../../styles/palette';
 
 import ReactHtmlParser from 'react-html-parser'
 
-function PostDetail(){
-    const postTitle = useSelector(state => state.normalPost.post_title)
-    const postContent = useSelector(state => state.normalPost.post_content)
-    const postUpdDate = useSelector(state => state.normalPost.post_upd_date)
+function PostDetail({postId}){
+    // const postTitle = useSelector(state => state.normalPost.post_title)
+    // const postContent = useSelector(state => state.normalPost.post_content)
+    // const postUpdDate = useSelector(state => state.normalPost.post_upd_date)
 
+    useEffect(() => {
+        async function singlePost(){
+          axios.get(
+            BACKEND_URL + `/post/read/${postId}`,
+            {
+              headers: {
+                "Content-type": "application/json",
+              },
+            }
+          ).then((res) => {
+            console.log("개별 글 list : ", res.data)
+          })
+        }
+        singlePost();
+       },[]);
 
     const [comment, setComment] = useState({
         comment_content: "",
@@ -82,7 +100,7 @@ function PostDetail(){
                             사용자 이름
                         </div>
                         <div>
-                            postUpdDate가 나올 예정
+                            postUpdDate가 나올 예정, postRegDate도 같이 나올 예정
                         </div>
                     </div>
                 </div>
