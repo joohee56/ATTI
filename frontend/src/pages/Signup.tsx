@@ -1,6 +1,6 @@
 import { api } from "../utils/api/index";
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import HomeIcon from "@mui/icons-material/Home";
@@ -13,6 +13,8 @@ import { palette } from "../styles/palette";
 import InputWithPhone from "../components/account/InputWithPhone";
 
 function SignupPage() {
+  const navigate = useNavigate();
+  
   //이름, 이메일, 비밀번호, 비밀번호 확인
   const [name, setName] = useState<string>("");
   const [id, setId] = useState<string>("");
@@ -167,7 +169,8 @@ function SignupPage() {
       .then(function (response) {
         console.log("response:", response);
         if (response.status === 200) {
-          document.location.href = "/login";
+          navigate("/login");
+          
         }
       })
       .catch(function (error) {
@@ -179,11 +182,7 @@ function SignupPage() {
 
   return (
     <>
-      <div>
-        <NavLink to="/">
-          <HomeIcon /> Home
-        </NavLink>
-        {" | "}
+          <div>
         <NavLink to="/login">
           <PersonAddAlt1Icon /> Login
         </NavLink>
