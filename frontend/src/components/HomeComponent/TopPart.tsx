@@ -20,6 +20,7 @@ const Main = styled.div`
   width: 100%;
   max-width: 1500px;
   height: 650px;
+  margin-bottom: 50px;
   text-align: center;
   ::after {
     width: 100%;

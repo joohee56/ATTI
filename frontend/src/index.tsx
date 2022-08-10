@@ -6,14 +6,17 @@ import "./index.css";
 import App from "./App";
 import { Provider } from 'react-redux'
 import communityStore from "./store/community";
+import store from "./store";
+import HeaderNav from "./components/HeaderNav";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  
   <BrowserRouter>
-      <Provider store={communityStore}>
+      {/* <Provider store={communityStore}> */}
+      <Provider store={store}>
+      <HeaderNav/>
         <App />
       </Provider>
     </BrowserRouter>
