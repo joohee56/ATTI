@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import HeaderNav from '../components/HomeComponent/HeaderNav';
+import HeaderNav from '../components/HeaderNav';
 import LowPart from "../components/HomeComponent/LowerPart";
 import TopPart from "../components/HomeComponent/TopPart";
 
@@ -22,7 +22,6 @@ function HomePage() {
   return (
     <>
       <Main>
-        <HeaderNav />
         <TopPart />
         <LowPart />
       </Main>
