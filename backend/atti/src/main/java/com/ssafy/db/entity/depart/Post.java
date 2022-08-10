@@ -27,7 +27,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Data
 @Entity
 @Setter
 @Getter
@@ -69,7 +68,7 @@ public class Post {
 	@JoinColumn(name="category_id")
 	private Category category;
 	
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
 	@JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 	
