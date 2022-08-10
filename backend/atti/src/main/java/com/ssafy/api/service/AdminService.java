@@ -6,6 +6,9 @@ import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.entity.webclass.Attendance;
 
+import com.ssafy.db.entity.depart.Post;
+
+
 public interface AdminService {
 	
 	// 채널 회원 목록 조회
@@ -15,5 +18,12 @@ public interface AdminService {
 	void deleteCategory(Long categoryId);
 
 	void editAttend(Attendance editAttend);
+
+
+
+public interface AdminService {
+	
+	List<Post> getAdminPostList(); // 전체 게시글 조회
+
 
 }

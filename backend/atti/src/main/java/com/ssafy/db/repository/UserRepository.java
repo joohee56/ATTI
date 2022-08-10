@@ -25,6 +25,8 @@ public class UserRepository {
 	@Autowired
 	EntityManager em;
 	
+	
+	
 	public void signUp(User user) {
 		em.persist(user);
 	}
@@ -32,7 +34,8 @@ public class UserRepository {
 	// 카카오로 회원가입
 	// User 엔티티말고 기본 유저 req 만들어서 상속받아 사용했으면 한 개만 만들어도 됐을 것 같음
 	public void signUpKakao(KakaoUser user) {
-		em.persist(user);
+//		
+//		em.persist(user);
 	}
 	
 	public List<User> findById(String userId){
