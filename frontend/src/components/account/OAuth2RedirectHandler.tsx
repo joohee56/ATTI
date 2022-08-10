@@ -3,6 +3,7 @@ import React from "react";
 import { BACKEND_URL } from "../../constant";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 const OAuth2RedirectHandler = () => {
 
   // 인가코드
@@ -32,6 +33,8 @@ const OAuth2RedirectHandler = () => {
   );
 };
 =======
+=======
+>>>>>>> ac944d20bcc4317d4b4d62d96820f2a79dcb489d
 function OAuth2RedirectHandler() {
   // 인가코드
   let Authcode = new URL(window.location.href).searchParams.get("code");
@@ -61,6 +64,9 @@ function OAuth2RedirectHandler() {
     </>
   );
 }
+<<<<<<< HEAD
+>>>>>>> ac944d20bcc4317d4b4d62d96820f2a79dcb489d
+=======
 >>>>>>> ac944d20bcc4317d4b4d62d96820f2a79dcb489d
 
 export default OAuth2RedirectHandler;

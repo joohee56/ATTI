@@ -5,11 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.repository.AdminRepository;
 
 import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.webclass.Attendance;
+import com.ssafy.db.repository.AdminRepository;
+
+import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.repository.AdminRepository;
 
 @Service
@@ -35,7 +39,6 @@ public class AdminServiceImpl implements AdminService{
 		adminRepository.editAttend(editAttend);
 		
 	}
-
 
 
 @Service

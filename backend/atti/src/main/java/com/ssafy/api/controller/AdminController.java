@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ssafy.api.service.AdminService;
 import com.ssafy.db.entity.depart.Post;
 
@@ -25,6 +29,9 @@ import com.ssafy.api.service.AdminService;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.webclass.Attendance;
+
+import com.ssafy.api.service.AdminService;
+import com.ssafy.db.entity.depart.Post;
 
 import io.swagger.annotations.Api;
 
@@ -64,6 +71,7 @@ public class AdminController {
 //import io.swagger.annotations.Api;
 //// @Api 클래스를 Swagger 리소스 대상으로 표시
 //@Api(value  = "관리자 API", tags = {"Admin"})
+
 
 @RestController
 @RequestMapping("/admin/post")

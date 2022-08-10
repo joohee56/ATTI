@@ -3,7 +3,6 @@ package com.ssafy.db.repository;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-<<<<<<< HEAD
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.entity.webclass.Attendance;
 
-=======
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
@@ -24,12 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.db.entity.depart.Post;
 
 // 사용 엔티티명, 해당 클래스의 pk 타입
->>>>>>> ac944d20bcc4317d4b4d62d96820f2a79dcb489d
+
 @Repository
 @Transactional
 public class AdminRepository {
 	
-<<<<<<< HEAD
 	@Autowired
 	EntityManager em;
 	
@@ -59,7 +56,6 @@ public class AdminRepository {
 		
 	}
 
-=======
 	@PersistenceContext
 	private EntityManager em;
 	
@@ -68,5 +64,5 @@ public class AdminRepository {
 		List<Post> result = em.createQuery("select p from Post as p", Post.class).getResultList();
 		return result;
 	}
->>>>>>> ac944d20bcc4317d4b4d62d96820f2a79dcb489d
+
 }

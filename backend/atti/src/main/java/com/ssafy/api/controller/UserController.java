@@ -96,7 +96,6 @@ public class UserController {
 		User user = userList.get(0);
 		
 		return ResponseEntity.ok(FindIdRes.of(200, "Success", user.getUserId()));
-
 	}
 	
 	// 비밀번호 찾기

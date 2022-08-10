@@ -7,6 +7,7 @@ import com.ssafy.db.entity.user.User;
 import com.ssafy.db.entity.webclass.Attendance;
 
 import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.depart.Post;
 
 
 public interface AdminService {
