@@ -10,7 +10,7 @@ import { ControlPointSharp } from "@mui/icons-material";
 
 // const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
 // const OPENVIDU_SERVER_SECRET = "MY_SECRET";
-const OPENVIDU_SERVER_URL = "https://i7b107.p.ssafy.io";
+const OPENVIDU_SERVER_URL = "https://i7b107.p.ssafy.io:5443";
 const OPENVIDU_SERVER_SECRET = "atti";
 // 도메인: https://i7b107.p.ssafy.io
 
@@ -511,7 +511,8 @@ const OpenViduTest = () => {
               )
             ) {
               window.location.assign(
-                OPENVIDU_SERVER_URL + "/accept-certificate"
+                // OPENVIDU_SERVER_URL + "/accept-certificate"
+                OPENVIDU_SERVER_URL + "/openvidu/accept-certificate"
               );
             }
           }

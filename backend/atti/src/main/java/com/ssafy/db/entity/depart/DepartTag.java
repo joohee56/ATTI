@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ssafy.db.entity.user.Auth;
 import com.ssafy.db.entity.user.User;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +16,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/*
+ * 채널 해시 태그
+ */
 @Entity
 @Getter
 @ToString
@@ -27,10 +29,12 @@ public class DepartTag {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="depart_tag_id")
-	private Long departTagId;
+	private Long departTagId;						// 해시 태그 ID
 	
 	@Column(name="depart_tag_name")
-	private String departTagName;
+	private String departTagName;					// 해시 태그 명 
+	
+	///////////////////////////////////////////////////////////////
 	
 	@OneToMany(mappedBy = "departTag")
 	private List<DepartTagList> departTagLists = new ArrayList<>();
