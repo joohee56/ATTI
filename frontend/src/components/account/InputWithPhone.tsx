@@ -2,8 +2,7 @@ import * as React from "react";
 import FormControl from "@mui/material/FormControl";
 import { ButtonPurple } from "../ButtonStyled";
 import { FormHelperText, InputAdornment, OutlinedInput } from "@mui/material";
-import axios from "axios";
-import { BACKEND_URL } from "../../constant";
+import { api } from "../../utils/api";
 
 interface inputInfo {
   name: string;
@@ -12,9 +11,14 @@ interface inputInfo {
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
 }
 
-export default function InputWithPhone({ placeholder, phonNumber, ...rest }: inputInfo) {
+export default function InputWithPhone({
+  placeholder,
+  phonNumber,
+  ...rest
+}: inputInfo) {
   const [isPhoneNumber, setIsPhoneNumber] = React.useState<boolean>(false);
-  const [phoneNumberMessage, setPhoneNumberMessage] = React.useState<boolean>(true);
+  const [phoneNumberMessage, setPhoneNumberMessage] =
+    React.useState<boolean>(true);
   const [isSuccess, setIsSuccess] = React.useState<boolean>(false);
   const [isCode, setIsCode] = React.useState<string>("");
 
@@ -24,24 +28,16 @@ export default function InputWithPhone({ placeholder, phonNumber, ...rest }: inp
     if (regex.test(value)) {
       setIsPhoneNumber(true);
       setPhoneNumberMessage(true);
-      await axios
-        .post(
-          BACKEND_URL + "/auth/phone",
-          {
-            phoneNumber: value,
-          },
-          {
-            headers: {
-              "Content-type": "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          console.log("성공");
-          console.log(res);
+      await api
+        .post("/auth/phone", {
+          phoneNumber: value,
+        })
+        .then(function (response) {
+          console.log("전화번호로 메세지 전송 성공");
+          console.log(response);
         })
         .catch(function (error) {
-          console.log(error);
+          console.log("에러발생 : " + error);
         });
     } else {
       setIsPhoneNumber(false);
@@ -58,18 +54,18 @@ export default function InputWithPhone({ placeholder, phonNumber, ...rest }: inp
     //if (5분 이내 입력 했는지) {
     if (value.length >= 6) {
       setIsSuccess(true);
-      await axios
-        .get(BACKEND_URL + "/auth/phone/authCode", {
+      await api
+        .get("/auth/phone/authCode", {
           params: {
             code: value,
           },
         })
-        .then((res) => {
-          console.log("성공");
-          console.log(res);
+        .then(function (response) {
+          console.log("인증 성공!");
+          console.log(response);
         })
         .catch(function (error) {
-          console.log(error);
+          console.log("에러발생 : " + error);
         });
     }
     // } else {
@@ -92,7 +88,9 @@ export default function InputWithPhone({ placeholder, phonNumber, ...rest }: inp
           value={phonNumber}
           {...rest}
         />
-        {!phoneNumberMessage && <FormHelperText error>번호를 다시 확인해 주세요</FormHelperText>}
+        {!phoneNumberMessage && (
+          <FormHelperText error>번호를 다시 확인해 주세요</FormHelperText>
+        )}
         {isPhoneNumber && (
           <div>
             <OutlinedInput
