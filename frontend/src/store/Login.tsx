@@ -1,42 +1,38 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const userDB = [{ id: "test", password: "test" }];
 
 export interface UserLoginState {
   id: string;
-  password: string;
+  accessToken: string;
   auth: boolean;
 }
 
 const initialState: UserLoginState = {
   id: "",
-  password: "",
+  accessToken: "",
   auth: false,
 };
 
-const fetchTodo = createAsyncThunk(
-  `${name}/fetchTodo`, // 액션 이름을 정의해 주도록 합니다.
-  async (todoId, thunkAPI) => {
-      //const response = await todoApi.fetchTodoInfo(todoId);
-     // return response.data
-  }
-)
-
-export const UserLoginSlice = createSlice({
-  name: 'lgoin', // 해당 모듈의 이름
-  initialState, // 초기값 세팅
+const userSlice = createSlice({
+  name: "auth",
+  initialState,
   reducers: {
-    login: (state, action) =>{
-      state.id = action.payload;
-    }
+    login:  (state, action: PayloadAction<{ id: string; accessToken: string }>) => {
+      state.id = action.payload.id;
+      state.accessToken = action.payload.accessToken;
+      state.auth = true;
+      localStorage.setItem("AccessToken",state.accessToken);
+      console.log(action.payload);
+    },
+    logout: (state) => {
+      state.id = "";
+      state.accessToken= "";
+      state.auth = false;
+    },
   },
 });
 
+export const loginActions = userSlice.actions; // Slice에서 reducer 함수들 모음
 
-
-export default UserLoginSlice.reducer;
-
-function createAsyncThunk(arg0: string, arg1: (todoId: any, thunkAPI: any) => Promise<any>) {
-  throw new Error("Function not implemented.");
-}
+export default userSlice.reducer; // 합체용 reducer부분 export

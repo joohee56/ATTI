@@ -12,6 +12,9 @@ import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
 import { KAKAO_AUTH_URL } from "../constant/index";
 import InputWithPhone from "../components/account/InputWithPhone";
+import { useDispatch } from "react-redux";
+import { loginActions } from "../store/Login";
+import { useNavigate } from "react-router-dom";
 
 interface userLoginInfo {
   userId: string;
@@ -31,6 +34,8 @@ interface findPwInfo {
 }
 
 function LoginPage() {
+  const navigate = useNavigate();
+
   const [loginInfo, setLoginInfo] = useState<userLoginInfo>({
     userId: "",
     password: "",
@@ -66,23 +71,30 @@ function LoginPage() {
     });
   };
 
+  const dispatch = useDispatch();
+
   // 일반 로그인
-  const loginClick = async (e: any) => {
-    e.preventDefault();
+  const loginClick = async (event: any) => {
+    event.preventDefault();
     await api
       .post("/auth/login/normal", {
         userId: loginInfo.userId,
         password: loginInfo.password,
       })
-      .then(function (response) {
-        console.log(response);
+      .then(async function (response) {
         if (response.status === 200) {
-          //document.location.href = "/welcome";
-          console.log("response:", response);
+          // console.log("response:", response.data);
+          dispatch(
+            loginActions.login({
+              id: loginInfo.userId,
+              accessToken: response.data.accessToken,
+            })
+          );
+          navigate("/welcome");
         }
       })
       .catch(function (error) {
-        console.log(error);
+        console.log("Error", error.data);
       });
   };
 
@@ -130,13 +142,6 @@ function LoginPage() {
 
   return (
     <>
-      <NavLink to="/">
-        <HomeIcon /> Home
-      </NavLink>
-      {" | "}
-      <NavLink to="/signup">
-        <PersonOutlineOutlinedIcon /> Signup
-      </NavLink>
       <HeaderDiv>로그인</HeaderDiv>
       <StyledPage>
         <StyledContent>
@@ -364,7 +369,7 @@ const TextSpan = styled.span`
   cursor: pointer;
   background: linear-gradient(135deg, #9dceff 0%, #92a3fd 100%);
   color: transparent;
-  -webkit-background-clip: text;
+  /* -webkit-background-clip: text; */
 `;
 
 export default LoginPage;
