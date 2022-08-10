@@ -13,8 +13,8 @@ import { normalPostActions } from '../../store/community/index'
 import { palette } from "../../styles/palette";
 import UseSwitchesBasic from "../SwitchButton"
 
-export function PostUpdate({singlePost}) {
-    console.log(singlePost)
+export function PostUpdate({singlePost, handleModal3}) {
+  
     const [post, setPost] = useState({
         postId : "",
         postTitle : "",
@@ -43,13 +43,14 @@ export function PostUpdate({singlePost}) {
               .put(
                 BACKEND_URL + "/post/update",
                 {
-                  postId : post.postId,
+                  postId : singlePost.postId,
                   postTitle : post.postTitle,
                   postContent : post.postContent,
-                  postRegDate : post.postRegDate,
+                  postRegDate : singlePost.postRegDate,
                   postUpdDate : post.postUpdDate,
-                  user_id : post.user_id,
-                  category_id : post.category_id
+                //   user_id : post.user_id,
+                  userId : "ssafy",
+                  category_id : singlePost.category_id
                 },
                 {
                   headers: {
@@ -59,23 +60,28 @@ export function PostUpdate({singlePost}) {
               )
               .then((res) => {
                 console.log("response:", res);
-      
+    
+
               });
           } catch (err) {
             console.log(err)
           }
         },
         [
-          post.postId,
+          singlePost.postId,
           post.postTitle,
           post.postContent,
-          post.postRegDate,
+          singlePost.postRegDate,
           post.postUpdDate,
-          post.user_id,
-          post.category_id
+        //   singlePost.user_id,
+          singlePost.category_id
         ]
       );
-      
+    
+    function UpdateFunction (){
+        updatePosts();
+        handleModal3();
+    }  
     return (
         <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
             <div className="form-wrapper">
@@ -97,7 +103,7 @@ export function PostUpdate({singlePost}) {
                             </SwitchDiv>
                         </Top2>
                     </Top>
-                    <PostTitle type="text" placeholder="제목을 입력하세요" name="postTitle" value={singlePost.postTitle} onChange={getValue}/>
+                    <PostTitle type="text" placeholder="제목을 입력하세요" name="postTitle" defaultValue={singlePost.postTitle} onChange={getValue}/>
                     <CKEditor
                         editor={ ClassicEditor }
                         data={singlePost.postContent}
@@ -132,7 +138,7 @@ export function PostUpdate({singlePost}) {
                 </Main>
             </div>
         <SubmitButton className='submit-button'
-          onClick = {updatePosts}>
+          onClick = {() => UpdateFunction()}>
             글 수정</SubmitButton>
         </div>
         

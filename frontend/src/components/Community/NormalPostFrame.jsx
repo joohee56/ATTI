@@ -79,8 +79,8 @@ const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
     <>
       {post.slice(offset, offset + limit).map((e, i) => (
       <IndividualPost key={i}>
-        {console.log(e)}
-        {console.log('-----')}
+        {/* {console.log(e)}
+        {console.log('-----')} */}
         {/* {console.log(e.postId)} */}
         {/* {console.log('postId :',  postId)} */}
         <div style={postStyle} onClick={() => {twofunctions(e.postId)}}>
@@ -137,11 +137,23 @@ function NormalPostFrame() {
   const onClickToggleModal1 = useCallback(() => {
     setOpenModal1(!isOpenModal1);
   }, [isOpenModal1]);
+  const handleModal1 = () => {
+    setOpenModal1((prev) => {
+      return !prev
+    }
+    );
+  }
 
   const [isOpenModal3, setOpenModal3] = useState(false);
   const onClickToggleModal3 = useCallback(() => {
     setOpenModal3(!isOpenModal3);
   }, [isOpenModal3]);
+  const handleModal3 = () => {
+    setOpenModal3((prev) => {
+      return !prev
+    }
+    );
+  }
 
   const [length,setLength] = useState([])
   const getLength = (length) => {
@@ -157,6 +169,9 @@ function NormalPostFrame() {
   
   const [singlePost, setSinglePost] = useState([])
 
+  const categoryName = useSelector(state => state.category.categoryName)
+  console.log('너의 이름은? ' , categoryName)
+  
   return (
     <>
       <PostContainer>
@@ -190,7 +205,7 @@ function NormalPostFrame() {
           width="1000px"
           height="680px"
         >
-          <PostUpdate singlePost={singlePost} />
+          <PostUpdate singlePost={singlePost} handleModal3={handleModal3} />
         </Modal>
       )}
       {isOpenModal2 && (
@@ -208,7 +223,7 @@ function NormalPostFrame() {
           width="800px"
           height="650px"
         >
-          <PostEditor />
+          <PostEditor handleModal1={handleModal1} />
         </Modal>
       )}
       {console.log('postId : ' , postId)}

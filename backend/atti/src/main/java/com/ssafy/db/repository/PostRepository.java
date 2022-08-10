@@ -75,11 +75,20 @@ public class PostRepository {
 	
 	// 단일 게시글 수정
 	public void updateOne(Post editPost) {
+		
+		System.out.println("============Repository================");
+		System.out.println("postId : " + editPost.getPostId());
+		System.out.println("======================================");
+		
+//		em.persist(editPost.getUser());
+		
 		Post originPost = em.createQuery("select p from Post as p where p.postId = :postId", Post.class)
 				.setParameter("postId", editPost.getPostId())
 				.getSingleResult();
 		
-		originPost.setPostTitle(editPost.getPostContent());
+		
+		originPost.setPostTitle(editPost.getPostTitle());
+		originPost.setUser(editPost.getUser());
 		originPost.setPostContent(editPost.getPostContent());
 		originPost.setPostUpdDate(editPost.getPostUpdDate());
 	}

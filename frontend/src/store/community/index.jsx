@@ -39,7 +39,32 @@ export const action = {
     //     )
       };
 
+const categorySlice = createSlice({
+    name: 'category',
+    initialState: {
+        categoryId: 0,
+        categoryAnoInfo: null,
+        categoryComAnoInfo: null,
+        categoryComInfo: null,
+        categoryName: null,
+        cType: null,
+        departId: null,
+        userId: null
+    },
+    reducers: {
+        saveCategory(state, action) {
+            state.categoryId = action.payload.categoryId;
+            state.categpryAnoInfo = action.payload.categpryAnoInfo;
+            state.categoryComAnoInfo = action.payload.categoryComAnoInfo;
+            state.categoryComInfo = action.payload.categoryComInfo;
+            state.categoryName = action.payload.categoryName;
+            state.cType = action.payload.cType;
+            state.departId = action.payload.departId;
+            state.userId = action.payload.userId;
+        },
+    }
 
+});
 const normalPostSlice = createSlice({
     name: 'normalPost',
     initialState: {
@@ -80,12 +105,14 @@ const communityStore = configureStore({
     reducer: { 
         normalPost: normalPostSlice.reducer, 
         comment: commentSlice.reducer,
+        category: categorySlice.reducer,
         
     },
 });
 
 export const normalPostActions = normalPostSlice.actions;
 export const commentActions = commentSlice.actions;
+export const categoryActions = categorySlice.actions;
 
 export default communityStore
 

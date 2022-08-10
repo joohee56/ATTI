@@ -3,6 +3,8 @@ package com.ssafy.api.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.dto.request.PostUpdateReq;
 import com.ssafy.api.service.PostService;
 import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.PostRepository;
 
 @RestController
@@ -36,7 +40,7 @@ public class PostController {
 		return new ResponseEntity<List<Post>>(postService.viewAllPosts(), HttpStatus.OK);
 	}
 	
-	@CrossOrigin(origins="*")
+//	@CrossOrigin(origins="*")
 	@PostMapping("/write") // 게시글 쓰기
 	public ResponseEntity<String> createWriting(@RequestBody Post post) {
 //		System.out.println(post);
@@ -69,8 +73,30 @@ public class PostController {
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	
+//	@PutMapping("/update") // 게시글 수정
+//	public ResponseEntity<String> editPost(@RequestBody Post editPost){
+//		postService.editPost(editPost);
+//		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+//	}
+	
 	@PutMapping("/update") // 게시글 수정
-	public ResponseEntity<String> editPost(@RequestBody Post editPost){
+	public ResponseEntity<String> editPost(@RequestBody PostUpdateReq editPostInfo){
+		
+		System.out.println("=====================");
+		System.out.println("postContent : " + editPostInfo.getPostContent());
+		System.out.println("=====================");
+		
+		Post editPost = new Post();
+		
+		editPost.setPostId(editPostInfo.getPostId());
+		
+		User user = new User();
+		user.setUserId(editPostInfo.getUserId());
+		editPost.setUser(user);
+		
+		editPost.setPostTitle(editPostInfo.getPostTitle());
+		editPost.setPostContent(editPostInfo.getPostContent());
+		
 		postService.editPost(editPost);
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}

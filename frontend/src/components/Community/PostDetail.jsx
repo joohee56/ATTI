@@ -67,6 +67,7 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                 [name] : value,
             }));
         };
+        
     const writeComment = useCallback(
         async (e) => {
         e.preventDefault();
@@ -131,7 +132,11 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
     
             });
         }
-
+    
+    function DeleteFunction(){
+        onClickToggleModal2();
+        deletePost()
+    }
 ///////////////////////////////////////////////////////////////////
     const detailStyle = {
         width: "1000px",
@@ -182,7 +187,7 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                 <div style={{display: "flex", flexDirection: "row" , margin: "0 10px 0 0"}}>
                     <CustomEditOutlinedIcon onClick={modalEvent}/>
                     &nbsp; &nbsp;
-                    <CustomDeleteIcon onClick={deletePost}/>
+                    <CustomDeleteIcon onClick={()=> DeleteFunction()}/>
                 </div>
             </div>
             <br />
@@ -204,8 +209,8 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                     </SwitchDiv>
                 </div>
                 <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
-                    <CustomInputWithLabel name='commentContent' placeholder='댓글을 작성해 주세요' onChange={getValue} value={comment.commentContent}/>
-                    {/* <CommentInput name='comment_content' onChange={getValue} value={comment.comment_content}/> */}
+                    {/* <CustomInputWithLabel name='commentContent' placeholder='댓글을 작성해 주세요' onChange={getValue} value={comment.commentContent}/> */}
+                    <CommentInput name='commentContent' onChange={getValue} value={comment.comment_content}/>
                     <CustomButtonBlue onClick={writeComment}>댓글 작성</CustomButtonBlue>
                 </div>
             </div>
@@ -214,10 +219,14 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
 }
 
 
-// const CommentInput = styled.input`
-// width: 900px;
-// height: 70px;   
-// `;
+const CommentInput = styled.input`
+width: 800px;
+height: 60px; 
+margin: 0 20px 0 30px;
+font-size: 18px;
+background-color: ${palette.gray_1};
+border: none;  
+`;
 const CustomInputWithLabel = styled(InputWithLabel)`
 width: 800px;
 height: 60px;

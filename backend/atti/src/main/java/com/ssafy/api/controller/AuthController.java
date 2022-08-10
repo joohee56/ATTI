@@ -53,7 +53,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Api(value = "인증 API", tags = {"Auth."})
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 	
 	@Autowired
