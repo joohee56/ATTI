@@ -8,13 +8,15 @@ export const api = axios.create({
   },
 });
 
-// 로그인 이후부터
-// export const apiAcc = axios.create({
-//   baseURL: BACKEND_URL,
-//   headers: {
-//     "Content-type": "application/json",
-//     "Authorization": ,
-//   },
-// });
+const token = localStorage.getItem("AccessToken");
 
-// export default apiAcc;
+//로그인 이후부터
+const apiAcc = axios.create({
+  baseURL: BACKEND_URL,
+  headers: {
+    "Content-type" : "application/json",
+    "Authorization" : 'Bearer ' + token,
+  },
+});
+
+export default apiAcc;
