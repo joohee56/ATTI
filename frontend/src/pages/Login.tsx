@@ -12,12 +12,9 @@ import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
 import { KAKAO_AUTH_URL } from "../constant/index";
 import InputWithPhone from "../components/account/InputWithPhone";
-<<<<<<< HEAD
-=======
 import { useDispatch } from "react-redux";
 import { loginActions } from "../store/Login";
 import { useNavigate } from "react-router-dom";
->>>>>>> 27b9f5d68a88cf21e0aeebf049b90a68c1452a93
 
 interface userLoginInfo {
   userId: string;
@@ -74,46 +71,6 @@ function LoginPage() {
     });
   };
 
-<<<<<<< HEAD
-  // 일반 로그인
-  const loginClick = useCallback(
-    async (e: any) => {
-      try {
-        await axios
-          .post(
-            BACKEND_URL + "/auth/login/normal",
-            {
-              userId: loginInfo.userId,
-              password: loginInfo.password,
-            },
-
-            {
-              headers: {
-                "Content-type": "application/json",
-              },
-            }
-          )
-          .then((res) => {
-            // localStorage.setItem("Response request",res.request);
-            // localStorage.setItem("Response config"," "+res.config);
-            // localStorage.setItem("Response headers"," "+res.headers);
-            // localStorage.setItem("Response status"," "+res.status);
-            // localStorage.setItem("Response statusText",res.statusText);
-            console.log(res);
-
-            if (res.status === 200) {
-              //document.location.href = "/welcome";
-              console.log("response:", res);
-            }
-          });
-      } catch (err) {
-        const { response } = err as unknown as AxiosError;
-        console.log(response);
-      }
-    },
-    [loginInfo.userId, loginInfo.password]
-  );
-=======
   const dispatch = useDispatch();
 
   // 일반 로그인
@@ -140,7 +97,6 @@ function LoginPage() {
         console.log("Error", error.data);
       });
   };
->>>>>>> 27b9f5d68a88cf21e0aeebf049b90a68c1452a93
 
   // 카카오 로그인
   const kakaoLogin = () => {
@@ -154,29 +110,6 @@ function LoginPage() {
 
   // 아이디 찾기
   const clickFindId = async (e: any) => {
-<<<<<<< HEAD
-    try {
-      await axios
-        .post(
-          BACKEND_URL + "/user/findId",
-          {
-            name: findIdInfo.findId_name,
-            email: findIdInfo.findId_email,
-          },
-          {
-            headers: {
-              "Content-type": "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          setFindID('는 "' + res.data.userId + '" 입니다.');
-        });
-    } catch (err) {
-      const { response } = err as unknown as AxiosError;
-      setFindID("가 존재하지 않습니다");
-    }
-=======
     e.preventDefault();
     await api
       .post("/user/findId", {
@@ -189,7 +122,6 @@ function LoginPage() {
       .catch(function (error) {
         setFindID("가 존재하지 않습니다");
       });
->>>>>>> 27b9f5d68a88cf21e0aeebf049b90a68c1452a93
   };
 
   // 아이디 찾기, 비밀번호 찾기
@@ -210,16 +142,6 @@ function LoginPage() {
 
   return (
     <>
-<<<<<<< HEAD
-      <NavLink to="/">
-        <HomeIcon /> Home
-      </NavLink>
-      {" | "}
-      <NavLink to="/signup">
-        <PersonOutlineOutlinedIcon /> Signup
-      </NavLink>
-=======
->>>>>>> 27b9f5d68a88cf21e0aeebf049b90a68c1452a93
       <HeaderDiv>로그인</HeaderDiv>
       <StyledPage>
         <StyledContent>
