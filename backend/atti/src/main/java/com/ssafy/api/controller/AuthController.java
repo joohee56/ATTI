@@ -51,7 +51,7 @@ import lombok.RequiredArgsConstructor;
 /*
  * 인증 관련 API 요청 처리를 위한 컨트롤러 정의
  */
-@Api(value = "인증 API", tags = {"Auth."})
+//@Api(value = "인증 API", tags = {"Auth."})
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

@@ -19,8 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ssafy.db.entity.message.UserMessage;
-import com.ssafy.db.entity.user.Auth;
+import com.ssafy.db.entity.message.Message;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.entity.user.UserRole;
 
@@ -32,7 +31,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Data
+/*
+ * 댓글
+ */
 @Entity
 @Getter
 @Setter
@@ -41,41 +42,44 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
-
+	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="comment_id")
-	private Long commentId;
+	private Long commentId;					// 댓글 ID
 	
 	@Column(name="comment_reg_date")
-//	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime commnetRegDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date commentRegDate;			// 댓글 등록일
 	
 	@Column(name="comment_delete_info")
-	private boolean commentDeleteInfo;
+	private boolean commentDeleteInfo;		// 삭제 여부
 	
 	@Column(name="comment_ano_info")
-	private boolean commentAnoInfo;
+	private boolean commentAnoInfo;			// 댓글 익명 여부
 	
 	@Column(name="comment_content")
 	@Lob
-	private String commentContent;
+	private String commentContent;			// 댓글 내용
 	
 	@Column(name="comment_group")
-	private int commentGroup;
+	private int commentGroup;				// 댓글 그룹
 	
 	@Column(name="comment_level")
-	private int commentLevel;
+	private int commentLevel;				// 그룹 내 순서
 	
-	private boolean seq;
+	private boolean seq;					// 루트 여부
+	
+	//////////////////////////////////////////////////////////
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
-	@JsonIgnore
-	private User user;
+	private User user;						// 사용자 ID (FK)
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="post_id")
-	private Post post;
+	private Post post;						// 게시글 ID (FK)
+	
+	//////////////////////////////////////////////////////////
 	
 	@OneToMany(mappedBy = "comment")
     private List<UserCommentMention> usercommentmentions = new ArrayList<>();
@@ -90,8 +94,7 @@ public class Comment {
 	
 	public void setPost(Post post) {
 		this.post = post;
-		post.getComments().add(this);
-//		user.getComments().add(this);
+		user.getComments().add(this);
 	}
 	
 	
