@@ -1,3 +1,4 @@
+import { api } from "../utils/api";
 import { useState, useCallback } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -9,10 +10,14 @@ import { ButtonBlue } from "../components/ButtonStyled";
 import { ButtonPurple } from "../components/ButtonStyled";
 import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
-import axios, { AxiosError } from "axios";
-import { BACKEND_URL } from "../constant/index";
 import { KAKAO_AUTH_URL } from "../constant/index";
 import InputWithPhone from "../components/account/InputWithPhone";
+<<<<<<< HEAD
+=======
+import { useDispatch } from "react-redux";
+import { loginActions } from "../store/Login";
+import { useNavigate } from "react-router-dom";
+>>>>>>> 27b9f5d68a88cf21e0aeebf049b90a68c1452a93
 
 interface userLoginInfo {
   userId: string;
@@ -32,6 +37,8 @@ interface findPwInfo {
 }
 
 function LoginPage() {
+  const navigate = useNavigate();
+
   const [loginInfo, setLoginInfo] = useState<userLoginInfo>({
     userId: "",
     password: "",
@@ -67,6 +74,7 @@ function LoginPage() {
     });
   };
 
+<<<<<<< HEAD
   // 일반 로그인
   const loginClick = useCallback(
     async (e: any) => {
@@ -105,6 +113,34 @@ function LoginPage() {
     },
     [loginInfo.userId, loginInfo.password]
   );
+=======
+  const dispatch = useDispatch();
+
+  // 일반 로그인
+  const loginClick = async (event: any) => {
+    event.preventDefault();
+    await api
+      .post("/auth/login/normal", {
+        userId: loginInfo.userId,
+        password: loginInfo.password,
+      })
+      .then(async function (response) {
+        if (response.status === 200) {
+          // console.log("response:", response.data);
+          dispatch(
+            loginActions.login({
+              id: loginInfo.userId,
+              accessToken: response.data.accessToken,
+            })
+          );
+          navigate("/welcome");
+        }
+      })
+      .catch(function (error) {
+        console.log("Error", error.data);
+      });
+  };
+>>>>>>> 27b9f5d68a88cf21e0aeebf049b90a68c1452a93
 
   // 카카오 로그인
   const kakaoLogin = () => {
@@ -118,6 +154,7 @@ function LoginPage() {
 
   // 아이디 찾기
   const clickFindId = async (e: any) => {
+<<<<<<< HEAD
     try {
       await axios
         .post(
@@ -139,6 +176,20 @@ function LoginPage() {
       const { response } = err as unknown as AxiosError;
       setFindID("가 존재하지 않습니다");
     }
+=======
+    e.preventDefault();
+    await api
+      .post("/user/findId", {
+        name: findIdInfo.findId_name,
+        email: findIdInfo.findId_email,
+      })
+      .then(function (response) {
+        setFindID('는 "' + response.data.userId + '" 입니다.');
+      })
+      .catch(function (error) {
+        setFindID("가 존재하지 않습니다");
+      });
+>>>>>>> 27b9f5d68a88cf21e0aeebf049b90a68c1452a93
   };
 
   // 아이디 찾기, 비밀번호 찾기
@@ -159,6 +210,7 @@ function LoginPage() {
 
   return (
     <>
+<<<<<<< HEAD
       <NavLink to="/">
         <HomeIcon /> Home
       </NavLink>
@@ -166,6 +218,8 @@ function LoginPage() {
       <NavLink to="/signup">
         <PersonOutlineOutlinedIcon /> Signup
       </NavLink>
+=======
+>>>>>>> 27b9f5d68a88cf21e0aeebf049b90a68c1452a93
       <HeaderDiv>로그인</HeaderDiv>
       <StyledPage>
         <StyledContent>
@@ -393,7 +447,7 @@ const TextSpan = styled.span`
   cursor: pointer;
   background: linear-gradient(135deg, #9dceff 0%, #92a3fd 100%);
   color: transparent;
-  -webkit-background-clip: text;
+  /* -webkit-background-clip: text; */
 `;
 
 export default LoginPage;
