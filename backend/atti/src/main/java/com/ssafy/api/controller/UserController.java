@@ -42,7 +42,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
-@Api(value = "유저 API", tags = {"User"})
+//@Api(value = "유저 API", tags = {"User"})
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -51,12 +51,12 @@ public class UserController {
 	UserService userService;
 	
 	// 일반 회원가입
-	@ApiResponses({
-		@ApiResponse(code =  200, message = "성공"),
-		@ApiResponse(code = 401, message = "인증 실패"),
-		@ApiResponse(code = 404, message = "사용자 없음"),
-		@ApiResponse(code = 500, message = "서버 오류")
-	})
+//	@ApiResponses({
+//		@ApiResponse(code =  200, message = "성공"),
+//		@ApiResponse(code = 401, message = "인증 실패"),
+//		@ApiResponse(code = 404, message = "사용자 없음"),
+//		@ApiResponse(code = 500, message = "서버 오류")
+//	})
 	@PostMapping("/signup/normal")
 	public ResponseEntity<?> signUpNormal(@RequestBody @Valid User user) throws Exception {
 		userService.signUp(user);

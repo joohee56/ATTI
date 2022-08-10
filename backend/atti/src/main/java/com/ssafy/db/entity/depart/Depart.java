@@ -15,7 +15,6 @@ import javax.persistence.OneToMany;
 
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.entity.webclass.Course;
-import com.ssafy.db.entity.webclass.WebClass;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +23,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/*
+ *  채널
+ */
 @Entity
 @Getter
 @ToString
@@ -34,17 +36,20 @@ public class Depart {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="depart_id")
-	private Long departId;
+	private Long departId;					// 채널 ID
 	
 	@Column(name="depart_name")
-	private String departName;
+	private String departName;				// 채널 명
 	
 	@Column(name="depart_code")
-	private String departCode;
+	private String departCode;				// 채널코드 (초대 코드)
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
-	private User user;
+	private User user;						// 회원 ID 
+	
+	/////////////////////////////////////////////////
+	
 	
 	@OneToMany(mappedBy = "depart")
 	private List<Course> courses = new ArrayList<>();
@@ -52,8 +57,8 @@ public class Depart {
 	@OneToMany(mappedBy = "depart")
     private List<Category> categorys = new ArrayList<>();
 
-	@OneToMany(mappedBy = "depart")
-    private List<WebClass> webclasses = new ArrayList<>();
+//	@OneToMany(mappedBy = "depart")
+//    private List<WebClass> webclasses = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "depart")
 	private List<UserDepart> userDeparts = new ArrayList<>();

@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ssafy.db.entity.user.Auth;
 import com.ssafy.db.entity.user.User;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +19,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/*
+ * [중계 테이블]
+ * 회원 댓글 멘션
+ */
 @Entity
 @Getter
 @ToString
@@ -30,16 +33,18 @@ public class UserCommentMention {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="user_comment_mention_id")
-	private Long userCommentMentionId;
+	private Long userCommentMentionId;				// 회원 댓글 멘션 ID
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
-	private User user;
+	private User user;								// 언급당한 회원 ID
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="comment_id")
-	private Comment comment;
+	private Comment comment;						// 댓글 ID
 	
+	///////////////////////////////////////////////////////
+	 
 	public void setUser(User user) {
 		this.user = user;
 		user.getUsercommentmentions().add(this);

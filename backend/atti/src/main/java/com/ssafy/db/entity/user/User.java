@@ -19,7 +19,6 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ssafy.db.entity.chat.Chat;
 import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Depart;
@@ -29,10 +28,8 @@ import com.ssafy.db.entity.depart.UserCommentMention;
 import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.depart.UserPostLike;
 import com.ssafy.db.entity.depart.UserPostMention;
-import com.ssafy.db.entity.message.UserMessage;
-import com.ssafy.db.entity.webclass.Attendance;
+import com.ssafy.db.entity.message.Message;
 import com.ssafy.db.entity.webclass.Course;
-import com.ssafy.db.entity.webclass.UserCourse;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -44,12 +41,12 @@ import lombok.*;
 @AllArgsConstructor
 public class User {
 
-	@ApiModelProperty(name="유저 ID", example="ssafy")
+//	@ApiModelProperty(name="유저 ID", example="ssafy")
 	@Id
 	@Column(name = "user_id")
 	private String userId;
 	
-	@ApiModelProperty(name="유저 Password", example="your_password")
+//	@ApiModelProperty(name="유저 Password", example="your_password")
 //	@JsonIgnore
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
@@ -71,24 +68,28 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private UserRole userRole;
 
+	
+	/////////////////////////////////////////////////////
+	
+	
 	@OneToMany(mappedBy = "tuser")
-	private List<UserMessage> tousers = new ArrayList<>();
+	private List<Message> tousers = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "fuser")
-	private List<UserMessage> fromusers = new ArrayList<>();
+	private List<Message> fromusers = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user") 
 	private List<Comment> comments = new ArrayList<>();
 	  
-	@OneToMany(mappedBy = "user")
-	private List<Attendance> attendances = new ArrayList<>();
+//	@OneToMany(mappedBy = "user")
+//	private List<Attendance> attendances = new ArrayList<>();
 	  
 	@OneToMany(mappedBy = "in_user")
 	private List<Course> courses = new ArrayList<>();
 	  
-	@OneToMany(mappedBy = "user")
-	private List<Chat> chats = new ArrayList<>();
-	  
+//	@OneToMany(mappedBy = "user")
+//	private List<Chat> chats = new ArrayList<>();
+	
 	@OneToMany(mappedBy = "user")
 	private List<Depart> departs = new ArrayList<>();
 	  
@@ -99,8 +100,8 @@ public class User {
 	private List<Category> categorys = new ArrayList<>();
 	 
 
-	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-	private Auth auth;
+//	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+//	private Auth auth;
 
 	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Profile profile;
@@ -120,8 +121,8 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<UserCommentLike> usercommentlikes = new ArrayList<>();
 	  
-	@OneToMany(mappedBy = "user")
-	private List<UserCourse> usercourses = new ArrayList<>();
+//	@OneToMany(mappedBy = "user")
+//	private List<UserCourse> usercourses = new ArrayList<>();
 	  
 	@OneToMany(mappedBy = "user")
 	private List<UserDepart> userDeparts = new ArrayList<>();

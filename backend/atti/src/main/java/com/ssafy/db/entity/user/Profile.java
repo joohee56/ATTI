@@ -18,6 +18,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/*
+ * 프로필 이미지
+ */
+
 @Entity
 @Getter
 @Setter
@@ -29,20 +33,20 @@ public class Profile {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="profile_id")
-	private Long profilId;
+	private Long profilId;					// 프로필 이미지 ID
 	
 	@Column(name="profile_origin")
-	private Long profileOrigin;
+	private String profileOrigin;			// 원본 파일명
 	
 	@Column(name="profile_new")
-	private Long profileNew;
+	private String profileNew;				// 새 파일명
 	
 	@Column(name="profile_folder")
-	private Long profileFoler;
+	private String profileFolder;			// 저장 폴더
 	
 	@OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user_id")
-	private User user;
+	private User user;						// 회원 ID (FK)
 	
 
 }
