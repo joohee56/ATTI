@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,6 @@ import com.ssafy.db.repository.PostRepository;
 @RequestMapping("/post")
 public class PostController {
 	
-	
-	
 	@Autowired
 	private PostService postService;
 	
@@ -38,9 +37,9 @@ public class PostController {
 	
 	@PostMapping("/write") // 게시글 쓰기
 	public ResponseEntity<String> createWriting(@RequestBody Post post) {
-		System.out.println(post);
+//		System.out.println(post);
 		postService.createWriting(post);
-		System.out.println(post);
+//		System.out.println(post);
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	
