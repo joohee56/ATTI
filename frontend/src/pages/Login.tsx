@@ -94,7 +94,8 @@ function LoginPage() {
         }
       })
       .catch(function (error) {
-        console.log("Error", error.data);
+        console.log("Error", error);
+        console.log("Error", "로그인 실패!");
       });
   };
 
