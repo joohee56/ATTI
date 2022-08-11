@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.request.CommentReq;
 import com.ssafy.api.service.CommentService;
 import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Post;
@@ -29,7 +30,7 @@ public class CommentController {
 	private CommentRepository commentRepository;
 	
 	@PostMapping("/write") // 댓글 작성
-	public ResponseEntity<String> createReply(@RequestBody Comment comment) {
+	public ResponseEntity<String> createReply(@RequestBody CommentReq comment) {
 		System.out.println(comment);
 		commentService.createReply(comment);
 		
@@ -42,8 +43,8 @@ public class CommentController {
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	
-	@GetMapping("/read/{postId}")
-	public ResponseEntity<List<Comment>> viewReply(@PathVariable Long postId){
+	@GetMapping("/read/{postId}") // 한 게시글의 댓글 보기
+	public ResponseEntity<List<Comment>> viewReply(@PathVariable Post postId){
 		commentService.viewReply(postId);
 		return new ResponseEntity<List<Comment>>(commentService.viewReply(postId), HttpStatus.OK);
 	}

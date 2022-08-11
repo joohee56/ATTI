@@ -15,12 +15,10 @@ import javax.persistence.OneToOne;
 
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.depart.UserPostMention;
-import com.ssafy.db.entity.message.UserMessage;
-import com.ssafy.db.entity.user.Auth;
+import com.ssafy.db.entity.message.Message;
 import com.ssafy.db.entity.user.Profile;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.entity.user.UserRole;
-import com.ssafy.db.entity.webclass.WebClass;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,15 +36,21 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ChatRoom {
 	
+//	화상 강의 ID	webclass_id
+//	채널 ID	channels_id
+//	수업 ID	class_id
+//	사용자 ID	user_id
+	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="chatroom_id")
-	private Long chatroomId;
+	private Long chatroomId;				// 채팅방 번호
 	
-	@OneToMany(mappedBy = "chatroom")
-    private List<Chat> chats = new ArrayList<>();
+//	@OneToOne(fetch=FetchType.LAZY)
+//	private WebClass webclass;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	private WebClass webclass;
+//	@OneToMany(mappedBy = "chatroom")
+//    private List<Chat> chats = new ArrayList<>();
+	
 	
 // 연관관계 메소드
 

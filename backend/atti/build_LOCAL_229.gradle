@@ -30,9 +30,6 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'eclipse'
-// apply plugin: 'com.github.node-gradle.node'
-//이클립스인 경우를 위한 QueryDSL 플러그인. IntelliJ는 불필요.
-// apply plugin: 'com.ewerk.gradle.plugins.querydsl'
 
 repositories {
     mavenCentral()
@@ -55,15 +52,6 @@ configurations {
 	providedRuntime
 }
 
-
-repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/snapshot' }
-    maven { url 'https://repo.spring.io/milestone' }
-    maven { url "https://repo.spring.io/libs-release" }
-    maven { url "https://repo.maven.apache.org/maven2" }
-    maven { url "https://build.shibboleth.net/nexus/content/repositories/releases" }
-}
 
 //set build time and inject value to application.properties
 def buildTime() {
@@ -120,6 +108,10 @@ dependencies {
 	
 	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.7.2'
 	
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+	
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+	
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
 	
@@ -157,20 +149,6 @@ dependencies {
     implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.22.0'
     
 	}
-	
-	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-	
-	//Swagger
-    //implementation("io.springfox:springfox-swagger2:3.0.0")
-    //implementation("io.springfox:springfox-swagger-ui:3.0.0")
-    //implementation("io.springfox:springfox-boot-starter:3.0.0")
-    //implementation("io.springfox:springfox-data-rest:3.0.0")
-    //implementation("io.springfox:springfox-bean-validators:3.0.0")
-    
-    //redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'it.ozimov:embedded-redis:0.7.2'
 }
 
 tasks.named('test') {
