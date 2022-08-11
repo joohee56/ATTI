@@ -23,7 +23,7 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override // 댓글 작성
 	public void createReply(Comment comment) {
-		comment.setCommnetRegDate(LocalDateTime.now());
+		comment.setCommentRegDate(LocalDateTime.now());
 		commentRepository.insertWriting(comment);
 	}
 

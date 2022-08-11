@@ -62,8 +62,8 @@ public class Message {
 	
 	//////////////////////////////////////////////////////
 	
-	@OneToMany(mappedBy = "usermessage")
-    private List<Message> messages = new ArrayList<>();
+//	@OneToMany(mappedBy = "usermessage")
+//    private List<Message> messages = new ArrayList<>();
 	
 	public void setTuser(User user) {
 		this.tuser = user;

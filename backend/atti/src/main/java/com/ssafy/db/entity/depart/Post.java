@@ -2,6 +2,7 @@ package com.ssafy.db.entity.depart;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,13 +16,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.db.entity.user.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,12 +54,12 @@ public class Post {
 	private String postContent;			// 내용
 	
 	@Column(name="post_reg_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date postRegDate;			// 등록일
+//	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime postRegDate;			// 등록일
 	
 	@Column(name="post_upd_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date postUpdDate;			// 수정일
+//	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime postUpdDate;			// 수정일
 	
 	@Column(name="post_ano_info")
 	private boolean postAnoInfo;		// 게시글 익명 여부
