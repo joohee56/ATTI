@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { departActions } from '../../store/community/Depart';
 
@@ -28,7 +28,7 @@ function DepartList(){
       departCode: ""
     },
     {
-      departId: 1,
+      departId: 3,
       userId: "",
       departName: "대전3반",
       departCode: ""
@@ -45,16 +45,17 @@ function DepartList(){
       setAnchorEl(event.currentTarget);
     }
 
-    // function departFunction(i){
-    //   handleClose()
-    //   dispatch(departActions.saveDepart({
-    //       {departId: dummyDepart[i].departId,
-    //         userId: dummyCategory[i].userId,
-    //         departName: dummyCategory[i].departName,
-    //         departCode: dummyCategory[i].departCode,
-    //     }
-    //   ))
-    // }
+    function departFunction(i){
+      handleClose()
+      dispatch(departActions.saveDepart(
+        {departId: dummyDepart[i].departId,
+        userId: dummyDepart[i].userId,
+        departName: dummyDepart[i].departName,
+        departCode: dummyDepart[i].departCode,
+       }
+    ))
+    }
+    const departName = useSelector(state => state.depart.departName)
     return (
       <DepartContainer>
          <Button
@@ -64,7 +65,7 @@ function DepartList(){
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        채널
+        {departName}
         </Button>
         <Menu
           id="fade-menu"
@@ -77,7 +78,7 @@ function DepartList(){
           TransitionComponent={Fade}
         >
           {dummyDepart.map((e,i) => (
-            <MenuItem onClick={handleClose} key={i}>{e.departName}</MenuItem> 
+            <MenuItem onClick={() => {departFunction(i)}} key={i}>{e.departName}</MenuItem> 
           ))}
         </Menu>
       </DepartContainer>
@@ -106,7 +107,7 @@ function DepartList(){
 // }
 
 const DepartContainer = styled.div`
-width: 150px;
+width: 100px;
 height: 100px;
 border: solid;
 border-radius: 5px;

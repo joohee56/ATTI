@@ -1,5 +1,5 @@
 import React, {PropsWithChildren, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NavLink, Route, Link } from "react-router-dom";
 import styled from 'styled-components';
@@ -92,15 +92,10 @@ const dummyCategory = [
 function CategoryList(dummyCategory){
     
     const dispatch = useDispatch()
+    const departName = useSelector(state => state.depart.departName)
 
     const [changeCss, setChangeCss] = useState(1);
    
-    // function categoryEvent () {
-    //     onChangeCss(num)
-    //     dispatch(saveCategory(
-    //         {categoryId: }
-    //     ))
-    // }
     const rendering = () => {
         const noClickStyle = {
             display: "flex",
@@ -147,12 +142,11 @@ function CategoryList(dummyCategory){
             ))
         }
         const result = [];
-      
         for (let i = 0; i < dummyCategory.length; i++) {
           result.push(
                 <>  
                     {dummyCategory[i].categoryName === "공지사항" && (
-                        <StyledLink to={`/community/`+dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
+                        <StyledLink to={`/community/` + departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
                              <div key={i} style={changeCss === 1 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 1 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
@@ -166,7 +160,7 @@ function CategoryList(dummyCategory){
                         </StyledLink>
                     )}
                     {dummyCategory[i].categoryName === "질문" && (
-                        <StyledLink to={`/community/`+dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
+                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
                             <div key={i} style={changeCss === 2 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 2 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
@@ -178,7 +172,7 @@ function CategoryList(dummyCategory){
                         </StyledLink>
                     )}
                     {dummyCategory[i].categoryName === "자료실" && (
-                        <StyledLink to={`/community/`+dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i) }}>
+                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i) }}>
                             <div key={i} style={changeCss === 3 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 3 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
@@ -190,7 +184,7 @@ function CategoryList(dummyCategory){
                         </StyledLink>
                     )}
                     {dummyCategory[i].categoryName === "자유게시판" && (
-                        <StyledLink to={`/community/`+dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i) }}>
+                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i) }}>
                             <div key={i} style={changeCss === 4 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 4 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
@@ -202,7 +196,7 @@ function CategoryList(dummyCategory){
                         </StyledLink>
                     )}
                     {dummyCategory[i].categoryName === "수업실" && (
-                        <StyledLink to={`/community/`+dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
+                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
                             <div key={i} style={changeCss === 5 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 5 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
@@ -214,7 +208,7 @@ function CategoryList(dummyCategory){
                         </StyledLink>
                     )}
                     {dummyCategory[i].categoryName === "수업일정" && (
-                        <StyledLink to={`/community/`+dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
+                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
                             <div key={i} style={changeCss === 6 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 6 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
@@ -226,7 +220,7 @@ function CategoryList(dummyCategory){
                         </StyledLink>
                     )}
                      {dummyCategory[i].categoryName === "관리자페이지" && (
-                        <StyledLink to={`/community/`+dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
+                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
                             <div key={i} style={changeCss === 7 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 7 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>

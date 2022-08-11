@@ -170,7 +170,9 @@ function NormalPostFrame() {
   const [singlePost, setSinglePost] = useState([])
 
   const categoryName = useSelector(state => state.category.categoryName)
-  console.log('너의 이름은? ' , categoryName)
+  console.log('카테고리, 너의 이름은? ' , categoryName)
+  const departName = useSelector(state => state.depart.departName)
+  console.log('채널, 너의 이름은? ' , departName)
   
   return (
     <>

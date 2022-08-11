@@ -3,10 +3,10 @@ import { createSlice, configureStore, createAsyncThunk, createReducer } from '@r
 const departSlice = createSlice({
     name: 'depart',
     initialState: {
-        departId: "",
-        userId: "",
-        departName: "",
-        departCode: ""
+        departId: null,
+        userId: null,
+        departName: "채널",
+        departCode: null
     },
     reducers: {
         saveDepart(state, action) {
@@ -20,4 +20,5 @@ const departSlice = createSlice({
 });
 
 export const departActions = departSlice.actions;
+export const departState = (state) =>state.depart;
 export default departSlice.reducer;
