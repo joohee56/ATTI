@@ -16,7 +16,7 @@ import UseSwitchesBasic from "../SwitchButton"
 import CommentList from './CommentList';
 import {ButtonBlue} from '../ButtonStyled';
 import InputWithLabel from '../InputWithLabel';
-import { commentActions } from '../../store/community/index'
+import { commentActions } from '../../store/community/Category'
 import { palette } from '../../styles/palette';
 
 import ReactHtmlParser from 'react-html-parser'

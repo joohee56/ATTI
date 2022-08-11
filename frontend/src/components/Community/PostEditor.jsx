@@ -9,7 +9,7 @@ import axios from 'axios';
 
 import { BACKEND_URL } from "../../constant";
 import { ButtonBlue } from '../ButtonStyled';
-import { normalPostActions } from '../../store/community/index'
+import { normalPostActions } from '../../store/community/Category'
 import { palette } from "../../styles/palette";
 import UseSwitchesBasic from "../SwitchButton"
 

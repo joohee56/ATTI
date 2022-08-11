@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
 
-
+import { api } from "../../utils/api";
 import { BACKEND_URL } from "../../constant";
 import PostUpdate  from "./PostUpdate";
 import PostDetail from "./PostDetail";

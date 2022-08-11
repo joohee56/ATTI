@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { NavLink, Route, Link } from "react-router-dom";
 import styled from 'styled-components';
 
-import { categoryActions } from '../../store/community';
+import { categoryActions } from '../../store/community/Category';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
@@ -68,12 +68,22 @@ const dummyCategory = [
         userId: null
     },
     {
-        categoryId: 2,
+        categoryId: 6,
         categpryAnoInfo: false,
         categoryComAnoInfo: false,
         categoryComInfo: false,
         categoryName: '수업일정',
         cType: '일정',
+        departId: null,
+        userId: null
+    },
+    {
+        categoryId: 7,
+        categpryAnoInfo: false,
+        categoryComAnoInfo: false,
+        categoryComInfo: false,
+        categoryName: '관리자페이지',
+        cType: '관리자',
         departId: null,
         userId: null
     }
@@ -83,7 +93,7 @@ function CategoryList(dummyCategory){
     
     const dispatch = useDispatch()
 
-    const [changeCss, setChangeCss] = useState(0);
+    const [changeCss, setChangeCss] = useState(1);
    
     // function categoryEvent () {
     //     onChangeCss(num)
@@ -207,6 +217,18 @@ function CategoryList(dummyCategory){
                         <StyledLink to={`/community/`+dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
                             <div key={i} style={changeCss === 6 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 6 ? null : purpleBar }></div>
+                                <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
+                                    <DateRangeOutlinedIcon/>
+                                    &nbsp;
+                                    {dummyCategory[i].categoryName}
+                                </div>
+                            </div>
+                        </StyledLink>
+                    )}
+                     {dummyCategory[i].categoryName === "관리자페이지" && (
+                        <StyledLink to={`/community/`+dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
+                            <div key={i} style={changeCss === 7 ? clickStyle : noClickStyle}>
+                                <div style={changeCss === 7 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <DateRangeOutlinedIcon/>
                                     &nbsp;
