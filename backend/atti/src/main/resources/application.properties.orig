@@ -1,7 +1,6 @@
 #it will be set build date by gradle. if this value is @build.date@, front-end is development mode
 build.date=@build.date@
 server.port=8080
-<<<<<<< HEAD
 
 server.address=0.0.0.0
 # server.servlet.contextPath=/
@@ -17,10 +16,6 @@ server.servlet.contextPath=/api
 # server.address=localhost
 # server.servlet.contextPath=/api
 
-=======
-server.address=localhost
-server.servlet.contextPath=/
->>>>>>> joohui
 
 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly.
 server.servlet.encoding.charset=UTF-8
@@ -72,7 +67,10 @@ jwt.secret=dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
 jwt.expiration=1296000000
 
 #logging
-logging.file.name=./ssafy-web.log
+<<<<<<< HEAD
+#logging.file.name=./ssafy-web.log
+=======
+>>>>>>> 5d962bc8e67895c527c836402f97f46214a3c07e
 logging.level.root=INFO
 logging.level.com.samsung.security=DEBUG
 logging.level.org.springframework.web=DEBUG
