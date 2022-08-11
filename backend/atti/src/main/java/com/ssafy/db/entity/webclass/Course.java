@@ -50,6 +50,9 @@ public class Course {
 	@Column(name="course_name")
 	private String courseName;					// 수업 이름
 	
+	@Column(name="course_teacher_name")
+	private String courseTeacherName;			// 교수명
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="course_start_time")	
 	private Date courseStartTime;				// 시작 시간
