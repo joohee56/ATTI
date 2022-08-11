@@ -28,7 +28,7 @@ public class PostRepository {
 		return result;
 	}
 	
-	// 게시글 전체 삭제
+	// 게시글 전체 삭제 (필요없음)
 //	public void deleteAll(Post post) {
 //		em.remove(post);
 //	}
@@ -49,9 +49,10 @@ public class PostRepository {
 	
 	// 게시글 전체 삭제
 	public void deleteAll() {
-//		em.createQuery("delete p from Post as p").get;
+//		em.createQuery("delete p from Post as p", Post.class).getResultList();
 		List<Post> result = em.createQuery("select p from Post as p", Post.class).getResultList();
-		for(int i=0; i<result.size(); i++) {
+		for(int i = 0; i < result.size(); i++) {
+			em.persist(result.get(i));
 			em.remove(result.get(i));
 		}
 	}
@@ -78,6 +79,7 @@ public class PostRepository {
 				.setParameter("postId", editPost.getPostId())
 				.getSingleResult();
 		
+		originPost.setPostTitle(editPost.getPostTitle());
 		originPost.setPostContent(editPost.getPostContent());
 		originPost.setPostUpdDate(editPost.getPostUpdDate());
 	}

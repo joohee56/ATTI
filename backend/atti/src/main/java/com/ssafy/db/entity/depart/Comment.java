@@ -1,5 +1,6 @@
 package com.ssafy.db.entity.depart;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.ssafy.db.entity.user.UserRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,6 +36,7 @@ import lombok.ToString;
  */
 @Entity
 @Getter
+@Setter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -45,8 +48,8 @@ public class Comment {
 	private Long commentId;					// 댓글 ID
 	
 	@Column(name="comment_reg_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date commentRegDate;			// 댓글 등록일
+//	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime commentRegDate;			// 댓글 등록일
 	
 	@Column(name="comment_delete_info")
 	private boolean commentDeleteInfo;		// 삭제 여부

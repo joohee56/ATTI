@@ -28,6 +28,8 @@ public class UserRepository {
 	@Autowired
 	EntityManager em;
 	
+	
+	
 	public void signUp(User user) {
 		em.persist(user);
 	}
