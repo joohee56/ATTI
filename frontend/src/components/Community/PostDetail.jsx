@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import UseSwitchesBasic from "../SwitchButton"
 
+import { reRenderingActions } from '../../store/community/ReRendering';
 import CommentList from './CommentList';
 import {ButtonBlue} from '../ButtonStyled';
 import InputWithLabel from '../InputWithLabel';
@@ -45,6 +46,8 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         onClickToggleModal2()
         onClickToggleModal3()
     }
+    // const categoryId = useSelector(state => state.category.categoryId)
+    // const departId = useSelector(state => state.depart.departId)
     const [comment, setComment] = useState({
         commentId: "",
         postId: "",
@@ -52,8 +55,8 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         departId: "",
         userId: "",
         commentRegDate: "",
-        commentDeleteInto: "",
-        commentAnoInfo: "",
+        commentDeleteInfo: "",
+        commentAnoInfo: false,
         commentContent: "",
         commentGroup: "",
         commentLevel: "",
@@ -67,11 +70,24 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                 [name] : value,
             }));
         };
+    const getAnoInfo = () => {
+        console.log("익명여부 :", comment.commentAnoInfo)
+        comment.commentAnoInfo = !comment.commentAnoInfo
         
+    }
+    const getAnoInfoNum = () => {
+        if (comment.commentAnoInfo){
+            return 1
+        } 
+        else{
+            return 0
+        }
+    }
     const writeComment = useCallback(
         async (e) => {
         e.preventDefault();
         try {
+            document.getElementById("commentInput").value=''
             await axios
             .post(
                 BACKEND_URL + "/post/comment/write",
@@ -82,8 +98,8 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                     departId: comment.departId,
                     userId: comment.userId,
                     commentRegDate: comment.commentRegDate,
-                    commentDeleteInto: comment.commentDeleteInto,
-                    commentAnoInfo: comment.commentAnoInfo,
+                    commentDeleteInfo: comment.commentDeleteInfo,
+                    commentAnoInfo: getAnoInfoNum(),
                     commentContent: comment.commentContent,
                     commentGroup: comment.commentGroup,
                     commentLevel: comment.commentLevel,
@@ -97,6 +113,11 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
             )
             .then((res) => {
                 console.log("response:", res);
+                dispatch(reRenderingActions.saveReRendering(
+                    {cider: updateCider }
+                ))
+                
+                 
     
             });
         } catch (err) {
@@ -110,13 +131,17 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         comment.departId,
         comment.userId,
         comment.commentRegDate,
-        comment.commentAnoInfo,
+        getAnoInfoNum(),
         comment.commentContent,
         comment.commentGroup,
         comment.commentLevel,
         comment.seq
         ]
     );
+    
+    const dispatch = useDispatch()
+    const currentCider = useSelector(state => state.reRendering.cider)
+    const updateCider = !currentCider
 
     const deletePost = () => {
         axios.delete(
@@ -129,13 +154,16 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
             )
             .then((res) => {
                 console.log("response:", res);
+                dispatch(reRenderingActions.saveReRendering(
+                    {cider: updateCider }
+                ))
     
             });
         }
     
     function DeleteFunction(){
         onClickToggleModal2();
-        deletePost()
+        deletePost();
     }
 ///////////////////////////////////////////////////////////////////
     const detailStyle = {
@@ -155,14 +183,15 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         <div style={detailStyle}>
             <div>
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between"}}>
-                    <div style={{margin: "10px 0 0 40px", fontWeight: "bold"}}>
+                    <div style={{width: "750px", margin: "10px 0 0 40px", fontWeight: "bold"}}>
                         {single.postTitle}
                     </div>
                     <div style={{display: "flex", margin: "0 35px 0 0"}}>
                         <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
-                        <span style={{margin: "10px 0 0 0"}}>숫자</span>
-                        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 0"}}>숫자</span>
+                        <span style={{margin: "10px 0 0 0"}}>24</span>
+                        &nbsp; &nbsp; 
+                        <Checkbox style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
+                        <span style={{margin: "10px 0 0 0"}}>22</span>
                     </div>
                 </div>
                 <hr style={hrStyle} />
@@ -205,12 +234,14 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                         <span style={{textAlign: "center" ,fontSize: "15px", marginBottom: "5px"}}>
                             익명댓글 
                         </span>
-                        {UseSwitchesBasic()}
+                        <span onClick={getAnoInfo}>
+                            {UseSwitchesBasic()}
+                        </span>
                     </SwitchDiv>
                 </div>
                 <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
                     {/* <CustomInputWithLabel name='commentContent' placeholder='댓글을 작성해 주세요' onChange={getValue} value={comment.commentContent}/> */}
-                    <CommentInput name='commentContent' onChange={getValue} value={comment.comment_content}/>
+                    <CommentInput id="commentInput" name='commentContent' onChange={getValue} value={comment.comment_content}/>
                     <CustomButtonBlue onClick={writeComment}>댓글 작성</CustomButtonBlue>
                 </div>
             </div>

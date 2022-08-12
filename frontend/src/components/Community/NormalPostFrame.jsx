@@ -21,24 +21,26 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
 function PostList({handleModal2, limit, page, getLength, getPostId}) {
+  async function getPosts(){
+    axios.get(
+      BACKEND_URL + "/post",
+      {
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    ).then((res) => {
+      console.log(res.data)
+      setPost(res.data)
+      getLength(res.data.length)
+    })
+  }
+  const currentCider = useSelector(state => state.reRendering.cider)
   const [post,setPost] = useState([])
   useEffect(() => {
-    async function getPosts(){
-      axios.get(
-        BACKEND_URL + "/post",
-        {
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
-      ).then((res) => {
-        console.log(res.data)
-        setPost(res.data)
-        getLength(res.data.length)
-      })
-    }
+    console.log('확인중입니다')
     getPosts();
-  },[]);
+  },[currentCider]);
   return (
     <>
       <Rendering post={post} handleModal2={handleModal2} limit={limit} page={page} getPostId={getPostId} />
@@ -47,21 +49,9 @@ function PostList({handleModal2, limit, page, getLength, getPostId}) {
   
 };
 
-  // const postTitle = useSelector((state) => state.normalPost_title);
-  // const postContent = useSelector((state) => state.normalPost_content);
-  // const postUpdDate = useSelector((state) => state.normalPost_upd_date);
-
-  // post.push({
-  //   post_title: postTitle,
-  //   post_content: postContent,
-  //   post_upd_date: postUpdDate,
-  // });
 
 const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
-  
-  // const result = post.filter(single => single.postId === 2)
-  // console.log(result[0].postContent)
-  
+
   const offset = (page - 1) * limit;
   const postStyle = {
     borderRadius: "30px",
@@ -71,10 +61,34 @@ const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
     margin: "15px 0 0 50px",
     boxShadow: "2px 2px 2px grey"
   };
- function twofunctions(id){
+ function TwoFunctions(id){
   handleModal2();
   getPostId(id);
  }
+
+ function timeForToday(value) {
+  const today = new Date();
+  const timeValue = new Date(value);
+
+  const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
+  if (betweenTime < 1) return '방금 전';
+  if (betweenTime < 60) {
+      return `${betweenTime}분 전`;
+  }
+
+  const betweenTimeHour = Math.floor(betweenTime / 60);
+  if (betweenTimeHour < 24) {
+      return `${betweenTimeHour}시간 전`;
+  }
+
+  const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+  if (betweenTimeDay < 365) {
+      return `${betweenTimeDay}일 전`;
+  }
+
+  return `${Math.floor(betweenTimeDay / 365)}년 전`;
+}
+
   return (
     <>
       {post.slice(offset, offset + limit).map((e, i) => (
@@ -83,7 +97,7 @@ const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
         {console.log('-----')} */}
         {/* {console.log(e.postId)} */}
         {/* {console.log('postId :',  postId)} */}
-        <div style={postStyle} onClick={() => {twofunctions(e.postId)}}>
+        <div style={postStyle} onClick={() => {TwoFunctions(e.postId)}}>
              <div
               style={{
                 display: "flex",
@@ -95,12 +109,12 @@ const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
               <UserIdDiv>
                 작성자: {e.user}
               </UserIdDiv>
-              {e.postRegDate}
+              {timeForToday(e.postRegDate)}
             </div>
             <hr style={{width: "95%"}} />
 
             <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0 20px" }}>
-              <div style={{fontSize: "20px", fontWeight: "bold"}}>
+              <div style={{width: "800px", fontSize: "20px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                 {e.postTitle}   
               </div>
               <div>
@@ -251,10 +265,11 @@ const PostContainer = styled.div`
   justify-content: space-around; */
 `;
 
+// pagenation 버튼 위치 조작하는 곳
 const StickyFooter = styled.footer`
-position: fixed; 
+/* position: fixed; 
 bottom: 0; 
-width: 83%; 
+width: 83%;  */
 `
 
 const Title = styled.p`

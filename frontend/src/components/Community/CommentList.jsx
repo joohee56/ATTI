@@ -19,100 +19,104 @@ function CommentList(){
     // const commentContent = useSelector(state => state.comment.comment_content)
     return(
         <CommentDiv>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between"}}>
-                <div style={{display: "flex", flexDirection: "column"}}>
+            <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "space-between"}}>
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                     <div style={{display: "flex", flexDirection: "row", height: "40px"}}>
                         <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>JJ</Avatar>
                         <p>이름</p>
                         <BestChip/>
                     </div>
-                    <div style={{margin: "0 0 0 15px"}}>
-                        <p>ddddddddddddddddddddddddddddddddddddddddddddddddd</p>
+                    <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
+                        <div>
+                            2022-07-14 / 16:15
+                        </div>
+                        <div style={{display: "flex", flexDirection: "row"}}>
+                            <span style={{margin: "10px 0 0 0"}}>답글</span>
+                            <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
+                            <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
+                            <CustomDeleteIcon/>
+                        </div>
                     </div>
                 </div>
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
-                    <div>
-                        2022-07-14 / 16:15
+                    <div style={{margin: "-15px 0 0 15px"}}>
+                        <p style={{wordBreak: "break-all", width: "880px"}}>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
                     </div>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <span style={{margin: "10px 0 0 0"}}>답글</span>
-                        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
-                        <CustomDeleteIcon/>
-                    </div>
-                </div>
+                
             </div>
            <Hr/>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between"}}>
-                <div style={{display: "flex", flexDirection: "column"}}>
-                    <div style={{display: "flex", flexDirection: "row"}}>
+           <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "space-between"}}>
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                    <div style={{display: "flex", flexDirection: "row", height: "40px"}}>
                         <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>JJ</Avatar>
                         <p>이름</p>
                         <BestChip/>
                     </div>
-                    <div style={{margin: "0 0 0 15px"}}>
-                        <p>ddddddddddddddddddddddddddddddddddddddddddddddddd</p>
+                    <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
+                        <div>
+                            2022-07-14 / 16:15
+                        </div>
+                        <div style={{display: "flex", flexDirection: "row"}}>
+                            <span style={{margin: "10px 0 0 0"}}>답글</span>
+                            <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
+                            <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
+                            <CustomDeleteIcon/>
+                        </div>
                     </div>
                 </div>
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
-                    <div>
-                        2022-07-14 / 16:15
+                    <div style={{margin: "-15px 0 0 15px"}}>
+                        <p style={{wordBreak: "break-all", width: "880px"}}>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
                     </div>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <span style={{margin: "10px 0 0 0"}}>답글</span>
-                        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
-                        <CustomDeleteIcon/>
-                    </div>
-                </div>
+                
             </div>
            <Hr/>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between"}}>
-                <div style={{display: "flex", flexDirection: "column"}}>
-                    <div style={{display: "flex", flexDirection: "row"}}>
+           <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "space-between"}}>
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                    <div style={{display: "flex", flexDirection: "row", height: "40px"}}>
                         <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>JJ</Avatar>
                         <p>이름</p>
                         <BestChip/>
                     </div>
-                    <div style={{margin: "0 0 0 15px"}}>
-                        <p>ddddddddddddddddddddddddddddddddddddddddddddddddd</p>
+                    <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
+                        <div>
+                            2022-07-14 / 16:15
+                        </div>
+                        <div style={{display: "flex", flexDirection: "row"}}>
+                            <span style={{margin: "10px 0 0 0"}}>답글</span>
+                            <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
+                            <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
+                            <CustomDeleteIcon/>
+                        </div>
                     </div>
                 </div>
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
-                    <div>
-                        2022-07-14 / 16:15
+                    <div style={{margin: "-15px 0 0 15px"}}>
+                        <p style={{wordBreak: "break-all", width: "880px"}}>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
                     </div>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <span style={{margin: "10px 0 0 0"}}>답글</span>
-                        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
-                        <CustomDeleteIcon/>
-                    </div>
-                </div>
+                
             </div>
            <Hr/>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between"}}>
-                <div style={{display: "flex", flexDirection: "column"}}>
-                    <div style={{display: "flex", flexDirection: "row"}}>
+           <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "space-between"}}>
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                    <div style={{display: "flex", flexDirection: "row", height: "40px"}}>
                         <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>JJ</Avatar>
                         <p>이름</p>
                         <BestChip/>
                     </div>
-                    <div style={{margin: "0 0 0 15px"}}>
-                        <p>ddddddddddddddddddddddddddddddddddddddddddddddddd</p>
+                    <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
+                        <div>
+                            2022-07-14 / 16:15
+                        </div>
+                        <div style={{display: "flex", flexDirection: "row"}}>
+                            <span style={{margin: "10px 0 0 0"}}>답글</span>
+                            <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
+                            <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
+                            <CustomDeleteIcon/>
+                        </div>
                     </div>
                 </div>
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
-                    <div>
-                        2022-07-14 / 16:15
+                    <div style={{margin: "-15px 0 0 15px"}}>
+                        <p style={{wordBreak: "break-all", width: "880px"}}>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
                     </div>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <span style={{margin: "10px 0 0 0"}}>답글</span>
-                        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
-                        <CustomDeleteIcon/>
-                    </div>
-                </div>
+                
             </div>
            <Hr/>
         </CommentDiv>

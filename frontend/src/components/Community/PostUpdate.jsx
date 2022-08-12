@@ -6,7 +6,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios from 'axios';
 
-
+import { reRenderingActions } from '../../store/community/ReRendering';
 import { BACKEND_URL } from "../../constant";
 import { ButtonBlue } from '../ButtonStyled';
 import { normalPostActions } from '../../store/community/Category'
@@ -22,9 +22,37 @@ export function PostUpdate({singlePost, handleModal3}) {
         postRegDate : "",
         postUpdDate : "",
         user_id : "",
-        category_id : ""
+        category_id : "",
+        postAnoInfo: false,
+        postComBanInfo: false
     })
 
+    const getAnoInfo = () => {
+      console.log("익명여부 :", post.postAnoInfo)
+      post.postAnoInfo = !post.postAnoInfo
+      
+  }
+    const getAnoInfoNum = () => {
+      if (post.postAnoInfo){
+          return 1
+      } 
+      else{
+          return 0
+      }
+  }
+
+    const getComBanInfo = () => {
+      console.log("댓글금지여부 :", post.postComBanInfo)
+      post.postComBanInfo = !post.postComBanInfo
+  }
+    const getComBanInfoNum = () => {
+      if (post.postComBanInfo){
+          return 1
+      } 
+      else{
+          return 0
+      }
+  }
     const getValue = e => {
         const {name,value} = e.target;
        
@@ -35,9 +63,12 @@ export function PostUpdate({singlePost, handleModal3}) {
         }));
     };
     
+    const dispatch = useDispatch()
+    const currentCider = useSelector(state => state.reRendering.cider)
+    const updateCider = !currentCider
+
     const updatePosts = useCallback(
         async (e) => {
-          e.preventDefault();
           try {
             await axios
               .put(
@@ -50,7 +81,9 @@ export function PostUpdate({singlePost, handleModal3}) {
                   postUpdDate : post.postUpdDate,
                 //   user_id : post.user_id,
                   userId : "ssafy",
-                  category_id : singlePost.category_id
+                  category_id : singlePost.category_id,
+                  postAnoInfo: getAnoInfoNum(),
+                  postComBanInfo: getComBanInfoNum()
                 },
                 {
                   headers: {
@@ -60,6 +93,9 @@ export function PostUpdate({singlePost, handleModal3}) {
               )
               .then((res) => {
                 console.log("response:", res);
+                dispatch(reRenderingActions.saveReRendering(
+                  {cider: updateCider }
+              ))
     
 
               });
@@ -74,7 +110,9 @@ export function PostUpdate({singlePost, handleModal3}) {
           singlePost.postRegDate,
           post.postUpdDate,
         //   singlePost.user_id,
-          singlePost.category_id
+          singlePost.category_id,
+          getAnoInfoNum(),
+          getComBanInfoNum()
         ]
       );
     
@@ -93,13 +131,17 @@ export function PostUpdate({singlePost, handleModal3}) {
                                 <span style={{textAlign: "center" ,fontSize: "12px", marginBottom: "5px"}}>
                                     익명으로 글쓰기 
                                 </span>
-                                {UseSwitchesBasic()}
+                                <span onClick={getAnoInfo}>
+                                    {UseSwitchesBasic()}
+                                </span>
                             </SwitchDiv>
                             <SwitchDiv>
                                 <span style={{textAlign: "center", fontSize: "12px",  marginBottom: "5px"}}>
                                     댓글 금지하기 
                                 </span>
-                                {UseSwitchesBasic()}
+                                <span onClick={getComBanInfo}>
+                                    {UseSwitchesBasic()}
+                                </span>
                             </SwitchDiv>
                         </Top2>
                     </Top>
