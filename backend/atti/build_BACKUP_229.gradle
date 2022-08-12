@@ -30,9 +30,6 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'eclipse'
-// apply plugin: 'com.github.node-gradle.node'
-//이클립스인 경우를 위한 QueryDSL 플러그인. IntelliJ는 불필요.
-// apply plugin: 'com.ewerk.gradle.plugins.querydsl'
 
 repositories {
     mavenCentral()
@@ -54,6 +51,7 @@ configurations {
 	}
 	providedRuntime
 }
+
 
 //set build time and inject value to application.properties
 def buildTime() {
@@ -105,6 +103,7 @@ dependencies {
 	
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+	
 	implementation("com.auth0:java-jwt:3.10.3")
 	implementation("com.google.guava:guava:29.0-jre")
 	
@@ -158,9 +157,6 @@ dependencies {
     //implementation("io.springfox:springfox-data-rest:3.0.0")
     //implementation("io.springfox:springfox-bean-validators:3.0.0")
     
-    //redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'it.ozimov:embedded-redis:0.7.2'
 }
 
 tasks.named('test') {

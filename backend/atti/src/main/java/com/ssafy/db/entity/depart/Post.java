@@ -2,6 +2,7 @@ package com.ssafy.db.entity.depart;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,19 +16,22 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.db.entity.user.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Data
+/*
+ *  게시글
+ */
 @Entity
 @Setter
 @Getter
@@ -39,37 +43,46 @@ public class Post {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="post_id")
-	private Long postId;
+	private Long postId;				// 게시글 ID
 	
+	@Lob
 	@Column(name="post_title")
-	private String postTitle;
+	private String postTitle;			// 제목
 	
 	@Lob
 	@Column(name="post_content")
-	private String postContent;
+	private String postContent;			// 내용
 	
 	@Column(name="post_reg_date")
-	private LocalDateTime postRegDate;
+//	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime postRegDate;			// 등록일
 	
 	@Column(name="post_upd_date")
-	private LocalDateTime postUpdDate;
+//	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime postUpdDate;			// 수정일
 	
 	@Column(name="post_ano_info")
-	private boolean postAnoInfo;
+	private boolean postAnoInfo;		// 게시글 익명 여부
 	
 	@Column(name="post_com_ban_info")
-	private boolean postComBanInfo;
+	private boolean postComBanInfo;		// 댓글 금지 여부
+	
+	/////////////////////////////////////////////////////
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
-	@JsonIgnore
-	private User user;
+	private User user;					// 회원 ID (FK)
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="category_id")
-	private Category category;
+	private Category category;			// 카테고리 ID (FK)
 	
-	@OneToMany(mappedBy = "post")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="depart_id")
+	private Depart depart;				// 채널 ID (FK)
+	/////////////////////////////////////////////////////
+	
+	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
 	@JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 	
