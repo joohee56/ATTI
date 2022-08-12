@@ -275,11 +275,11 @@ function LoginPage() {
                   <>
                     <InputWithLabel name="id" placeholder="ID" />
                     <InputWithLabel name="name" placeholder="Name" />
-                    <InputWithPhone
+                    {/* <InputWithPhone
                       name="phoneNumber"
                       placeholder="폰 번호"
                       phonNumber={phoneNumber}
-                    />
+                    /> */}
                     <ButtonPurple>보내기</ButtonPurple>
                     <p>
                       가입하신 이메일(xxx@naver.com)으로
