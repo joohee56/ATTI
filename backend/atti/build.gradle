@@ -19,13 +19,12 @@ buildscript{
     }
 }
 
+
 plugins {
 	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id 'java'
-	id 'idea'
-	id 'org.springframework.boot' version "${springBootVer}"
-	
-}
+	id 'idea' }
+	// id 'org.springframework.boot' version "${springBootVer}"
 
 
 apply plugin: 'io.spring.dependency-management'
@@ -34,14 +33,6 @@ apply plugin: 'eclipse'
 //이클립스인 경우를 위한 QueryDSL 플러그인. IntelliJ는 불필요.
 // apply plugin: 'com.ewerk.gradle.plugins.querydsl'
 
-repositories {
-    mavenCentral()
-    maven { url 'https://repo.spring.io/snapshot' }
-    maven { url 'https://repo.spring.io/milestone' }
-    maven { url "https://repo.spring.io/libs-release" }
-    maven { url "https://repo.maven.apache.org/maven2" }
-    maven { url "https://build.shibboleth.net/nexus/content/repositories/releases" }
-}
 
 group = 'com.ssafy'
 version = '0.0.1-SNAPSHOT'
@@ -64,31 +55,6 @@ def buildTime() {
 
 project.ext.set("build.date", buildTime())
 
-processResources {
-    with copySpec {
-        from "src/main/resources"
-        include "**/application*.yml"
-        include "**/application*.yaml"
-        include "**/application*.properties"
-        project.properties.findAll().each {
-            prop ->
-               if (prop.value != null) {
-                     filter(ReplaceTokens, tokens: [ (prop.key): String.valueOf(prop.value)])
-                     filter(ReplaceTokens, tokens: [ ('project.' + prop.key): String.valueOf(prop.value)])
-                     filter(ReplaceTokens, tokens: [ ('project.ext.' + prop.key): String.valueOf(prop.value)])
-               }
-        }
-    }
-}
-
-
-tasks {
-
-    processResources {
-        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
-    }
-    }
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -107,6 +73,7 @@ dependencies {
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
 	implementation("com.auth0:java-jwt:3.10.3")
 	implementation("com.google.guava:guava:29.0-jre")
+	
 	
 	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.7.2'
 	
@@ -128,7 +95,7 @@ dependencies {
 	
 	//JUnit4 추가
 	testImplementation("org.junit.vintage:junit-vintage-engine") {
-		exclude group: "org.hamcrest", module: "hamcrest-core"
+		exclude group: "org.hamcrest", module: "hamcrest-core"}
 	
 	//STOMP 웹소캣 서버 사이드 테스트를 위한 의존성 추가
     implementation("org.springframework.boot:spring-boot-starter-mustache")
@@ -146,7 +113,7 @@ dependencies {
     // Openvidu 의존성
     implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.22.0'
     
-	}
+	
 	
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'

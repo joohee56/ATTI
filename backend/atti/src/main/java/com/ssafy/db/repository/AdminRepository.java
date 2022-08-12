@@ -12,7 +12,7 @@ import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.user.User;
-import com.ssafy.db.entity.webclass.Attendance;
+//import com.ssafy.db.entity.webclass.Attendance;
 
 import javax.persistence.PersistenceContext;
 
@@ -41,17 +41,17 @@ public class AdminRepository {
 		em.remove(result);
 	}
 
-	public void editAttend(Attendance editAttend) {
-		Attendance originAttend = em.createQuery("select a from attendance as a where a.attendanceId = :attendanceId",
-				Attendance.class)
-				.setParameter("attendanceId", editAttend.getAttendanceId())
-				.getSingleResult();
-		
-		originAttend.setAttendancdContent(editAttend.getAttendancdContent());
-
-		
-	}
-
+	/*
+	 * public void editAttend(Attendance editAttend) { Attendance originAttend = em.
+	 * createQuery("select a from attendance as a where a.attendanceId = :attendanceId"
+	 * , Attendance.class) .setParameter("attendanceId",
+	 * editAttend.getAttendanceId()) .getSingleResult();
+	 * 
+	 * originAttend.setAttendancdContent(editAttend.getAttendancdContent());
+	 * 
+	 * 
+	 * }
+	 */
 	// 게시글 전체 조회
 	public List<Post> findAll() {
 		List<Post> result = em.createQuery("select p from Post as p", Post.class).getResultList();
