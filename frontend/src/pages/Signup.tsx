@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import HomeIcon from "@mui/icons-material/Home";
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlue } from "../components/ButtonStyled";
 import InputWithLabel from "../components/InputWithLabel";
@@ -15,7 +13,7 @@ import InputWithPhone from "../components/account/InputWithPhone";
 function SignupPage() {
   const navigate = useNavigate();
   
-  //이름, 이메일, 비밀번호, 비밀번호 확인
+  //이름, 아이디, 비밀번호, 비밀번호 확인, 생일, 이메일, 폰번호
   const [name, setName] = useState<string>("");
   const [id, setId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -43,7 +41,7 @@ function SignupPage() {
   const [isPassword, setIsPassword] = useState<boolean>(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(false);
   const [isEmail, setIsEmail] = useState<boolean>(false);
-  // const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
+  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
 
   // 회원가입 성공여부
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,7 +112,7 @@ function SignupPage() {
   const now = new Date();
   let years = [];
   for (let y = now.getFullYear(); y >= 1930; y -= 1) {
-    years.push(y);
+    years.push(y.toString());
   }
 
   let month = [];
@@ -158,7 +156,7 @@ function SignupPage() {
           password: password,
           userName: name,
           email: email,
-          birth: new Date(birthState.yy, birthState.mm - 1, birthState.dd),
+          birth: ""+birthState.yy+ birthState.mm+birthState.dd,
           phone: phoneNumber,
           social: "none",
           uid: 1111111,
@@ -170,7 +168,6 @@ function SignupPage() {
         console.log("response:", response);
         if (response.status === 200) {
           navigate("/login");
-          
         }
       })
       .catch(function (error) {
@@ -182,11 +179,6 @@ function SignupPage() {
 
   return (
     <>
-          <div>
-        <NavLink to="/login">
-          <PersonAddAlt1Icon /> Login
-        </NavLink>
-      </div>
       <HeaderDiv>회원가입</HeaderDiv>
       <StyledPage>
         <StyledContent>
@@ -291,6 +283,7 @@ function SignupPage() {
               placeholder="폰 번호"
               phonNumber={phoneNumber}
               onChange={onChangePhonNumber}
+              isCertifiedSuccess={setIsPhoneNumber}
             />
 
             {/* {phoneNumber.length > 0 && !isPhoneNumber && (
@@ -305,7 +298,7 @@ function SignupPage() {
               onClick={signSubmit}
               disabled={
                 !(
-                  (isName && isId && isPassword && isPasswordConfirm && isEmail)
+                  (isName && isId && isPassword && isPasswordConfirm && isEmail&& isPhoneNumber)
                   // &&
                   // isPhoneNumber
                 )
@@ -314,12 +307,12 @@ function SignupPage() {
               가입하기
             </ButtonBlue>
             {!(
-              (isName && isId && isPassword && isPasswordConfirm && isEmail)
+              (isName && isId && isPassword && isPasswordConfirm && isEmail && isPhoneNumber)
               // &&
               // isPhoneNumber
             ) && (
               <p style={{ color: `${palette.red}` }}>
-                가입하려면 모두 입력해주세요.
+                회원가입하려면 모두 입력해주세요.
               </p>
             )}
           </>
