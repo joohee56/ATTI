@@ -22,24 +22,20 @@ import CommunityBg from "../assets/images/communityBG.png";
 import MyPage from "../components/MyPage/MyInfo";
 import ContactAdmin from "../components/MyPage/ContactAdmin";
 import AdminContactHistory from "../components/MyPage/AdminContactHistory";
-import { useState } from "react";
+import * as React from "react";
+import MyPageComponent from "../components/MyPage/MyPageComponent";
 
-function Community() {
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  
+function Welcome() {
+  const [value, setValue] = React.useState(0);
+
+  const tabContArr = [<MyPage />, <ContactAdmin />, <AdminContactHistory />];
+
   return (
     <CommunityDiv>
       <Main>
         <PostContainer>
-          <button>나의 정보</button>
-          <button>관리자에게 1:1문의하기</button>
-          <button>1:1 문의내역</button>
-          <MyPage />
-          <ContactAdmin />
-          <AdminContactHistory />
-
+         <MyPageComponent/>
         </PostContainer>
-        {/* <Calendar/> */}
       </Main>
     </CommunityDiv>
   );
@@ -76,4 +72,4 @@ const FlexDiv = styled.div`
   justify-content: flex-end;
 `;
 
-export default Community;
+export default Welcome;
