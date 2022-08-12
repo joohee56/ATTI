@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { memberInterface } from "./AdminMember";
 
 const Table = styled.table`
+  margin-top: 10%;
   width: 100%;
   height: 100%;
 `;
@@ -28,12 +29,11 @@ const AdminMemberTable = ({
       <thead>
         <tr>
           <th>No.</th>
-          <th>Team</th>
+          <th>채널</th>
           <th>Name</th>
           <th>Email</th>
           <th>Birth</th>
           <th>출석률</th>
-          <th>on/off</th>
           <th>역할</th>
         </tr>
       </thead>
@@ -46,7 +46,6 @@ const AdminMemberTable = ({
             <td>{e.Email}</td>
             <td>{e.Birth}</td>
             <td>{e.출석률}</td>
-            <td>{e.on}</td>
             <td>
               <select
                 key={e.역할}
