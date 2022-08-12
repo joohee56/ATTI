@@ -55,16 +55,6 @@ configurations {
 	providedRuntime
 }
 
-
-repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/snapshot' }
-    maven { url 'https://repo.spring.io/milestone' }
-    maven { url "https://repo.spring.io/libs-release" }
-    maven { url "https://repo.maven.apache.org/maven2" }
-    maven { url "https://build.shibboleth.net/nexus/content/repositories/releases" }
-}
-
 //set build time and inject value to application.properties
 def buildTime() {
     def date = new Date()
@@ -168,6 +158,9 @@ dependencies {
     //implementation("io.springfox:springfox-data-rest:3.0.0")
     //implementation("io.springfox:springfox-bean-validators:3.0.0")
     
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'it.ozimov:embedded-redis:0.7.2'
 }
 
 tasks.named('test') {

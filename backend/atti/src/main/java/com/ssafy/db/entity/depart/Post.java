@@ -55,11 +55,11 @@ public class Post {
 	
 	@Column(name="post_reg_date")
 //	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime postRegDate;	// 등록일
+	private LocalDateTime postRegDate;			// 등록일
 	
 	@Column(name="post_upd_date")
 //	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime postUpdDate;	// 수정일
+	private LocalDateTime postUpdDate;			// 수정일
 	
 	@Column(name="post_ano_info")
 	private boolean postAnoInfo;		// 게시글 익명 여부

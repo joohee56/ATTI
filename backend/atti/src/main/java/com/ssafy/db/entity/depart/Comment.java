@@ -48,8 +48,8 @@ public class Comment {
 	private Long commentId;					// 댓글 ID
 	
 	@Column(name="comment_reg_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date commentRegDate;			// 댓글 등록일
+//	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime commentRegDate;			// 댓글 등록일
 	
 	@Column(name="comment_delete_info")
 	private boolean commentDeleteInfo;		// 삭제 여부

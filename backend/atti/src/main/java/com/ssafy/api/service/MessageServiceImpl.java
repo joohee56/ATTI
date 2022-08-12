@@ -18,7 +18,7 @@ public class MessageServiceImpl implements MessageService {
 	
 	@Override // 전체 메세지 조회
 	@Transactional(readOnly = true)
-	public List<Message> viewAllMessage(Long MessageId) {
+	public List<Message> viewAllMessage(Long userMessageId) {
 		
 		return messageRepository.allMessage(MessageId);
 	}

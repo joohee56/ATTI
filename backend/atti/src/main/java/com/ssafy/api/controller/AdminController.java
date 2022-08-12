@@ -41,7 +41,7 @@
 //		return new ResponseEntity<String>("Success", HttpStatus.OK);
 //	}
 //	
-//	 학생 출결 변경
+//	// 학생 출결 변경
 //	@PutMapping("/attendance/modify")
 //	public ResponseEntity<String> editAttend(@RequestBody Attendance editAttend){
 //		adminService.editAttend(editAttend);
@@ -56,21 +56,3 @@
 //	}
 //
 //	}
-//	
-//
-//
-////import io.swagger.annotations.Api;
-////// @Api 클래스를 Swagger 리소스 대상으로 표시
-////@Api(value  = "관리자 API", tags = {"Admin"})
-//
-//	/*
-//	 * @RestController
-//	 * 
-//	 * @RequestMapping("/admin/post") public class AdminController {
-//	 * 
-//	 * @Autowired private AdminService adminService;
-//	 * 
-//	 * 
-//	 * }
-//	 */
-//

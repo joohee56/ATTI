@@ -24,9 +24,9 @@ public class MessageController {
 	private MessageService messageService;
 	
 	@GetMapping("/read/{userMessageId}") // 특정 메세지 조회
-	public ResponseEntity<List<Message>> viewAllMessage(@PathVariable Long MessageId) {
-		System.out.println(MessageId);
-		return new ResponseEntity<List<Message>>(messageService.viewAllMessage(MessageId), HttpStatus.OK);
+	public ResponseEntity<List<Message>> viewAllMessage(@PathVariable Long messageId) {
+		System.out.println(messageId);
+		return new ResponseEntity<List<Message>>(messageService.viewAllMessage(messageId), HttpStatus.OK);
 	}
 	
 	@PostMapping("/send") // 메세지 보내기

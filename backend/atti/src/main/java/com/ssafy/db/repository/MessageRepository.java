@@ -23,9 +23,9 @@ public class MessageRepository {
 	}
 	
 	// 쪽지 전체 조회
-	public List<Message> allMessage(Long MessageId) {
-		List<Message> messageBox = em.createQuery("select m from Message as m where m.MessageId = :MessageId", Message.class)
-				.setParameter("MessageId", MessageId)
+	public List<Message> allMessage(Long messageId) {
+		List<Message> messageBox = em.createQuery("select m from Message as m where m.messageId = :messageId", Message.class)
+				.setParameter("messageId", messageId)
 				.getResultList();
 		return messageBox;
 	}

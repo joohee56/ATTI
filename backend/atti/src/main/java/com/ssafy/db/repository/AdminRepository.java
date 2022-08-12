@@ -57,11 +57,5 @@
 //		List<Post> result = em.createQuery("select p from Post as p", Post.class).getResultList();
 //		return result;
 //	}
-//	
-//	/*
-//	 * @PersistenceContext private EntityManager em;
-//	 */
-//	
-//
-//
 //}
+
