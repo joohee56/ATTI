@@ -58,10 +58,7 @@ public class AdminRepository {
 		return result;
 	}
 	
-	/*
-	 * @PersistenceContext private EntityManager em;
-	 */
-	
+
 
 
 }
