@@ -2,9 +2,8 @@ package com.ssafy.api.service;
 
 import java.util.List;
 
-import com.ssafy.db.entity.depart.UserDepart;
-import com.ssafy.db.entity.webclass.Attendance;
 import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.depart.UserDepart;
 
 public interface AdminService {
 	
@@ -16,7 +15,7 @@ public interface AdminService {
 	
 	List<Post> getAdminPostList(); // 전체 게시글 조회
 
-	void editAttend(Attendance editAttend);
+//	void editAttend(Attendance editAttend);
 
 }
 /*public interface AdminService {

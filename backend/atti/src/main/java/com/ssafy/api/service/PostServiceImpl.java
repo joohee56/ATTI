@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.repository.PostRepository;
 
@@ -28,8 +30,16 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override // 게시글 전체 조회
-	public List<Post> viewAllPosts() {
-		return postRepository.findAll();
+	public List<PostViewAllRes> viewAllPosts(Long departId, Long categoryId) {
+
+//		System.out.println("=======================" + departId + "=======================");
+//		System.out.println("=======================" + categoryId + "=======================");
+		List<Post> entityList = postRepository.findAllPosts(departId, categoryId);
+		List<PostViewAllRes> list = new ArrayList<>();
+		for (Post post : entityList) {
+			list.add(new PostViewAllRes(post));
+		}
+		return list;
 	}
 
 	@Override // 게시글 상세 조회

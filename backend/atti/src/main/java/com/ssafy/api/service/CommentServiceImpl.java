@@ -28,7 +28,6 @@ public class CommentServiceImpl implements CommentService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	
 	@Override // 댓글 작성
 	public void createReply(CommentReq comment) {
 //		comment.setCommnetRegDate(LocalDateTime.now());

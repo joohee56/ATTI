@@ -23,8 +23,11 @@ public class PostRepository {
 	}
 	
 	// 게시글 전체 조회
-	public List<Post> findAll() {
-		List<Post> result = em.createQuery("select p from Post as p", Post.class).getResultList();
+	public List<Post> findAllPosts(Long departId, Long categoryId) {
+		List<Post> result = em.createQuery("select p from Post as p where p.depart = :departId and p.category = :categoryId order by p.postId desc", Post.class)
+				.setParameter("departId", departId)
+				.setParameter("categoryId", categoryId)
+				.getResultList();
 		return result;
 	}
 	
@@ -74,15 +77,24 @@ public class PostRepository {
 	}
 	
 	// 단일 게시글 수정
-	public void updateOne(Post editPost) {
-		Post originPost = em.createQuery("select p from Post as p where p.postId = :postId", Post.class)
-				.setParameter("postId", editPost.getPostId())
-				.getSingleResult();
-		
-		originPost.setPostTitle(editPost.getPostTitle());
-		originPost.setPostContent(editPost.getPostContent());
-		originPost.setPostUpdDate(editPost.getPostUpdDate());
-	}
+    public void updateOne(Post editPost) {
+
+        System.out.println("============Repository================");
+        System.out.println("postId : " + editPost.getPostId());
+        System.out.println("======================================");
+
+//        em.persist(editPost.getUser());
+
+        Post originPost = em.createQuery("select p from Post as p where p.postId = :postId", Post.class)
+                .setParameter("postId", editPost.getPostId())
+                .getSingleResult();
+
+
+        originPost.setPostTitle(editPost.getPostTitle());
+        originPost.setUser(editPost.getUser());
+        originPost.setPostContent(editPost.getPostContent());
+        originPost.setPostUpdDate(editPost.getPostUpdDate());
+    }
 	
 	
 }
