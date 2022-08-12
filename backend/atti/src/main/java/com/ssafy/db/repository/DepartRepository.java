@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.api.request.DepartCreateReq;
+// import com.ssafy.api.request.DepartCreateReq;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.user.User;
 
@@ -20,9 +20,10 @@ public class DepartRepository{
 	private EntityManager em;
 	
 	// 채널 생성
-	public void createChannel(DepartCreateReq departCreateReq) {
-		em.persist(departCreateReq);
-	}
+	/*
+	 * public void createChannel(DepartCreateReq departCreateReq) {
+	 * em.persist(departCreateReq); }
+	 */
 	
 	// 채널 입장
 	public Depart joinChannel(Long departId) {

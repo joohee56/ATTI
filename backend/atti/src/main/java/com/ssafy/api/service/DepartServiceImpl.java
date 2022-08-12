@@ -41,7 +41,7 @@ public class DepartServiceImpl implements DepartService {
 		Depart depart = new Depart();
 		depart.setDepartCode(generatedString);
 		
-		departRepository.createChannel(departCreateReq);
+		// departRepository.createChannel(departCreateReq);
 //		depart.setUser(userRepository.findById(userId));
 	}
 
