@@ -20,7 +20,7 @@ public class MessageServiceImpl implements MessageService {
 	@Transactional(readOnly = true)
 	public List<Message> viewAllMessage(Long userMessageId) {
 		
-		return messageRepository.allMessage(userMessageId);
+		return messageRepository.allMessage(MessageId);
 	}
 
 	@Override // 메세지 보내기

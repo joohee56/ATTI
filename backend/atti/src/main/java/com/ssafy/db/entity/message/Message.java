@@ -27,7 +27,6 @@ import lombok.ToString;
 /*
  * 쪽지
  */
-
 @Entity
 @Getter 
 @ToString

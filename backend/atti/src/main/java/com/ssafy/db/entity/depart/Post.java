@@ -71,6 +71,7 @@ public class Post {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
+	@JsonIgnore
 	private User user;					// 회원 ID (FK)
 	
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -19,8 +19,3 @@
 //	void editAttend(Attendance editAttend);
 //
 //}
-///*public interface AdminService {
-//	
-//
-//}
-//*/

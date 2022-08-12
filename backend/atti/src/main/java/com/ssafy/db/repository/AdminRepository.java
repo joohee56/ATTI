@@ -1,3 +1,4 @@
+
 package com.ssafy.db.repository;
 
 import java.util.List;
@@ -65,4 +66,5 @@ public class AdminRepository {
 
 
 }
+
 

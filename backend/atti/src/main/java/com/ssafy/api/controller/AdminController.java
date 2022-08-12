@@ -16,7 +16,6 @@
 //import com.ssafy.api.service.AdminService;
 //import com.ssafy.db.entity.depart.Post;
 //import com.ssafy.db.entity.depart.UserDepart;
-//import com.ssafy.db.entity.webclass.Attendance;
 //
 //import io.swagger.annotations.Api;
 //
@@ -57,21 +56,3 @@
 //	}
 //
 //	}
-//	
-//
-//
-////import io.swagger.annotations.Api;
-////// @Api 클래스를 Swagger 리소스 대상으로 표시
-////@Api(value  = "관리자 API", tags = {"Admin"})
-//
-//	/*
-//	 * @RestController
-//	 * 
-//	 * @RequestMapping("/admin/post") public class AdminController {
-//	 * 
-//	 * @Autowired private AdminService adminService;
-//	 * 
-//	 * 
-//	 * }
-//	 */
-//
