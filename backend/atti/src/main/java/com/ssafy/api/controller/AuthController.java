@@ -53,7 +53,7 @@ import lombok.RequiredArgsConstructor;
  */
 //@Api(value = "인증 API", tags = {"Auth."})
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 	
 	@Autowired
@@ -185,6 +185,9 @@ public class AuthController {
 		// 인증번호가 일치하는지 검증
 		if(code.equals(correctCode)) {
 //			session.removeAttribute("code");
+			
+			// redis 에 저장되어 있는 코드 삭제해야 함
+			
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "인증되었습니다."));
 		} else {
 			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증번호가 다릅니다."));
