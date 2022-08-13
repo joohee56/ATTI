@@ -206,13 +206,9 @@ public class AuthController {
 			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "핸드폰 번호를 입력해 주세요."));
 		}
 		
-		// 핸드폰 번호 중복 체크 
-		boolean okPhone = userService.phoneCheck(phoneNumber);
-		if(!okPhone) {
-			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "이미 가입된 아이디가 있습니다. 아이디를 찾고 싶으시면 아이디 찾기를 진행해 주세요."));
-		}
 			
-		String fromNumber = "";
+		String fromNumber = "01059368015";
+		
 		String verifyCode = makeVerifyCode();  // 인증 키 생성
 		
 		if(fromNumber.equals(""))
