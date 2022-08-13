@@ -1,4 +1,4 @@
-import { api } from "../../utils/api";
+import {api} from "../../utils/api";
 
 function OAuth2RedirectHandler() {
   // 인가코드

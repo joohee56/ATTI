@@ -19,6 +19,7 @@ interface inputInfo {
   icon?: SvgIconComponent;
   type?: string;
   value?: string | number | readonly string[] | undefined;
+  disabled?: boolean;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
 }
 
@@ -29,7 +30,7 @@ const InputStyle = styled(TextField)(({ theme }) => ({
 // rest 쪽에는 onChange, type, name, value, placeholder 등의 input 에서 사용 하는 값들을 넣어줄수 있다.
 const InputWithIcon = ({ icon, placeholder, ...rest }: inputInfo) => (
   <Wrapper>
-    <FormControl sx={{ m: 1, width: "54%" }}>
+    <FormControl sx={{width: "100%" , height:"100%"}}>
       <InputStyle
         InputProps={{
           startAdornment: icon && (

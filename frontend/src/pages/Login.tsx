@@ -13,8 +13,10 @@ import Modal from "../components/Modal";
 import { KAKAO_AUTH_URL } from "../constant/index";
 import InputWithPhone from "../components/account/InputWithPhone";
 import { useDispatch } from "react-redux";
-import { loginActions } from "../store/Login";
+import { loginActions } from "../store/LoginSotre";
 import { useNavigate } from "react-router-dom";
+import { palette } from "../styles/palette";
+import { Divider } from "@mui/material";
 
 interface userLoginInfo {
   userId: string;
@@ -29,32 +31,16 @@ interface findIdInfo {
 interface findPwInfo {
   findPw_Id: string;
   findPw_name: string;
-  findPw_phone: string;
-  findPw_number: string;
 }
 
 function LoginPage() {
   const navigate = useNavigate();
 
+  // 로그인
   const [loginInfo, setLoginInfo] = useState<userLoginInfo>({
     userId: "",
     password: "",
   });
-
-  const [findIdInfo, setfindIdInfo] = useState<findIdInfo>({
-    findId_name: "",
-    findId_email: "",
-  });
-
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-
-  // const [findPwInfo, setFindPwInfo] = useState<findPwInfo>({
-  //   findPw_Id: "",
-  //   findPw_name: "",
-  //   findPw_phone: "",
-  //   findPw_number: "",
-  // });
-
   const onChangeLogin = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setLoginInfo({
@@ -62,16 +48,6 @@ function LoginPage() {
       [event.target.name]: event.target.value,
     });
   };
-
-  const onChangeFindID = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setfindIdInfo({
-      ...findIdInfo,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const dispatch = useDispatch();
 
   // 일반 로그인
   const loginClick = async (event: any) => {
@@ -94,7 +70,8 @@ function LoginPage() {
         }
       })
       .catch(function (error) {
-        console.log("Error", error.data);
+        console.log("Error", error);
+        console.log("Error", "로그인 실패!");
       });
   };
 
@@ -108,7 +85,20 @@ function LoginPage() {
     console.log(AuthorizationCode);
   };
 
-  // 아이디 찾기
+  //아이디 찾기
+  const [findIdInfo, setfindIdInfo] = useState<findIdInfo>({
+    findId_name: "",
+    findId_email: "",
+  });
+
+  const onChangeFindID = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setfindIdInfo({
+      ...findIdInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   const clickFindId = async (e: any) => {
     e.preventDefault();
     await api
@@ -123,6 +113,49 @@ function LoginPage() {
         setFindID("가 존재하지 않습니다");
       });
   };
+
+  // 비밀번호 찾기
+  const [findPwInfo, setFindPwInfo] = useState<findPwInfo>({
+    findPw_Id: "",
+    findPw_name: "",
+  });
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
+  const onChangePhonNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setPhoneNumber(
+      value
+        .replace(/[^0-9]/g, "")
+        .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
+        .replace(/(\-{1,2})$/g, "")
+    );
+  };
+
+  const onChangeFindPW = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setFindPwInfo({
+      ...findPwInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const clickFindPw = async (e: any) => {
+    e.preventDefault();
+    await api
+      .post("/user/findPassword", {
+        userId: findPwInfo.findPw_Id,
+        usesrName: findPwInfo.findPw_name,
+        phoneNumber: phoneNumber,
+      })
+      .then(function (response) {
+        console.log("가입된 회원이다");
+      })
+      .catch(function (error) {
+        console.log("회원이 없음");
+      });
+  };
+
+  const dispatch = useDispatch();
 
   // 아이디 찾기, 비밀번호 찾기
   const [findValue, setFindValue] = useState<string>("");
@@ -240,6 +273,7 @@ function LoginPage() {
                     아이디 찾기
                   </TextSpan>
                 </LeftTextDiv>
+
                 <TextDiv>
                   <TextSpan
                     onClick={(e) => {
@@ -272,20 +306,30 @@ function LoginPage() {
                 {/*비밀번호 찾기 모달*/}
                 {findValue == "findPW" && (
                   <>
-                    <InputWithLabel name="id" placeholder="ID" />
-                    <InputWithLabel name="name" placeholder="Name" />
+                    <InputWithLabel
+                      name="findPw_Id"
+                      placeholder="ID"
+                      onChange={onChangeFindPW}
+                    />
+                    <InputWithLabel
+                      name="findPw_name"
+                      placeholder="Name"
+                      onChange={onChangeFindPW}
+                    />
                     <InputWithPhone
                       name="phoneNumber"
                       placeholder="폰 번호"
                       phonNumber={phoneNumber}
+                      onChange={onChangePhonNumber}
+                      isCertifiedSuccess={setIsPhoneNumber}
                     />
-                    <ButtonPurple>보내기</ButtonPurple>
-                    <p>
-                      가입하신 이메일(xxx@naver.com)으로
-                      <br />
-                      임시비밀번호를 보내드렸습니다
-                    </p>
-                    <ButtonBlue>닫기</ButtonBlue>
+
+                    {isPhoneNumber && (
+                      <p>
+                        새 비밀번호찾기 모달 나오기
+                      </p>
+                    )}
+                    <ButtonBlue onClick={clickFindPw}>찾기</ButtonBlue>
                   </>
                 )}
               </div>
@@ -308,7 +352,7 @@ const StyledPage = styled.div`
 const StyledContent = styled.div`
   max-width: 500px;
   min-width: 500px;
-  height: 400px;
+  height: 450px;
   padding: 3rem;
   text-align: center;
   border-radius: 1rem;
@@ -326,8 +370,8 @@ const HeaderDiv = styled.div`
   font-size: large; //텍스트 크기
   font-weight: bold; //텍스트 굵기
   text-align: center; //텍스트 정렬 방향
-  height: 150px; //높이
-  line-height: 150px; //줄간격
+  height: 130px; //높이
+  line-height: 130px; //줄간격
 `;
 
 const DialogButton = styled.button`
@@ -367,9 +411,9 @@ const TextDiv = styled.div`
 const TextSpan = styled.span`
   font-size: 1.2em;
   cursor: pointer;
-  background: linear-gradient(135deg, #9dceff 0%, #92a3fd 100%);
+  background: ${palette.main_grBlue};
+  -webkit-background-clip: text;
   color: transparent;
-  /* -webkit-background-clip: text; */
 `;
 
 export default LoginPage;

@@ -79,7 +79,7 @@ public class PostRepository {
 				.setParameter("postId", editPost.getPostId())
 				.getSingleResult();
 		
-		originPost.setPostTitle(editPost.getPostContent());
+		originPost.setPostTitle(editPost.getPostTitle());
 		originPost.setPostContent(editPost.getPostContent());
 		originPost.setPostUpdDate(editPost.getPostUpdDate());
 	}

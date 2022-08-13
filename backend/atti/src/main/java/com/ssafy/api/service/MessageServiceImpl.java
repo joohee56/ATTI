@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.db.entity.message.Message;
-import com.ssafy.db.entity.message.UserMessage;
 import com.ssafy.db.repository.MessageRepository;
 
 @Service
@@ -19,7 +18,7 @@ public class MessageServiceImpl implements MessageService {
 	
 	@Override // 전체 메세지 조회
 	@Transactional(readOnly = true)
-	public List<UserMessage> viewAllMessage(Long userMessageId) {
+	public List<Message> viewAllMessage(Long userMessageId) {
 		
 		return messageRepository.allMessage(userMessageId);
 	}
