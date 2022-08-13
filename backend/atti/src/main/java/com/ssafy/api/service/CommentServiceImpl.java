@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.api.request.CommentReq;
+import com.ssafy.api.response.CommentViewReplyRes;
 import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.user.User;
@@ -15,6 +17,7 @@ import com.ssafy.db.repository.CommentRepository;
 import com.ssafy.db.repository.CommentRepository2;
 import com.ssafy.db.repository.PostRepository;
 import com.ssafy.db.repository.PostRepository2;
+import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepository2;
 
 @Service
@@ -28,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
 	private PostRepository postRepository;
 	
 	@Autowired
-	private UserRepository2 userRepository;
+	private UserRepository userRepository;
 	
 	@Override // 댓글 작성
 	public void createReply(CommentReq comment) {
@@ -47,8 +50,18 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override // 댓글 조회
 	@Transactional(readOnly = true)
-	public List<Comment> viewReply(Post postId) {
+	public List<CommentViewReplyRes> viewReply(Long postId) {
 //		return commentRepository.findComment(postId);
-		return null;
+		Post post = postRepository.findById(postId).orElse(null);
+		List<Comment> commentList = commentRepository.findByPostOrderByCommentIdDesc(post);
+		
+		List<CommentViewReplyRes> commentViewReplyRes;
+		if(commentList.isEmpty()) return null;
+		else commentViewReplyRes = new ArrayList<CommentViewReplyRes>();
+		
+		for(Comment c : commentList) {
+			commentViewReplyRes.add(new CommentViewReplyRes(c));
+		}
+		return commentViewReplyRes;
 	}
 }

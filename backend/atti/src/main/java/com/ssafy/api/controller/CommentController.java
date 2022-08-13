@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.CommentReq;
+import com.ssafy.api.response.CommentViewReplyRes;
 import com.ssafy.api.service.CommentService;
 import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Post;
-import com.ssafy.db.repository.CommentRepository2;
 
 @RestController
 @RequestMapping("/post/comment")
@@ -25,9 +25,6 @@ public class CommentController {
 	
 	@Autowired
 	private CommentService commentService;
-	
-	@Autowired
-	private CommentRepository2 commentRepository;
 	
 	@PostMapping("/write") // 댓글 작성
 	public ResponseEntity<String> createReply(@RequestBody CommentReq comment) {
@@ -44,8 +41,8 @@ public class CommentController {
 	}
 	
 	@GetMapping("/read/{postId}") // 한 게시글의 댓글 보기
-	public ResponseEntity<List<Comment>> viewReply(@PathVariable Post postId){
-		commentService.viewReply(postId);
-		return new ResponseEntity<List<Comment>>(commentService.viewReply(postId), HttpStatus.OK);
+	public ResponseEntity<List<CommentViewReplyRes>> viewReply(@PathVariable Long postId){
+//		commentService.viewReply(postId);
+		return new ResponseEntity<List<CommentViewReplyRes>>(commentService.viewReply(postId), HttpStatus.OK);
 	}
 }

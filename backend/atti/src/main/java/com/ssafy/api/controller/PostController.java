@@ -77,7 +77,7 @@ public class PostController {
 
         Post editPost = new Post();
 
-        editPost.setPostId(editPostInfo.getPostId());
+//        editPost.setPostId(editPostInfo.getPostId());
 
         User user = new User();
         user.setUserId(editPostInfo.getUserId());

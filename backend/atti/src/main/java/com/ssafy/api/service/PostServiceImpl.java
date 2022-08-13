@@ -3,12 +3,10 @@ package com.ssafy.api.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ssafy.api.request.PostWriteReq;
 import com.ssafy.api.response.PostViewAllRes;
@@ -18,13 +16,9 @@ import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.CategoryRepository;
-import com.ssafy.db.repository.CategoryRepository2;
 import com.ssafy.db.repository.DepartRepository;
-import com.ssafy.db.repository.DepartRepository2;
 import com.ssafy.db.repository.PostRepository;
-import com.ssafy.db.repository.PostRepository2;
 import com.ssafy.db.repository.UserRepository;
-import com.ssafy.db.repository.UserRepository2;
 
 @Service
 @Transactional(readOnly = true) // readOnly true를 사용하면 읽기 최적화
@@ -87,7 +81,7 @@ public class PostServiceImpl implements PostService {
 //		}
 		Depart depart = departRepository.getById(departId);
 		Category category = categoryRepository.getById(categoryId);
-		List<Post> postList = postRepository.findByDepartAndCategory(depart, category);
+		List<Post> postList = postRepository.findByDepartAndCategoryOrderByPostIdDesc(depart, category);
 		
 		List<PostViewAllRes> postViewAllResList;
 		if(postList.isEmpty()) return null;
