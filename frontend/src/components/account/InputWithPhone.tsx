@@ -29,23 +29,19 @@ export default function InputWithPhone({
 
   const [minutes, setMinutes] = React.useState(5);
   const [seconds, setSeconds] = React.useState(0);
+  const initialTime = React.useRef(minutes * 60 + seconds);
+  const countdown = React.useRef<NodeJS.Timer>();
 
   React.useEffect(() => {
-    const countdown = setInterval(() => {
-      if (seconds > 0) {
-        setSeconds(seconds - 1);
-      }
-      if (seconds === 0) {
-        if (minutes === 0) {
-          clearInterval(countdown);
-        } else {
-          setMinutes(minutes - 1);
-          setSeconds(59);
-        }
-      }
+    countdown.current = setInterval(() => {
+      initialTime.current -= 1;
+      setSeconds(initialTime.current % 60);
+      setMinutes(parseInt((initialTime.current / 60).toString().padStart(2, '0')));
+
     }, 1000);
-    return () => clearInterval(countdown);
+    return () => clearInterval(countdown.current);
   }, [minutes, seconds]);
+
 
   const accreditPhone = async () => {
     const value = phonNumber.replace(/[^0-9]/g, "");
@@ -59,8 +55,7 @@ export default function InputWithPhone({
           setPhoneNumberMessage(true);
           setIsPhoneNumber(true);
           console.log("전화번호로 메세지 전송 성공");
-          setMinutes(5);
-          setSeconds(0);
+          initialTime.current=300;
           // console.log(response);
         })
         .catch(function (error) {
@@ -91,6 +86,7 @@ export default function InputWithPhone({
           // console.log("인증 성공!");
           setIsSuccessMessage("성공적으로 인증 되었습니다.");
           isCertifiedSuccess(true);
+          clearInterval(countdown.current);
         })
         .catch(function (error) {
           console.log("에러발생 : " + error);
