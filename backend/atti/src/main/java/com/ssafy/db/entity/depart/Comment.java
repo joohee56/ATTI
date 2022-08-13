@@ -81,21 +81,19 @@ public class Comment {
 	
 	//////////////////////////////////////////////////////////
 	
-	@OneToMany(mappedBy = "comment")
-    private List<UserCommentMention> usercommentmentions = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "comment")
-	private List<UserCommentLike> usercommentlikes = new ArrayList<>();
-	
-	public void setUser(User user) {
-		this.user = user;
-		user.getComments().add(this);
-	}
-	
-	public void setPost(Post post) {
-		this.post = post;
-		user.getComments().add(this);
-	}
-	
-	
+//	@OneToMany(mappedBy = "comment")
+//    private List<UserCommentMention> usercommentmentions = new ArrayList<>();
+//	
+//	@OneToMany(mappedBy = "comment")
+//	private List<UserCommentLike> usercommentlikes = new ArrayList<>();
+//	
+//	public void setUser(User user) {
+//		this.user = user;
+//		user.getComments().add(this);
+//	}
+//	
+//	public void setPost(Post post) {
+//		this.post = post;
+//		user.getComments().add(this);
+//	}
 }

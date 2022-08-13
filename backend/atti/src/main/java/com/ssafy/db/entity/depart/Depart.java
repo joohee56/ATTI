@@ -52,25 +52,23 @@ public class Depart {
 	/////////////////////////////////////////////////
 	
 	
-	@OneToMany(mappedBy = "depart")
-	private List<Course> courses = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "depart")
-    private List<Category> categorys = new ArrayList<>();
-
 //	@OneToMany(mappedBy = "depart")
-//    private List<WebClass> webclasses = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "depart")
-	private List<UserDepart> userDeparts = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "depart")
-	private List<DepartTagList> departTagLists = new ArrayList<>();
-
-	public void setUser(User user) {
-		this.user = user;
-		user.getDeparts().add(this);
-	}
-	
-	
+//	private List<Course> courses = new ArrayList<>();
+//	
+//	@OneToMany(mappedBy = "depart")
+//    private List<Category> categorys = new ArrayList<>();
+//
+////	@OneToMany(mappedBy = "depart")
+////    private List<WebClass> webclasses = new ArrayList<>();
+//	
+//	@OneToMany(mappedBy = "depart")
+//	private List<UserDepart> userDeparts = new ArrayList<>();
+//	
+//	@OneToMany(mappedBy = "depart")
+//	private List<DepartTagList> departTagLists = new ArrayList<>();
+//
+//	public void setUser(User user) {
+//		this.user = user;
+//		user.getDeparts().add(this);
+//	}
 }

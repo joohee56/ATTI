@@ -46,13 +46,13 @@ public class UserPostMention {
 	
 	//////////////////////////////////////////////////////
 	
-	public void setUser(User user) {
-		this.user = user;
-		user.getUserpostmentions().add(this);
-	}
-	
-	public void setPost(Post post) {
-		this.post = post;
-		post.getUserpostmentions().add(this);
-	}
+//	public void setUser(User user) {
+//		this.user = user;
+//		user.getUserpostmentions().add(this);
+//	}
+//	
+//	public void setPost(Post post) {
+//		this.post = post;
+//		post.getUserpostmentions().add(this);
+//	}
 }

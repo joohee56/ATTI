@@ -36,6 +36,6 @@ public class DepartTag {
 	
 	///////////////////////////////////////////////////////////////
 	
-	@OneToMany(mappedBy = "departTag")
-	private List<DepartTagList> departTagLists = new ArrayList<>();
+//	@OneToMany(mappedBy = "departTag")
+//	private List<DepartTagList> departTagLists = new ArrayList<>();
 }

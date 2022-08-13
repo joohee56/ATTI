@@ -46,13 +46,13 @@ public class UserPostLike {
 	
 	/////////////////////////////////////////////////////////
 	
-	public void setUser(User user) {
-		this.user = user;
-		user.getUserpostlikes().add(this);
-	}
-	
-	public void setPost(Post post) {
-		this.post = post;
-		post.getUserpostlikes().add(this);
-	}
+//	public void setUser(User user) {
+//		this.user = user;
+//		user.getUserpostlikes().add(this);
+//	}
+//	
+//	public void setPost(Post post) {
+//		this.post = post;
+//		post.getUserpostlikes().add(this);
+//	}
 }

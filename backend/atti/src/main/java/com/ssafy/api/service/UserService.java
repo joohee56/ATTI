@@ -25,7 +25,7 @@ import com.ssafy.api.request.UserUpdateReq;
 import com.ssafy.common.util.AuthPhoneUtil;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.db.entity.user.User;
-import com.ssafy.db.repository.UserRepository;
+import com.ssafy.db.repository.UserRepository2;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
 	@Autowired
-	UserRepository userRepository;
+	UserRepository2 userRepository;
 	
 	@Autowired
 	PasswordEncoder passwordEncorder;

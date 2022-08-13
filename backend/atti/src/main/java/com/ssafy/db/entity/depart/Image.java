@@ -51,8 +51,8 @@ public class Image {
 	
 	///////////////////////////////////////////////
 	
-	public void setPost(Post post) {
-		this.post = post;
-		post.getImages().add(this);
-	}
+//	public void setPost(Post post) {
+//		this.post = post;
+//		post.getImages().add(this);
+//	}
 }

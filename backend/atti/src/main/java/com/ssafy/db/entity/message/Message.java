@@ -61,17 +61,16 @@ public class Message {
 	
 	//////////////////////////////////////////////////////
 	
-//	@OneToMany(mappedBy = "usermessage")
-//    private List<Message> messages = new ArrayList<>();
-	
-	public void setTuser(User user) {
-		this.tuser = user;
-		user.getTousers().add(this);
-	}
-
-	public void setFuser(User user) {
-		this.fuser = user;
-		user.getFromusers().add(this);
-	}
-
+////	@OneToMany(mappedBy = "usermessage")
+////    private List<Message> messages = new ArrayList<>();
+//	
+//	public void setTuser(User user) {
+//		this.tuser = user;
+//		user.getTousers().add(this);
+//	}
+//
+//	public void setFuser(User user) {
+//		this.fuser = user;
+//		user.getFromusers().add(this);
+//	}
 }

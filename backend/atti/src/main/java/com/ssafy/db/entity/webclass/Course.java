@@ -85,8 +85,8 @@ public class Course {
 //	@OneToMany(mappedBy = "user")
 //	private List<UserCourse> usercourses = new ArrayList<>();
 	
-	public void setUser(User user) {
-		this.in_user = user;
-		user.getCourses().add(this);
-	}
+//	public void setUser(User user) {
+//		this.in_user = user;
+//		user.getCourses().add(this);
+//	}
 }

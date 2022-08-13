@@ -7,7 +7,7 @@ import com.ssafy.db.entity.depart.Post;
 import lombok.Getter;
 
 @Getter
-public class PostViewAllRes {
+public class PostViewOneRes {
 	
 	private String postTitle;
 	
@@ -15,9 +15,11 @@ public class PostViewAllRes {
 	
 	private LocalDateTime postRegDate;
 	
+//	private LocalDateTime postUpdDate;
+	
 	private String userId;
 	
-	public PostViewAllRes(Post post) {
+	public PostViewOneRes(Post post) {
 		this.postTitle = post.getPostTitle();
 		this.postContent = post.getPostContent();
 		this.postRegDate = post.getPostRegDate();

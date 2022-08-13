@@ -50,8 +50,8 @@ public class File {
 	
 	/////////////////////////////////////////////////////// 
 	
-	public void setPost(Post post) {
-		this.post = post;
-		post.getFiles().add(this);
-	}
+//	public void setPost(Post post) {
+//		this.post = post;
+//		post.getFiles().add(this);
+//	}
 }

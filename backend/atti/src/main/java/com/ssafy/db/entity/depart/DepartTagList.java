@@ -45,13 +45,13 @@ public class DepartTagList {
 	
 	/////////////////////////////////////////////////
 	
-	public void setDepart(Depart depart) {
-		this.depart = depart;
-		depart.getDepartTagLists().add(this);
-	}
-	
-	public void setDepartTag(DepartTag departtag) {
-		this.departTag = departtag;
-		depart.getDepartTagLists().add(this);
-	}
+//	public void setDepart(Depart depart) {
+//		this.depart = depart;
+//		depart.getDepartTagLists().add(this);
+//	}
+//	
+//	public void setDepartTag(DepartTag departtag) {
+//		this.departTag = departtag;
+//		depart.getDepartTagLists().add(this);
+//	}
 }
