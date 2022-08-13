@@ -17,7 +17,7 @@ import com.ssafy.api.request.CommentReq;
 import com.ssafy.api.service.CommentService;
 import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Post;
-import com.ssafy.db.repository.CommentRepository;
+import com.ssafy.db.repository.CommentRepository2;
 
 @RestController
 @RequestMapping("/post/comment")
@@ -27,7 +27,7 @@ public class CommentController {
 	private CommentService commentService;
 	
 	@Autowired
-	private CommentRepository commentRepository;
+	private CommentRepository2 commentRepository;
 	
 	@PostMapping("/write") // 댓글 작성
 	public ResponseEntity<String> createReply(@RequestBody CommentReq comment) {

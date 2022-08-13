@@ -12,8 +12,10 @@ import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.CommentRepository;
+import com.ssafy.db.repository.CommentRepository2;
 import com.ssafy.db.repository.PostRepository;
-import com.ssafy.db.repository.UserRepository;
+import com.ssafy.db.repository.PostRepository2;
+import com.ssafy.db.repository.UserRepository2;
 
 @Service
 @Transactional
@@ -26,8 +28,7 @@ public class CommentServiceImpl implements CommentService {
 	private PostRepository postRepository;
 	
 	@Autowired
-	private UserRepository userRepository;
-	
+	private UserRepository2 userRepository;
 	
 	@Override // 댓글 작성
 	public void createReply(CommentReq comment) {
@@ -36,17 +37,18 @@ public class CommentServiceImpl implements CommentService {
 //		Post post = postRepository.findById(comment.getPostId());
 		
 //		Comment entity = comment.toEntity(user, post);
-		commentRepository.insertWriting(comment);
+//		commentRepository.insertWriting(comment);
 	}
 
 	@Override // 단일 댓글 삭제
 	public void deleteFindOne(Long commentId) {
-		commentRepository.deleteOne(commentId);
+		commentRepository.deleteById(commentId);
 	}
 
 	@Override // 댓글 조회
 	@Transactional(readOnly = true)
 	public List<Comment> viewReply(Post postId) {
-		return commentRepository.findComment(postId);
+//		return commentRepository.findComment(postId);
+		return null;
 	}
 }

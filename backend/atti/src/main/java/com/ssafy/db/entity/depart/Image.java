@@ -49,10 +49,4 @@ public class Image {
 	@JoinColumn(name="post_id")
 	private Post post;						// 게시글 ID (FK)
 	
-	///////////////////////////////////////////////
-	
-	public void setPost(Post post) {
-		this.post = post;
-		post.getImages().add(this);
-	}
 }

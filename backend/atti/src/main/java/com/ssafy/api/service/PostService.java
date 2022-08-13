@@ -1,15 +1,19 @@
 package com.ssafy.api.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.ssafy.api.request.PostWriteReq;
+import com.ssafy.api.response.PostViewAllRes;
+import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.db.entity.depart.Post;
 
 public interface PostService {
-	void createWriting(Post post); // 글쓰기
+	void createWriting(PostWriteReq postWriteReq); // 글쓰기
 	
-	List<Post> viewAllPosts(); // 게시글 전체 조회
+	List<PostViewAllRes> viewAllPosts(Long departId, Long categoryId); // 게시글 전체 조회
 	
-	Post viewFindOne(Long postId); // 게시글 상세 조회
+	PostViewOneRes viewFindOne(Long postId); // 게시글 상세 조회
 	
 	List<Post> viewByName(String name); // 이름으로 게시글 검색 / 조회 (아직 쓸지말지 몰라서 컨트롤러에서 구현안했음)
 	
