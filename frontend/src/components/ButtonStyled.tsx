@@ -20,7 +20,7 @@ export const ButtonBlue = styled.button`
   &:disabled {
     opacity: 0.5;
     background: ${palette.main_grBlue};
-    cursor: auto;
+    cursor: not-allowed;
   }
 `;
 
@@ -43,6 +43,6 @@ export const ButtonPurple = styled.button`
   &:disabled {
     opacity: 0.5;
     background: ${palette.main_grPurple};
-    cursor: auto;
+    cursor: not-allowed;
   }
 `;
