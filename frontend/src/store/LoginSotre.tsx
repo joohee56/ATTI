@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export const userDB = [{ id: "test", password: "test" }];
-
 export interface UserLoginState {
   id: string;
   accessToken: string;

@@ -9,6 +9,7 @@ import InputWithLabel from "../components/InputWithLabel";
 import InputPassword from "../components/account/InputPassword";
 import { palette } from "../styles/palette";
 import InputWithPhone from "../components/account/InputWithPhone";
+import SnacbarTell from "../components/SnacbarTell";
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -147,6 +148,9 @@ function SignupPage() {
     );
   };
 
+  // 회원가입 성공 알림
+  const [open, setOpen] = useState(false);
+
   const signSubmit = async (e: any) => {
     e.preventDefault();
     await api
@@ -165,7 +169,8 @@ function SignupPage() {
       .then(function (response) {
         console.log("response:", response);
         if (response.status === 200) {
-          navigate("/login");
+          // navigate("/login");
+          setOpen(true);
         }
       })
       .catch(function (error) {
@@ -177,19 +182,25 @@ function SignupPage() {
 
   return (
     <>
+      <SnacbarTell
+        open={open}
+        setOpen={setOpen}
+        message="회원가입 되었습니다."
+        type="success"
+      />
       <HeaderDiv>회원가입</HeaderDiv>
       <StyledPage>
-        <StyledContent>
+      <StyledContent>
           <div>
             <p>아띠</p>
             <img src={Logo} style={logoStyle} alt="Logo Cumputer Img" />
-            <p>자체 커뮤니티와 함께 화상 회의가 가능한 교육 플랫폼</p>
+            <p>커뮤니티와 화상회의가 가능한 교육 플랫폼</p>
           </div>
-          <p>개인 정보 처리 방침</p>
+          {/* <p>개인 정보 처리 방침</p>
           <div style={InfoPolicyStyle}>assets/infoPolicy.html 확인</div>
           <div>
             <input type="checkbox" id="switch" value="off" /> 동의합니다.
-          </div>
+          </div> */}
         </StyledContent>
         <StyledContent>
           <>
