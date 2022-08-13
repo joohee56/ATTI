@@ -3,7 +3,14 @@ import moment from "moment";
 import styled from "styled-components";
 import Modal from "../../Modal";
 import InputSchedule from "./InputSchedule";
-import { AddClassButton, ExistenceClass, LeftBar } from "./SchedulePageStyle";
+import {
+  AddClassButton,
+  ExistenceClass,
+  LeftBar,
+  ScheduleLi,
+  ScheduleUl,
+  TempDiv,
+} from "./SchedulePageStyle";
 
 export interface weekClassSchedule {
   cousrseId: string | null;
@@ -48,6 +55,8 @@ const dummyClass = [
 
 const SchedulePage = styled.div`
   display: flex;
+  width: 100%;
+  justify-content: center;
 `;
 const LeftWrapper = styled.div`
   display: flex;
@@ -64,8 +73,9 @@ const WeekStringWrapper = styled.div`
 `;
 
 const WeekString = styled.div`
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 6%;
+  margin-right: 8%;
+  margin-bottom: 1%;
 `;
 
 const DayScheduleList = styled.div`
@@ -78,6 +88,8 @@ const SchedulePageWrapper = () => {
   const [getMoment, setMoment] = useState(() => moment());
   const [weekList, setWeekList] = useState<string[]>([]);
   const [selectDay, setSelectDay] = useState<any>();
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [selectDeleteSchedule, setSeleteDeleteSchedule] = useState<any>();
   const [insertSchedule, setInsertSchedule] = useState<weekClassSchedule>({
     cousrseId: "",
     courseName: "",
@@ -117,6 +129,7 @@ const SchedulePageWrapper = () => {
     "18:00",
   ];
   const handlerInserSchedule = (element: weekClassSchedule) => {
+    // startTime,endTime 년-월-일 시간:분 으로 할것 (띄어쓰기 잊기 말기)
     element.courseDate = weekList[selectDay.weekIndex];
     setInsertSchedule(element);
     let tempWeek = week;
@@ -139,6 +152,41 @@ const SchedulePageWrapper = () => {
     console.log(weekSchedule);
     setWeekClassState(weekSchedule);
   };
+
+  const deleteSchedule = (element: weekClassSchedule) => {
+    let tempWeek = week;
+    let weekClass = tempWeek.filter((e: weekClassSchedule) => {
+      return e.cousrseId === element.cousrseId;
+    });
+    let weekSchedule = weekClassState;
+    for (let i = 0; i < monToFri.length; i++) {
+      for (let j = 0; j < weekClass.length; j++) {
+        if (weekClass[j].weekName === monToFri[i]) {
+          for (let k = 0; k < time.length; k++) {
+            if (time[k] === weekClass[j].courseStartTime) {
+              weekSchedule[i][k] = {
+                ...weekSchedule[i][k],
+                cousrseId: "",
+                courseName: "",
+                courseProf: "",
+                userId: "",
+                courseStartTime: "",
+                courseEndTime: "",
+              };
+            }
+          }
+        }
+      }
+    }
+    let result = tempWeek.filter((e) => {
+      return e.cousrseId !== element.cousrseId;
+    });
+    setWeek(result);
+    console.log(weekSchedule);
+    setWeekClassState(weekSchedule);
+    setIsOpenDeleteModal(false);
+  };
+
   const today = getMoment;
 
   let daySchedule: any = new Array(10).fill({
@@ -204,13 +252,45 @@ const SchedulePageWrapper = () => {
         >
           <InputSchedule
             weekList={selectDay}
+            week={week}
             handlerInserSchedule={handlerInserSchedule}
           />
         </Modal>
       )}
+      {isOpenDeleteModal && (
+        <Modal
+          onClickToggleModal={() => {
+            setIsOpenDeleteModal(false);
+          }}
+        >
+          {
+            <div>
+              삭제하시겠습니까?
+              <div>
+                <div>
+                  <button
+                    onClick={() => {
+                      deleteSchedule(selectDeleteSchedule);
+                    }}
+                  >
+                    네
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsOpenDeleteModal(false);
+                    }}
+                  >
+                    아니오
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </Modal>
+      )}
       <LeftWrapper>
-        <div>왼쪽 공간</div>
         <div>
+          <TempDiv />
           {Object.keys(time).map((e: any, i) => (
             <LeftBar key={i}>{time[e]}</LeftBar>
           ))}
@@ -224,37 +304,45 @@ const SchedulePageWrapper = () => {
         </WeekStringWrapper>
         <DayScheduleList>
           {Object.keys(weekClassState).map((e: any, i: number) => (
-            <div key={i}>
+            <ScheduleUl key={i} index={i}>
               {weekClassState[0].courseName !== "" && (
                 <div>
                   {weekClassState[e].map((el: any, index: number) => (
-                    <div key={index}>
+                    <ScheduleLi key={index}>
                       {el.courseName !== "" ? (
-                        <ExistenceClass
-                          extendsHeight={
-                            Number(el.courseEndTime.substring(0, 2)) -
-                            Number(el.courseStartTime.substring(0, 2))
-                          }
-                        >
-                          <div>{el.courseName}</div>
-                          <div>{el.courseProf}</div>
-                          <div>시작시간 : {el.courseStartTime}</div>
-                          <div>끝나는 시간 : {el.courseEndTime}</div>
-                        </ExistenceClass>
+                        <>
+                          <ExistenceClass
+                            extendsHeight={
+                              Number(el.courseEndTime.substring(0, 2)) -
+                              Number(el.courseStartTime.substring(0, 2))
+                            }
+                          >
+                            <div>{el.courseName}</div>
+                            <div>{el.courseProf}</div>
+                            <div>시작시간 : {el.courseStartTime}</div>
+                            <div>끝나는 시간 : {el.courseEndTime}</div>
+                            <button
+                              onClick={() => {
+                                setSeleteDeleteSchedule(el);
+                                setIsOpenDeleteModal(true);
+                              }}
+                            >
+                              삭제하기
+                            </button>
+                          </ExistenceClass>
+                        </>
                       ) : (
-                        <div>
-                          <AddClassButton
-                            onClick={onClickAddSchedule}
-                            id={i.toString()}
-                            value={index}
-                          ></AddClassButton>
-                        </div>
+                        <AddClassButton
+                          onClick={onClickAddSchedule}
+                          id={i.toString()}
+                          value={index}
+                        ></AddClassButton>
                       )}
-                    </div>
+                    </ScheduleLi>
                   ))}
                 </div>
               )}
-            </div>
+            </ScheduleUl>
           ))}
         </DayScheduleList>
       </RightWrapper>

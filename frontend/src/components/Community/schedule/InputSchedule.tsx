@@ -3,11 +3,13 @@ import { weekClassSchedule } from "./SchedulePageWrapper";
 
 const InputSchedule = ({
   weekList,
+  week,
   handlerInserSchedule,
 }: //   weekClass,
 {
   weekList: any;
   handlerInserSchedule: (element: weekClassSchedule) => void;
+  week: weekClassSchedule[];
   //   weekClass: weekClassSchedule;
 }) => {
   const time = [
@@ -22,14 +24,15 @@ const InputSchedule = ({
     "17:00",
     "18:00",
   ];
-  console.log(weekList);
+  console.log(week);
+
   const [endTime, setEndTime] = useState<string[]>(
     time.slice(weekList.timeIndex)
   );
   const [saveStartTimeIndex, setSaveStartTimeIndex] = useState<number>(
     weekList.timeIndex
   );
-
+  const [checkClass, setCheckClass] = useState(false);
   const [startEndTime, setStartEndTime] = useState<any>({
     startTime: weekList.time,
     endTime: weekList.time,
@@ -70,9 +73,31 @@ const InputSchedule = ({
         userId: "박범수",
         weekName: weekList.weekString,
       };
-      handlerInserSchedule(content);
-      cousrseNameRef.current.value = "";
-      cousrseProfRef.current.value = "";
+      let flag = false;
+      for (let i = 0; i < week.length; i++) {
+        console.log(week[i]);
+        if (week[i].weekName === content.weekName) {
+          const weekStartTime = Number(week[i].courseStartTime.slice(0, 2));
+          const contentStartTime = Number(content.courseStartTime.slice(0, 2));
+          const weekEndTime = Number(week[i].courseEndTime.slice(0, 2));
+          const contentEndTime = Number(content.courseEndTime.slice(0, 2));
+          for (let j = weekStartTime; j < weekEndTime; j++) {
+            if (contentStartTime === j || contentEndTime === j) {
+              flag = true;
+              setCheckClass(true);
+              break;
+            }
+          }
+        }
+      }
+      console.log(flag);
+      if (!flag) {
+        handlerInserSchedule(content);
+        cousrseNameRef.current.value = "";
+        cousrseProfRef.current.value = "";
+      } else {
+        return;
+      }
     }
   };
 
@@ -126,6 +151,7 @@ const InputSchedule = ({
           </div>
         </span>
       </div>
+      {checkClass && <div>같은 시간에 수업이 있습니다.</div>}
       <button onClick={onClick}>추가</button>
     </div>
   );
