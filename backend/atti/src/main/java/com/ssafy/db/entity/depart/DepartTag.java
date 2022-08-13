@@ -33,9 +33,4 @@ public class DepartTag {
 	
 	@Column(name="depart_tag_name")
 	private String departTagName;					// 해시 태그 명 
-	
-	///////////////////////////////////////////////////////////////
-	
-//	@OneToMany(mappedBy = "departTag")
-//	private List<DepartTagList> departTagLists = new ArrayList<>();
 }

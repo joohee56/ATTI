@@ -71,22 +71,11 @@ public class Course {
 	@JoinColumn(name="depart_course")
 	private Depart depart;						// 채널 ID (FK)
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="in_user_id") 
-	private User in_user;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "make_user_id")
-	private User make_user;
-	
-//	@OneToOne(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private WebClass webclass;
-	
-//	@OneToMany(mappedBy = "user")
-//	private List<UserCourse> usercourses = new ArrayList<>();
-	
-//	public void setUser(User user) {
-//		this.in_user = user;
-//		user.getCourses().add(this);
-//	}
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name="in_user_id") 
+//	private User in_user;
+//	
+//	@OneToOne(fetch=FetchType.LAZY)
+//    @JoinColumn(name = "make_user_id")
+//	private User make_user;
 }

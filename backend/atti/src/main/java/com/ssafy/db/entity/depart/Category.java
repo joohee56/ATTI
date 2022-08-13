@@ -59,20 +59,5 @@ public class Category{
 	@JoinColumn(name="depart_id")
 	private Depart depart;				// 채널 ID (FK)
 	
-	/////////////////////////////////////////////////////
-	
-//	@OneToMany(mappedBy = "category")
-//    private List<Post> posts = new ArrayList<>();
-//	 
-//	////////////////////////////////////////////////////
-//	
-//	public void setUser(User user) {
-//		this.user = user;
-//		user.getCategorys().add(this);
-//	}
-//	
-//	public void setDepart(Depart depart) {
-//		this.depart = depart;
-//		depart.getCategorys().add(this);
-//	}
+
 }
