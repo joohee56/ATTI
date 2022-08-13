@@ -1,0 +1,127 @@
+import { useState } from "react"
+import { palette } from "../../styles/palette"
+import styled from "styled-components"
+
+
+import InputWithIcon from "../InputWithLabel"
+function CategoryCreate(){
+
+    const [newCategory, setNewCategory] = useState([])
+
+    const getValue = e => {
+        const {value} = e.target;
+        setNewCategory(value)
+    };
+
+    return(
+        <div style={{width: "900px"}}>  
+            <div style={{display: "flex", justifyContent: "center", alignItems:"center"}}>
+                <Title>
+                    카테고리 생성
+                </Title> 
+            </div>
+            <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", margin: "30px 0 0 40px"}}>
+                <div style={{display: "flex", flexDirection: "column", alignItems:"flex-start"}}>
+                    <Question>1. 카테고리 이름은 무엇인가요?</Question> 
+                    <span style={{fontSize: "15px", color: "gray"}}>다른 사용자에게 보여질 카테고리의 이름을 지어주세요!</span>
+                    <InputDiv>
+                        <InputWithIcon borderRadius="20px" onChange={getValue} placeholder="ex) 나는야 카테고리"/>
+                    </InputDiv>
+                </div>
+                <div style={{display: "flex", flexDirection: "column", alignItems:"flex-start"}}>
+                    <Question>2. 카테고리의 형식을 1개 선택해 주세요.</Question> 
+                    <span style={{fontSize: "15px", color: "gray"}}>선택한 카테고리 형식을 배경으로 제작됩니다.</span>
+                    <div style={{display: "flex", flexDirection: "column", justifyContent:"center", alignItems:"flex-start"}}>
+                        <CustomDiv>
+                            <CustomButton name="자유게시판">자유게시판</CustomButton>
+                            <CustomButton name="시간표">시간표(수업 미팅실)</CustomButton>
+                        </CustomDiv>
+                        <CustomDiv>
+                            <CustomButton name="공지사항">공지사항(관리자만 작성이 가능)</CustomButton>
+                            <CustomButton name="자료실">자료실(첨부파일 첨부 가능)</CustomButton>
+                        </CustomDiv>
+                    </div>
+                </div>
+                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
+                    <Question>3. 세부 설정을 체크해주세요!</Question> 
+                    <div style={{display: "flex", flexDirection: "column", margin: "0 0 0 10px"}}>
+                        <SettingDiv>
+                            <CustomSpan>게시글 작성 시 익명을 허용하시겠습니까?</CustomSpan>
+                            <div>
+                                <button>Yes</button>
+                                <button>No</button>
+                            </div>
+                        </SettingDiv>
+                        <SettingDiv>
+                            <CustomSpan>게시글에 대한 댓글 작성을 허용하시겠습니까?</CustomSpan>
+                            <div>
+                                <button>Yes</button>
+                                <button>No</button>
+                            </div>
+                        </SettingDiv>
+                        <SettingDiv>
+                            <CustomSpan>게시글애 대한 댓글 작성 시 익명을 허용하시겠습니까?</CustomSpan>
+                            <div>
+                                <button>Yes</button>
+                                <button>No</button>
+                            </div>
+                        </SettingDiv>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const Title = styled.span`
+    background: ${palette.main_grBlue};
+    color: transparent;
+    -webkit-background-clip: text;
+    font-size: 40px; 
+    font-weight: bold;
+    text-align: center;
+`
+const Question = styled.span`
+    font-size: 30px;
+    font-weight: bold;
+    margin: 10px 10px;
+`
+
+const InputDiv = styled.div`
+    width: 35vw;
+    height: 10vh;
+    margin: 10px 0;
+`
+const CustomDiv = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: space-between;
+    width: 500px;
+`
+
+const CustomButton = styled.button`
+    width: 240px;
+    height: 50px;
+    margin: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    background: white;
+    border: 1px solid;
+    border-radius: 20px;
+    &:hover{  
+  cursor: pointer
+ }
+`
+const CustomSpan = styled.span`
+    font-size: 20px;
+    margin: 10px 0;
+`
+const SettingDiv = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 750px;
+`
+export default CategoryCreate

@@ -200,10 +200,10 @@ function PostEditor({handleModal1}, props) {
             <div className="form-wrapper">
                 <Main>
                     <Top>
-                        <TopTitle>category이름+ 글쓰기</TopTitle>
+                        <TopTitle>{categoryName} 글쓰기</TopTitle>
                         <Top2>
                             <SwitchDiv>
-                                <span style={{textAlign: "center" ,fontSize: "12px", marginBottom: "5px"}}>
+                                <span style={{textAlign: "center" ,fontSize: "17px", marginBottom: "5px"}}>
                                     익명으로 글쓰기 
                                 </span>
                                 <span onClick={getAnoInfo}>
@@ -212,7 +212,7 @@ function PostEditor({handleModal1}, props) {
                              
                             </SwitchDiv>
                             <SwitchDiv>
-                                <span style={{textAlign: "center", fontSize: "12px",  marginBottom: "5px"}}>
+                                <span style={{textAlign: "center", fontSize: "17px",  marginBottom: "5px"}}>
                                     댓글 금지하기 
                                 </span>
                                 <span onClick={getComBanInfo}>
@@ -242,12 +242,14 @@ function PostEditor({handleModal1}, props) {
     );
 }
 
-const TopTitle = styled.h2`
+const TopTitle = styled.p`
+font-size: 37px;
+font-weight: bolder;
 background: ${palette.main_grBlue};
 color: transparent;
 -webkit-background-clip: text;
 text-align: center;
-margin: 6px 0;
+margin: 15px 0;
 `;
 const PostTitle = styled.input`
 width: 700px;
@@ -256,7 +258,7 @@ border: none;
 border-bottom: 2px solid;
 outline: none;
 margin: 0 0 10px 0;
-font-size: 20px;
+font-size: 25px;
 
 `;
 
@@ -289,5 +291,6 @@ flex-direction: row;
 align-items: center;
 justify-content: center;
 font-weight: bold;
+margin: -10px 0 0 0;
 `;
 export default PostEditor;

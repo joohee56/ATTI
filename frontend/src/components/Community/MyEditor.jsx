@@ -50,7 +50,7 @@ export default function MyEditor({ handleChange, ...props }) {
             editor.editing.view.change((writer) => {
                 writer.setStyle(
                     "height", 
-                    "350px", 
+                    "450px", 
                     editor.editing.view.document.getRoot()
                 );
             });

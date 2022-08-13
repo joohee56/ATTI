@@ -9,6 +9,8 @@ import { BACKEND_URL } from "../../constant";
 import PostUpdate  from "./PostUpdate";
 import PostDetail from "./PostDetail";
 import PostEditor from "./PostEditor";
+import DepartCreate from "./DepartCreate";
+import DepartJoin from "./DepartJoin";
 import Modal from "../Modal";
 import SearchBar from "./SearchBar";
 import { ButtonBlue } from "../ButtonStyled";
@@ -56,9 +58,9 @@ const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
   const postStyle = {
     borderRadius: "30px",
     backgroundColor: palette.gray_1,
-    width: "1150px",
-    height: "90px",
-    margin: "15px 0 0 50px",
+    width: "90%",
+    height: "110px",
+    margin: "30px 0 0 50px",
     boxShadow: "2px 2px 2px grey"
   };
  function TwoFunctions(id){
@@ -113,8 +115,8 @@ const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
             </div>
             <hr style={{width: "95%"}} />
 
-            <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0 20px" }}>
-              <div style={{width: "800px", fontSize: "20px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+            <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "7px 20px" }}>
+              <div style={{width: "1200px", fontSize: "20px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                 {e.postTitle}   
               </div>
               <div>
@@ -135,6 +137,16 @@ const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
   };
 function NormalPostFrame() {
 
+  const [isOpenModal1, setOpenModal1] = useState(false);
+  const onClickToggleModal1 = useCallback(() => {
+    setOpenModal1(!isOpenModal1);
+  }, [isOpenModal1]);
+  const handleModal1 = () => {
+    setOpenModal1((prev) => {
+      return !prev
+    }
+    );
+  }
   const [isOpenModal2, setOpenModal2] = useState(false);
   const onClickToggleModal2 = useCallback(() => {
     setOpenModal2(!isOpenModal2);
@@ -146,18 +158,6 @@ function NormalPostFrame() {
     }
     );
   }
-
-  const [isOpenModal1, setOpenModal1] = useState(false);
-  const onClickToggleModal1 = useCallback(() => {
-    setOpenModal1(!isOpenModal1);
-  }, [isOpenModal1]);
-  const handleModal1 = () => {
-    setOpenModal1((prev) => {
-      return !prev
-    }
-    );
-  }
-
   const [isOpenModal3, setOpenModal3] = useState(false);
   const onClickToggleModal3 = useCallback(() => {
     setOpenModal3(!isOpenModal3);
@@ -193,7 +193,7 @@ function NormalPostFrame() {
       <PostContainer>
         <div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Title> 공지사항 or 질문 or 자유게시판 </Title>
+            <Title> {categoryName} </Title>
             <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
               <SearchBar />
               <WriteButton onClick={onClickToggleModal1}>
@@ -213,17 +213,17 @@ function NormalPostFrame() {
           setPage={setPage}
         />
       </StickyFooter>
-      </PostContainer>
-
-      {isOpenModal3 && (
+      {isOpenModal1 && (
         <Modal
-          onClickToggleModal={onClickToggleModal3}
-          width="1000px"
-          height="680px"
+          onClickToggleModal={onClickToggleModal1}
+          width="65vw"
+          height="800px"
         >
-          <PostUpdate singlePost={singlePost} handleModal3={handleModal3} />
+          <PostEditor handleModal1={handleModal1} />
         </Modal>
       )}
+      </PostContainer>
+
       {isOpenModal2 && (
         <Modal
           onClickToggleModal={onClickToggleModal2}
@@ -233,13 +233,13 @@ function NormalPostFrame() {
           <PostDetail postId={postId} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
         </Modal>
       )}
-      {isOpenModal1 && (
+      {isOpenModal3 && (
         <Modal
-          onClickToggleModal={onClickToggleModal1}
-          width="800px"
-          height="650px"
+          onClickToggleModal={onClickToggleModal3}
+          width="1000px"
+          height="680px"
         >
-          <PostEditor handleModal1={handleModal1} />
+          <PostUpdate singlePost={singlePost} handleModal3={handleModal3} />
         </Modal>
       )}
       {console.log('postId : ' , postId)}
@@ -255,9 +255,9 @@ color: transparent;
 -webkit-background-clip: text;
 `;
 const PostContainer = styled.div`
-  width: 1300px;
-  height: 671px;
-  margin: 15px 0;
+  width: 85vw;
+  height: 869px;
+  margin: 25px 0;
   border-radius: 20px;
   background-color: white;
   /* display: flex;

@@ -102,9 +102,8 @@ function CategoryList(dummyCategory){
             flexDirection: "row",
             justifyContent: "flex-start",
             backgroundColor: "white",
-            
-            width: "155px",
-            height: "60px",
+            width: "180px",
+            height: "70px",
             margin: "15px 0px 0px 0px",
             boxShadow: "3px 3px 3px grey"
             
@@ -115,15 +114,16 @@ function CategoryList(dummyCategory){
             justifyContent: "flex-start",
             backgroundColor: "white",
             borderRadius: "10px 15px 15px 10px",
-            width: "180px",
-            height: "100px",
+            width: "200px",
+            height: "110px",
             margin: "15px 0px 0px 0px",
             boxShadow: "3px 3px 3px grey",
-            color: palette.blue_3
+            color: palette.blue_3,
+           
         }
         const purpleBar = {
             width: "15px",
-            height: "60px",
+            height: "70px",
             position: 'absolute',
             backgroundColor: palette.purlue_2,
         }
