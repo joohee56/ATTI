@@ -5,10 +5,12 @@ import com.ssafy.db.entity.user.User;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class DepartCreateReq {
 	
 	private String departName;
@@ -21,9 +23,10 @@ public class DepartCreateReq {
 		this.userId = userId;
 	}
 	
-	public Depart toEntity(User user) {
+	public Depart toEntity(User user, String departCode) {
 		return Depart.builder()
 				.departName(departName)
+				.departCode(departCode)
 				.user(user)
 				.build();
 	}

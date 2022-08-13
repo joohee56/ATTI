@@ -30,11 +30,20 @@ public class DepartController {
 	private PostService postService;
 	
 	@PostMapping("/create") // 채널 생성
+
 	/*
 	 * public ResponseEntity<String> createChannel(@RequestBody DepartCreateReq
 	 * departCreateReq) { departService.createChannel(departCreateReq); //, userId
 	 * return new ResponseEntity<String>("SUCCESS", HttpStatus.OK); }
 	 */
+
+	public ResponseEntity<String> createChannel(@RequestBody DepartCreateReq departCreateReq) {
+		System.out.println("===========================" + departCreateReq.getDepartName() + "=============================");
+		System.out.println("===========================" + departCreateReq.getUserId() + "=============================");
+		departService.createChannel(departCreateReq); //, userId
+		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+	}
+
 	
 	@GetMapping("/{departId}") // 채널 입장 
 	public ResponseEntity<String> joinChannel(@PathVariable Long departId) {

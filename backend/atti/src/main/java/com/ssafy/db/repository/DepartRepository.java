@@ -1,16 +1,15 @@
 package com.ssafy.db.repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+<<<<<<< HEAD
 // import com.ssafy.api.request.DepartCreateReq;
+=======
+>>>>>>> c23ccc711daea50ce75c5c4818f22ca34f1c859b
 import com.ssafy.db.entity.depart.Depart;
-import com.ssafy.db.entity.user.User;
 
 @Repository
 @Transactional
@@ -32,4 +31,10 @@ public class DepartRepository{
 				.getSingleResult();
 		return channel;
 	}
-}
+	
+/*
+ * public interface DepartRepository extends JpaRepository<Depart, Long>{
+ * Optional<Depart> findByDepartName(String departName);
+ * 
+ * }
+ */

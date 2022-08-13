@@ -45,13 +45,4 @@ public class UserDepart {
 	
 	/////////////////////////////////////////////
 	
-	public void setUser(User user) {
-		this.user = user;
-		user.getUserDeparts().add(this);
-	}
-	
-	public void setDepart(Depart depart) {
-		this.depart = depart;
-		depart.getUserDeparts().add(this);
-	}
 }

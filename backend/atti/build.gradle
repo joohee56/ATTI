@@ -30,8 +30,6 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'eclipse'
 // apply plugin: 'com.github.node-gradle.node'
-//이클립스인 경우를 위한 QueryDSL 플러그인. IntelliJ는 불필요.
-// apply plugin: 'com.ewerk.gradle.plugins.querydsl'
 
 
 group = 'com.ssafy'
@@ -54,6 +52,32 @@ def buildTime() {
 }
 
 project.ext.set("build.date", buildTime())
+
+processResources {
+    with copySpec {
+        from "src/main/resources"
+        include "**/application*.yml"
+        include "**/application*.yaml"
+        include "**/application*.properties"
+        project.properties.findAll().each {
+            prop ->
+               if (prop.value != null) {
+                     filter(ReplaceTokens, tokens: [ (prop.key): String.valueOf(prop.value)])
+                     filter(ReplaceTokens, tokens: [ ('project.' + prop.key): String.valueOf(prop.value)])
+                     filter(ReplaceTokens, tokens: [ ('project.ext.' + prop.key): String.valueOf(prop.value)])
+               }
+        }
+    }
+}
+
+
+tasks {
+
+    processResources {
+        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
+    }
+}
+
 
 dependencies {
 

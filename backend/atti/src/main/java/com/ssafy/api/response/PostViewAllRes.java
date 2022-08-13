@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 
 import com.ssafy.db.entity.depart.Post;
 
+import lombok.Getter;
+
+@Getter
 public class PostViewAllRes {
 	
 	private String postTitle;

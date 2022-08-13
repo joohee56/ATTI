@@ -9,15 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Comment;
@@ -29,14 +25,22 @@ import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.depart.UserPostLike;
 import com.ssafy.db.entity.depart.UserPostMention;
 import com.ssafy.db.entity.message.Message;
+import com.ssafy.db.entity.webclass.Attendance;
 import com.ssafy.db.entity.webclass.Course;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+<<<<<<< HEAD
+=======
+import lombok.Builder;
+>>>>>>> c7b30d92f86f08a5a01685c3ee6bb6c111e2c4bf
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -81,8 +85,8 @@ public class User {
 	@OneToMany(mappedBy = "user") 
 	private List<Comment> comments = new ArrayList<>();
 	  
-//	@OneToMany(mappedBy = "user")
-//	private List<Attendance> attendances = new ArrayList<>();
+	@OneToMany(mappedBy = "user")
+	private List<Attendance> attendances = new ArrayList<>();
 	  
 	@OneToMany(mappedBy = "in_user")
 	private List<Course> courses = new ArrayList<>();
@@ -98,10 +102,7 @@ public class User {
 	  
 	@OneToMany(mappedBy = "user")
 	private List<Category> categorys = new ArrayList<>();
-	 
 
-//	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-//	private Auth auth;
 
 	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Profile profile;
