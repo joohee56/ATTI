@@ -34,6 +34,7 @@ function Welcome() {
     <CommunityDiv>
       <Main>
         <PostContainer>
+          {/* Mypage Test */}
          <MyPageComponent/>
         </PostContainer>
       </Main>
