@@ -28,8 +28,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-
 /*
  * 수업 시간표 테이블
  */

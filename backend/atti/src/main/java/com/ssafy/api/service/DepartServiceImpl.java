@@ -14,6 +14,7 @@ import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.DepartRepository;
 import com.ssafy.db.repository.DepartRepository2;
+import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepository2;
 
 @Service

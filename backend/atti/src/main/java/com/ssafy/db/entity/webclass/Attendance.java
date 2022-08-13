@@ -42,10 +42,10 @@ public class Attendance {
 //	@JoinColumn(name="webclass_id")
 //	private WebClass webclass;
 	
-	public void setUser(User user) {
-		this.user = user;
-		user.getAttendances().add(this);
-	}
+//	public void setUser(User user) {
+//		this.user = user;
+//		user.getAttendances().add(this);
+//	}
 	
 //	public void setWebclass(WebClass webclass) {
 //		this.webclass = webclass;
