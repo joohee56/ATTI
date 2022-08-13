@@ -1,42 +1,47 @@
-import { useState, useCallback, MouseEventHandler } from "react";
-import { Link } from "react-router-dom";
+import { api } from "../utils/api";
+import { useState, useCallback } from "react";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 import HomeIcon from "@mui/icons-material/Home";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlue } from "../components/ButtonStyled";
 import { ButtonPurple } from "../components/ButtonStyled";
 import InputWithLabel from "../components/InputWithLabel";
-import InputWithIcon from "../components/account/IputWithIcon";
 import Modal from "../components/Modal";
-import axios, { AxiosError } from "axios";
-import { BACKEND_URL } from "../constant/index";
-import { palette } from "../styles/palette";
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { KAKAO_AUTH_URL } from "../constant/index";
+import InputWithPhone from "../components/account/InputWithPhone";
+import { useDispatch } from "react-redux";
+import { loginActions } from "../store/LoginSotre";
+import { useNavigate } from "react-router-dom";
+import { palette } from "../styles/palette";
+import { Divider } from "@mui/material";
 
 interface userLoginInfo {
   userId: string;
   password: string;
 }
 
-interface findIdInfo{
-  name: string,
-  email: string,
-  date: {
-    yy: Date,
-    mm: 1,
-    dd: 1,
-  } 
+interface findIdInfo {
+  findId_name: string;
+  findId_email: string;
+}
+
+interface findPwInfo {
+  findPw_Id: string;
+  findPw_name: string;
 }
 
 function LoginPage() {
+  const navigate = useNavigate();
+
+  // 로그인
   const [loginInfo, setLoginInfo] = useState<userLoginInfo>({
     userId: "",
     password: "",
   });
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeLogin = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setLoginInfo({
       ...loginInfo,
@@ -44,68 +49,118 @@ function LoginPage() {
     });
   };
 
-  const loginClick = useCallback(
-    async (e: any) => {
-      //e.preventDefault();
-      try {
-        await axios
-          .post(
-            BACKEND_URL + "/api/auth/login/normal",
-            {
-              userId: loginInfo.userId,
-              password: loginInfo.password,
-            },
-            {
-              headers: {
-                "Content-type": "application/json",
-              },
-            }
-          )
-          .then((res) => {
-            console.log("response:", res);
-            if (res.status === 200) {
-              document.location.href = "/welcome";
-            }
-          });
-      } catch (err) {
-        const { response } = err as unknown as AxiosError;
-        console.log(response);
-      }
-    },
-    [loginInfo.userId, loginInfo.password]
-  );
+  // 일반 로그인
+  const loginClick = async (event: any) => {
+    event.preventDefault();
+    await api
+      .post("/auth/login/normal", {
+        userId: loginInfo.userId,
+        password: loginInfo.password,
+      })
+      .then(async function (response) {
+        if (response.status === 200) {
+          // console.log("response:", response.data);
+          dispatch(
+            loginActions.login({
+              id: loginInfo.userId,
+              accessToken: response.data.accessToken,
+            })
+          );
+          navigate("/welcome");
+        }
+      })
+      .catch(function (error) {
+        console.log("Error", error);
+        console.log("Error", "로그인 실패!");
+      });
+  };
 
-  const kakaoLogin=()=>{
-    window.location.replace(KAKAO_AUTH_URL);
+  // 카카오 로그인
+  const kakaoLogin = () => {
+    window.location.href = KAKAO_AUTH_URL;
 
-    let AuthorizationCode = new URL(window.location.href).searchParams.get('code');
+    let AuthorizationCode = new URL(window.location.href).searchParams.get(
+      "code"
+    );
     console.log(AuthorizationCode);
-  }
+  };
 
+  //아이디 찾기
+  const [findIdInfo, setfindIdInfo] = useState<findIdInfo>({
+    findId_name: "",
+    findId_email: "",
+  });
 
-  const findSubmit = async ( e: any) => {
-    // await axios.get(BACKEND_URL+"/api/user/findId", {
-    //   params: {
-    //     name: ,
-    //     emai: ,
-    //     birth: 
-    //   }
-    // })
-    // .then(function (response) {
-    //  let data:boolean = response.data;
-    //  if(data) setIsId(true);
-    //  else {
-    //   setIdMessage("중복된 ID입니다");
-    //   setIsId(false);
-    //  }
-    // }).catch(function (error) {
-    //   console.log(error);
-    // })
-  }
-  
-   
+  const onChangeFindID = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setfindIdInfo({
+      ...findIdInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const clickFindId = async (e: any) => {
+    e.preventDefault();
+    await api
+      .post("/user/findId", {
+        name: findIdInfo.findId_name,
+        email: findIdInfo.findId_email,
+      })
+      .then(function (response) {
+        setFindID('는 "' + response.data.userId + '" 입니다.');
+      })
+      .catch(function (error) {
+        setFindID("가 존재하지 않습니다");
+      });
+  };
+
+  // 비밀번호 찾기
+  const [findPwInfo, setFindPwInfo] = useState<findPwInfo>({
+    findPw_Id: "",
+    findPw_name: "",
+  });
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
+  const onChangePhonNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setPhoneNumber(
+      value
+        .replace(/[^0-9]/g, "")
+        .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
+        .replace(/(\-{1,2})$/g, "")
+    );
+  };
+
+  const onChangeFindPW = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setFindPwInfo({
+      ...findPwInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const clickFindPw = async (e: any) => {
+    e.preventDefault();
+    await api
+      .post("/user/findPassword", {
+        userId: findPwInfo.findPw_Id,
+        usesrName: findPwInfo.findPw_name,
+        phoneNumber: phoneNumber,
+      })
+      .then(function (response) {
+        console.log("가입된 회원이다");
+      })
+      .catch(function (error) {
+        console.log("회원이 없음");
+      });
+  };
+
+  const dispatch = useDispatch();
+
   // 아이디 찾기, 비밀번호 찾기
   const [findValue, setFindValue] = useState<string>("");
+  const [clickFindID, setFindID] = useState<string>("");
+  //const [clickFindID] = useState<boolean>(false);
 
   // 모달 보이기 여부
   const [findInfoModal, setOpenModal] = useState<boolean>(false);
@@ -120,7 +175,6 @@ function LoginPage() {
 
   return (
     <>
-      <HomeIcon />
       <HeaderDiv>로그인</HeaderDiv>
       <StyledPage>
         <StyledContent>
@@ -149,14 +203,13 @@ function LoginPage() {
               <InputWithLabel
                 name="userId"
                 placeholder="ID"
-                onChange={onChange}
+                onChange={onChangeLogin}
               />
               <InputWithLabel
-                label="Password"
                 name="password"
                 placeholder="Password"
                 type="password"
-                onChange={onChange}
+                onChange={onChangeLogin}
               />
             </div>
 
@@ -200,11 +253,13 @@ function LoginPage() {
             />
           </div>
         </StyledContent>
+
+        {/* 모달 생성 */}
         {findInfoModal && (
           <Modal
             onClickToggleModal={onClickToggleModal}
             width="600px"
-            height="auto"
+            height="400px"
           >
             <ModalDiv>
               <StyledPage>
@@ -212,11 +267,13 @@ function LoginPage() {
                   <TextSpan
                     onClick={(e) => {
                       setFindValue("findID");
+                      setFindID("");
                     }}
                   >
                     아이디 찾기
                   </TextSpan>
                 </LeftTextDiv>
+
                 <TextDiv>
                   <TextSpan
                     onClick={(e) => {
@@ -228,47 +285,51 @@ function LoginPage() {
                 </TextDiv>
               </StyledPage>
               <div>
+                {/*아이디 찾기 모달*/}
                 {findValue == "findID" && (
-                  <form onSubmit={findSubmit}>
+                  <>
                     <InputWithLabel
-                      label="Name"
-                      name="name"
+                      name="findId_name"
                       placeholder="Name"
-                      onChange={onChange}
+                      onChange={onChangeFindID}
                     />
                     <InputWithLabel
-                      label="email"
-                      name="email"
+                      name="findId_email"
                       placeholder="email"
                       type="email"
-                      onChange={onChange}
+                      onChange={onChangeFindID}
                     />
-                    <InputWithLabel
-                      label="date"
-                      name="date"
-                      type="date"
-                      onChange={onChange}
-                    />
-                    <p>(dustnzlzl@naver.com) 에 해당하는 아이디는 없습니다.</p>
-                    <ButtonPurple type="submit">찾기</ButtonPurple>
-                    </form>
+                    {clickFindID && <p>아이디{clickFindID}</p>}
+                    <ButtonPurple onClick={clickFindId}>찾기</ButtonPurple>
+                  </>
                 )}
+                {/*비밀번호 찾기 모달*/}
                 {findValue == "findPW" && (
                   <>
                     <InputWithLabel
-                      label="Id"
-                      name="id"
+                      name="findPw_Id"
                       placeholder="ID"
-                      // value={signupInfo.id}
-                      onChange={onChange}
+                      onChange={onChangeFindPW}
                     />
-                    <ButtonPurple>보내기</ButtonPurple>
-                    <p>
-                      가입하신 이메일(xxx@naver.com)으로
-                      <br />
-                      임시비밀번호를 보내드렸습니다
-                    </p>
-                    <ButtonBlue>닫기</ButtonBlue>
+                    <InputWithLabel
+                      name="findPw_name"
+                      placeholder="Name"
+                      onChange={onChangeFindPW}
+                    />
+                    <InputWithPhone
+                      name="phoneNumber"
+                      placeholder="폰 번호"
+                      phonNumber={phoneNumber}
+                      onChange={onChangePhonNumber}
+                      isCertifiedSuccess={setIsPhoneNumber}
+                    />
+
+                    {isPhoneNumber && (
+                      <p>
+                        새 비밀번호찾기 모달 나오기
+                      </p>
+                    )}
+                    <ButtonBlue onClick={clickFindPw}>찾기</ButtonBlue>
                   </>
                 )}
               </div>
@@ -291,7 +352,7 @@ const StyledPage = styled.div`
 const StyledContent = styled.div`
   max-width: 500px;
   min-width: 500px;
-  height: 400px;
+  height: 450px;
   padding: 3rem;
   text-align: center;
   border-radius: 1rem;
@@ -309,8 +370,8 @@ const HeaderDiv = styled.div`
   font-size: large; //텍스트 크기
   font-weight: bold; //텍스트 굵기
   text-align: center; //텍스트 정렬 방향
-  height: 150px; //높이
-  line-height: 150px; //줄간격
+  height: 130px; //높이
+  line-height: 130px; //줄간격
 `;
 
 const DialogButton = styled.button`
@@ -350,9 +411,9 @@ const TextDiv = styled.div`
 const TextSpan = styled.span`
   font-size: 1.2em;
   cursor: pointer;
-  background: linear-gradient(135deg, #9dceff 0%, #92a3fd 100%);
-  color: transparent;
+  background: ${palette.main_grBlue};
   -webkit-background-clip: text;
+  color: transparent;
 `;
 
 export default LoginPage;

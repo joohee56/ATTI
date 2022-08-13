@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -196,6 +197,7 @@ public class AuthController {
 
 	
 	// 휴대폰 인증
+	@CrossOrigin("*")
 	@PostMapping("/phone")
 	private ResponseEntity<?> authPhone(@RequestBody AuthPhoneReq phoneNumberInfo) {
 		String phoneNumber = phoneNumberInfo.getPhoneNumber();
@@ -212,7 +214,7 @@ public class AuthController {
 			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "이미 가입된 아이디가 있습니다. 아이디를 찾고 싶으시면 아이디 찾기를 진행해 주세요."));
 		}
 			
-		String fromNumber = "";
+		String fromNumber = "01059368015";
 		String verifyCode = makeVerifyCode();  // 인증 키 생성
 		
 		if(fromNumber.equals(""))
@@ -221,8 +223,8 @@ public class AuthController {
 		// 문자 보냄
 		userService.sendSMS(phoneNumber, fromNumber, verifyCode);
 		
-//		//code session 에 저장
-//		session.setAttribute("code", verifyCode);
+//			//code session 에 저장
+//			session.setAttribute("code", verifyCode);
 		
 		// redis 에 code 저장
 		userService.setRedisStringValue("code", verifyCode);
@@ -234,7 +236,7 @@ public class AuthController {
 	// 사용자가 인증번호 전송
 	@GetMapping("/phone/authCode")
 	private ResponseEntity<?> authPhoneCode(@RequestParam("code") String code) {
-//		String correctCode = (String)session.getAttribute("code");
+//			String correctCode = (String)session.getAttribute("code");
 		
 		// redis 에 저장되어 있는 코드 가져옴
 		String correctCode = userService.getRedisStringValue("code");
@@ -245,6 +247,9 @@ public class AuthController {
 			
 			// redis 에 저장되어 있는 코드 삭제해야 함
 			
+
+//				session.removeAttribute("code");
+
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "인증되었습니다."));
 		} else {
 			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증번호가 다릅니다."));
