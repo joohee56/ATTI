@@ -30,13 +30,16 @@ function Modal({onClickToggleModal,children,...rest}: PropsWithChildren<ModalDef
 }
 
 const ModalContainer = styled.div`
-  width: 100%;
+width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: fixed;
-`;
+  left: 0;
+  top: 50px;
+  z-index: 1;
+  `
 
 const DialogBox = styled.dialog<ModalStyle>`
   display: flex;
