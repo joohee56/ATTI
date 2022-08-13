@@ -41,29 +41,69 @@ const AdminPageAttendCalendar = ({ handlerModal, handlerPickDay }) => {
                 .week(week)
                 .startOf("week")
                 .add(index, "day"); //d로해도되지만 직관성
-
-              if (days.format("MM") !== today.format("MM")) {
-                return (
-                  <td key={index} style={{ backgroundColor: "gray" }}>
-                    <span>{days.format("D")}</span>
-                  </td>
-                );
+              // console.log(days);
+              if (days.format("MM") < moment().format("MM")) {
+                if (days.format("MM") !== today.format("MM")) {
+                  return (
+                    <td key={index} style={{ backgroundColor: "gray" }}>
+                      <span>{days.format("D")}</span>
+                    </td>
+                  );
+                } else {
+                  return (
+                    <td key={index}>
+                      <span>{days.format("D")}</span>
+                      <button
+                        onClick={() => {
+                          handlerPickDay(days.format());
+                          handlerModal();
+                        }}
+                      >
+                        출석변경
+                      </button>
+                    </td>
+                  );
+                }
+              } else if (days.format("MM") > moment().format("MM")) {
+                if (days.format("MM") !== today.format("MM")) {
+                  return (
+                    <td key={index} style={{ backgroundColor: "gray" }}>
+                      <span>{days.format("D")}</span>
+                    </td>
+                  );
+                } else {
+                  return (
+                    <td key={index}>
+                      <span>{days.format("D")}</span>
+                    </td>
+                  );
+                }
               } else {
-                return (
-                  <td
-                    key={index}
-                    onClick={() => {
-                      console.log(days.format());
-                      handlerPickDay(days.format());
-                      handlerModal();
-                    }}
-                  >
-                    <span>{days.format("D")}</span>
-                    {Number(days.format("D")) <= Number(today.format("D")) && (
-                      <button>안녕하세요</button>
-                    )}
-                  </td>
-                );
+                if (days.format("MM") !== today.format("MM")) {
+                  return (
+                    <td key={index} style={{ backgroundColor: "gray" }}>
+                      <span>{days.format("D")}</span>
+                    </td>
+                  );
+                } else {
+                  return (
+                    <td key={index}>
+                      <span>{days.format("D")}</span>
+                      {Number(days.format("D")) <=
+                        Number(today.format("D")) && (
+                        <button
+                          onClick={() => {
+                            console.log(days.format());
+                            handlerPickDay(days.format());
+                            handlerModal();
+                          }}
+                        >
+                          출석변경
+                        </button>
+                      )}
+                    </td>
+                  );
+                }
               }
             })}
         </CalTableTR>

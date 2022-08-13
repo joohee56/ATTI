@@ -10,6 +10,9 @@ interface adminPageWrapperProps {
 const AdminTabWrapper = styled.div`
   margin-top: 5%;
   margin-left: 5%;
+  margin-bottom: 3%;
+  display: flex;
+  height: 50px;
 `;
 
 const AdminPageTabWrapper = ({
@@ -17,11 +20,16 @@ const AdminPageTabWrapper = ({
   select,
 }: adminPageWrapperProps) => {
   const tab = ["시간표", "멤버 관리", "출결 확인", "초대코드"];
-
+  console.log(select);
   return (
     <AdminTabWrapper>
       {tab.map((e) => (
-        <AdminPageTab handlerSelectTab={handlerSelect} name={e} key={e}>
+        <AdminPageTab
+          handlerSelectTab={handlerSelect}
+          name={e}
+          key={e}
+          select={select}
+        >
           {e}
         </AdminPageTab>
       ))}

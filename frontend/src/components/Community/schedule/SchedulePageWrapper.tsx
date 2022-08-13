@@ -3,6 +3,7 @@ import moment from "moment";
 import styled from "styled-components";
 import Modal from "../../Modal";
 import InputSchedule from "./InputSchedule";
+import { AddClassButton, ExistenceClass, LeftBar } from "./SchedulePageStyle";
 
 export interface weekClassSchedule {
   cousrseId: string | null;
@@ -211,7 +212,7 @@ const SchedulePageWrapper = () => {
         <div>왼쪽 공간</div>
         <div>
           {Object.keys(time).map((e: any, i) => (
-            <div key={i}>{time[e]}</div>
+            <LeftBar key={i}>{time[e]}</LeftBar>
           ))}
         </div>
       </LeftWrapper>
@@ -229,21 +230,24 @@ const SchedulePageWrapper = () => {
                   {weekClassState[e].map((el: any, index: number) => (
                     <div key={index}>
                       {el.courseName !== "" ? (
-                        <div>
+                        <ExistenceClass
+                          extendsHeight={
+                            Number(el.courseEndTime.substring(0, 2)) -
+                            Number(el.courseStartTime.substring(0, 2))
+                          }
+                        >
                           <div>{el.courseName}</div>
                           <div>{el.courseProf}</div>
                           <div>시작시간 : {el.courseStartTime}</div>
                           <div>끝나는 시간 : {el.courseEndTime}</div>
-                        </div>
+                        </ExistenceClass>
                       ) : (
                         <div>
-                          <button
+                          <AddClassButton
                             onClick={onClickAddSchedule}
                             id={i.toString()}
                             value={index}
-                          >
-                            시간표 추가하기
-                          </button>
+                          ></AddClassButton>
                         </div>
                       )}
                     </div>

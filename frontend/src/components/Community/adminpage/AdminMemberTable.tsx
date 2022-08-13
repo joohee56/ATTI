@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { memberInterface } from "./AdminMember";
 
 const Table = styled.table`
-  margin-top: 10%;
+  margin-top: 5%;
   width: 100%;
   height: 100%;
 `;
