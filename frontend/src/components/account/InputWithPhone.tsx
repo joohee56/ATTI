@@ -3,6 +3,7 @@ import FormControl from "@mui/material/FormControl";
 import { ButtonPurple } from "../ButtonStyled";
 import { FormHelperText, InputAdornment, OutlinedInput } from "@mui/material";
 import { api } from "../../utils/api";
+import { palette } from "../../styles/palette";
 
 interface inputInfo {
   name: string;
@@ -104,7 +105,7 @@ export default function InputWithPhone({
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: "54%" }}>
+      <FormControl sx={{width: "100%", my:1}}>
         <OutlinedInput
           type="text"
           endAdornment={
@@ -116,6 +117,7 @@ export default function InputWithPhone({
           placeholder={placeholder}
           value={phonNumber}
           {...rest}
+          sx={{bgcolor:`${palette.gray_1}`}}
         />
         {!phoneNumberMessage && (
           <FormHelperText error>번호를 다시 확인해 주세요</FormHelperText>
@@ -123,7 +125,7 @@ export default function InputWithPhone({
       </FormControl>
       {isPhoneNumber && (
         <div>
-          <FormControl sx={{ width: "54%", mb: 1 }}>
+          <FormControl sx={{ width: "100%", mb: 1 }}>
             <OutlinedInput
               type="text"
               endAdornment={
@@ -138,6 +140,7 @@ export default function InputWithPhone({
               placeholder="인증번호"
               value={isCode}
               onChange={onChangeCode}
+              sx={{bgcolor:`${palette.gray_1}`}}
             />
             {isSuccess && <FormHelperText>{isSuccessMessage}</FormHelperText>}
           </FormControl>

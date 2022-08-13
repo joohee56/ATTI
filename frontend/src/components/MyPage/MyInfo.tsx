@@ -2,7 +2,10 @@ import { Avatar, TextField } from "@mui/material";
 import { useCallback, useState } from "react";
 import styled from "styled-components";
 import { palette } from "../../styles/palette";
-import { ButtonPurple } from "../ButtonStyled";
+import InputPassword from "../account/InputPassword";
+import InputWithPhone from "../account/InputWithPhone";
+import { ButtonBlue, ButtonPurple } from "../ButtonStyled";
+import InputWithLabel from "../InputWithLabel";
 import Modal from "../Modal";
 
 function MyPage() {
@@ -14,148 +17,157 @@ function MyPage() {
     setIsEdit(false);
   };
 
-  return (
-    <Main>
-      {!isEdit ? (
-        <>
-          <Avatar
-            sx={{
-              width: 100,
-              height: 100,
-              bgcolor: palette.gray_2,
-              marginBottom: 2,
-            }}
-          >
-            PP
-          </Avatar>
-          <InfoDiv>
-            <SpanStyle>Name</SpanStyle>
-            <TextField disabled value={"전역에서 이름 가져오기"} />
-          </InfoDiv>
-          <InfoDiv>
-            <SpanStyle>ID</SpanStyle>
-            <TextField disabled value={"전역에서 ID 가져오기"} />
-          </InfoDiv>
-          <InfoDiv>
-            <SpanStyle>Email</SpanStyle>
-            <TextField disabled value={"전역에서 Email 가져오기"} />
-          </InfoDiv>
-          <InfoDiv>
-            <SpanStyle>Channel</SpanStyle>
-            <TextField disabled value={"전역에서 Channel 가져오기"} />
-          </InfoDiv>
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
 
-          <div>
-            <MemberWithdrawal onClick={() => setOpenModal(true)}>
+  const onChangePhonNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setPhoneNumber(
+      value
+        .replace(/[^0-9]/g, "")
+        .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
+        .replace(/(\-{1,2})$/g, "")
+    );
+  };
+  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
+
+  return (
+    <>
+      <Main>
+        {!isEdit ? (
+          <>
+            <Avatar
+              sx={{
+                width: 100,
+                height: 100,
+                bgcolor: palette.gray_2,
+                marginBottom: 2,
+              }}
+            >
+              PP
+            </Avatar>
+            <Grid>
+              <SpanStyle>Name</SpanStyle>
+              <InputWithLabel disabled name={""} placeholder={""} />
+
+              <SpanStyle>ID</SpanStyle>
+              <InputWithLabel disabled name={""} placeholder={""} />
+
+              <SpanStyle>Email</SpanStyle>
+              <InputWithLabel disabled name={""} placeholder={""} />
+
+              <SpanStyle>Channel</SpanStyle>
+              <InputWithLabel disabled name={""} placeholder={""} />
+            </Grid>
+            <UserEdit onClick={() => setIsEdit(true)}>회원정보수정</UserEdit>
+            {isOpenModal && (
+              <Modal onClickToggleModal={() => setOpenModal(false)}>
+                <p>정말로 탈퇴하시곘습니까?</p>
+                <p>
+                  탈퇴시 관련 데이터들이 삭제 됩니다.
+                  <br />
+                  재가입시 데이터를 복구 할 수 없습니다.
+                </p>
+                <div>
+                  <button>아니오</button>
+                  <MemberWithdrawal>탈퇴</MemberWithdrawal>
+                </div>
+              </Modal>
+            )}
+             <MemberWithdrawal onClick={() => setOpenModal(true)}>
               회원탈퇴
             </MemberWithdrawal>
-            <MemberEdit onClick={() => setIsEdit(true)}>
-              회원정보수정
-            </MemberEdit>
-          </div>
-          {isOpenModal && (
-            <Modal onClickToggleModal={() => setOpenModal(false)}>
-              <p>정말로 탈퇴하시곘습니까?</p>
-              <p>
-                탈퇴시 관련 데이터들이 삭제 됩니다.
-                <br />
-                재가입시 데이터를 복구 할 수 없습니다.
-              </p>
-              <div>
-                <button>아니오</button>
-                <MemberWithdrawal>탈퇴</MemberWithdrawal>
-              </div>
-            </Modal>
-          )}
-        </>
-      ) : (
-        <>
-          <Avatar
-            sx={{
-              width: 100,
-              height: 100,
-              bgcolor: palette.gray_2,
-              marginBottom: 2,
-            }}
-          >
-            수정
-          </Avatar>
-          <StyledPage>
-            <StyledContent>
-              <InfoDiv>
-                <SpanStyle>Name</SpanStyle>
-                <TextField value={"이름"} />
-              </InfoDiv>
-              <InfoDiv>
-                <SpanStyle>ID</SpanStyle>
-                <TextField value={"ID"} />
-              </InfoDiv>
-              <InfoDiv>
-                <SpanStyle>password</SpanStyle>
-                <TextField value={"password"} />
-              </InfoDiv>
-              <InfoDiv>
-                <SpanStyle>password 확인</SpanStyle>
-                <TextField  value={"password 확인"} />
-              </InfoDiv>
-            </StyledContent>
-            <StyledContent>
-              <InfoDiv>
-                <SpanStyle>Email</SpanStyle>
-                <TextField  value={"Email"} />
-              </InfoDiv>
-              <InfoDiv>
-                <SpanStyle>Phone</SpanStyle>
-                <TextField  value={"Phone"} />
-              </InfoDiv>
-              <InfoDiv>
-                <SpanStyle></SpanStyle>
-                <TextField  value={"전역에서 Email 가져오기"} />
-              </InfoDiv>
-              <InfoDiv>
-                <SpanStyle>Channel</SpanStyle>
-                <TextField  value={"Channel"} />
-              </InfoDiv>
-            </StyledContent>
-          </StyledPage>
-          <MemberEdit onClick={InfoSubmit}>저장하기</MemberEdit>
-        </>
-      )}
-    </Main>
+          </>
+        ) : (
+          <>
+            <Avatar
+              sx={{
+                width: 100,
+                height: 100,
+                bgcolor: palette.gray_2,
+                marginBottom: 2,
+              }}
+            >
+              수정
+            </Avatar>
+            <StyledPage>
+              <StyledContent>
+                <Grid>
+                  <SpanStyle>Name</SpanStyle>
+                  <InputWithLabel name={""} placeholder={""} value={"이름"} />
+
+                  <SpanStyle>ID</SpanStyle>
+                  <InputWithLabel disabled name={""} placeholder={""} />
+                  <SpanStyle>Password</SpanStyle>
+                  <InputPassword
+                    name="password"
+                    placeholder="비밀번호"
+                    value={"비밀번호"}
+                    // onChange={onChangePassword}
+                  />
+
+                  <SpanStyle>Email</SpanStyle>
+                  <InputWithLabel
+                    name="password확인"
+                    placeholder="비밀번호 확인"
+                    type="password"
+                    value={""}
+                  />
+                </Grid>
+              </StyledContent>
+              <StyledContent>
+                <Grid>
+                  <SpanStyle>Email</SpanStyle>
+                  <InputWithLabel name={""} placeholder={""} value={"Email"} />
+
+                  <SpanStyle>Phone</SpanStyle>
+                  <InputWithPhone
+                    name="phoneNumber"
+                    placeholder="폰 번호"
+                    phonNumber={phoneNumber}
+                    onChange={onChangePhonNumber}
+                    isCertifiedSuccess={setIsPhoneNumber}
+                  />
+
+                  <SpanStyle>Channel</SpanStyle>
+                  <InputWithLabel name={""} placeholder={""} />
+                </Grid>
+              </StyledContent>
+            </StyledPage>
+            <UserEdit onClick={InfoSubmit}>저장하기</UserEdit>
+          </>
+        )}
+      </Main>
+    </>
   );
 }
 
 const Main = styled.main`
-  display: grid;
-  flex-direction: row;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  justify-items: center;
   align-items: center;
-  height: 100%;
-  width: 100%;
+  min-height: 70vh;
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 100px 300px;
+  grid-auto-rows: minmax(1fr, auto);
+  row-gap: 20px;
+  column-gap: 50px;
+  align-items: stretch;
 `;
 
 const SpanStyle = styled.span`
-  padding: 12px 12px;
-  width: 60px;
+  padding: 12px 0px;
+  width: 100%;
   border-radius: 8px;
   font-weight: bold;
-  background: ${palette.main_grBlue};
-  color: white;
+  background: ${palette.blue_1};
+  color: black;
   border: 0px solid;
   font-size: 1rem;
   text-align: center;
-`;
-
-const InfoDiv = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  flex-direction: row;
-  justify-items: center;
-  justify-content: center;
-  justify-items: center;
-  align-items: center;
-  margin: 15px 0px;
 `;
 
 const MemberWithdrawal = styled.button`
@@ -164,11 +176,9 @@ const MemberWithdrawal = styled.button`
   font-size: 0.8rem;
   border-radius: 1rem;
   border: 0px solid;
-  padding: 0.8rem 1.2rem;
+  padding: 0.5rem 1.2rem;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 40px;
-  margin-right: 20px;
   &:active,
   &:hover {
     filter: brightness(90%);
@@ -176,9 +186,10 @@ const MemberWithdrawal = styled.button`
   }
 `;
 
-const MemberEdit = styled(ButtonPurple)`
+const UserEdit = styled(ButtonBlue)`
   font-size: 0.8rem;
   padding: 0.8rem 1.2rem;
+  margin-top: 20px;
 `;
 
 const StyledPage = styled.div`

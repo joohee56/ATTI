@@ -5,6 +5,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { palette } from "../../styles/palette";
 
 interface State {
   showPassword: boolean;
@@ -37,7 +38,7 @@ export default function InputPassword({ placeholder, ...rest }: inputInfo) {
 
   return (
     <div>
-     <FormControl sx={{ m: 1, width: "54%" }}>
+     <FormControl sx={{width: "100%" }}>
         <OutlinedInput
           type={values.showPassword ? "text" : "password"}
           endAdornment={
@@ -54,6 +55,7 @@ export default function InputPassword({ placeholder, ...rest }: inputInfo) {
           size="small"
           placeholder={placeholder}
           {...rest}
+          sx={{bgcolor:`${palette.gray_1}`}}
         />
       </FormControl>
     </div>
