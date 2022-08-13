@@ -5,15 +5,20 @@ import Modal from "../../Modal";
 import InputSchedule from "./InputSchedule";
 import {
   AddClassButton,
+  ConnectButton,
+  DeleteButton,
   ExistenceClass,
   LeftBar,
   ScheduleLi,
   ScheduleUl,
   TempDiv,
+  TextWrapper,
 } from "./SchedulePageStyle";
-
+import { Navigate, useNavigate } from "react-router-dom";
+import ClearIcon from "@mui/icons-material/Clear";
+import { palette } from "../../../styles/palette";
 export interface weekClassSchedule {
-  cousrseId: string | null;
+  courseId: string | null;
   courseName: string;
   courseProf: string;
   userId: string;
@@ -25,7 +30,7 @@ export interface weekClassSchedule {
 
 const dummyClass = [
   {
-    cousrseId: "1",
+    courseId: "1",
     courseName: "테스트",
     courseProf: "이현태",
     userId: "박범수",
@@ -34,7 +39,7 @@ const dummyClass = [
     courseDate: "2022-08-12",
   },
   {
-    cousrseId: "2",
+    courseId: "2",
     courseName: "리액트",
     courseProf: "이주희",
     userId: "박범수",
@@ -43,7 +48,7 @@ const dummyClass = [
     courseDate: "2022-08-11",
   },
   {
-    cousrseId: "3",
+    courseId: "3",
     courseName: "뷰",
     courseProf: "김연수",
     userId: "박범수",
@@ -91,7 +96,7 @@ const SchedulePageWrapper = () => {
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [selectDeleteSchedule, setSeleteDeleteSchedule] = useState<any>();
   const [insertSchedule, setInsertSchedule] = useState<weekClassSchedule>({
-    cousrseId: "",
+    courseId: "",
     courseName: "",
     courseProf: "",
     userId: "",
@@ -105,7 +110,7 @@ const SchedulePageWrapper = () => {
 
   const [weekClassState, setWeekClassState] = useState<any>([
     {
-      cousrseId: "",
+      courseId: "",
       courseName: "",
       courseProf: "",
       userId: "",
@@ -115,7 +120,11 @@ const SchedulePageWrapper = () => {
       weekName: undefined,
     },
   ]);
+  const navigate = useNavigate();
 
+  function connectMeeting(e: any) {
+    navigate("/classmeeting?courseId=" + e.target.value);
+  }
   const time = [
     "09:00",
     "10:00",
@@ -156,7 +165,7 @@ const SchedulePageWrapper = () => {
   const deleteSchedule = (element: weekClassSchedule) => {
     let tempWeek = week;
     let weekClass = tempWeek.filter((e: weekClassSchedule) => {
-      return e.cousrseId === element.cousrseId;
+      return e.courseId === element.courseId;
     });
     let weekSchedule = weekClassState;
     for (let i = 0; i < monToFri.length; i++) {
@@ -166,7 +175,7 @@ const SchedulePageWrapper = () => {
             if (time[k] === weekClass[j].courseStartTime) {
               weekSchedule[i][k] = {
                 ...weekSchedule[i][k],
-                cousrseId: "",
+                courseId: "",
                 courseName: "",
                 courseProf: "",
                 userId: "",
@@ -179,7 +188,7 @@ const SchedulePageWrapper = () => {
       }
     }
     let result = tempWeek.filter((e) => {
-      return e.cousrseId !== element.cousrseId;
+      return e.courseId !== element.courseId;
     });
     setWeek(result);
     console.log(weekSchedule);
@@ -190,7 +199,7 @@ const SchedulePageWrapper = () => {
   const today = getMoment;
 
   let daySchedule: any = new Array(10).fill({
-    cousrseId: "",
+    courseId: "",
     courseName: "",
     courseProf: "",
     userId: "",
@@ -241,6 +250,63 @@ const SchedulePageWrapper = () => {
       weekString: monToFri[e.target.id],
     });
     setIsOpenModal(true);
+  }
+  function calcColor(index: number) {
+    const result = index % 5;
+    console.log(result, index);
+    if (result === 0) {
+      return palette.pink_1;
+    } else if (result === 1) {
+      return palette.blue_1;
+    } else if (result === 2) {
+      return palette.green_1;
+    } else if (result === 3) {
+      return palette.purple_1;
+    } else if (result === 4) {
+      return palette.yellow_1;
+    }
+  }
+  function calcColor2(index: number) {
+    const result = index % 5;
+    if (result === 0) {
+      return palette.pink_2;
+    } else if (result === 1) {
+      return palette.blue_2;
+    } else if (result === 2) {
+      return palette.green_2;
+    } else if (result === 3) {
+      return palette.purlue_2;
+    } else if (result === 4) {
+      return palette.yellow_2;
+    }
+  }
+  function calcColor3(index: number) {
+    const result = index % 5;
+    if (result === 0) {
+      return palette.pink_3;
+    } else if (result === 1) {
+      return palette.blue_3;
+    } else if (result === 2) {
+      return palette.green_3;
+    } else if (result === 3) {
+      return palette.purlue_3;
+    } else if (result === 4) {
+      return palette.yellow_3;
+    }
+  }
+  function calcColor4(index: number) {
+    const result = index % 5;
+    if (result === 0) {
+      return palette.pink_4;
+    } else if (result === 1) {
+      return palette.blue_4;
+    } else if (result === 2) {
+      return palette.green_4;
+    } else if (result === 3) {
+      return palette.purlue_4;
+    } else if (result === 4) {
+      return palette.yellow_4;
+    }
   }
   return (
     <SchedulePage>
@@ -316,19 +382,30 @@ const SchedulePageWrapper = () => {
                               Number(el.courseEndTime.substring(0, 2)) -
                               Number(el.courseStartTime.substring(0, 2))
                             }
+                            calcColor={calcColor(index)}
                           >
-                            <div>{el.courseName}</div>
-                            <div>{el.courseProf}</div>
-                            <div>시작시간 : {el.courseStartTime}</div>
-                            <div>끝나는 시간 : {el.courseEndTime}</div>
-                            <button
+                            <TextWrapper calcColor={calcColor4(index)}>
+                              <div>{el.courseName}</div>
+                              <div>{el.courseProf}</div>
+                              <div>
+                                {el.courseStartTime} ~ {el.courseEndTime}
+                              </div>
+                            </TextWrapper>
+                            <DeleteButton
                               onClick={() => {
                                 setSeleteDeleteSchedule(el);
                                 setIsOpenDeleteModal(true);
                               }}
                             >
-                              삭제하기
-                            </button>
+                              <ClearIcon />
+                            </DeleteButton>
+                            <ConnectButton
+                              onClick={connectMeeting}
+                              value={el.courseId}
+                              calcColor={calcColor3(index)}
+                            >
+                              접속하기
+                            </ConnectButton>
                           </ExistenceClass>
                         </>
                       ) : (

@@ -64,7 +64,7 @@ const InputSchedule = ({
       cousrseProfRef.current
     ) {
       const content: weekClassSchedule = {
-        cousrseId: null,
+        courseId: null,
         courseName: cousrseNameRef.current.value,
         courseStartTime: startEndTime.startTime,
         courseEndTime: startEndTime.endTime,
@@ -82,9 +82,14 @@ const InputSchedule = ({
           const weekEndTime = Number(week[i].courseEndTime.slice(0, 2));
           const contentEndTime = Number(content.courseEndTime.slice(0, 2));
           for (let j = weekStartTime; j < weekEndTime; j++) {
-            if (contentStartTime === j || contentEndTime === j) {
-              flag = true;
-              setCheckClass(true);
+            for (let k = contentStartTime; k < contentEndTime; k++) {
+              if (k === j || k === j) {
+                flag = true;
+                setCheckClass(true);
+                break;
+              }
+            }
+            if (flag) {
               break;
             }
           }
@@ -100,7 +105,7 @@ const InputSchedule = ({
       }
     }
   };
-
+  
   const monToFri = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
   return (
     <div>
