@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,10 +81,10 @@ public class UserController {
 	// 아이디 찾기
 	@PostMapping("/findId")
 	public ResponseEntity<FindIdRes> findId(@RequestBody UserFindIdReq findIdInfo) {
-		List<User> userList = userService.findId(findIdInfo);
-		if(userList.isEmpty())
+		User user = userService.findId(findIdInfo);
+		
+		if(user==null)
 			return ResponseEntity.status(404).body(FindIdRes.of(404, "일치하는 회원이 없습니다.", null));
-		User user = userList.get(0);
 		
 		return ResponseEntity.ok(FindIdRes.of(200, "Success", user.getUserId()));
 	}
@@ -91,27 +92,58 @@ public class UserController {
 	// 회원정보 수정
 	@PutMapping("/updateUser")
 	public ResponseEntity<?> updateUser(@RequestBody UserUpdateReq userUpdateInfo) {
-		System.out.println("UpdateUser 호출");
-		
-		int resultCount = userService.updateUser(userUpdateInfo);
-		System.out.println("resultCount : " + resultCount);
-		
-		if(resultCount==1)
+		userService.updateUser(userUpdateInfo);
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "회원 정보가 정상적으로 수정되었습니다. "));
-		else
-			return ResponseEntity.status(500).body(BaseResponseBody.of(500, "회원 정보 수정 중 문제가 발생했습니다." ));
 	}
 	
-	// 비밀번호 찾기
-//	@PostMapping("/findPassword")
-//	public ResponseEntity<?> findPassword(@RequestBody Map<String, String> findPasswordInfo) {
-//		// 가입한 아이디인지 검사
-//		User findUser = userService.getUserByUserId(findPasswordInfo.get("userId"));
-//		if(findUser == null)
-//			return ResponseEntity.status(404).body(FindIdRes.of(404, "일치하는 회원이 없습니다.", null));
-//		
-////		return "userId: " + findPasswordInfo.get("userId") + ", userName: " + findPasswordInfo.get("userName") + ", phoneNumber : " + findPasswordInfo.get("phoneNumber");
-//	}
+	// 비밀번호 찾기 요청
+	@PostMapping("/findPassword")
+	public ResponseEntity<?> findPassword(@RequestBody Map<String, String> findPasswordInfo) {
+		// 가입한 아이디인지 검사
+		User findUser = userService.findByUserId(findPasswordInfo.get("userId"));
+		
+		if(findUser == null)
+			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "가입된 아이디가 없습니다."));
+		
+		if(!findUser.getUserName().equals(findPasswordInfo.get("userName")))
+			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "일치하는 회원이 없습니다."));
+		
+		if(!findUser.getPhone().equals(findPasswordInfo.get("phoneNumber")))
+			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "일치하는 회원이 없습니다."));
+		
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "비밀번호 변경 모달로 넘어갑니다."));
+	}
+	
+	// 비밀번호 찾기 후 변경 요청
+	@PutMapping("/updatePassword")
+	public ResponseEntity<?> updatePassword(@RequestBody Map<String, String> updatePWInfo){
+		// 아이디 입력했는지 검사
+		if(updatePWInfo.get("userId") == null) return ResponseEntity.status(404).body(BaseResponseBody.of(404, "아이디를 입력해 주세요."));
+		// 비밀번호 입력했는지 검사
+		if(updatePWInfo.get("password") == null) return ResponseEntity.status(404).body(BaseResponseBody.of(404, "비밀번호를 입력해 주세요."));
+		
+		// 가입한 아이디인지 검사
+		User findUser = userService.findByUserId(updatePWInfo.get("userId"));
+		
+		if(findUser == null)
+			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "가입된 아이디가 없습니다."));
+		
+		// 비밀번호 업데이트
+		userService.updatePW(findUser, updatePWInfo.get("password"));
+		
+		return ResponseEntity.status(404).body(BaseResponseBody.of(200, "비밀번호가 변경되었습니다."));
+	}
+	
+	// 회원 탈퇴
+	@PutMapping("/delete/{userId}")
+	public ResponseEntity<?> deleteUser(@PathVariable("userId") String userId){
+		userService.deleteUser(userId);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "탈퇴되었습니다."));
+	}
+	
+	// 프로필 이미지 변경
+	
+	
 }
 
 

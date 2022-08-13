@@ -60,18 +60,5 @@ public class Message {
 	private User fuser;						// 보낸 사람 ID (FK)
 	
 	//////////////////////////////////////////////////////
-	
-//	@OneToMany(mappedBy = "usermessage")
-//    private List<Message> messages = new ArrayList<>();
-	
-	public void setTuser(User user) {
-		this.tuser = user;
-		user.getTousers().add(this);
-	}
-
-	public void setFuser(User user) {
-		this.fuser = user;
-		user.getFromusers().add(this);
-	}
 
 }

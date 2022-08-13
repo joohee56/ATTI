@@ -10,6 +10,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -28,6 +29,10 @@ import com.ssafy.db.entity.webclass.Attendance;
 import com.ssafy.db.entity.webclass.Course;
 
 import lombok.AllArgsConstructor;
+<<<<<<< HEAD
+=======
+import lombok.Builder;
+>>>>>>> c7b30d92f86f08a5a01685c3ee6bb6c111e2c4bf
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +40,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
