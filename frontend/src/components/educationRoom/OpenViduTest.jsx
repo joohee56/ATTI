@@ -979,11 +979,7 @@ const OpenViduTest = () => {
               ) : null}
               <VideoBox id="VideoBox">
                 {state.mainStreamManager !== undefined &&
-                fullScreenLayoutMode &&
-                !openModal &&
-                !onClickToggleModal &&
-                !reqeustPresent &&
-                !receivePresent ? null : (
+                fullScreenLayoutMode ? null : (
                   <SubStream
                     mainStream={
                       state.mainStreamManager !== undefined ? true : false
@@ -1001,10 +997,6 @@ const OpenViduTest = () => {
                     ) : null}
                     {state.subscribers &&
                       !fullScreenLayoutMode &&
-                      !openModal &&
-                      !onClickToggleModal &&
-                      !reqeustPresent &&
-                      !receivePresent &&
                       state.subscribers.map((sub, i) => (
                         <div
                           className="col-md-6"
@@ -1028,11 +1020,7 @@ const OpenViduTest = () => {
                 )}
 
                 <div>
-                  {state.mainStreamManager !== undefined &&
-                  !openModal &&
-                  !onClickToggleModal &&
-                  !reqeustPresent &&
-                  !receivePresent ? (
+                  {state.mainStreamManager !== undefined ? (
                     <div
                       onClick={() => {
                         setState((prev) => ({

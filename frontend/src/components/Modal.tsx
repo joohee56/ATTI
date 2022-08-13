@@ -13,7 +13,11 @@ interface ModalDefaultType extends ModalStyle {
   className?: string;
 }
 
-function Modal({onClickToggleModal,children,...rest}: PropsWithChildren<ModalDefaultType>) {
+function Modal({
+  onClickToggleModal,
+  children,
+  ...rest
+}: PropsWithChildren<ModalDefaultType>) {
   return (
     <ModalContainer>
       <DialogBox {...rest}>{children}</DialogBox>
@@ -36,6 +40,9 @@ const ModalContainer = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
+  left: 0;
+  top: 50px;
+  z-index: 1;
 `;
 
 const DialogBox = styled.dialog<ModalStyle>`
@@ -51,8 +58,8 @@ const DialogBox = styled.dialog<ModalStyle>`
   ${({ width = "800px", height = "400px" }) => css`
     width: ${width};
     height: ${height};
-  `}`;
-
+  `}
+`;
 
 const Backdrop = styled.div`
   width: 100vw;
