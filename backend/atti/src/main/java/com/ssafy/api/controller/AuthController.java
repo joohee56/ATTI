@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -36,13 +37,16 @@ import com.ssafy.api.request.AuthPhoneReq;
 import com.ssafy.api.request.KakaoUser;
 import com.ssafy.api.request.UserFindIdReq;
 import com.ssafy.api.request.UserLoginPostReq;
-import com.ssafy.api.response.UserLoginPostRes;
+import com.ssafy.api.response.UserDepartRes;
+import com.ssafy.api.response.UserLoginRes;
 import com.ssafy.api.service.AuthService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.AuthPhoneUtil;
 import com.ssafy.common.util.JwtTokenUtil;
+import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.user.User;
+import com.ssafy.db.repository.UserRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -60,31 +64,83 @@ public class AuthController {
 	UserService userService;
 	@Autowired
 	AuthService authService;
+	@Autowired
+	UserRepository userRepository;
 	
 	@Autowired
 	PasswordEncoder passwordEncorder;
 	
 	// 일반 로그인
 	@PostMapping("/login/normal")
-	public ResponseEntity<UserLoginPostRes> login(@RequestBody UserLoginPostReq loginInfo){
+	public ResponseEntity<UserLoginRes> login(@RequestBody UserLoginPostReq loginInfo){
 		String userId = loginInfo.getUserId();
 		String password = loginInfo.getPassword();
 		
-		User user = userService.getUserByUserId(userId);
+		User user = userService.findByUserId(userId);
 		// 가입된 아이디를 찾을 수 없음
-		if(user == null) return ResponseEntity.status(404).body(UserLoginPostRes.of(404, "가입된 아이디가 없습니다.", null));
+		if(user == null) 
+			return ResponseEntity.status(404).body(UserLoginRes.failOf(404, "가입된 아이디가 없습니다."));
 		
 		// 로그인 요청한 유저로부터 입력된 패스워드와 디비에 저장된 유저의 암호화된 패스워드가 같은 값인지 확인 (유효한 패스워드인지 여부 확인)
 		if(passwordEncorder.matches(password, user.getPassword())) {
-			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));	//토큰 넘김
+			// 0. 탈퇴한 회원인지 확인
+			if(user.isUserDeleteInfo()==true)
+				return ResponseEntity.status(404).body(UserLoginRes.failOf(404, "탈퇴한 회원입니다."));
+			
+			// 1. 가입한 채널 리스트 가져옴
+			List<UserDepartRes> userDepartList = userService.getDepartList(userId);
+			
+			// 2. 가입한 채널 리스트의 첫 번째 카테고리 리스트를 가져옴
+			List<Integer> userCategoryList;
+			if(userDepartList != null) {
+				userCategoryList = new ArrayList<Integer>();
+				
+				Long departId = userDepartList.get(0).getDepartId();	// 가입한 채널 중 첫 번째 채널의 아이디
+				// departId 에 해당하는 Depart 가져옴
+				// 카테고리 중 Depart 에 해당하는 Category 가져옴
+				
+			} else {
+				userCategoryList = null;
+			}
+			
+			// 3. 첫 번쨰 카테고리에 해당하는 글 목록
+			
+			// 4. 유저 아이디가 가입한 채널의 유저 권한 테이블의 아이디와 매칭되는지를 찾음
+			boolean admin = false;
+			// departID 에 해당하는 depart 가져옴
+			// user 와 depart 를 adminRole 에서 일치하는 adminRole 을 가져옴 
+			// 있다면 관리자, 없다면 일반 학생
+			
+			// 5. 유저 이름 가져옴
+			String userName = user.getUserName();
+			
+			return ResponseEntity.ok(UserLoginRes.of(200, "Success", JwtTokenUtil.getToken(userId), userDepartList, userCategoryList, admin, userName));	//토큰 넘김
 		}
+		
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
+		return ResponseEntity.status(401).body(UserLoginRes.failOf(401, "Invalid Password"));
+	}
+	
+	@GetMapping("/test")
+	public void test(@RequestParam String userId) {
+		System.out.println("===============================");
+		System.out.println("test 실행됨");
+		System.out.println("===============================");
+//		List<UserDepart> departList = userService.getDepartList(userId);
+//		if(!departList.isEmpty()) {
+//			System.out.println("null");
+//			System.out.println("result : " + departList.get(0).getUser().getUserId());
+//		}else {
+//			System.out.println("result : " + null);
+//		}
+		
+//		User user = userRepository.findOne(userId);
+//		System.out.println("result : " + user.getUserId());
 	}
 	
 	// 카카오로그인
 	@GetMapping("/login/kakao")
-    public ResponseEntity<UserLoginPostRes> redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
+    public ResponseEntity<UserLoginRes> redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
         System.out.println("code:: " + code);
 
         // 접속토큰 get
@@ -103,16 +159,16 @@ public class AuthController {
         KakaoUser kakaoUser = new KakaoUser();
 //         일치하는 snsId 없을 시 회원가입
         System.out.println(userService.findKakaoId(snsId));
-        List<User> userList = userService.findKakaoId(snsId);
-        if (userList.isEmpty()) {
-//            log.warn("카카오로 회원가입");
-//        	kakaoUser.setUserId(email);
-        	kakaoUser.setPassword(userpw);
-//        	kakaoUser.setUserName(userName);
-        	kakaoUser.setSnsId(snsId);
-//        	kakaoUser.setEmail(email);
-            userService.signUpKakao(kakaoUser);
-        }
+//        List<User> userList = userService.findKakaoId(snsId);
+//        if (userList.isEmpty()) {
+////            log.warn("카카오로 회원가입");
+////        	kakaoUser.setUserId(email);
+//        	kakaoUser.setPassword(userpw);
+////        	kakaoUser.setUserName(userName);
+//        	kakaoUser.setSnsId(snsId);
+////        	kakaoUser.setEmail(email);
+//            userService.signUpKakao(kakaoUser);
+//        }
 
         // 일치하는 snsId가 있으면 멤버객체에 담음.
 //        log.warn("카카오로 로그인");
@@ -134,7 +190,8 @@ public class AuthController {
         //snsId 에 해당하는 아이디 가져옴
         String userId = snsId;
         
-        return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));	//토큰 넘김
+        return null;
+//        return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));	//토큰 넘김
     }
 
 	

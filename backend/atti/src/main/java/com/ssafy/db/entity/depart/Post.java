@@ -80,33 +80,5 @@ public class Post {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="depart_id")
 	private Depart depart;				// 채널 ID (FK)
-	/////////////////////////////////////////////////////
-	
-	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
-	@JsonIgnore
-    private List<Comment> comments = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Image> images = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<File> files = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "post")
-    private List<UserPostMention> userpostmentions = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "post")
-	private List<UserPostLike> userpostlikes = new ArrayList<>();
-	
-	public void setUser(User user) {
-		this.user = user;
-		user.getPosts().add(this);
-	}
-	
-	public void setCategory(Category category) {
-		this.category = category;
-		category.getPosts().add(this);
-	}
-	
 	
 }
