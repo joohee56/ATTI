@@ -1,5 +1,5 @@
 import { api } from "../utils/api";
-import { useState, useCallback,useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
@@ -12,13 +12,13 @@ import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
 import { KAKAO_AUTH_URL } from "../constant/index";
 import InputWithPhone from "../components/account/InputWithPhone";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginActions, UserLoginState } from "../store/LoginSotre";
 import { useNavigate } from "react-router-dom";
 import { palette } from "../styles/palette";
 import InputPassword from "../components/account/InputPassword";
 import { FormHelperText, Snackbar } from "@mui/material";
-import SnacbarTell from "../components/SnacbarTell"
+import SnacbarTell from "../components/SnacbarTell";
 import { RootState } from "../store";
 
 interface userLoginInfo {
@@ -40,6 +40,12 @@ interface findPwInfo {
 function LoginPage() {
   const navigate = useNavigate();
   const { auth } = useSelector((state: RootState) => state.userInfo);
+
+  useEffect(() => {
+    if (auth) {
+      navigate("/welcome");
+    }
+  }, [auth]);
 
   // 로그인
   const [loginInfo, setLoginInfo] = useState<userLoginInfo>({
@@ -68,11 +74,13 @@ function LoginPage() {
           dispatch(
             loginActions.login({
               id: loginInfo.userId,
+              userName: response.data.userName,
               accessToken: response.data.accessToken,
+              admin: response.data.admin,
+              categoryList: response.data.categoryList,
+              departList: response.data.departList,
             })
           );
-          console.log(response);
-          
         }
       })
       .catch(function (error) {
@@ -81,11 +89,7 @@ function LoginPage() {
       });
   };
 
-  useEffect(() => {
-    if (auth) {
-      navigate("/welcome");
-    }
-  },[auth])
+ 
 
   // 카카오 로그인
   const kakaoLogin = () => {
@@ -119,7 +123,7 @@ function LoginPage() {
         email: findIdInfo.findId_email,
       })
       .then(function (response) {
-        //snacbar확인 
+        //snacbar확인
         setOpen(true);
         setFindID('는 "' + response.data.userId + '" 입니다.');
       })
@@ -385,7 +389,7 @@ function LoginPage() {
                       type="email"
                       onChange={onChangeFindID}
                     />
-                    {clickFindID.length>0 && <p> 아이디{clickFindID}</p>}
+                    {clickFindID.length > 0 && <p> 아이디{clickFindID}</p>}
                     <ButtonPurple onClick={clickFindId}>찾기</ButtonPurple>
                   </>
                 )}
