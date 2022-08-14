@@ -27,13 +27,13 @@ import lombok.*;
 @Setter
 public class PostUpdateReq {
 
-    private Long postId;
+//    private Long postId;
 
     private String postTitle;
 
     private String postContent;
 
-    private LocalDateTime postRegDate;
+//    private LocalDateTime postRegDate;
 
     private LocalDateTime postUpdDate;
 
