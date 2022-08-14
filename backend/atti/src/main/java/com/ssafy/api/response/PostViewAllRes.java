@@ -4,10 +4,16 @@ import java.time.LocalDateTime;
 
 import com.ssafy.db.entity.depart.Post;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class PostViewAllRes {
+	
+	private Long postId;
 	
 	private String postTitle;
 	
@@ -15,12 +21,20 @@ public class PostViewAllRes {
 	
 	private LocalDateTime postRegDate;
 	
-	private String userId;
+	private String userId = "익명";
+	
+	// 수정 - 주희
+	private long likeCount;
+	private long commentCount;
+	private boolean myLike; 
 	
 	public PostViewAllRes(Post post) {
+		this.postId = post.getPostId();
 		this.postTitle = post.getPostTitle();
 		this.postContent = post.getPostContent();
 		this.postRegDate = post.getPostRegDate();
-		this.userId = post.getUser().getUserId();
+		if(post.getUser() != null) {
+			this.userId = post.getUser().getUserId();
+		}
 	}
 }

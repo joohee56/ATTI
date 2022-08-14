@@ -7,6 +7,8 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,12 +25,16 @@ public class CourseCreateReq {
 	private String courseName;
 	private String courseTeacherName;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private Date courseStartTime;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private Date courseEndTime;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date courseDate; 
+//	@JsonFormat(pattern = "yyyy-MM-dd")
+//	private Date courseDate; 
+	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate courseDate;
 }

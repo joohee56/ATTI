@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,10 +11,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.CourseCreateReq;
+import com.ssafy.api.request.CourseGetReq;
 import com.ssafy.api.request.CourseUpdateReq;
+import com.ssafy.api.response.CourseAttendenceListRes;
+import com.ssafy.api.response.CourseAttendenceRes;
+import com.ssafy.api.response.CourseGetRes;
+import com.ssafy.api.response.CourseListRes;
 import com.ssafy.api.response.CreateCourseRes;
 import com.ssafy.api.service.CourseService;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -32,9 +40,13 @@ public class CourseController {
 	}
 	
 	// 시간표 조회
-	@GetMapping
-	public void getCourse() {
+	@GetMapping()
+	public ResponseEntity<CourseListRes> getCourse(@RequestBody CourseGetReq courseGetReq) {
+		List<CourseGetRes> courseResList = courseService.getCourse(courseGetReq);
 		
+		if(courseResList == null)
+			return ResponseEntity.status(200).body(CourseListRes.of(200, "조회할 시간표가 없습니다.", null));
+		return ResponseEntity.status(200).body(CourseListRes.of(200, "success", courseResList));
 	}
 	
 	// 시간표 삭제
@@ -51,5 +63,12 @@ public class CourseController {
 		if(!res)
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "수정 중 문제가 발생했습니다."));
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "수정되었습니다."));
+	}
+	
+	// 채널에 속한 참가자 리스트 조회
+	@GetMapping("/attendence/{departId}")
+	public ResponseEntity<CourseAttendenceListRes> getAttendence(@PathVariable("departId") Long departId) {
+		List<CourseAttendenceRes> attendenceList = courseService.getAttendence(departId);
+		return ResponseEntity.status(200).body(CourseAttendenceListRes.of(200, "success", attendenceList));
 	}
 }

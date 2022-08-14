@@ -79,6 +79,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		.and()
 		.addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
 		 .authorizeRequests()
+		 // 아래의 경로는 인증을 해야 접근이 허용된다.
+		 .antMatchers("/api/user").authenticated()
 //		 .antMatchers("/api/user/signup/normal").authenticated()
 //         .antMatchers("/api/v1/users/me").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
 //	        	    .anyRequest().permitAll()

@@ -37,9 +37,9 @@ width: 100%;
   justify-content: center;
   position: fixed;
   left: 0;
-  top: 50px;
+  top: 15px;
   z-index: 1;
-  `
+`;
 
 const DialogBox = styled.dialog<ModalStyle>`
   display: flex;
@@ -47,6 +47,8 @@ const DialogBox = styled.dialog<ModalStyle>`
   align-items: center;
   border: none;
   border-radius: 1rem;
+  position: fixed;
+  left: 0;
   box-shadow: 0 0 30px rgba(30, 30, 30, 0/185);
   box-sizing: border-box;
   background-color: white;

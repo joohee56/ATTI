@@ -1,8 +1,11 @@
 package com.ssafy.api.request;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +23,10 @@ public class CourseUpdateReq {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	private Date courseEndTime;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date courseDate;
+//	@JsonFormat(pattern = "yyyy-MM-dd")
+//	private Date courseDate;
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate courseDate;
 
 }

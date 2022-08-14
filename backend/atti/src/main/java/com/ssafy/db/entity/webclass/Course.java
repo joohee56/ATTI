@@ -68,10 +68,12 @@ public class Course {
 	@Column(name="course_end_time")
 	private Date courseEndTime;					// 종료 시간
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-//	@Temporal(TemporalType.DATE)
-	@Column(name="course_date")
-	private Date courseDate;					// 강의 날짜
+//	@DateTimeFormat(pattern = "yyyy-MM-dd")
+////	@Temporal(TemporalType.DATE)
+//	@Column(name="course_date")
+//	private Date courseDate;					// 강의 날짜
+	
+	private LocalDate courseDate;
 	
 	//////////////////////////////////////////////////////
 	

@@ -27,7 +27,7 @@ import lombok.*;
 @Setter
 public class PostUpdateReq {
 
-//    private Long postId;
+    private Long postId;
 
     private String postTitle;
 
@@ -40,7 +40,11 @@ public class PostUpdateReq {
     private boolean postAnoInfo;
 
     private boolean postComBanInfo;
-
+    
+    private Long departId;
+    
+    private Long categoryId;
+    
     private String userId;
 
 }

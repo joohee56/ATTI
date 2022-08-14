@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ import com.ssafy.api.request.UserUpdateReq;
 import com.ssafy.api.response.FindIdRes;
 import com.ssafy.api.response.UserInfoRes;
 import com.ssafy.api.service.UserService;
+import com.ssafy.common.auth.AttiUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.db.entity.user.User;
@@ -148,31 +150,33 @@ public class UserController {
 	// 프로필 이미지 변경
 	
 	// 회원 정보 조회
-	@GetMapping("{userId}")
-	public ResponseEntity<? extends BaseResponseBody> getUserInfo(@RequestHeader("Authorization") String accessToken, @PathVariable("userId") String userId){
-		if(accessToken == null)
-			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증되지 않은 사용자입니다."));
-		
-		System.out.println("=================================");
-		String tokenuserId = GetLoginIdFromToken(accessToken);
-		System.out.println("from access token userId: " + tokenuserId);
-		System.out.println("=================================");
-				
-		User user = userService.findByUserId(userId);
-		
-		if(user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "회원 정보를 불러오지 못했습니다."));
-		
-		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
-	}
+//	@GetMapping("/{userId}")
+//	public ResponseEntity<? extends BaseResponseBody> getUserInfo(@PathVariable("userId") String userId){
+//		User user = userService.findByUserId(userId);
+//		
+//		if(user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "회원 정보를 불러오지 못했습니다."));
+//		
+//		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
+//	}
 	
-	// test
-	public String GetLoginIdFromToken(String accessToken) {
-
-		String token = accessToken.split(" ")[1];
-
-		return jwtTokenUtil.getUserId(token);
+	// 회원 정보 조회 + spring security + access token
+	@GetMapping()
+	public ResponseEntity<? extends BaseResponseBody> getUserInfo(Authentication authentication){
+		
+		AttiUserDetails attiDetails = (AttiUserDetails) authentication.getDetails();
+		String userId = attiDetails.getUser().getUserId();
+		
+		System.out.println("==============================");
+		System.out.println("userId :" + userId);
+		System.out.println("==============================");
+		
+//		User user = userService.findByUserId(userId);
+		
+//		if(user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "회원 정보를 불러오지 못했습니다."));
+		
+		return null;
+//		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
 	}
-	
 }
 
 

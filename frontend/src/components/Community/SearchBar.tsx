@@ -35,7 +35,7 @@ width: 300px;
 height: 35px;
 border: none;
 font-size: 22px;
-borderRadius: 10px;
+border-radius: 10px;
 outline: none;
 `
 const SearchButton = styled.button`

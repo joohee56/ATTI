@@ -8,115 +8,105 @@ import styled from 'styled-components';
 import BestChip from './BestChip';
 
 import { palette } from '../../styles/palette';
+import apiAcc, {api} from '../../utils/api';
+import { CommentOutlined } from '@material-ui/icons';
 
-function CommentList(){
+
+function CommentList({comments}){
+    const { auth } = useSelector(state => state.userInfo)
+
+    // 단일 comment 지우기
+    const commentDelete = (commentId) => {
+        api.delete(`/post/comment/delete/${commentId}`
+        )
+        .then((res) => {
+            console.log("댓글 지우기:", res);
+        });
+    }
+
+    // // 단일 comment 좋아요
+    // const [commentLikeCount, setCommentLikeCount] = useState([])
+    // const commentLike = (commentId) => {
+    //     api.get(`/post/comment/likeBtn/${commentId}/${auth.id}`
+    //     ).then((res) => {
+    //         console.log("댓글 좋아요: ", res.data )
+    //         setCommentLikeCount(res.data)
+    //     })
+    // }
+    // useEffect(() => {
+    //     commentLike()
+    // }, [commentLikeCount]);
+
+
      const hrStyle = {
         height: "0.1px",
         backgroundColor: "gray",
         width: "100%",
         margin: "-10px 0 0 0"
     }
-    // const commentContent = useSelector(state => state.comment.comment_content)
-    return(
-        <CommentDiv>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between"}}>
-                <div style={{display: "flex", flexDirection: "column"}}>
-                    <div style={{display: "flex", flexDirection: "row", height: "40px"}}>
-                        <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>JJ</Avatar>
-                        <p>이름</p>
-                        <BestChip/>
+    function timeForToday(value) {
+        const today = new Date();
+        const timeValue = new Date(value);
+      
+        const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
+        if (betweenTime < 1) return '방금 전';
+        if (betweenTime < 60) {
+            return `${betweenTime}분 전`;
+        }
+      
+        const betweenTimeHour = Math.floor(betweenTime / 60);
+        if (betweenTimeHour < 24) {
+            return `${betweenTimeHour}시간 전`;
+        }
+      
+        const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+        if (betweenTimeDay < 365) {
+            return `${betweenTimeDay}일 전`;
+        }
+      
+        return `${Math.floor(betweenTimeDay / 365)}년 전`;
+      }
+    if(comments.length === 0){
+        return(
+            <div></div>
+        )
+    }
+    else{
+        return(
+            <CommentDiv>
+                {comments.map((e,i) => (
+                    <>
+                    {console.log(e)}
+                    <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "space-between"}}>
+                        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                            <div style={{display: "flex", flexDirection: "row", height: "40px"}}>
+                                <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>JJ</Avatar>
+                                <p>{e.userId}</p>
+                                <BestChip/>
+                            </div>
+                            <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
+                                <div>
+                                    {timeForToday(e.commentRegDate)}
+                                </div>
+                                <div style={{display: "flex", flexDirection: "row"}}>
+                                    <span style={{margin: "10px 0 0 0"}}>답글</span>
+                                    <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
+                                    <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
+                                    <CustomDeleteIcon onClick={commentDelete(12)}/>
+                                </div>
+                            </div>
+                        </div>
+                            <div style={{margin: "-15px 0 0 15px"}}>
+                                <p style={{wordBreak: "break-all", width: "880px"}}>{e.commentContent}</p>
+                            </div>
+                        
                     </div>
-                    <div style={{margin: "0 0 0 15px"}}>
-                        <p>ddddddddddddddddddddddddddddddddddddddddddddddddd</p>
-                    </div>
-                </div>
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
-                    <div>
-                        2022-07-14 / 16:15
-                    </div>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <span style={{margin: "10px 0 0 0"}}>답글</span>
-                        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
-                        <CustomDeleteIcon/>
-                    </div>
-                </div>
-            </div>
-           <Hr/>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between"}}>
-                <div style={{display: "flex", flexDirection: "column"}}>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>JJ</Avatar>
-                        <p>이름</p>
-                        <BestChip/>
-                    </div>
-                    <div style={{margin: "0 0 0 15px"}}>
-                        <p>ddddddddddddddddddddddddddddddddddddddddddddddddd</p>
-                    </div>
-                </div>
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
-                    <div>
-                        2022-07-14 / 16:15
-                    </div>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <span style={{margin: "10px 0 0 0"}}>답글</span>
-                        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
-                        <CustomDeleteIcon/>
-                    </div>
-                </div>
-            </div>
-           <Hr/>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between"}}>
-                <div style={{display: "flex", flexDirection: "column"}}>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>JJ</Avatar>
-                        <p>이름</p>
-                        <BestChip/>
-                    </div>
-                    <div style={{margin: "0 0 0 15px"}}>
-                        <p>ddddddddddddddddddddddddddddddddddddddddddddddddd</p>
-                    </div>
-                </div>
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
-                    <div>
-                        2022-07-14 / 16:15
-                    </div>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <span style={{margin: "10px 0 0 0"}}>답글</span>
-                        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
-                        <CustomDeleteIcon/>
-                    </div>
-                </div>
-            </div>
-           <Hr/>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between"}}>
-                <div style={{display: "flex", flexDirection: "column"}}>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>JJ</Avatar>
-                        <p>이름</p>
-                        <BestChip/>
-                    </div>
-                    <div style={{margin: "0 0 0 15px"}}>
-                        <p>ddddddddddddddddddddddddddddddddddddddddddddddddd</p>
-                    </div>
-                </div>
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
-                    <div>
-                        2022-07-14 / 16:15
-                    </div>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <span style={{margin: "10px 0 0 0"}}>답글</span>
-                        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
-                        <CustomDeleteIcon/>
-                    </div>
-                </div>
-            </div>
-           <Hr/>
-        </CommentDiv>
-    )
+                    <Hr/>
+                    </>
+                ))}
+            </CommentDiv>
+        )
+    }
 }
 
 const CustomDeleteIcon = styled(DeleteIcon)`

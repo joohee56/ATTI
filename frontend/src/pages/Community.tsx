@@ -1,23 +1,36 @@
 import React, { useState, useCallback, PropsWithChildren } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-
+import DepartList from '../components/Community/Depart';
 import NormalPostFrame from '../components/Community/NormalPostFrame';
 import Category from '../components/Community/Category';
 import Calendar from '../components/Community/Calendar';
-import PostEditor from '../components/Community/PostEditor';
-import PostDetail from '../components/Community/PostDetail';
-import Modal from '../components/Modal';
-import NavBar from '../components/NavBar';
-import CommunityBg from '../assets/images/communityBG.png'
+import Class from '../components/Community/Class';
 
+import CommunityBg from '../assets/images/communityBG.png'
+import {categoryState} from "../store/community/Category";
+import {departState} from "../store/community/Depart"
 
 function Community(){
+  // const departName = useSelector(categoryState => categoryState.depart.departName)
+  const categoryName = useSelector(categoryState);
+  const departName = useSelector(departState);
+  console.log(categoryName);
   return(
     <CommunityDiv>
-        <NavBar/>
       <Main>
-        <Category/>
-        <NormalPostFrame/>
+        <div>
+          <DepartList/>
+          <Category/>
+        </div>
+        {(categoryName.categoryName === "공지사항" || categoryName.categoryName === "질문" || 
+        categoryName.categoryName === "자유게시판" || categoryName.categoryName === "자료실") && 
+        (
+          <NormalPostFrame/>
+        )}
+        {/* {categoryName.categoryName === "수업실" && (
+          <Class/>
+        )} */}
         {/* <Calendar/> */}
       </Main>
 

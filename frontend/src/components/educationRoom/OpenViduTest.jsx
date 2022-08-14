@@ -53,10 +53,10 @@ import ChatIcon from "@mui/icons-material/Chat";
 import FaceRetouchingOffIcon from "@mui/icons-material/FaceRetouchingOff";
 import StudentAnonymouse from "./StudentAnonymous";
 
-// const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
-// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
-const OPENVIDU_SERVER_URL = "https://i7b107.p.ssafy.io:8443";
-const OPENVIDU_SERVER_SECRET = "atti";
+const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_URL = "https://i7b107.p.ssafy.io";
+// const OPENVIDU_SERVER_SECRET = "atti";
 // 도메인: https://i7b107.p.ssafy.io
 
 const STUDENT = "student";
