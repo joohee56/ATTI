@@ -60,12 +60,6 @@ public class DepartServiceImpl implements DepartService {
 			return "FAIL";
 		}
 	}
-
-	@Override
-	public String departCodeCheck() {
-		return null;
-	}
-	
 	
 
 }

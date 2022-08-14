@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.api.request.CategoryCreateReq;
 import com.ssafy.api.request.DepartCreateReq;
 import com.ssafy.api.request.DepartJoinReq;
+import com.ssafy.api.request.ViewAllPostsReq;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.service.CategoryService;
 import com.ssafy.api.service.DepartService;
@@ -48,11 +49,11 @@ public class DepartController {
 		return new ResponseEntity<String>(departService.joinChannel(departCode), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{departCode}/category/{categoryId}/post") // 게시글 전체 조회
-	public ResponseEntity<List<PostViewAllRes>> viewAllPosts(@PathVariable String departCode, @PathVariable Long categoryId) {
-		System.out.println("===========================" + departCode + "=============================");
+	@PostMapping("/category/{categoryId}/post") // 게시글 전체 조회
+	public ResponseEntity<List<PostViewAllRes>> viewAllPosts(@RequestBody ViewAllPostsReq viewAllPostsReq, @PathVariable Long categoryId) {
+		System.out.println("===========================" + viewAllPostsReq + "=============================");
 		System.out.println("===========================" + categoryId + "=============================");
-		return new ResponseEntity<List<PostViewAllRes>>(postService.viewAllPosts(departCode, categoryId), HttpStatus.OK);
+		return new ResponseEntity<List<PostViewAllRes>>(postService.viewAllPosts(viewAllPostsReq, categoryId), HttpStatus.OK);
 	}
 	
 	// 카테고리 생성

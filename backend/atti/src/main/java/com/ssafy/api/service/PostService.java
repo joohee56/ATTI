@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ssafy.api.request.PostWriteReq;
+import com.ssafy.api.request.ViewAllPostsReq;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.db.entity.depart.Post;
@@ -11,7 +12,7 @@ import com.ssafy.db.entity.depart.Post;
 public interface PostService {
 	void createWriting(PostWriteReq postWriteReq); // 글쓰기
 	
-	List<PostViewAllRes> viewAllPosts(String departCode, Long categoryId); // 게시글 전체 조회
+	List<PostViewAllRes> viewAllPosts(ViewAllPostsReq viewAllPostsReq, Long categoryId); // 게시글 전체 조회
 	
 	PostViewOneRes viewFindOne(Long postId); // 게시글 상세 조회
 	

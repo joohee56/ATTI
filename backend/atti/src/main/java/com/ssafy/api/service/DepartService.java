@@ -9,5 +9,4 @@ public interface DepartService {
 	
 	String joinChannel(String departCode); // 채널 입장
 	
-	String departCodeCheck();
 }

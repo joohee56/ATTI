@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.api.request.PostWriteReq;
+import com.ssafy.api.request.ViewAllPostsReq;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.db.entity.depart.Category;
@@ -70,7 +71,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override // 게시글 전체 조회
-	public List<PostViewAllRes> viewAllPosts(String departCode, Long categoryId) {
+	public List<PostViewAllRes> viewAllPosts(ViewAllPostsReq viewAllPostsReq, Long categoryId) {
 
 //		System.out.println("=======================" + departId + "=======================");
 //		System.out.println("=======================" + categoryId + "=======================");
@@ -80,8 +81,10 @@ public class PostServiceImpl implements PostService {
 //		for (Post post : entityList) {
 //			list.add(new PostViewAllRes(post));
 //		}
-		Depart depart = departRepository.findByDepartCode(departCode).orElse(null);
-		Category category = categoryRepository.getById(categoryId);
+		Depart depart = departRepository.findByDepartCode(viewAllPostsReq.getDepartCode())
+				.orElseThrow(() -> new IllegalArgumentException("post not found"));
+		Category category = categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new IllegalArgumentException("category not found"));
 		List<Post> postList = postRepository.findByDepartAndCategoryOrderByPostIdDesc(depart, category);
 		
 		List<PostViewAllRes> postViewAllResList;
