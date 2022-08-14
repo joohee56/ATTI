@@ -9,12 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.api.request.DepartCreateReq;
-import com.ssafy.api.request.DepartJoinReq;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.DepartRepository;
-import com.ssafy.db.repository.DepartRepository2;
-import com.ssafy.db.repository.UserRepository2;
+import com.ssafy.db.repository.UserRepository;
 
 @Service
 @Transactional
@@ -24,7 +22,7 @@ public class DepartServiceImpl implements DepartService {
 	private DepartRepository departRepository;
 	
 	@Autowired
-	private UserRepository2 userRepository;
+	private UserRepository userRepository;
 	
 	@Override // 채널 생성
 	public void createChannel(DepartCreateReq departCreateReq) { //, String userId
@@ -40,10 +38,11 @@ public class DepartServiceImpl implements DepartService {
 		  .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 		  .toString();
 		
+		User user = userRepository.getById(departCreateReq.getUserId());
 		Depart depart = Depart.builder()
 				.departName(departCreateReq.getDepartName())
 				.departCode(generatedString)
-				.user(userRepository.findOne(departCreateReq.getUserId()))
+				.user(user)
 				.build();
 		
 		departRepository.save(depart);
@@ -63,13 +62,13 @@ public class DepartServiceImpl implements DepartService {
 		} else {
 			return "FAIL";
 		}
-		
-		// 무덤
-//		if(departRepository.joinChannel(departId) != null) {
-//			return "SUCCESS";
-//		} else {
-//			return "FAIL";
-//		}
 	}
+
+	@Override
+	public String departCodeCheck() {
+		return null;
+	}
+	
+	
 
 }

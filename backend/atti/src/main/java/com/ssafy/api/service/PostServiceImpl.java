@@ -3,12 +3,10 @@ package com.ssafy.api.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ssafy.api.request.PostWriteReq;
 import com.ssafy.api.response.PostViewAllRes;
@@ -16,15 +14,13 @@ import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.depart.UserPostLike;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.CategoryRepository;
-import com.ssafy.db.repository.CategoryRepository2;
 import com.ssafy.db.repository.DepartRepository;
-import com.ssafy.db.repository.DepartRepository2;
 import com.ssafy.db.repository.PostRepository;
-import com.ssafy.db.repository.PostRepository2;
+import com.ssafy.db.repository.UserPostLikeRepository;
 import com.ssafy.db.repository.UserRepository;
-import com.ssafy.db.repository.UserRepository2;
 
 @Service
 @Transactional(readOnly = true) // readOnly true를 사용하면 읽기 최적화
@@ -41,6 +37,10 @@ public class PostServiceImpl implements PostService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	// 좋아요 추가 - 주희
+	@Autowired
+	private UserPostLikeRepository userPostLikeRepository;
 
 	@Override // 글쓰기
 	@Transactional // 쓰기가 필요할땐 그냥 Transactional
@@ -87,7 +87,7 @@ public class PostServiceImpl implements PostService {
 //		}
 		Depart depart = departRepository.getById(departId);
 		Category category = categoryRepository.getById(categoryId);
-		List<Post> postList = postRepository.findByDepartAndCategory(depart, category);
+		List<Post> postList = postRepository.findByDepartAndCategoryOrderByPostIdDesc(depart, category);
 		
 		List<PostViewAllRes> postViewAllResList;
 		if(postList.isEmpty()) return null;
@@ -119,10 +119,13 @@ public class PostServiceImpl implements PostService {
 		postRepository.deleteById(postId);
 	}
 
-	@Override // 전체 게시글 일괄 삭제
+	@Override // 카테고리 게시글 일괄 삭제
 	@Transactional
-	public void deleteAll() {
-		postRepository.deleteAll();
+	public void deleteAllPosts(Long categoryId) {
+		System.out.println("=====================");
+		System.out.println(categoryId);
+		System.out.println("=====================");
+		
 	}
 
 	@Override // 단일 게시글 수정
@@ -130,5 +133,27 @@ public class PostServiceImpl implements PostService {
 	public void editPost(Post editPost) {
 		editPost.setPostUpdDate(LocalDateTime.now());
 //		postRepository.updateOne(editPost);
+	}
+	
+	// 좋아요 기능 - 주희 추가
+	// 좋아요 버튼 누름
+	@Override
+	@Transactional
+	public long postLike(Long postId, String userId) {
+		Post post = postRepository.findById(postId).orElse(null);
+		User user = userRepository.findById(userId).orElse(null);
+		
+		// UserPostLike 에서 post 에 해당하는 user 가 있는지 찾기
+		UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
+		
+		// 없다면, 추가
+		if(userPostLike == null)
+			userPostLikeRepository.save(new UserPostLike().builder().post(post).user(user).build());
+		// 있다면, 삭제
+		else userPostLikeRepository.deleteById(userPostLike.getUserPostLikeId());
+		
+		// 변화된 갯수 리턴
+		long count = userPostLikeRepository.countByPost(post);
+		return count;
 	}
 }

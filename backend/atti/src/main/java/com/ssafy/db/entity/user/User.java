@@ -34,6 +34,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import lombok.*;
+
 @Entity
 @Getter
 @Setter
@@ -68,9 +70,4 @@ public class User {
 	@Column(name = "user_role")
 	@Enumerated(EnumType.STRING)
 	private UserRole userRole;
-
-	
-	/////////////////////////////////////////////////////
-	
-
 }
