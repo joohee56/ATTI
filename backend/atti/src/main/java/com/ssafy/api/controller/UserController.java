@@ -150,33 +150,32 @@ public class UserController {
 	// 프로필 이미지 변경
 	
 	// 회원 정보 조회
-//	@GetMapping("/{userId}")
-//	public ResponseEntity<? extends BaseResponseBody> getUserInfo(@PathVariable("userId") String userId){
-//		User user = userService.findByUserId(userId);
-//		
-//		if(user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "회원 정보를 불러오지 못했습니다."));
-//		
-//		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
-//	}
+	@GetMapping("/{userId}")
+	public ResponseEntity<? extends BaseResponseBody> getUserInfo(@PathVariable("userId") String userId){
+		User user = userService.findByUserId(userId);
+		
+		if(user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "회원 정보를 불러오지 못했습니다."));
+		
+		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
+	}
 	
 	// 회원 정보 조회 + spring security + access token
-	@GetMapping()
-	public ResponseEntity<? extends BaseResponseBody> getUserInfo(Authentication authentication){
-		
-		AttiUserDetails attiDetails = (AttiUserDetails) authentication.getDetails();
-		String userId = attiDetails.getUser().getUserId();
-		
-		System.out.println("==============================");
-		System.out.println("userId :" + userId);
-		System.out.println("==============================");
+//	@GetMapping()
+//	public ResponseEntity<? extends BaseResponseBody> getUserInfo(Authentication authentication){
+//		
+//		System.out.println("GET USER INFO");
+//		AttiUserDetails attiDetails = (AttiUserDetails) authentication.getDetails();
+//		String userId = attiDetails.getUser().getUserId();
+//		
+//		System.out.println("==============================");
+//		System.out.println("userId :" + userId);
+//		System.out.println("==============================");
 		
 //		User user = userService.findByUserId(userId);
 		
 //		if(user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "회원 정보를 불러오지 못했습니다."));
-		
-		return null;
 //		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
-	}
+//	}
 }
 
 

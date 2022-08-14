@@ -32,11 +32,15 @@ public class Attendance {
 	
 	@Lob
 	@Column(name="attendance_content")
-	private String attendancdContent;
+	private String attendancedContent;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	private User user;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="course_id")
+	private Course course;
 	
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name="webclass_id")

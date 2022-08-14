@@ -40,7 +40,7 @@ public class CourseController {
 	}
 	
 	// 시간표 조회
-	@GetMapping()
+	@PostMapping()
 	public ResponseEntity<CourseListRes> getCourse(@RequestBody CourseGetReq courseGetReq) {
 		List<CourseGetRes> courseResList = courseService.getCourse(courseGetReq);
 		

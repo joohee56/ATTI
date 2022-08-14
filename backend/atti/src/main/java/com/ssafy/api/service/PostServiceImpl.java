@@ -106,6 +106,10 @@ public class PostServiceImpl implements PostService {
 		User user = userRepository.findById(userId).orElse(null);
 		
 		for(Post p : postList) {
+			if(p.isPostAnoInfo() == true) {
+				p.getUser().setUserId("익명");
+			}
+			
 			// 내가 이 게시글에 좋아요를 눌렀는지 체크
 			UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(p, user).orElse(null);
 			boolean myLike = false;
