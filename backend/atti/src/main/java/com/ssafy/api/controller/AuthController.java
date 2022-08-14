@@ -38,12 +38,14 @@ import com.ssafy.api.request.KakaoUser;
 import com.ssafy.api.request.UserFindIdReq;
 import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.response.CategoryListRes;
+import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.UserDepartRes;
 import com.ssafy.api.response.UserLoginRes;
 import com.ssafy.api.service.AdminRoleService;
 import com.ssafy.api.service.AuthService;
 import com.ssafy.api.service.CategoryService;
 import com.ssafy.api.service.DepartService;
+import com.ssafy.api.service.PostService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.AuthPhoneUtil;
@@ -73,6 +75,8 @@ public class AuthController {
 	CategoryService categoryService;
 	@Autowired
 	AdminRoleService adminRoleService;
+	@Autowired
+	PostService postService;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -104,9 +108,10 @@ public class AuthController {
 			// 3. 유저 아이디가 가입한 채널의 유저 권한 테이블의 아이디와 매칭되는지를 찾음
 			List<CategoryListRes> userCategoryList;
 			boolean admin = false;
+			Long departId=(long) 0;
 			
 			if(userDepartList != null) {
-				Long departId = userDepartList.get(0).getDepartId();	// 가입한 채널 중 첫 번째 채널의 아이디
+				departId = userDepartList.get(0).getDepartId();	// 가입한 채널 중 첫 번째 채널의 아이디
 				
 				userCategoryList = categoryService.getCategorList(departId);
 //				admin = adminRoleService.getAdminRole(user, departId);
@@ -115,14 +120,17 @@ public class AuthController {
 			}
 			
 			// 4. 첫 번쨰 카테고리에 해당하는 글 목록
+			List<PostViewAllRes> postList;
 			if(userCategoryList != null) {
-				
-			}
+				postList = new ArrayList<PostViewAllRes>();
+				postList = postService.viewAllPosts(departId, userCategoryList.get(0).getCategoryId());
+			} else 
+				postList = null;
 			
 			// 5. 유저 이름 가져옴
 			String userName = user.getUserName();
 			
-			return ResponseEntity.ok(UserLoginRes.of(200, "Success", JwtTokenUtil.getToken(userId), userDepartList, userCategoryList, admin, userName));	//토큰 넘김
+			return ResponseEntity.ok(UserLoginRes.of(200, "Success", JwtTokenUtil.getToken(userId), userDepartList, userCategoryList, postList, admin, userName));	//토큰 넘김
 		}
 		
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
