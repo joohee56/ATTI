@@ -3,10 +3,12 @@ package com.ssafy.api.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ssafy.api.request.PostWriteReq;
 import com.ssafy.api.response.PostViewAllRes;
@@ -17,8 +19,11 @@ import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.depart.UserPostLike;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.CategoryRepository;
+import com.ssafy.db.repository.CategoryRepository2;
 import com.ssafy.db.repository.DepartRepository;
+import com.ssafy.db.repository.DepartRepository2;
 import com.ssafy.db.repository.PostRepository;
+import com.ssafy.db.repository.PostRepository2;
 import com.ssafy.db.repository.UserPostLikeRepository;
 import com.ssafy.db.repository.UserRepository;
 
@@ -119,14 +124,11 @@ public class PostServiceImpl implements PostService {
 		postRepository.deleteById(postId);
 	}
 
-	@Override // 카테고리 게시글 일괄 삭제
-	@Transactional
-	public void deleteAllPosts(Long categoryId) {
-		System.out.println("=====================");
-		System.out.println(categoryId);
-		System.out.println("=====================");
-		
-	}
+//	@Override // 전체 게시글 일괄 삭제
+//	@Transactional
+//	public void deleteAllPosts() {
+//		postRepository.deleteAll();
+//	}
 
 	@Override // 단일 게시글 수정
 	@Transactional
@@ -143,14 +145,14 @@ public class PostServiceImpl implements PostService {
 		Post post = postRepository.findById(postId).orElse(null);
 		User user = userRepository.findById(userId).orElse(null);
 		
-		// UserPostLike 에서 post 에 해당하는 user 가 있는지 찾기
+		// UserPostLike 에서 Post 에 해당하는 user 가 있는지 찾기
 		UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
 		
 		// 없다면, 추가
 		if(userPostLike == null)
 			userPostLikeRepository.save(new UserPostLike().builder().post(post).user(user).build());
 		// 있다면, 삭제
-		else userPostLikeRepository.deleteById(userPostLike.getUserPostLikeId());
+		userPostLikeRepository.deleteById(userPostLike.getUserPostLikeId());
 		
 		// 변화된 갯수 리턴
 		long count = userPostLikeRepository.countByPost(post);
