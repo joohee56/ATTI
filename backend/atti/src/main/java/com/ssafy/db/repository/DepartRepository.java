@@ -10,4 +10,6 @@ import com.ssafy.db.entity.depart.Depart;
 @Repository
 public interface DepartRepository extends JpaRepository<Depart, Long>{
 	Optional<Depart> findByDepartName(String departName);
+	
+	Optional<Depart> findByDepartCode(String departCode);
 }

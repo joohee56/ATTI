@@ -42,17 +42,17 @@ public class DepartController {
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	
-	@GetMapping("/{departId}") // 채널 입장 
-	public ResponseEntity<String> joinChannel(@PathVariable Long departId) {
+	@GetMapping("/{departCode}") // 채널 입장 
+	public ResponseEntity<String> joinChannel(@PathVariable String departCode) {
 //		System.out.println("===========================" + departId + "=============================");
-		return new ResponseEntity<String>(departService.joinChannel(departId), HttpStatus.OK);
+		return new ResponseEntity<String>(departService.joinChannel(departCode), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{departId}/category/{categoryId}/post") // 게시글 전체 조회
-	public ResponseEntity<List<PostViewAllRes>> viewAllPosts(@PathVariable Long departId, @PathVariable Long categoryId) {
-		System.out.println("===========================" + departId + "=============================");
+	@GetMapping("/{departCode}/category/{categoryId}/post") // 게시글 전체 조회
+	public ResponseEntity<List<PostViewAllRes>> viewAllPosts(@PathVariable String departCode, @PathVariable Long categoryId) {
+		System.out.println("===========================" + departCode + "=============================");
 		System.out.println("===========================" + categoryId + "=============================");
-		return new ResponseEntity<List<PostViewAllRes>>(postService.viewAllPosts(departId, categoryId), HttpStatus.OK);
+		return new ResponseEntity<List<PostViewAllRes>>(postService.viewAllPosts(departCode, categoryId), HttpStatus.OK);
 	}
 	
 	// 카테고리 생성

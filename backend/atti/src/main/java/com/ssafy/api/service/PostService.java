@@ -11,7 +11,7 @@ import com.ssafy.db.entity.depart.Post;
 public interface PostService {
 	void createWriting(PostWriteReq postWriteReq); // 글쓰기
 	
-	List<PostViewAllRes> viewAllPosts(Long departId, Long categoryId); // 게시글 전체 조회
+	List<PostViewAllRes> viewAllPosts(String departCode, Long categoryId); // 게시글 전체 조회
 	
 	PostViewOneRes viewFindOne(Long postId); // 게시글 상세 조회
 	

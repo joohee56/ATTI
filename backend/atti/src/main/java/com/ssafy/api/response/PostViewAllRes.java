@@ -15,12 +15,14 @@ public class PostViewAllRes {
 	
 	private LocalDateTime postRegDate;
 	
-	private String userId;
+	private String userId = "익명";
 	
 	public PostViewAllRes(Post post) {
 		this.postTitle = post.getPostTitle();
 		this.postContent = post.getPostContent();
 		this.postRegDate = post.getPostRegDate();
-		this.userId = post.getUser().getUserId();
+		if(post.getUser() != null) {
+			this.userId = post.getUser().getUserId();
+		}
 	}
 }

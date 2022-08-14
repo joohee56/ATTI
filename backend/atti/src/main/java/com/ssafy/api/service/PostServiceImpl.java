@@ -48,10 +48,11 @@ public class PostServiceImpl implements PostService {
 //				.depart(departRepository.findById(id)(postWriteReq.getDepartId()))
 //				.build();
 		postWriteReq.setPostRegDate(LocalDateTime.now());
-		
+
 		Depart depart = departRepository.getById(postWriteReq.getDepartId());
 		Category category = categoryRepository.getById(postWriteReq.getCategoryId());
 		User user = userRepository.getById(postWriteReq.getUserId());
+		
 		Post post = Post.builder()
 				.postTitle(postWriteReq.getPostTitle())
 				.postContent(postWriteReq.getPostContent())
@@ -69,7 +70,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override // 게시글 전체 조회
-	public List<PostViewAllRes> viewAllPosts(Long departId, Long categoryId) {
+	public List<PostViewAllRes> viewAllPosts(String departCode, Long categoryId) {
 
 //		System.out.println("=======================" + departId + "=======================");
 //		System.out.println("=======================" + categoryId + "=======================");
@@ -79,7 +80,7 @@ public class PostServiceImpl implements PostService {
 //		for (Post post : entityList) {
 //			list.add(new PostViewAllRes(post));
 //		}
-		Depart depart = departRepository.getById(departId);
+		Depart depart = departRepository.findByDepartCode(departCode).orElse(null);
 		Category category = categoryRepository.getById(categoryId);
 		List<Post> postList = postRepository.findByDepartAndCategoryOrderByPostIdDesc(depart, category);
 		
@@ -88,6 +89,9 @@ public class PostServiceImpl implements PostService {
 		else postViewAllResList = new ArrayList<PostViewAllRes>(); 
 		
 		for(Post p : postList) {
+			if(p.isPostAnoInfo() == true) {
+				p.setUser(null);
+			}
 			postViewAllResList.add(new PostViewAllRes(p));
 		}
 		
@@ -119,6 +123,8 @@ public class PostServiceImpl implements PostService {
 		System.out.println("=====================");
 		System.out.println(categoryId);
 		System.out.println("=====================");
+		Category category = new Category();
+		categoryRepository.findById(categoryId);
 		
 	}
 
