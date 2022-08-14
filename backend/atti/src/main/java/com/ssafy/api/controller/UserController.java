@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.api.request.UserFindIdReq;
 import com.ssafy.api.request.UserUpdateReq;
 import com.ssafy.api.response.FindIdRes;
+import com.ssafy.api.response.UserInfoRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.user.User;
@@ -131,7 +132,7 @@ public class UserController {
 		// 비밀번호 업데이트
 		userService.updatePW(findUser, updatePWInfo.get("password"));
 		
-		return ResponseEntity.status(404).body(BaseResponseBody.of(200, "비밀번호가 변경되었습니다."));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "비밀번호가 변경되었습니다."));
 	}
 	
 	// 회원 탈퇴
@@ -143,6 +144,15 @@ public class UserController {
 	
 	// 프로필 이미지 변경
 	
+	// 회원 정보 조회
+	@GetMapping("{userId}")
+	public ResponseEntity<? extends BaseResponseBody> getUserInfo(@PathVariable("userId") String userId){
+		User user = userService.findByUserId(userId);
+		
+		if(user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "회원 정보를 불러오지 못했습니다."));
+		
+		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
+	}
 	
 }
 

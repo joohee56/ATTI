@@ -14,7 +14,7 @@ import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.DepartRepository;
 import com.ssafy.db.repository.DepartRepository2;
-import com.ssafy.db.repository.UserRepository2;
+import com.ssafy.db.repository.UserRepository;
 
 @Service
 @Transactional
@@ -24,7 +24,7 @@ public class DepartServiceImpl implements DepartService {
 	private DepartRepository departRepository;
 	
 	@Autowired
-	private UserRepository2 userRepository;
+	private UserRepository userRepository;
 	
 	@Override // 채널 생성
 	public void createChannel(DepartCreateReq departCreateReq) { //, String userId
@@ -43,7 +43,7 @@ public class DepartServiceImpl implements DepartService {
 		Depart depart = Depart.builder()
 				.departName(departCreateReq.getDepartName())
 				.departCode(generatedString)
-				.user(userRepository.findOne(departCreateReq.getUserId()))
+				.user(userRepository.findById(departCreateReq.getUserId()).orElse(null))
 				.build();
 		
 		departRepository.save(depart);

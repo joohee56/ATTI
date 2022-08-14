@@ -23,7 +23,7 @@ public class UserLoginRes extends BaseResponseBody {
 	// 가입한 채널 리스트
 	List<UserDepartRes> departList = new ArrayList<>();
 	// 채널 리스트의 첫 번쨰 카테고리 리스트
-	List<Integer> categoryList = new ArrayList<>();
+	List<CategoryListRes> categoryList = new ArrayList<>();
 	
 	// 유저 권한
 	boolean admin;
@@ -31,7 +31,7 @@ public class UserLoginRes extends BaseResponseBody {
 	// 유저 이름
 	String userName;
 	
-	public static UserLoginRes of(Integer statusCode, String message, String accessToken, List<UserDepartRes> departList, List<Integer> categoryList, boolean admin, String userName) {
+	public static UserLoginRes of(Integer statusCode, String message, String accessToken, List<UserDepartRes> departList, List<CategoryListRes> categoryList, boolean admin, String userName) {
 		UserLoginRes res = new UserLoginRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);

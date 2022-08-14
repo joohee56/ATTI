@@ -90,4 +90,14 @@ public class PostController {
         return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
     }
 	
+	// 좋아요 기능 - 주희 추가
+	// 좋아요 버튼 누름
+	@GetMapping("/likeBtn/{postId}/{userId}")
+	public ResponseEntity<Long> postLike(@PathVariable("postId") Long postId, @PathVariable("userId") String userId) {
+		Long count = postService.postLike(postId, userId);
+		return new ResponseEntity<Long>(count, HttpStatus.OK);
+	}
+	
+	
+	
 }

@@ -16,6 +16,7 @@ import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.depart.UserPostLike;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.CategoryRepository;
 import com.ssafy.db.repository.CategoryRepository2;
@@ -23,8 +24,8 @@ import com.ssafy.db.repository.DepartRepository;
 import com.ssafy.db.repository.DepartRepository2;
 import com.ssafy.db.repository.PostRepository;
 import com.ssafy.db.repository.PostRepository2;
+import com.ssafy.db.repository.UserPostLikeRepository;
 import com.ssafy.db.repository.UserRepository;
-import com.ssafy.db.repository.UserRepository2;
 
 @Service
 @Transactional(readOnly = true) // readOnly true를 사용하면 읽기 최적화
@@ -41,6 +42,10 @@ public class PostServiceImpl implements PostService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	// 좋아요 추가 - 주희
+	@Autowired
+	private UserPostLikeRepository userPostLikeRepository;
 
 	@Override // 글쓰기
 	@Transactional // 쓰기가 필요할땐 그냥 Transactional
@@ -130,5 +135,27 @@ public class PostServiceImpl implements PostService {
 	public void editPost(Post editPost) {
 		editPost.setPostUpdDate(LocalDateTime.now());
 //		postRepository.updateOne(editPost);
+	}
+	
+	// 좋아요 기능 - 주희 추가
+	// 좋아요 버튼 누름
+	@Override
+	@Transactional
+	public long postLike(Long postId, String userId) {
+		Post post = postRepository.findById(postId).orElse(null);
+		User user = userRepository.findById(userId).orElse(null);
+		
+		// UserPostLike 에서 post 에 해당하는 user 가 있는지 찾기
+		UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
+		
+		// 없다면, 추가
+		if(userPostLike == null)
+			userPostLikeRepository.save(new UserPostLike().builder().post(post).user(user).build());
+		// 있다면, 삭제
+		else userPostLikeRepository.deleteById(userPostLike.getUserPostLikeId());
+		
+		// 변화된 갯수 리턴
+		long count = userPostLikeRepository.countByPost(post);
+		return count;
 	}
 }

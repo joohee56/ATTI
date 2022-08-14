@@ -22,4 +22,6 @@ public interface PostService {
 	void deleteAll(); // 전체 게시글 삭제
 	
 	void editPost(Post editPost); // 단일 게시글 수정
+	
+	long postLike(Long postId, String userId);	// 좋아요 기능 - 주희
 }

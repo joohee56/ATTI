@@ -1,5 +1,8 @@
 package com.ssafy.db.entity.webclass;
 
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.user.User;
@@ -53,15 +58,18 @@ public class Course {
 	@Column(name="course_teacher_name")
 	private String courseTeacherName;			// 교수명
 	
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.TIME)
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	@Column(name="course_start_time")	
 	private Date courseStartTime;				// 시작 시간
 	
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.TIME)
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	@Column(name="course_end_time")
 	private Date courseEndTime;					// 종료 시간
 	
-	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+//	@Temporal(TemporalType.DATE)
 	@Column(name="course_date")
 	private Date courseDate;					// 강의 날짜
 	
@@ -70,12 +78,4 @@ public class Course {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="depart_course")
 	private Depart depart;						// 채널 ID (FK)
-	
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name="in_user_id") 
-//	private User in_user;
-//	
-//	@OneToOne(fetch=FetchType.LAZY)
-//    @JoinColumn(name = "make_user_id")
-//	private User make_user;
 }

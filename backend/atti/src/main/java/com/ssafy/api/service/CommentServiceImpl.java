@@ -15,7 +15,7 @@ import com.ssafy.db.repository.CommentRepository;
 import com.ssafy.db.repository.CommentRepository2;
 import com.ssafy.db.repository.PostRepository;
 import com.ssafy.db.repository.PostRepository2;
-import com.ssafy.db.repository.UserRepository2;
+import com.ssafy.db.repository.UserRepository;
 
 @Service
 @Transactional
@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
 	private PostRepository postRepository;
 	
 	@Autowired
-	private UserRepository2 userRepository;
+	private UserRepository userRepository;
 	
 	@Override // 댓글 작성
 	public void createReply(CommentReq comment) {
