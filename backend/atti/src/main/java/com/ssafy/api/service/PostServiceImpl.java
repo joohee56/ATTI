@@ -127,5 +127,6 @@ public class PostServiceImpl implements PostService {
 	public void editPost(Post editPost) {
 		editPost.setPostUpdDate(LocalDateTime.now());
 //		postRepository.updateOne(editPost);
+		postRepository.save(editPost);
 	}
 }

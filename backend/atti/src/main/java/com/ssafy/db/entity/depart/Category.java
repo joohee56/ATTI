@@ -24,6 +24,7 @@ import lombok.ToString;
 
 @Entity
 @Getter
+@Setter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -37,8 +38,8 @@ public class Category{
 	@Column(name="category_name")
 	private String categoryName;		// 카테고리 이름
 	
-	@Enumerated(EnumType.STRING)
-	private Ctype ctype;				// 카테고리 분류
+//	@Enumerated(EnumType.STRING)
+	private String ctype;				// 카테고리 분류
 	
 	@Column(name="category_ano_info")
 	private boolean categoryAnoInfo;	// 카테고리 게시글 익명 여부

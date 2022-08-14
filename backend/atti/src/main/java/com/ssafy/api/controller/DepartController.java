@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.request.CategoryCreateReq;
 import com.ssafy.api.request.DepartCreateReq;
 import com.ssafy.api.request.DepartJoinReq;
 import com.ssafy.api.response.PostViewAllRes;
+import com.ssafy.api.service.CategoryService;
 import com.ssafy.api.service.DepartService;
 import com.ssafy.api.service.PostService;
 import com.ssafy.db.entity.depart.Depart;
@@ -28,6 +30,9 @@ public class DepartController {
 	
 	@Autowired
 	private PostService postService;
+	
+	@Autowired
+	private CategoryService categoryService;
 	
 	@PostMapping("/create") // 채널 생성
 	public ResponseEntity<String> createChannel(@RequestBody DepartCreateReq departCreateReq) {
@@ -48,5 +53,17 @@ public class DepartController {
 		System.out.println("===========================" + departId + "=============================");
 		System.out.println("===========================" + categoryId + "=============================");
 		return new ResponseEntity<List<PostViewAllRes>>(postService.viewAllPosts(departId, categoryId), HttpStatus.OK);
+	}
+	
+	// 카테고리 생성
+	@PostMapping("/category/create")
+	public ResponseEntity<String> createCategory(@RequestBody CategoryCreateReq categoryCreateReq) {
+		System.out.println("=========================");
+		System.out.println("cType :"+ categoryCreateReq.getType());
+		System.out.println(categoryCreateReq.getCategoryName());
+		System.out.println("=========================");
+		
+		categoryService.createCategory(categoryCreateReq);
+		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 }

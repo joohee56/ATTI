@@ -1,7 +1,5 @@
 package com.ssafy.api.service;
 
-import java.nio.charset.Charset;
-import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
