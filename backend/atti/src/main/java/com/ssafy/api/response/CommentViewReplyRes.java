@@ -19,7 +19,7 @@ public class CommentViewReplyRes {
 	
 	private boolean seq;
 	
-	private String userId;
+	private String userId = "익명";
 	
 	public CommentViewReplyRes(Comment comment) {
 		this.commentContent = comment.getCommentContent();
@@ -27,6 +27,8 @@ public class CommentViewReplyRes {
 		this.commentGroup = comment.getCommentGroup();
 		this.commentLevel = comment.getCommentLevel();
 		this.seq = comment.isSeq();
-		this.userId = comment.getUser().getUserId();
+		if(comment.getUser() != null) {
+			this.userId = comment.getUser().getUserId();
+		}
 	}
 }

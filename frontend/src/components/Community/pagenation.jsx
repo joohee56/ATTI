@@ -34,7 +34,9 @@ const Nav = styled.nav`
   justify-content: center;
   align-items: center;
   gap: 15px;
-  margin: 26px;
+  position: fixed;
+  left: 900px;
+  bottom: 40px;
 `;
 
 const ArrowButton = styled.button`
@@ -45,8 +47,8 @@ background: ${palette.main_grBlue};
 color: white;
 font-weight: bold;
 font-size: 1.1rem;
-width: 30px;
-height: 30px;
+width: 50px;
+height: 50px;
 &:hover {
     cursor: pointer;
     transform: translateY(-2px);
@@ -60,8 +62,8 @@ background: ${palette.gray_1};
 color: black;
 font-weight: bold;
 font-size: 1.1rem;
-width: 30px;
-height: 30px;
+width: 50px;
+height: 50px;
 
   &:hover {
     background: ${palette.purlue_2};

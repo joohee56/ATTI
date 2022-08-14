@@ -89,7 +89,7 @@ function BasicSwitch(props: UseSwitchParameters) {
 export default function UseSwitchesBasic() {
   return (
     <div>
-      <BasicSwitch defaultChecked />
+      <BasicSwitch />
     </div>
   );
 }

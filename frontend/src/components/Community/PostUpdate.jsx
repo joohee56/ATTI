@@ -6,7 +6,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios from 'axios';
 
-
+import apiAcc, {api} from '../../utils/api';
+import { reRenderingActions } from '../../store/community/ReRendering';
 import { BACKEND_URL } from "../../constant";
 import { ButtonBlue } from '../ButtonStyled';
 import { normalPostActions } from '../../store/community/Category'
@@ -19,12 +20,12 @@ export function PostUpdate({singlePost, handleModal3}) {
         postId : "",
         postTitle : "",
         postContent : "",
-        postRegDate : "",
-        postUpdDate : "",
-        user_id : "",
-        category_id : ""
+        userId : "gusxo123",
+        categoryId : 2,
+        departId : 1
     })
 
+    
     const getValue = e => {
         const {name,value} = e.target;
        
@@ -35,31 +36,50 @@ export function PostUpdate({singlePost, handleModal3}) {
         }));
     };
     
+    const dispatch = useDispatch()
+    const currentCider = useSelector(state => state.reRendering.cider)
+    const updateCider = !currentCider
+
     const updatePosts = useCallback(
         async (e) => {
-          e.preventDefault();
           try {
-            await axios
-              .put(
-                BACKEND_URL + "/post/update",
+            await api
+              .put(`/post/update`,
                 {
                   postId : singlePost.postId,
                   postTitle : post.postTitle,
                   postContent : post.postContent,
-                  postRegDate : singlePost.postRegDate,
-                  postUpdDate : post.postUpdDate,
-                //   user_id : post.user_id,
-                  userId : "ssafy",
-                  category_id : singlePost.category_id
+                  userId : post.userId,                     // 전역변수에서 받아서 써야
+                  categoryId : post.categoryId,           // 전역변수에서 받아서 써야
+                  departId: post.departId                 // 전역변수에서 받아서 써야
                 },
-                {
-                  headers: {
-                    "Content-type": "application/json",
-                  },
-                }
               )
+            // await axios
+            //   .put(
+            //     BACKEND_URL + "/post/update",
+            //     {
+            //       postId : singlePost.postId,
+            //       postTitle : post.postTitle,
+            //       postContent : post.postContent,
+            //       postRegDate : singlePost.postRegDate,
+            //       postUpdDate : post.postUpdDate,
+            //     //   userId : post.userId,
+            //       userId : "ssafy",
+            //       categoryId : singlePost.categoryId,
+            //       postAnoInfo: getAnoInfoNum(),
+            //       postComBanInfo: getComBanInfoNum()
+            //     },
+            //     {
+            //       headers: {
+            //         "Content-type": "application/json",
+            //       },
+            //     }
+            //   )
               .then((res) => {
                 console.log("response:", res);
+                dispatch(reRenderingActions.saveReRendering(
+                  {cider: updateCider }
+              ))
     
 
               });
@@ -71,10 +91,10 @@ export function PostUpdate({singlePost, handleModal3}) {
           singlePost.postId,
           post.postTitle,
           post.postContent,
-          singlePost.postRegDate,
-          post.postUpdDate,
-        //   singlePost.user_id,
-          singlePost.category_id
+          post.userId,
+          post.categoryId,
+          post.departId
+         
         ]
       );
     
@@ -82,26 +102,16 @@ export function PostUpdate({singlePost, handleModal3}) {
         updatePosts();
         handleModal3();
     }  
+    const categoryName = useSelector(state => state.category.categoryName)
+    const categoryAnoInfo = useSelector(state => state.category.categoryAnoInfo)
+    const categoryComInfo = useSelector(state => state.category.categoryComInfo)
     return (
         <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
             <div className="form-wrapper">
                 <Main>
                     <Top>
-                        <TopTitle>category이름+ 수정하기</TopTitle>
-                        <Top2>
-                            <SwitchDiv>
-                                <span style={{textAlign: "center" ,fontSize: "12px", marginBottom: "5px"}}>
-                                    익명으로 글쓰기 
-                                </span>
-                                {UseSwitchesBasic()}
-                            </SwitchDiv>
-                            <SwitchDiv>
-                                <span style={{textAlign: "center", fontSize: "12px",  marginBottom: "5px"}}>
-                                    댓글 금지하기 
-                                </span>
-                                {UseSwitchesBasic()}
-                            </SwitchDiv>
-                        </Top2>
+                        <TopTitle>{categoryName} 수정하기</TopTitle>
+                        
                     </Top>
                     <PostTitle type="text" placeholder="제목을 입력하세요" name="postTitle" defaultValue={singlePost.postTitle} onChange={getValue}/>
                     <CKEditor
@@ -173,12 +183,12 @@ display: flex;
 flex-direction: column;
 `;
 
-const Top2 = styled.div`
-display: flex;
-flex-direction: column;
-justify-content: flex-start;
-align-items: flex-end;
-`;
+// const Top2 = styled.div`
+// display: flex;
+// flex-direction: column;
+// justify-content: flex-start;
+// align-items: flex-end;
+// `;
 
 const SubmitButton = styled(ButtonBlue)`
 width: 100px;

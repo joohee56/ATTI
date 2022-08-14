@@ -13,13 +13,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PostViewAllRes {
 	
+	private Long postId;
+	
 	private String postTitle;
 	
 	private String postContent;
 	
 	private LocalDateTime postRegDate;
 	
-	private String userId;
+	private String userId = "익명";
 	
 	// 수정 - 주희
 	private long likeCount;
@@ -27,9 +29,12 @@ public class PostViewAllRes {
 	private boolean myLike; 
 	
 	public PostViewAllRes(Post post) {
+		this.postId = post.getPostId();
 		this.postTitle = post.getPostTitle();
 		this.postContent = post.getPostContent();
 		this.postRegDate = post.getPostRegDate();
-		this.userId = post.getUser().getUserId();
+		if(post.getUser() != null) {
+			this.userId = post.getUser().getUserId();
+		}
 	}
 }

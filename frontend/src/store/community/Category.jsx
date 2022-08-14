@@ -52,7 +52,7 @@ const categorySlice = createSlice({
     reducers: {
         saveCategory(state, action) {
             state.categoryId = action.payload.categoryId;
-            state.categpryAnoInfo = action.payload.categpryAnoInfo;
+            state.categoryAnoInfo = action.payload.categoryAnoInfo;
             state.categoryComAnoInfo = action.payload.categoryComAnoInfo;
             state.categoryComInfo = action.payload.categoryComInfo;
             state.categoryName = action.payload.categoryName;
@@ -63,41 +63,6 @@ const categorySlice = createSlice({
     }
 
 });
-// const normalPostSlice = createSlice({
-//     name: 'normalPost',
-//     initialState: {
-//         user_id : '',
-//         post_id : '',
-//         post_title : '',
-//         post_content : '',
-//         post_req_date :'',
-//         post_upd_date : '',
-//         post_ano_info :'',
-//         post_com_ban_info :''},
-
-//     reducers: {
-//         saveNormalPost(state, action) {
-//             console.log(action)
-//             state.post_title = action.payload.post_title;
-//             state.post_content = action.payload.post_content;
-//             state.post_upd_date = action.payload.post_upd_date;
-            
-//         },
-//     }
-
-// });
-
-// const commentSlice = createSlice({
-//     name: 'comment',
-//     initialState: {
-//         comment_content: '',
-//     },
-//     reducers: {
-//         saveComment(state, action) {
-//             state.comment_content = action.payload.comment_content;
-//         },
-//     }
-// })
 
 const communityStore = configureStore({
     reducer: { 
@@ -106,12 +71,7 @@ const communityStore = configureStore({
     },
 });
 
-// export const normalPostActions = normalPostSlice.actions;
-// export const commentActions = commentSlice.actions;
+
 export const categoryActions = categorySlice.actions;
+export const categoryState = (state) =>state.category;
 export default categorySlice.reducer;
-
-
- // const postTitle = useSelector(state => state.normalPost.post_title)
-    // const postContent = useSelector(state => state.normalPost.post_content)
-    // const postUpdDate = useSelector(state => state.normalPost.post_upd_date)

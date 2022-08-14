@@ -1,7 +1,5 @@
 package com.ssafy.api.service;
 
-import java.nio.charset.Charset;
-import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,20 +53,13 @@ public class DepartServiceImpl implements DepartService {
 	}
 
 	@Override // 채널 입장
-	public String joinChannel(Long departId) {
-		if(departRepository.findById(departId) != null) {
-			
+	public String joinChannel(String departCode) {
+		if(departRepository.findByDepartCode(departCode) != null) {
 			return "SUCCESS";
 		} else {
 			return "FAIL";
 		}
 	}
-
-	@Override
-	public String departCodeCheck() {
-		return null;
-	}
-	
 	
 
 }

@@ -2,17 +2,9 @@ import axios from "axios";
 import React from "react";
 import { BACKEND_URL } from "../../constant";
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5a42bf0c5fa83ebb1264a3f8fe77922e56b53101
-const OAuth2RedirectHandler = () => {
 
-=======
 function OAuth2RedirectHandler() {
->>>>>>> joohui
+
   // 인가코드
   let Authcode = new URL(window.location.href).searchParams.get("code");
   console.log(Authcode);
@@ -40,14 +32,9 @@ function OAuth2RedirectHandler() {
       <p>code: {Authcode}</p>
     </>
   );
-<<<<<<< HEAD
+
 };
-=======
-<<<<<<< HEAD
-=======
->>>>>>> ac944d20bcc4317d4b4d62d96820f2a79dcb489d
-=======
->>>>>>> 5a42bf0c5fa83ebb1264a3f8fe77922e56b53101
+
 function OAuth2RedirectHandler() {
   // 인가코드
   let Authcode = new URL(window.location.href).searchParams.get("code");

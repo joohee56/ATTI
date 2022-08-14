@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.api.request.CourseCreateReq;
 import com.ssafy.api.request.CourseGetReq;
 import com.ssafy.api.request.CourseUpdateReq;
+import com.ssafy.api.response.CourseAttendenceListRes;
+import com.ssafy.api.response.CourseAttendenceRes;
 import com.ssafy.api.response.CourseGetRes;
 import com.ssafy.api.response.CourseListRes;
 import com.ssafy.api.response.CreateCourseRes;
@@ -62,5 +64,12 @@ public class CourseController {
 		if(!res)
 			return ResponseEntity.status(400).body(BaseResponseBody.of(400, "수정 중 문제가 발생했습니다."));
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "수정되었습니다."));
+	}
+	
+	// 채널에 속한 참가자 리스트 조회
+	@GetMapping("/attendence/{departId}")
+	public ResponseEntity<CourseAttendenceListRes> getAttendence(@PathVariable("departId") Long departId) {
+		List<CourseAttendenceRes> attendenceList = courseService.getAttendence(departId);
+		return ResponseEntity.status(200).body(CourseAttendenceListRes.of(200, "success", attendenceList));
 	}
 }

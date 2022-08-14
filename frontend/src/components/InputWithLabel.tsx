@@ -1,8 +1,14 @@
 import * as React from "react";
-import TextField from "@mui/material/TextField";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { SvgIconComponent } from "@mui/icons-material";
 import SvgIcon from "@mui/material/SvgIcon";
-import { FormControl, InputAdornment } from "@mui/material";
+import {
+  alpha,
+  FormControl,
+  FormHelperText,
+  InputAdornment,
+  OutlinedInputProps,
+} from "@mui/material";
 import styled from "styled-components";
 import { palette } from "../styles/palette";
 
@@ -19,6 +25,11 @@ interface inputInfo {
   icon?: SvgIconComponent;
   type?: string;
   value?: string | number | readonly string[] | undefined;
+  disabled?: boolean;
+  multiline?: boolean;
+  rows?: number;
+  textBool?: boolean;
+  helperText?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
 }
 
@@ -26,10 +37,43 @@ const InputStyle = styled(TextField)(({ theme }) => ({
   backgroundColor: palette.gray_1,
 }));
 
+const RedditTextField = styled((props: TextFieldProps) => (
+  <TextField
+    InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiFilledInput-root": {
+    border: "1px solid #e2e2e1",
+    borderRadius: 4,
+    backgroundColor: palette.gray_1,
+    transition: theme.transitions.create([
+      "border-color",
+      "background-color",
+      "box-shadow",
+    ]),
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
+    "&.Mui-focused": {
+      backgroundColor: "transparent",
+      boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
+      borderColor: theme.palette.primary.main,
+    },
+  },
+}));
+
 // rest 쪽에는 onChange, type, name, value, placeholder 등의 input 에서 사용 하는 값들을 넣어줄수 있다.
-const InputWithIcon = ({ icon, placeholder, ...rest }: inputInfo) => (
+const InputWithIcon = ({
+  icon,
+  placeholder,
+  textBool,
+  helperText,
+  rows,
+  ...rest
+}: inputInfo) => (
   <Wrapper>
-    <FormControl sx={{ m: 1, width: "54%" }}>
+    <FormControl sx={{ width: "100%", height: "100%" }}>
       <InputStyle
         InputProps={{
           startAdornment: icon && (
@@ -41,8 +85,19 @@ const InputWithIcon = ({ icon, placeholder, ...rest }: inputInfo) => (
         size="small"
         placeholder={placeholder}
         {...rest}
+        rows={rows}
+        // helperText={helperText ? helperText : " "}
       />
     </FormControl>
+    {textBool &&
+      (helperText ? (
+        <FormHelperText disabled variant="filled">
+          {" "}
+          {helperText}
+        </FormHelperText>
+      ) : (
+        <p style={{ margin: `21px` }}> </p>
+      ))}
   </Wrapper>
 );
 

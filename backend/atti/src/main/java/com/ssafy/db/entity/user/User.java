@@ -29,6 +29,7 @@ import com.ssafy.db.entity.webclass.Attendance;
 import com.ssafy.db.entity.webclass.Course;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -69,4 +70,73 @@ public class User {
 	@Column(name = "user_role")
 	@Enumerated(EnumType.STRING)
 	private UserRole userRole;
+
+	
+	/////////////////////////////////////////////////////
+	
+	
+//	@OneToMany(mappedBy = "tuser")
+//	private List<Message> tousers = new ArrayList<>();
+//	
+//	@OneToMany(mappedBy = "fuser")
+//	private List<Message> fromusers = new ArrayList<>();
+//
+//	@OneToMany(mappedBy = "user") 
+//	private List<Comment> comments = new ArrayList<>();
+//	  
+//	@OneToMany(mappedBy = "user")
+//	private List<Attendance> attendances = new ArrayList<>();
+//	  
+//	@OneToMany(mappedBy = "in_user")
+//	private List<Course> courses = new ArrayList<>();
+//	  
+//	@OneToMany(mappedBy = "user")
+//	private List<Chat> chats = new ArrayList<>();
+//	
+//	@OneToMany(mappedBy = "user")
+//	private List<Depart> departs = new ArrayList<>();
+//	  
+//	@OneToMany(mappedBy = "user")
+//	private List<Post> posts = new ArrayList<>();
+//	  
+//	@OneToMany(mappedBy = "user")
+//	private List<Category> categorys = new ArrayList<>();
+//
+//
+//	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Profile profile;
+//
+//	@OneToOne(mappedBy = "make_user", fetch = FetchType.LAZY)
+//	private Course course;
+//	 
+//	@OneToMany(mappedBy = "user")
+//	private List<UserPostMention> userpostmentions = new ArrayList<>();
+//	  
+//	@OneToMany(mappedBy = "user")
+//	private List<UserPostLike> userpostlikes = new ArrayList<>();
+//	  
+//	@OneToMany(mappedBy = "user")
+//	private List<UserCommentMention> usercommentmentions = new ArrayList<>();
+//	  
+//	@OneToMany(mappedBy = "user")
+//	private List<UserCommentLike> usercommentlikes = new ArrayList<>();
+//	  
+//	@OneToMany(mappedBy = "user")
+//	private List<UserCourse> usercourses = new ArrayList<>();
+	  
+//	@OneToMany(mappedBy = "user")
+//	private List<UserDepart> userDeparts = new ArrayList<>();
+//	
+	// 연관관계메소드
+//	public void setProfile(Profile profile) {
+//		this.profile = profile;
+//		profile.setUser(this);
+//	}
+//	
+//	public void setCourse(Course course) {
+//		this.course = course;
+//		course.setUser(this);
+//		
+//	}
+
 }

@@ -13,6 +13,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import UseSwitchesBasic from "../SwitchButton"
 
+import apiAcc, {api} from '../../utils/api';
+import { reRenderingActions } from '../../store/community/ReRendering';
 import CommentList from './CommentList';
 import {ButtonBlue} from '../ButtonStyled';
 import InputWithLabel from '../InputWithLabel';
@@ -23,37 +25,50 @@ import ReactHtmlParser from 'react-html-parser'
 
 function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
     const [single, setSingle] = useState([])
+    const [comments, setComments] = useState([])
+    
     useEffect(() => {
         async function singlePost(){
-          axios.get(
-            BACKEND_URL + `/post/read/${postId}`,
-            {
-              headers: {
-                "Content-type": "application/json",
-              },
-            }
-          ).then((res) => {
-            console.log("개별 글 list : ", res.data)
-            setSingle(res.data)
-            setSinglePost(res.data)
-          })
+            api.get(`/post/read/${postId}`
+              ).then((res) => {
+                console.log("개별 글 list : ", res.data)
+                setSingle(res.data)
+                setSinglePost(res.data)
+              })
+        //   axios.get(
+        //     BACKEND_URL + `/post/read/${postId}`,
+        //     {
+        //       headers: {
+        //         "Content-type": "application/json",
+        //       },
+        //     }
+        //   ).then((res) => {
+        //     console.log("개별 글 list : ", res.data)
+        //     setSingle(res.data)
+        //     setSinglePost(res.data)
+        //   })
         }
         singlePost();
+
+        // 댓글 list 불러오는 것
+        api.get(`post/comment/read/${postId}`)
+        .then((res) => {
+            console.log("댓글들: ", res)
+            setComments(res.data)
+        })
        },[]);
     
     function modalEvent(){
         onClickToggleModal2()
         onClickToggleModal3()
     }
+
+    const { auth } = useSelector(state => state.userInfo)
     const [comment, setComment] = useState({
-        commentId: "",
-        postId: "",
-        categoryId: "",
-        departId: "",
-        userId: "",
-        commentRegDate: "",
-        commentDeleteInto: "",
-        commentAnoInfo: "",
+        postId: postId,
+        userId: "gusxo123",
+        commentDeleteInfo: "",
+        commentAnoInfo: false,
         commentContent: "",
         commentGroup: "",
         commentLevel: "",
@@ -67,36 +82,60 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                 [name] : value,
             }));
         };
+    const getAnoInfo = () => {
+        console.log("익명여부 :", comment.commentAnoInfo)
+        comment.commentAnoInfo = !comment.commentAnoInfo
         
+    }
+
     const writeComment = useCallback(
         async (e) => {
         e.preventDefault();
         try {
-            await axios
-            .post(
-                BACKEND_URL + "/post/comment/write",
+            document.getElementById("commentInput").value=''
+
+            await api
+            .post("/post/comment/write",
                 {
-                    commentId: comment.commentId,
                     postId: comment.postId,
-                    categoryId: comment.categoryId,
-                    departId: comment.departId,
                     userId: comment.userId,
-                    commentRegDate: comment.commentRegDate,
-                    commentDeleteInto: comment.commentDeleteInto,
+                    commentDeleteInfo: comment.commentDeleteInfo,
                     commentAnoInfo: comment.commentAnoInfo,
                     commentContent: comment.commentContent,
                     commentGroup: comment.commentGroup,
                     commentLevel: comment.commentLevel,
                     seq: comment.seq
                 },
-                {
-                headers: {
-                    "Content-type": "application/json",
-                },
-                }
             )
+
+            // await axios
+            // .post(
+            //     BACKEND_URL + "/post/comment/write",
+            //     {
+            //         commentId: comment.commentId,
+            //         postId: comment.postId,
+            //         categoryId: comment.categoryId,
+            //         departId: comment.departId,
+            //         userId: comment.userId,
+            //         commentRegDate: comment.commentRegDate,
+            //         commentDeleteInfo: comment.commentDeleteInfo,
+            //         commentAnoInfo: getAnoInfoNum(),
+            //         commentContent: comment.commentContent,
+            //         commentGroup: comment.commentGroup,
+            //         commentLevel: comment.commentLevel,
+            //         seq: comment.seq
+            //     },
+            //     {
+            //     headers: {
+            //         "Content-type": "application/json",
+            //     },
+            //     }
+            // )
             .then((res) => {
                 console.log("response:", res);
+                dispatch(reRenderingActions.saveReRendering(
+                    {cider: updateCider }
+                ))
     
             });
         } catch (err) {
@@ -110,6 +149,7 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         comment.departId,
         comment.userId,
         comment.commentRegDate,
+        comment.commentDeleteInfo,
         comment.commentAnoInfo,
         comment.commentContent,
         comment.commentGroup,
@@ -117,26 +157,60 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         comment.seq
         ]
     );
+    
+    const dispatch = useDispatch()
+    const currentCider = useSelector(state => state.reRendering.cider)
+    const updateCider = !currentCider
 
     const deletePost = () => {
-        axios.delete(
-                BACKEND_URL + `/post/delete/${single.postId}`,
-                {
-                headers: {
-                    "Content-type": "application/json",
-                },
-                }
-            )
-            .then((res) => {
-                console.log("response:", res);
+
+        api.delete(`/post/delete/${single.postId}`,
+        )
+        .then((res) => {
+            console.log("response:", res);
+            dispatch(reRenderingActions.saveReRendering(
+                {cider: updateCider }
+            ))
+        });
+
+        // axios.delete(
+        //         BACKEND_URL + `/post/delete/${single.postId}`,
+        //         {
+        //         headers: {
+        //             "Content-type": "application/json",
+        //         },
+        //         }
+        //     )
+        //     .then((res) => {
+        //         console.log("response:", res);
+        //         dispatch(reRenderingActions.saveReRendering(
+        //             {cider: updateCider }
+        //         ))
     
-            });
+        //     });
         }
     
     function DeleteFunction(){
         onClickToggleModal2();
-        deletePost()
+        deletePost();
     }
+
+    // // 글 좋아요 부분
+    // const [postLikeCount, setPostLikeCount] = useState([])
+    // const postLike = () => {
+    //     api.get(`/post/likeBtn/${single.postId}/${auth.Id}`
+    //     )
+    //     .then((res) => {
+    //         console.log("response:", res);
+    //         setPostLikeCount(res.data)
+    //     });
+    // }
+    
+    // useEffect(() => {
+    //     postLike()
+    // }, [postLikeCount]);
+
+
 ///////////////////////////////////////////////////////////////////
     const detailStyle = {
         width: "1000px",
@@ -155,14 +229,15 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         <div style={detailStyle}>
             <div>
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between"}}>
-                    <div style={{margin: "10px 0 0 40px", fontWeight: "bold"}}>
+                    <div style={{width: "750px", margin: "10px 0 0 40px", fontWeight: "bold"}}>
                         {single.postTitle}
                     </div>
                     <div style={{display: "flex", margin: "0 35px 0 0"}}>
                         <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
-                        <span style={{margin: "10px 0 0 0"}}>숫자</span>
-                        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 0"}}>숫자</span>
+                        <span style={{margin: "10px 0 0 0"}}>24</span>
+                        &nbsp; &nbsp; 
+                        <Checkbox style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
+                        <span style={{margin: "10px 0 0 0"}}>22</span>
                     </div>
                 </div>
                 <hr style={hrStyle} />
@@ -197,7 +272,7 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
             </ContentDiv>
             <hr style={{ height: "0.1px", backgroundColor: "gray", width: "95%", marginBottom: "0"}} />
             <br />
-            <CommentList/>
+            <CommentList comments={comments}/>
             
             <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-end", alignContent: "flex-end", margin: "10px 0 0 0"}}>
                 <div style={{display: "flex", flexDirection: "row"}}>
@@ -205,12 +280,14 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                         <span style={{textAlign: "center" ,fontSize: "15px", marginBottom: "5px"}}>
                             익명댓글 
                         </span>
-                        {UseSwitchesBasic()}
+                        <span onClick={getAnoInfo}>
+                            {UseSwitchesBasic()}
+                        </span>
                     </SwitchDiv>
                 </div>
                 <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
                     {/* <CustomInputWithLabel name='commentContent' placeholder='댓글을 작성해 주세요' onChange={getValue} value={comment.commentContent}/> */}
-                    <CommentInput name='commentContent' onChange={getValue} value={comment.comment_content}/>
+                    <CommentInput id="commentInput" name='commentContent' onChange={getValue} value={comment.comment_content}/>
                     <CustomButtonBlue onClick={writeComment}>댓글 작성</CustomButtonBlue>
                 </div>
             </div>

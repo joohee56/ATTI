@@ -1,5 +1,5 @@
 import { api } from "../utils/api";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
@@ -12,9 +12,14 @@ import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
 import { KAKAO_AUTH_URL } from "../constant/index";
 import InputWithPhone from "../components/account/InputWithPhone";
-import { useDispatch } from "react-redux";
-import { loginActions } from "../store/Login";
+import { useDispatch, useSelector } from "react-redux";
+import { loginActions, UserLoginState } from "../store/LoginSotre";
 import { useNavigate } from "react-router-dom";
+import { palette } from "../styles/palette";
+import InputPassword from "../components/account/InputPassword";
+import { FormHelperText, Snackbar } from "@mui/material";
+import SnacbarTell from "../components/SnacbarTell";
+import { RootState } from "../store";
 
 interface userLoginInfo {
   userId: string;
@@ -29,32 +34,24 @@ interface findIdInfo {
 interface findPwInfo {
   findPw_Id: string;
   findPw_name: string;
-  findPw_phone: string;
-  findPw_number: string;
+  phoneNumber: string;
 }
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { auth } = useSelector((state: RootState) => state.userInfo);
 
+  useEffect(() => {
+    if (auth) {
+      navigate("/welcome");
+    }
+  }, [auth]);
+
+  // 로그인
   const [loginInfo, setLoginInfo] = useState<userLoginInfo>({
     userId: "",
     password: "",
   });
-
-  const [findIdInfo, setfindIdInfo] = useState<findIdInfo>({
-    findId_name: "",
-    findId_email: "",
-  });
-
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-
-  // const [findPwInfo, setFindPwInfo] = useState<findPwInfo>({
-  //   findPw_Id: "",
-  //   findPw_name: "",
-  //   findPw_phone: "",
-  //   findPw_number: "",
-  // });
-
   const onChangeLogin = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setLoginInfo({
@@ -62,16 +59,6 @@ function LoginPage() {
       [event.target.name]: event.target.value,
     });
   };
-
-  const onChangeFindID = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setfindIdInfo({
-      ...findIdInfo,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const dispatch = useDispatch();
 
   // 일반 로그인
   const loginClick = async (event: any) => {
@@ -87,16 +74,22 @@ function LoginPage() {
           dispatch(
             loginActions.login({
               id: loginInfo.userId,
+              userName: response.data.userName,
               accessToken: response.data.accessToken,
+              admin: response.data.admin,
+              categoryList: response.data.categoryList,
+              departList: response.data.departList,
             })
           );
-          navigate("/welcome");
         }
       })
       .catch(function (error) {
-        console.log("Error", error.data);
+        console.log("Error", error);
+        console.log("Error", "로그인 실패!");
       });
   };
+
+ 
 
   // 카카오 로그인
   const kakaoLogin = () => {
@@ -108,7 +101,20 @@ function LoginPage() {
     console.log(AuthorizationCode);
   };
 
-  // 아이디 찾기
+  //아이디 찾기
+  const [findIdInfo, setfindIdInfo] = useState<findIdInfo>({
+    findId_name: "",
+    findId_email: "",
+  });
+
+  const onChangeFindID = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setfindIdInfo({
+      ...findIdInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   const clickFindId = async (e: any) => {
     e.preventDefault();
     await api
@@ -117,6 +123,8 @@ function LoginPage() {
         email: findIdInfo.findId_email,
       })
       .then(function (response) {
+        //snacbar확인
+        setOpen(true);
         setFindID('는 "' + response.data.userId + '" 입니다.');
       })
       .catch(function (error) {
@@ -124,9 +132,117 @@ function LoginPage() {
       });
   };
 
+  // 비밀번호 찾기
+  const [findPwInfo, setFindPwInfo] = useState<findPwInfo>({
+    findPw_name: "",
+    findPw_Id: "",
+    phoneNumber: "",
+  });
+  //const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
+  const onChangePhonNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setFindPwInfo({
+      ...findPwInfo,
+      phoneNumber: value
+        .replace(/[^0-9]/g, "")
+        .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
+        .replace(/(\-{1,2})$/g, ""),
+    });
+  };
+
+  const onChangeFindPW = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setFindPwInfo({
+      ...findPwInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const clickFindPw = async (e: any) => {
+    e.preventDefault();
+    await api
+      .post("/user/findPassword", {
+        userId: findPwInfo.findPw_Id,
+        usesrName: findPwInfo.findPw_name,
+        phoneNumber: findPwInfo.phoneNumber,
+      })
+      .then(function (response) {
+        setFindPwInfo({
+          ...findPwInfo,
+          findPw_name: "",
+          findPw_Id: "",
+          phoneNumber: "",
+        });
+        setOpen(true);
+        setIsPhoneNumber(false);
+      })
+      .catch(function (error) {
+        setFindPW("회원정보가 없습니다");
+      });
+  };
+
+  // 새 비밀번호
+  /* 값 받아오기 */
+  const [password, setPassword] = useState<string>("");
+  const [passwordConfirm, setPasswordConfirm] = useState<string>("");
+  /* 오류메세지 */
+  const [passwordMessage, setPasswordMessage] = useState<string>("");
+  const [passwordConfirmMessage, setPasswordConfirmMessage] =
+    useState<string>("");
+  /* 성공여부 */
+  const [isPassword, setIsPassword] = useState<boolean>(false);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(false);
+
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\~!@#$%^&*])[^\s]{6,12}$/;
+    if (!regex.test(e.target.value)) {
+      setPasswordMessage(
+        "영어 대문자, 영어 소문자, 숫자, 특수문자(~!@#$%^&*)를 모두 1개 이상을 포함한 비밀번호 6~12자만 가능합니다."
+      );
+      setIsPassword(false);
+    } else setIsPassword(true);
+  };
+
+  const onChangePasswordConfirm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordConfirm(e.target.value);
+    if (password != e.target.value) {
+      setPasswordConfirmMessage("위에 입력한 비밀번호와 일치하지 않습니다.");
+      setIsPasswordConfirm(false);
+    } else setIsPasswordConfirm(true);
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const updatePw = async (e: any) => {
+    e.preventDefault();
+    await api
+      .put("/user/updatePassword", {
+        userId: findPwInfo.findPw_Id,
+        password: password,
+      })
+      .then(function (response) {
+        console.log("비밀번호가 변경되었습니다.");
+        setPassword("");
+        setPasswordConfirm("");
+      })
+      .catch(function (error) {
+        setFindPW("error가 발생");
+        console.log("Error", error);
+        // ↓ 오류 해결 후 지워도 됨 ↓
+        setPassword("");
+        setPasswordConfirm("");
+      });
+  };
+
+  const dispatch = useDispatch();
+
   // 아이디 찾기, 비밀번호 찾기
   const [findValue, setFindValue] = useState<string>("");
   const [clickFindID, setFindID] = useState<string>("");
+  const [clickFindPW, setFindPW] = useState<string>("");
   //const [clickFindID] = useState<boolean>(false);
 
   // 모달 보이기 여부
@@ -142,6 +258,12 @@ function LoginPage() {
 
   return (
     <>
+      <SnacbarTell
+        open={open}
+        setOpen={setOpen}
+        message="비밀번호가 변경되었습니다."
+        type="success"
+      />
       <HeaderDiv>로그인</HeaderDiv>
       <StyledPage>
         <StyledContent>
@@ -152,14 +274,14 @@ function LoginPage() {
           </div>
         </StyledContent>
         <StyledContent>
-          <div>최근에 로그인한 서비스</div>
+          {/* <div>최근에 로그인한 서비스</div>
           <img
             src={
               "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
             }
             alt="네이버로 로그인"
           />
-          <hr />
+          <hr /> */}
           <div>
             자동로그인
             <input type="checkbox" id="switch" value="off" />
@@ -171,11 +293,13 @@ function LoginPage() {
                 name="userId"
                 placeholder="ID"
                 onChange={onChangeLogin}
+                
               />
               <InputWithLabel
                 name="password"
                 placeholder="Password"
                 type="password"
+                helperText="Please enter your name"
                 onChange={onChangeLogin}
               />
             </div>
@@ -184,6 +308,7 @@ function LoginPage() {
               <DialogButton
                 onClick={(e) => {
                   setClickModal("findID");
+                  setFindID("");
                 }}
               >
                 아이디 찾기
@@ -196,7 +321,6 @@ function LoginPage() {
               >
                 비밀번호 찾기
               </DialogButton>
-              | <Link to="../signup">회원가입</Link>
             </p>
           </div>
 
@@ -212,12 +336,12 @@ function LoginPage() {
               width={"50px"}
               onClick={kakaoLogin}
             />
-            <img
+            {/* <img
               src={
                 "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
               }
               alt="네이버로 로그인"
-            />
+            /> */}
           </div>
         </StyledContent>
 
@@ -240,10 +364,12 @@ function LoginPage() {
                     아이디 찾기
                   </TextSpan>
                 </LeftTextDiv>
+
                 <TextDiv>
                   <TextSpan
                     onClick={(e) => {
                       setFindValue("findPW");
+                      setFindPW("");
                     }}
                   >
                     비밀번호 찾기
@@ -265,27 +391,73 @@ function LoginPage() {
                       type="email"
                       onChange={onChangeFindID}
                     />
-                    {clickFindID && <p>아이디{clickFindID}</p>}
+                    {clickFindID.length > 0 && <p> 아이디{clickFindID}</p>}
                     <ButtonPurple onClick={clickFindId}>찾기</ButtonPurple>
                   </>
                 )}
                 {/*비밀번호 찾기 모달*/}
                 {findValue == "findPW" && (
                   <>
-                    <InputWithLabel name="id" placeholder="ID" />
-                    <InputWithLabel name="name" placeholder="Name" />
+                    <InputWithLabel
+                      name="findPw_name"
+                      placeholder="이름"
+                      onChange={onChangeFindPW}
+                    />
+                    <InputWithLabel
+                      name="findPw_Id"
+                      placeholder="아이디"
+                      onChange={onChangeFindPW}
+                    />
                     <InputWithPhone
                       name="phoneNumber"
                       placeholder="폰 번호"
-                      phonNumber={phoneNumber}
+                      phonNumber={findPwInfo.phoneNumber}
+                      onChange={onChangePhonNumber}
+                      isCertifiedSuccess={setIsPhoneNumber}
                     />
-                    <ButtonPurple>보내기</ButtonPurple>
-                    <p>
-                      가입하신 이메일(xxx@naver.com)으로
-                      <br />
-                      임시비밀번호를 보내드렸습니다
-                    </p>
-                    <ButtonBlue>닫기</ButtonBlue>
+
+                    {isPhoneNumber &&
+                      findPwInfo.findPw_name.length > 0 &&
+                      findPwInfo.findPw_Id.length > 0 && (
+                        <NewPW>
+                          <div>
+                            <div style={{ padding: `1rem` }}>
+                              <TextSpan>비밀번호변경</TextSpan>
+                            </div>
+                            <div style={{ width: `70%`, padding: `30px 15%` }}>
+                              <InputPassword
+                                name="password"
+                                placeholder="비밀번호"
+                                value={password}
+                                onChange={onChangePassword}
+                              />
+                              {password.length > 0 && !isPassword && (
+                                <FormHelperText error>
+                                  {" "}
+                                  {passwordMessage}
+                                </FormHelperText>
+                              )}
+                              <InputWithLabel
+                                name="password2"
+                                placeholder="비밀번호 확인"
+                                type="password"
+                                value={passwordConfirm}
+                                onChange={onChangePasswordConfirm}
+                              />
+                              {passwordConfirm.length > 0 &&
+                                !isPasswordConfirm && (
+                                  <FormHelperText error>
+                                    {" "}
+                                    {passwordConfirmMessage}
+                                  </FormHelperText>
+                                )}
+                            </div>
+                            <ButtonBlue onClick={updatePw}>수정</ButtonBlue>
+                          </div>
+                        </NewPW>
+                      )}
+                    {clickFindPW && <p>{clickFindPW}</p>}
+                    <ButtonBlue onClick={clickFindPw}>찾기</ButtonBlue>
                   </>
                 )}
               </div>
@@ -308,7 +480,7 @@ const StyledPage = styled.div`
 const StyledContent = styled.div`
   max-width: 500px;
   min-width: 500px;
-  height: 400px;
+  height: 450px;
   padding: 3rem;
   text-align: center;
   border-radius: 1rem;
@@ -326,8 +498,8 @@ const HeaderDiv = styled.div`
   font-size: large; //텍스트 크기
   font-weight: bold; //텍스트 굵기
   text-align: center; //텍스트 정렬 방향
-  height: 150px; //높이
-  line-height: 150px; //줄간격
+  height: 130px; //높이
+  line-height: 130px; //줄간격
 `;
 
 const DialogButton = styled.button`
@@ -367,9 +539,32 @@ const TextDiv = styled.div`
 const TextSpan = styled.span`
   font-size: 1.2em;
   cursor: pointer;
-  background: linear-gradient(135deg, #9dceff 0%, #92a3fd 100%);
+  background: ${palette.main_grBlue};
+  -webkit-background-clip: text;
   color: transparent;
-  /* -webkit-background-clip: text; */
+`;
+
+const Grid = styled.div`
+  display: grid;
+  //grid-template-columns: 1fr 1.3fr 1fr 5fr 1fr;
+  grid-template-rows: repeat(2, 1fr);
+  row-gap: 10px;
+  align-items: stretch;
+  width: 80%;
+  /* border-bottom: 1px solid; */
+`;
+
+const NewPW = styled.div`
+  position: absolute;
+  background: white;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
 `;
 
 export default LoginPage;
+function useSnackbar(): { enqueueSnackbar: any } {
+  throw new Error("Function not implemented.");
+}
