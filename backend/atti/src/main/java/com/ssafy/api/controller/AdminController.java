@@ -29,11 +29,10 @@
 //	AdminService adminService;
 //	
 //	// 채널 회원 목록 조회
-//	@GetMapping("/user/check/{departId}")
-//	public ResponseEntity<List<UserDepart>> viewAllUsers(@PathVariable Long departId){
-//		
-//		return new ResponseEntity<List<UserDepart>>(adminService.viewAllUsers(departId), HttpStatus.OK);
-//	}
+////	@GetMapping("/user/check/{departId}") // 보냄
+////	public ResponseEntity<List<UserDepart>> viewAllUsers(@PathVariable Long departId){	
+////		return new ResponseEntity<List<UserDepart>>(adminService.viewAllUsers(departId), HttpStatus.OK);
+////	}
 //	
 //	// 카테고리 삭제
 //	@DeleteMapping("/category/delete/{categoryId}")
@@ -57,21 +56,3 @@
 //	}
 //
 //	}
-//	
-//
-//
-////import io.swagger.annotations.Api;
-////// @Api 클래스를 Swagger 리소스 대상으로 표시
-////@Api(value  = "관리자 API", tags = {"Admin"})
-//
-//	/*
-//	 * @RestController
-//	 * 
-//	 * @RequestMapping("/admin/post") public class AdminController {
-//	 * 
-//	 * @Autowired private AdminService adminService;
-//	 * 
-//	 * 
-//	 * }
-//	 */
-//

@@ -31,8 +31,6 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'eclipse'
 // apply plugin: 'com.github.node-gradle.node'
-//이클립스인 경우를 위한 QueryDSL 플러그인. IntelliJ는 불필요.
-// apply plugin: 'com.ewerk.gradle.plugins.querydsl'
 
 repositories {
     mavenCentral()
@@ -53,16 +51,6 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 	providedRuntime
-}
-
-
-repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/snapshot' }
-    maven { url 'https://repo.spring.io/milestone' }
-    maven { url "https://repo.spring.io/libs-release" }
-    maven { url "https://repo.maven.apache.org/maven2" }
-    maven { url "https://build.shibboleth.net/nexus/content/repositories/releases" }
 }
 
 //set build time and inject value to application.properties
@@ -97,7 +85,8 @@ tasks {
     processResources {
         duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
     }
-    }
+}
+
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'

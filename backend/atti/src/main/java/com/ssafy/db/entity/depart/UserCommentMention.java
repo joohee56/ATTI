@@ -44,14 +44,4 @@ public class UserCommentMention {
 	private Comment comment;						// 댓글 ID
 	
 	///////////////////////////////////////////////////////
-	 
-	public void setUser(User user) {
-		this.user = user;
-		user.getUsercommentmentions().add(this);
-	}
-	
-	public void setComment(Comment comment) {
-		this.comment = comment;
-		comment.getUsercommentmentions().add(this);
-	}
 }

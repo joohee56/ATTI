@@ -49,9 +49,4 @@ public class File {
 	private Post post;						// 게시글 ID (FK)
 	
 	/////////////////////////////////////////////////////// 
-	
-	public void setPost(Post post) {
-		this.post = post;
-		post.getFiles().add(this);
-	}
 }

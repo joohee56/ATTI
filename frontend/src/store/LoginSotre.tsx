@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export const userDB = [{ id: "test", password: "test" }];
-
 export interface UserLoginState {
   id: string;
   accessToken: string;
@@ -24,6 +22,7 @@ const userSlice = createSlice({
       state.auth = true;
       localStorage.setItem("AccessToken",state.accessToken);
       console.log(action.payload);
+      
     },
     logout: (state) => {
       state.id = "";
