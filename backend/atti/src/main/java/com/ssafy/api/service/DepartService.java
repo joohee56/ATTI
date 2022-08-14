@@ -1,9 +1,13 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.DepartCreateReq;
+import com.ssafy.api.request.DepartJoinReq;
 import com.ssafy.db.entity.depart.Depart;
 
 public interface DepartService {
-	void createChannel(Depart depart); // 채널 생성
+	void createChannel(DepartCreateReq departCreateReq); // 채널 생성
 	
-	Depart joinChannel(String departCode); // 채널 입장
+	String joinChannel(Long departId); // 채널 입장
+	
+	String departCodeCheck();
 }
