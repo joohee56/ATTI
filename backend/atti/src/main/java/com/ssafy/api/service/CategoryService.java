@@ -35,7 +35,7 @@ public class CategoryService {
 			dtoList.add(CategoryListRes.builder()
 					.categoryId(c.getCategoryId())
 					.categoryName(c.getCategoryName())
-					.cType(c.getCtype().name()).build());
+					.cType(c.getCtype()).build());
 		}
 		
 		return dtoList;

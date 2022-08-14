@@ -123,7 +123,7 @@ public class AuthController {
 			List<PostViewAllRes> postList;
 			if(userCategoryList != null) {
 				postList = new ArrayList<PostViewAllRes>();
-				postList = postService.viewAllPosts(departId, userCategoryList.get(0).getCategoryId());
+				postList = postService.viewAllPosts(departId, userCategoryList.get(0).getCategoryId(), userId);
 			} else 
 				postList = null;
 			

@@ -20,6 +20,7 @@ import com.ssafy.db.entity.depart.UserPostLike;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.CategoryRepository;
 import com.ssafy.db.repository.CategoryRepository2;
+import com.ssafy.db.repository.CommentRepository;
 import com.ssafy.db.repository.DepartRepository;
 import com.ssafy.db.repository.DepartRepository2;
 import com.ssafy.db.repository.PostRepository;
@@ -46,6 +47,10 @@ public class PostServiceImpl implements PostService {
 	// 좋아요 추가 - 주희
 	@Autowired
 	private UserPostLikeRepository userPostLikeRepository;
+	
+	// 댓글 갯수 추가 - 주희
+	@Autowired
+	private CommentRepository commentRepository;
 
 	@Override // 글쓰기
 	@Transactional // 쓰기가 필요할땐 그냥 Transactional
@@ -80,7 +85,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override // 게시글 전체 조회
-	public List<PostViewAllRes> viewAllPosts(Long departId, Long categoryId) {
+	public List<PostViewAllRes> viewAllPosts(Long departId, Long categoryId, String userId) {
 
 //		System.out.println("=======================" + departId + "=======================");
 //		System.out.println("=======================" + categoryId + "=======================");
@@ -90,16 +95,34 @@ public class PostServiceImpl implements PostService {
 //		for (Post post : entityList) {
 //			list.add(new PostViewAllRes(post));
 //		}
-		Depart depart = departRepository.getById(departId);
-		Category category = categoryRepository.getById(categoryId);
+		Depart depart = departRepository.findById(departId).orElse(null);
+		Category category = categoryRepository.findById(categoryId).orElse(null);
 		List<Post> postList = postRepository.findByDepartAndCategoryOrderByPostIdDesc(depart, category);
 		
 		List<PostViewAllRes> postViewAllResList;
 		if(postList.isEmpty()) return null;
 		else postViewAllResList = new ArrayList<PostViewAllRes>(); 
 		
+		User user = userRepository.findById(userId).orElse(null);
+		
 		for(Post p : postList) {
-			postViewAllResList.add(new PostViewAllRes(p));
+			// 내가 이 게시글에 좋아요를 눌렀는지 체크
+			UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(p, user).orElse(null);
+			boolean myLike = false;
+			if(userPostLike != null)
+				myLike = true;
+			
+			Long likeCount = userPostLikeRepository.countByPost(p);
+			Long commentCount = commentRepository.countByPost(p);
+			
+			postViewAllResList.add(PostViewAllRes.builder()
+					.postTitle(p.getPostTitle())
+					.postContent(p.getPostContent())
+					.postRegDate(p.getPostRegDate())
+					.userId(p.getUser().getUserId())
+					.likeCount(likeCount)
+					.commentCount(commentCount)
+					.myLike(myLike).build());
 		}
 		
 		return postViewAllResList;
@@ -123,12 +146,6 @@ public class PostServiceImpl implements PostService {
 	public void deleteFindOne(Long postId) {
 		postRepository.deleteById(postId);
 	}
-
-//	@Override // 전체 게시글 일괄 삭제
-//	@Transactional
-//	public void deleteAllPosts() {
-//		postRepository.deleteAll();
-//	}
 
 	@Override // 단일 게시글 수정
 	@Transactional

@@ -23,6 +23,7 @@ public class PostViewAllRes {
 	
 	// 수정 - 주희
 	private long likeCount;
+	private long commentCount;
 	private boolean myLike; 
 	
 	public PostViewAllRes(Post post) {
