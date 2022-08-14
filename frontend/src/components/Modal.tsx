@@ -37,7 +37,7 @@ width: 100%;
   justify-content: center;
   position: fixed;
   left: 0;
-  top: 50px;
+  top: 15px;
   z-index: 1;
   `
 

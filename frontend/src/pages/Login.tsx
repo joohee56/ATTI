@@ -274,14 +274,14 @@ function LoginPage() {
           </div>
         </StyledContent>
         <StyledContent>
-          <div>최근에 로그인한 서비스</div>
+          {/* <div>최근에 로그인한 서비스</div>
           <img
             src={
               "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
             }
             alt="네이버로 로그인"
           />
-          <hr />
+          <hr /> */}
           <div>
             자동로그인
             <input type="checkbox" id="switch" value="off" />
@@ -336,12 +336,12 @@ function LoginPage() {
               width={"50px"}
               onClick={kakaoLogin}
             />
-            <img
+            {/* <img
               src={
                 "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
               }
               alt="네이버로 로그인"
-            />
+            /> */}
           </div>
         </StyledContent>
 

@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import styled from "styled-components";
 import { palette } from "../styles/palette";
-import { margin } from "@mui/system";
 
 // 두개가 함께 있을땐 상단 (그 사이) 에 여백을 준다
 const Wrapper = styled.div`
@@ -29,7 +28,6 @@ interface inputInfo {
   disabled?: boolean;
   multiline?: boolean;
   rows?: number;
-  textType?: "error"
   textBool?: boolean;
   helperText?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
@@ -91,9 +89,15 @@ const InputWithIcon = ({
         // helperText={helperText ? helperText : " "}
       />
     </FormControl>
-    {textBool&& (helperText? <FormHelperText disabled variant="filled" > {helperText}</FormHelperText>
-    : <p style={{margin:`21px`}}>  </p>)
-    }
+    {textBool &&
+      (helperText ? (
+        <FormHelperText disabled variant="filled">
+          {" "}
+          {helperText}
+        </FormHelperText>
+      ) : (
+        <p style={{ margin: `21px` }}> </p>
+      ))}
   </Wrapper>
 );
 

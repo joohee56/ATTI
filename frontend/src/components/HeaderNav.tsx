@@ -41,7 +41,7 @@ function HeaderNav() {
   };
 
   const logoClick = () => {
-    navigate(auth? "/":"/community");
+    navigate(!auth? "/":"/community");
   };
 
   return (

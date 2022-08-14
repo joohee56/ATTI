@@ -89,7 +89,7 @@ function SignupPage() {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\~!@#$%^&*])[^\s]{6,12}$/;
     if (!regex.test(e.target.value)) {
       setPasswordMessage(
-        "영어 대문자, 영어 소문자, 숫자, 특수문자(~!@#$%^&*)를 모두 1개 이상을 포함한 비밀번호 6~12자만 가능합니다."
+        "영어 대문자, 영어 소문자, 숫자, 특수문자 각 1개 이상을 포함한 비밀번호 6~12자만 가능합니다."
       );
       setIsPassword(false);
     } else setIsPassword(true);
@@ -226,29 +226,19 @@ function SignupPage() {
                 placeholder="비밀번호"
                 value={password}
                 onChange={onChangePassword}
+                textBool={true}
+                helperText={(password.length > 0 && !isPassword )? passwordMessage : "."}
               />
-              {password.length > 0 && !isPassword && (
-                <span className={`message ${isPassword ? "success" : "error"}`}>
-                  {passwordMessage}
-                </span>
-              )}
               <InputWithLabel
                 name="password2"
                 placeholder="비밀번호 확인"
                 type="password"
                 value={passwordConfirm}
                 onChange={onChangePasswordConfirm}
+                textBool={true}
+                helperText={(passwordConfirm.length > 0 && !isPasswordConfirm)? passwordConfirmMessage : "."}
               />
-              {passwordConfirm.length > 0 && !isPasswordConfirm && (
-                <span
-                  className={`message ${
-                    isPasswordConfirm ? "success" : "error"
-                  }`}
-                >
-                  {passwordConfirmMessage}
-                </span>
-              )}
-              <div>
+              <div style={{marginBottom:"20px"}}>
                 <select
                   name="yy"
                   value={birthState.yy}
@@ -290,12 +280,9 @@ function SignupPage() {
                 type="email"
                 value={email}
                 onChange={onChangeEmail}
+                textBool={true}
+                helperText={(email.length > 0 && !isEmail)? emailMessage : ""}
               />
-              {email.length > 0 && !isEmail && (
-                <span className={`message ${isEmail ? "success" : "error"}`}>
-                  {emailMessage}
-                </span>
-              )}
               <InputWithPhone
                 name="phoneNumber"
                 placeholder="폰 번호"
@@ -341,7 +328,7 @@ function SignupPage() {
             )}
           </>
 
-          <p>------- 회원가입 없이 소셜로 로그인하기 -------</p>
+          {/* <p>------- 회원가입 없이 소셜로 로그인하기 -------</p>
           <div>
             <img
               src={
@@ -356,7 +343,7 @@ function SignupPage() {
               }
               alt="네이버로 회원가입"
             />
-          </div>
+          </div> */}
         </StyledContent>
       </StyledPage>
     </>
