@@ -97,7 +97,7 @@ public class PostServiceImpl implements PostService {
 //		for (Post post : entityList) {
 //			list.add(new PostViewAllRes(post));
 //		}
-		Depart depart = departRepository.findByDepartCode(viewAllPostsReq.getDepartCode())
+		Depart depart = departRepository.findById(departId)
 				.orElseThrow(() -> new IllegalArgumentException("post not found"));
 		Category category = categoryRepository.findById(categoryId)
 				.orElseThrow(() -> new IllegalArgumentException("category not found"));
