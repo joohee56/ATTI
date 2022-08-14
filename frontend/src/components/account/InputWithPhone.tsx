@@ -11,6 +11,8 @@ interface inputInfo {
   phonNumber: string;
   isCertifiedSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  textBool?: boolean;
+  helperText?: string;
 }
 
 export default function InputWithPhone({
@@ -37,7 +39,6 @@ export default function InputWithPhone({
       initialTime.current -= 1;
       setSeconds(initialTime.current % 60);
       setMinutes(parseInt((initialTime.current / 60).toString().padStart(2, '0')));
-
     }, 1000);
     return () => clearInterval(countdown.current);
   }, [minutes, seconds]);
