@@ -1,22 +1,16 @@
 package com.ssafy.db.repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.depart.UserPostLike;
+import com.ssafy.db.entity.user.User;
 
 @Repository
-@Transactional
-public class UserPostLikeRepository {
-
-	@PersistenceContext
-	private EntityManager em;
-	
-	// 게시글 좋아요~
-//	public void postLike() {
-//		
-//	}
+public interface UserPostLikeRepository extends JpaRepository<UserPostLike, Long>{
+	public Optional<UserPostLike> findByPostAndUser(Post post, User user); 
+	public long countByPost(Post post);
 }

@@ -9,11 +9,11 @@ import axios from 'axios';
 
 import { BACKEND_URL } from "../../constant";
 import { ButtonBlue } from '../ButtonStyled';
-import { normalPostActions } from '../../store/community/index'
+import { normalPostActions } from '../../store/community/Category'
 import { palette } from "../../styles/palette";
 import UseSwitchesBasic from "../SwitchButton"
 
-export function PostEditor() {
+export function PostEditor({handleModal1}) {
 
     const [post, setPost] = useState({
         postId : "",
@@ -37,7 +37,7 @@ export function PostEditor() {
     
     const writePosts = useCallback(
         async (e) => {
-          e.preventDefault();
+        //   e.preventDefault();
           try {
             await axios
               .post(
@@ -76,13 +76,17 @@ export function PostEditor() {
         ]
       );
       
-
-    const dispatch = useDispatch();
-    const postHandler = (event) => {
-        event.preventDefault();
-        console.log(post)
-        dispatch(normalPostActions.saveNormalPost({post_title: post.postTitle, post_content: post.postContent}))
+    function EditFunction(){
+        writePosts();
+        handleModal1()
     }
+
+    // const dispatch = useDispatch();
+    // const postHandler = (event) => {
+    //     event.preventDefault();
+    //     console.log(post)
+    //     dispatch(normalPostActions.saveNormalPost({post_title: post.postTitle, post_content: post.postContent}))
+    // }
 
     return (
         <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
@@ -140,7 +144,7 @@ export function PostEditor() {
                 </Main>
             </div>
         <SubmitButton className='submit-button'
-          onClick = {writePosts}>
+          onClick = {() => {EditFunction()}}>
             글작성</SubmitButton>
         </div>
         

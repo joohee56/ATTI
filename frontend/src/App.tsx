@@ -13,14 +13,14 @@ import OAuth2RedirectHandler from "./components/account/OAuth2RedirectHandler";
 function App() {
   return (
     <Routes>
-    <Route path="/" element={ <Homepage />} />
-    <Route path="/login" element={ <LoginPage />} />
-    <Route path="/signup" element={ <SignupPage />} />
-    <Route path="/community" element={ <Community />} />
-    <Route path="/classmeeting" element={ <ClassMeeting />} />
-    <Route path="/welcome" element={ <WelcomePage />} />
-    <Route path="/modaltest" element={ <ModalTest />} />
-    <Route path="/oauth/callback/kakao" element={<OAuth2RedirectHandler/>}/>
+      <Route path="/" element={ <Homepage />} />
+      <Route path="/login" element={ <LoginPage />} />
+      <Route path="/signup" element={ <SignupPage />} />
+      <Route path="/community/:categoryName" element={<Community/>}/>
+      <Route path="/classmeeting" element={ <ClassMeeting />} />
+      <Route path="/welcome" element={ <WelcomePage />} />
+      <Route path="/modaltest" element={ <ModalTest />} />
+      <Route path="/oauth/callback/kakao" element={<OAuth2RedirectHandler/>}/>
     </Routes>
   );
 }

@@ -4,8 +4,9 @@ import { useSelector } from "react-redux";
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
 
-
+import { api } from "../../utils/api";
 import { BACKEND_URL } from "../../constant";
+import PostUpdate  from "./PostUpdate";
 import PostDetail from "./PostDetail";
 import PostEditor from "./PostEditor";
 import Modal from "../Modal";
@@ -19,7 +20,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
 
-function PostList({handleModal2, limit, page, getLength, getSinglePost}) {
+function PostList({handleModal2, limit, page, getLength, getPostId}) {
   const [post,setPost] = useState([])
   useEffect(() => {
     async function getPosts(){
@@ -40,7 +41,7 @@ function PostList({handleModal2, limit, page, getLength, getSinglePost}) {
   },[]);
   return (
     <>
-      <Rendering post={post} handleModal2={handleModal2} limit={limit} page={page} getSinglePost={getSinglePost} />
+      <Rendering post={post} handleModal2={handleModal2} limit={limit} page={page} getPostId={getPostId} />
     </>
   );
   
@@ -56,27 +57,10 @@ function PostList({handleModal2, limit, page, getLength, getSinglePost}) {
   //   post_upd_date: postUpdDate,
   // });
 
-const Rendering = ({ post, handleModal2, limit, page, getSinglePost }) => {
+const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
   
   // const result = post.filter(single => single.postId === 2)
   // console.log(result[0].postContent)
-  const Single = useEffect(() => {
-       async function singlePost(){
-         const postId = 13
-         axios.get(
-           BACKEND_URL + `/post/read/${postId}`,
-           {
-             headers: {
-               "Content-type": "application/json",
-             },
-           }
-         ).then((res) => {
-           console.log(res.data)
-           getSinglePost(res.data)
-         })
-       }
-       singlePost();
-      },[]);
   
   const offset = (page - 1) * limit;
   const postStyle = {
@@ -87,13 +71,19 @@ const Rendering = ({ post, handleModal2, limit, page, getSinglePost }) => {
     margin: "15px 0 0 50px",
     boxShadow: "2px 2px 2px grey"
   };
+ function twofunctions(id){
+  handleModal2();
+  getPostId(id);
+ }
   return (
     <>
       {post.slice(offset, offset + limit).map((e, i) => (
-        // <div key={i}>{post[e].user_id}</div>
       <IndividualPost key={i}>
-        {console.log(e)}
-        <div style={postStyle} onClick={handleModal2}>
+        {/* {console.log(e)}
+        {console.log('-----')} */}
+        {/* {console.log(e.postId)} */}
+        {/* {console.log('postId :',  postId)} */}
+        <div style={postStyle} onClick={() => {twofunctions(e.postId)}}>
              <div
               style={{
                 display: "flex",
@@ -122,8 +112,10 @@ const Rendering = ({ post, handleModal2, limit, page, getSinglePost }) => {
             </div>
             
           </div>
+          
       </IndividualPost>
       ))}
+        
     </>
     )
   };
@@ -145,20 +137,41 @@ function NormalPostFrame() {
   const onClickToggleModal1 = useCallback(() => {
     setOpenModal1(!isOpenModal1);
   }, [isOpenModal1]);
+  const handleModal1 = () => {
+    setOpenModal1((prev) => {
+      return !prev
+    }
+    );
+  }
+
+  const [isOpenModal3, setOpenModal3] = useState(false);
+  const onClickToggleModal3 = useCallback(() => {
+    setOpenModal3(!isOpenModal3);
+  }, [isOpenModal3]);
+  const handleModal3 = () => {
+    setOpenModal3((prev) => {
+      return !prev
+    }
+    );
+  }
 
   const [length,setLength] = useState([])
   const getLength = (length) => {
     setLength(length)
   }
-  const [singlePost, setSinglePost] = useState([])
-  const getSinglePost = (singlePost) => {
-    setSinglePost(singlePost)
+  const [postId, setPostId] = useState(null)
+  const getPostId = (postId) => {
+    setPostId(postId)
   }
 
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(1);
   
+  const [singlePost, setSinglePost] = useState([])
 
+  const categoryName = useSelector(state => state.category.categoryName)
+  console.log('너의 이름은? ' , categoryName)
+  
   return (
     <>
       <PostContainer>
@@ -173,7 +186,7 @@ function NormalPostFrame() {
             </div>
           </div>
           <div>
-            <PostList handleModal2={handleModal2} limit={limit} page={page} getLength={getLength} getSinglePost={getSinglePost} />
+            <PostList handleModal2={handleModal2} limit={limit} page={page} getLength={getLength} getPostId={getPostId} />
           </div>
         </div>
         <StickyFooter>
@@ -185,14 +198,23 @@ function NormalPostFrame() {
         />
       </StickyFooter>
       </PostContainer>
-      
+
+      {isOpenModal3 && (
+        <Modal
+          onClickToggleModal={onClickToggleModal3}
+          width="1000px"
+          height="680px"
+        >
+          <PostUpdate singlePost={singlePost} handleModal3={handleModal3} />
+        </Modal>
+      )}
       {isOpenModal2 && (
         <Modal
           onClickToggleModal={onClickToggleModal2}
           width="1000px"
           height="680px"
         >
-          <PostDetail />
+          <PostDetail postId={postId} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
         </Modal>
       )}
       {isOpenModal1 && (
@@ -201,9 +223,10 @@ function NormalPostFrame() {
           width="800px"
           height="650px"
         >
-          <PostEditor />
+          <PostEditor handleModal1={handleModal1} />
         </Modal>
       )}
+      {console.log('postId : ' , postId)}
     </>
   );
 }
