@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { palette } from "../../styles/palette"
 import styled from "styled-components"
 
@@ -7,11 +7,26 @@ import InputWithIcon from "../InputWithLabel"
 function CategoryCreate(){
 
     const [newCategory, setNewCategory] = useState([])
-
+    
     const getValue = e => {
         const {value} = e.target;
         setNewCategory(value)
     };
+    const [changeCss, setChangeCss] = useState(1);
+    const [cType, setCType] = useState([]);
+    const [categoryAnoInfo, setCategoryAnoInfo] = useState([]);
+    const [categoryComInfo, setCategoryComInfo] = useState([]);
+    const [categoryComAnoInfo, setCategoryComAnoInfo] = useState([]);
+    
+    // useEffect(() => {
+    //     console.log('카테고리명: ', newCategory)
+    //     console.log('카테고리타입: ', cType)
+    //     console.log('익명여부: ', categoryAnoInfo)
+    //     console.log('댓글금지여부: ', categoryComInfo)
+    //     console.log('댓글익명여부: ', categoryComAnoInfo)
+    // },
+    // [cType, categoryAnoInfo, categoryComInfo, categoryComAnoInfo]
+    // )
 
     return(
         <div style={{width: "900px"}}>  
@@ -33,12 +48,12 @@ function CategoryCreate(){
                     <span style={{fontSize: "15px", color: "gray"}}>선택한 카테고리 형식을 배경으로 제작됩니다.</span>
                     <div style={{display: "flex", flexDirection: "column", justifyContent:"center", alignItems:"flex-start"}}>
                         <CustomDiv>
-                            <CustomButton name="자유게시판">자유게시판</CustomButton>
-                            <CustomButton name="시간표">시간표(수업 미팅실)</CustomButton>
+                            <CustomButton onClick={() => {setCType("자유게시판")}} name="자유게시판">자유게시판</CustomButton>
+                            <CustomButton onClick={() => {setCType("시간표")}} name="시간표">시간표(수업 미팅실)</CustomButton>
                         </CustomDiv>
                         <CustomDiv>
-                            <CustomButton name="공지사항">공지사항(관리자만 작성이 가능)</CustomButton>
-                            <CustomButton name="자료실">자료실(첨부파일 첨부 가능)</CustomButton>
+                            <CustomButton onClick={() => {setCType("공지사항")}} name="공지사항">공지사항(관리자만 작성이 가능)</CustomButton>
+                            <CustomButton onClick={() => {setCType("자료실")}} name="자료실">자료실(첨부파일 첨부 가능)</CustomButton>
                         </CustomDiv>
                     </div>
                 </div>
@@ -48,22 +63,22 @@ function CategoryCreate(){
                         <SettingDiv>
                             <CustomSpan>게시글 작성 시 익명을 허용하시겠습니까?</CustomSpan>
                             <div>
-                                <button>Yes</button>
-                                <button>No</button>
+                                <button onClick={() => {setCategoryAnoInfo(1)}}>Yes</button>
+                                <button onClick={() => {setCategoryAnoInfo(0)}}>No</button>
                             </div>
                         </SettingDiv>
                         <SettingDiv>
                             <CustomSpan>게시글에 대한 댓글 작성을 허용하시겠습니까?</CustomSpan>
                             <div>
-                                <button>Yes</button>
-                                <button>No</button>
+                                <button onClick={() => {setCategoryComInfo(1)}}>Yes</button>
+                                <button onClick={() => {setCategoryComInfo(0)}}>No</button>
                             </div>
                         </SettingDiv>
                         <SettingDiv>
                             <CustomSpan>게시글애 대한 댓글 작성 시 익명을 허용하시겠습니까?</CustomSpan>
                             <div>
-                                <button>Yes</button>
-                                <button>No</button>
+                                <button onClick={() => {setCategoryComAnoInfo(1)}}>Yes</button>
+                                <button onClick={() => {setCategoryComAnoInfo(1)}}>No</button>
                             </div>
                         </SettingDiv>
                     </div>

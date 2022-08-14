@@ -68,16 +68,6 @@ const dummyCategory = [
         userId: null
     },
     {
-        categoryId: 6,
-        categpryAnoInfo: false,
-        categoryComAnoInfo: false,
-        categoryComInfo: false,
-        categoryName: '수업일정',
-        cType: '일정',
-        departId: null,
-        userId: null
-    },
-    {
         categoryId: 7,
         categpryAnoInfo: false,
         categoryComAnoInfo: false,
@@ -202,18 +192,6 @@ function CategoryList(dummyCategory){
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <VideocamOutlinedIcon/>
                                      &nbsp;
-                                    {dummyCategory[i].categoryName}
-                                </div>
-                            </div>
-                        </StyledLink>
-                    )}
-                    {dummyCategory[i].categoryName === "수업일정" && (
-                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
-                            <div key={i} style={changeCss === 6 ? clickStyle : noClickStyle}>
-                                <div style={changeCss === 6 ? null : purpleBar }></div>
-                                <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
-                                    <DateRangeOutlinedIcon/>
-                                    &nbsp;
                                     {dummyCategory[i].categoryName}
                                 </div>
                             </div>
