@@ -28,9 +28,10 @@ function PostList({handleModal2, limit, page, getLength, getPostId}) {
   console.log('카테고리, 너의 이름은? ' , categoryName)
   const departId = useSelector(state => state.depart.departId)
   console.log('채널, 너의 아이디는? ' , departId)
+  const { auth } = useSelector(state => state.userInfo)
   
   async function getPosts(){
-    api.get(`/depart/${departId}/category/${categoryName}/post`
+    api.get(`/depart/${departId}/category/${categoryName}/user/${auth.id}`
     ).then((res) => {
       console.log(res.data)
       setPost(res.data)
