@@ -293,11 +293,13 @@ function LoginPage() {
                 name="userId"
                 placeholder="ID"
                 onChange={onChangeLogin}
+                
               />
               <InputWithLabel
                 name="password"
                 placeholder="Password"
                 type="password"
+                helperText="Please enter your name"
                 onChange={onChangeLogin}
               />
             </div>

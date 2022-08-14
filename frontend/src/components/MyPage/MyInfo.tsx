@@ -11,42 +11,12 @@ import { ButtonBlue, ButtonPurple } from "../ButtonStyled";
 import InputWithLabel from "../InputWithLabel";
 import Modal from "../Modal";
 
-function stringToColor(string: string) {
-  let hash = 0;
-  let i;
-
-  /* eslint-disable no-bitwise */
-  for (i = 0; i < string.length; i += 1) {
-    hash = string.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  let color = "#";
-
-  for (i = 0; i < 3; i += 1) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += `00${value.toString(16)}`.slice(-2);
-  }
-  /* eslint-enable no-bitwise */
-
-  return color;
-}
-
-function stringAvatar(name: string) {
-  return {
-    sx: {
-      bgcolor: stringToColor(name),
-    },
-    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
-  };
-}
-
 interface MyInfoData {
   userName: string;
   email: string;
   birth: string;
   phone: string;
 }
-
 
 function MyPage() {
   const { userName } = useSelector((state: RootState) => state.userInfo);
@@ -60,20 +30,24 @@ function MyPage() {
     phone: "",
   });
 
-  useEffect(()=>{
-    apiAcc
-        .get("/user/"+{id}, {
-          params: {
-            userId:{id},
-          },
-        })
-        .then(function (response) {
-           console.log("성공",response);
-        })
-        .catch(function (error) {
-          console.log("에러발생 : " + error);
-        });
-  },[]);
+  // useEffect(() => {
+  //   console.log(id);
+  //   apiAcc
+  //     .get(`/user/${id}`)
+  //     .then(function (response) {
+  //       console.log("성공", response);
+  //       setMydataInfo({
+  //         ...mydataInfo,
+  //         userName: response.data.userName,
+  //         email: response.data.email,
+  //         birth: response.data.birth,
+  //         phone: response.data.phone,
+  //       });
+  //     })
+  //     .catch(function (error) {
+  //       console.log("에러발생 : " + error);
+  //     });
+  // }, []);
 
   // 모달 보이기 여부
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
@@ -102,7 +76,6 @@ function MyPage() {
         <>
           <Content>
             <Avatar
-              {...stringAvatar("Kent Dodds")}
               sx={{
                 width: 120,
                 height: 120,
@@ -110,7 +83,7 @@ function MyPage() {
                 marginBottom: 5,
                 fontSize: 40,
               }}
-            ></Avatar>
+            >{userName}</Avatar>
             <Grid>
               <SpanStyle>Name</SpanStyle>
               <InputWithLabel
@@ -119,21 +92,15 @@ function MyPage() {
                 placeholder={""}
                 value={userName}
               />
-
               <SpanStyle>ID</SpanStyle>
-              <InputWithLabel
-                disabled
-                name={""}
-                placeholder={""}
-                value={id}
-              />
+              <InputWithLabel disabled name={""} placeholder={""} value={id} />
 
               <SpanStyle>Email</SpanStyle>
               <InputWithLabel
                 disabled
                 name={""}
                 placeholder={""}
-                value={"내 이메일"}
+                value={mydataInfo.email}
               />
 
               <SpanStyle>Channel</SpanStyle>
@@ -141,7 +108,7 @@ function MyPage() {
                 disabled
                 name={""}
                 placeholder={""}
-                value={"내 채널"}
+                value={"내 채널가져오기 현태형 Merge후"}
               />
             </Grid>
             <UserEdit onClick={() => setIsEdit(true)}>회원정보수정</UserEdit>
@@ -160,9 +127,12 @@ function MyPage() {
               </Modal>
             )}
           </Content>
+          <div>
           <MemberWithdrawal onClick={() => setOpenModal(true)}>
             회원탈퇴
           </MemberWithdrawal>
+          </div>
+
         </>
       ) : (
         <Content>
@@ -228,11 +198,10 @@ function MyPage() {
 }
 
 const Main = styled.main`
-  display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
-  min-height: 80vh;
-  position: relative;
+  min-height: 100vh;
 `;
 
 const Content = styled.div`
@@ -241,7 +210,7 @@ const Content = styled.div`
   align-items: center;
   position: absolute;
   left: 50%;
-  margin-top: 50px;
+  margin-top: 40px;
   transform: translate(-50%);
 `;
 
@@ -281,6 +250,11 @@ const MemberWithdrawal = styled.button`
   border: 0px solid;
   padding: 0.5rem 1.2rem;
   font-weight: bold;
+
+  position:absolute;
+    right:2%;
+    margin-top:535px;
+
   cursor: pointer;
   &:active,
   &:hover {
@@ -292,7 +266,7 @@ const MemberWithdrawal = styled.button`
 const UserEdit = styled(ButtonBlue)`
   font-size: 0.8rem;
   padding: 0.8rem 1.2rem;
-  margin-top: 20px;
+  margin-top: 40px;
 `;
 
 const StyledPage = styled.div`

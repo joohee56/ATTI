@@ -210,23 +210,17 @@ function SignupPage() {
                 placeholder="이름"
                 value={name}
                 onChange={onChangeName}
+                textBool={true}
+                helperText={(name.length > 0 && !isName)? nameMessage : ""}
               />
-              {name.length > 0 && !isName && (
-                <span className={`message ${isName ? "success" : "error"}`}>
-                  {nameMessage}
-                </span>
-              )}
               <InputWithLabel
                 name="id"
                 placeholder="아이디"
                 value={id}
                 onChange={onChangeId}
+                textBool={true}
+                helperText={(id.length > 0 && !isId)? idMessage : ""}
               />
-              {id.length > 0 && !isId && (
-                <span className={`message ${isId ? "success" : "error"}`}>
-                  {idMessage}
-                </span>
-              )}
               <InputPassword
                 name="password"
                 placeholder="비밀번호"

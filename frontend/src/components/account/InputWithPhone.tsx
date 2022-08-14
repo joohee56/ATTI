@@ -11,6 +11,8 @@ interface inputInfo {
   phonNumber: string;
   isCertifiedSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  textBool?: boolean;
+  helperText?: string;
 }
 
 export default function InputWithPhone({

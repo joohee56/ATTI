@@ -15,7 +15,7 @@ const apiAcc = axios.create({
   baseURL: BACKEND_URL,
   headers: {
     "Content-type" : "application/json",
-    "Authorization" : 'Bearer ' + token,
+    "Authorization" : ""+ token,
   },
 });
 
