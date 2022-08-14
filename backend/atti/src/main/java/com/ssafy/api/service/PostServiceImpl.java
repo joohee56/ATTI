@@ -123,9 +123,8 @@ public class PostServiceImpl implements PostService {
 		System.out.println("=====================");
 		System.out.println(categoryId);
 		System.out.println("=====================");
-		Category category = new Category();
-		categoryRepository.findById(categoryId);
-		
+		postRepository.deleteByCategory(categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new IllegalArgumentException("category not found")));
 	}
 
 	@Override // 단일 게시글 수정
