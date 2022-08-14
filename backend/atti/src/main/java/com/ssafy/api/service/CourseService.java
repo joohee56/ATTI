@@ -64,8 +64,8 @@ public class CourseService {
 	
 	// 시간표 조회
 	public List<CourseGetRes> getCourse(CourseGetReq courseGetReq) {
-		LocalDate startDate = courseGetReq.getWeekStartDate();	// 2022-08-14 ~ 2022-08-20
-		LocalDate endDate = startDate.plusDays(6);
+		LocalDate startDate = courseGetReq.getWeekStartDate().plusDays(1);	// 2022-08-14 ~ 2022-08-20
+		LocalDate endDate = startDate.plusDays(5);
 		
 //		System.out.println("startDate: " + startDate + ", endDate: " + endDate);
 		// course 중에 departId 에 해당하는 course 중 start Date between end Date 에 해당하는 리스트 뽑기
@@ -83,7 +83,8 @@ public class CourseService {
 					.courseName(c.getCourseName())
 					.courseTeacherName(c.getCourseTeacherName())
 					.courseStartTime(c.getCourseStartTime())
-					.courseEndTime(c.getCourseEndTime()).build());
+					.courseEndTime(c.getCourseEndTime())
+					.courseDate(c.getCourseDate()).build());
 		}
 		
 		return courseResList;
