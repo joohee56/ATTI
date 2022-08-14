@@ -13,11 +13,14 @@ import org.springframework.stereotype.Service;
 import com.ssafy.api.request.CourseCreateReq;
 import com.ssafy.api.request.CourseGetReq;
 import com.ssafy.api.request.CourseUpdateReq;
+import com.ssafy.api.response.CourseAttendenceRes;
 import com.ssafy.api.response.CourseGetRes;
 import com.ssafy.db.entity.depart.Depart;
+import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.webclass.Course;
 import com.ssafy.db.repository.CourseRepository;
 import com.ssafy.db.repository.DepartRepository;
+import com.ssafy.db.repository.UserDepartRepository;
 
 
 @Service
@@ -26,6 +29,8 @@ public class CourseService {
 	CourseRepository courseRepository;
 	@Autowired
 	DepartRepository departRepository;
+	@Autowired
+	UserDepartRepository userDepartReposity;
 	
 	// 시간표 생성
 	public Long createCourse(CourseCreateReq courseReq) {
@@ -88,9 +93,25 @@ public class CourseService {
 		}
 		
 		return courseResList;
-		
 	}
 	
-	
+	public List<CourseAttendenceRes> getAttendence(Long departId){
+		Depart depart = departRepository.findById(departId).orElse(null);
+		List<UserDepart> userDepartList = userDepartReposity.findByDepart(depart);
+		
+		List<CourseAttendenceRes> attendenceList = new ArrayList<CourseAttendenceRes>();
+		
+		if(userDepartList.isEmpty()) {
+			return null;
+		}
+		
+		for(UserDepart ud : userDepartList) {
+			attendenceList.add(CourseAttendenceRes.builder()
+					.userId(ud.getUser().getUserId())
+					.userName(ud.getUser().getUserName()).build());
+		}
+		
+		return attendenceList;
+	}
 	
 }

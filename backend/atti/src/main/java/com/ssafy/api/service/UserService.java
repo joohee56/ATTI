@@ -132,13 +132,6 @@ public class UserService {
 		userRepository.save(user);
 	}
 	
-	public String GetLoginIdFromToken(String accessToken) {
-
-		String token = accessToken.split(" ")[1];
-		return jwtTokenUtil.getUserId(token);
-
-	}
-	
 	// Redis
 	public String getRedisStringValue(String key) {
 		ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
