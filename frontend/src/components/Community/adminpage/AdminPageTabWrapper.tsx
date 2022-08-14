@@ -8,9 +8,9 @@ interface adminPageWrapperProps {
 }
 
 const AdminTabWrapper = styled.div`
-  margin-top: 5%;
+  margin-top: 1%;
   margin-left: 5%;
-  margin-bottom: 3%;
+  margin-bottom: 2%;
   display: flex;
   height: 50px;
 `;

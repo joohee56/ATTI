@@ -95,6 +95,7 @@ const SchedulePageWrapper = () => {
   const [selectDay, setSelectDay] = useState<any>();
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [selectDeleteSchedule, setSeleteDeleteSchedule] = useState<any>();
+  const [weekStart, setWeekStart] = useState<string | undefined>(undefined);
   const [insertSchedule, setInsertSchedule] = useState<weekClassSchedule>({
     courseId: "",
     courseName: "",
@@ -210,37 +211,43 @@ const SchedulePageWrapper = () => {
   });
   let weekSchedule: any = [];
   useEffect(() => {
-    let weekClass = dummyClass.map((e) => {
-      const weekName = moment(e.courseDate, "YYYY-MM-DD").format("dddd");
-      let temp = { ...e, weekName };
-      return temp;
-    });
-    monToFri.forEach((e: any) => {
-      weekSchedule.push(daySchedule.slice());
-    });
-    for (let i = 0; i < monToFri.length; i++) {
-      const startWeek = moment()
-        .day(i + 1)
-        .format("YYYY-MM-DD");
-      for (let j = 0; j < weekClass.length; j++) {
-        if (weekClass[j].weekName === monToFri[i]) {
-          for (let k = 0; k < time.length; k++) {
-            if (time[k] === weekClass[j].courseStartTime) {
-              weekSchedule[i][k] = weekClass[j];
+    setWeekStart(moment().day(0).format("YYYY-MM-DD"));
+    console.log(moment().day(0).format("YYYY-MM-DD"));
+  }, []);
+  useEffect(() => {
+    if (weekStart !== undefined) {
+      let weekClass = dummyClass.map((e) => {
+        const weekName = moment(e.courseDate, "YYYY-MM-DD").format("dddd");
+        let temp = { ...e, weekName };
+        return temp;
+      });
+      monToFri.forEach((e: any) => {
+        weekSchedule.push(daySchedule.slice());
+      });
+      for (let i = 0; i < monToFri.length; i++) {
+        const startWeek = moment()
+          .day(i + 1)
+          .format("YYYY-MM-DD");
+        for (let j = 0; j < weekClass.length; j++) {
+          if (weekClass[j].weekName === monToFri[i]) {
+            for (let k = 0; k < time.length; k++) {
+              if (time[k] === weekClass[j].courseStartTime) {
+                weekSchedule[i][k] = weekClass[j];
+              }
             }
           }
         }
+        let tempWeekList = weekList;
+        if (tempWeekList.length < 5) {
+          tempWeekList.push(startWeek);
+          setWeekList(tempWeekList);
+        }
       }
-      let tempWeekList = weekList;
-      if (tempWeekList.length < 5) {
-        tempWeekList.push(startWeek);
-        setWeekList(tempWeekList);
-      }
+      console.log(weekClass);
+      setWeekClassState(weekSchedule);
+      setWeek(weekClass);
     }
-    console.log(weekClass);
-    setWeekClassState(weekSchedule);
-    setWeek(weekClass);
-  }, []);
+  }, [weekStart]);
   console.log(weekList);
   function onClickAddSchedule(e: any) {
     setSelectDay({
@@ -266,20 +273,7 @@ const SchedulePageWrapper = () => {
       return palette.yellow_1;
     }
   }
-  function calcColor2(index: number) {
-    const result = index % 5;
-    if (result === 0) {
-      return palette.pink_2;
-    } else if (result === 1) {
-      return palette.blue_2;
-    } else if (result === 2) {
-      return palette.green_2;
-    } else if (result === 3) {
-      return palette.purlue_2;
-    } else if (result === 4) {
-      return palette.yellow_2;
-    }
-  }
+
   function calcColor3(index: number) {
     const result = index % 5;
     if (result === 0) {

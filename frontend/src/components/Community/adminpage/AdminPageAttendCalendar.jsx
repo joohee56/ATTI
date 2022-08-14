@@ -1,6 +1,15 @@
 import React, { useCallback, useState } from "react";
 import moment from "moment";
 import styled from "styled-components";
+import {
+  AdminCalendarAttendChange,
+  AdminCalendarAttendMonthDiv,
+  AdminCalendarAttendMonthSpan,
+  AdminCalendarChangeButton,
+  AdminCalendarTableWrapperDiv,
+} from "./adminStyle/AdminCalendarPageStyle";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 const CalTableHead = styled.table`
   width: 85%;
@@ -53,14 +62,14 @@ const AdminPageAttendCalendar = ({ handlerModal, handlerPickDay }) => {
                   return (
                     <td key={index}>
                       <span>{days.format("D")}</span>
-                      <button
+                      <AdminCalendarAttendChange
                         onClick={() => {
-                          handlerPickDay(days.format());
+                          handlerPickDay(days.format("YYYY-MM-DD"));
                           handlerModal();
                         }}
                       >
                         출석변경
-                      </button>
+                      </AdminCalendarAttendChange>
                     </td>
                   );
                 }
@@ -91,15 +100,15 @@ const AdminPageAttendCalendar = ({ handlerModal, handlerPickDay }) => {
                       <span>{days.format("D")}</span>
                       {Number(days.format("D")) <=
                         Number(today.format("D")) && (
-                        <button
+                        <AdminCalendarAttendChange
                           onClick={() => {
                             console.log(days.format());
-                            handlerPickDay(days.format());
+                            handlerPickDay(days.format("YYYY-MM-DD"));
                             handlerModal();
                           }}
                         >
                           출석변경
-                        </button>
+                        </AdminCalendarAttendChange>
                       )}
                     </td>
                   );
@@ -114,39 +123,43 @@ const AdminPageAttendCalendar = ({ handlerModal, handlerPickDay }) => {
 
   return (
     <div>
-      <div>
-        <button
+      <AdminCalendarAttendMonthDiv>
+        <AdminCalendarChangeButton
           onClick={() => {
             setMoment(getMoment.clone().subtract(1, "month"));
           }}
         >
-          이전달
-        </button>
-        <span>{today.format("YYYY 년 MM 월")}</span>
-        <button
+          <ArrowBackIosNewIcon />
+        </AdminCalendarChangeButton>
+        <AdminCalendarAttendMonthSpan>
+          {today.format("YYYY 년 MM 월")}
+        </AdminCalendarAttendMonthSpan>
+        <AdminCalendarChangeButton
           onClick={() => {
             setMoment(getMoment.clone().add(1, "month"));
           }}
         >
-          다음달
-        </button>
-      </div>
-      <CalTableHead>
-        <thead>
-          <tr>
-            <th>일</th>
-            <th>월</th>
-            <th>화</th>
-            <th>수</th>
-            <th>목</th>
-            <th>금</th>
-            <th>토</th>
-          </tr>
-        </thead>
-        <CalTableBody>
-          {calendarArr({ handlerModal, handlerPickDay })}
-        </CalTableBody>
-      </CalTableHead>
+          <ArrowForwardIosIcon />
+        </AdminCalendarChangeButton>
+      </AdminCalendarAttendMonthDiv>
+      <AdminCalendarTableWrapperDiv>
+        <CalTableHead>
+          <thead>
+            <tr>
+              <th>일</th>
+              <th>월</th>
+              <th>화</th>
+              <th>수</th>
+              <th>목</th>
+              <th>금</th>
+              <th>토</th>
+            </tr>
+          </thead>
+          <CalTableBody>
+            {calendarArr({ handlerModal, handlerPickDay })}
+          </CalTableBody>
+        </CalTableHead>
+      </AdminCalendarTableWrapperDiv>
     </div>
   );
 };
