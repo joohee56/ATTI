@@ -14,49 +14,20 @@ import {
   TempDiv,
   TextWrapper,
 } from "./SchedulePageStyle";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import { palette } from "../../../styles/palette";
+import { api } from "../../../utils/api";
+
 export interface weekClassSchedule {
   courseId: string | null;
   courseName: string;
-  courseProf: string;
-  userId: string;
+  courseTeacherName: string;
   courseStartTime: string;
   courseEndTime: string;
   courseDate: string;
   weekName: string | null | undefined;
 }
-
-const dummyClass = [
-  {
-    courseId: "1",
-    courseName: "테스트",
-    courseProf: "이현태",
-    userId: "박범수",
-    courseStartTime: "09:00",
-    courseEndTime: "12:00",
-    courseDate: "2022-08-12",
-  },
-  {
-    courseId: "2",
-    courseName: "리액트",
-    courseProf: "이주희",
-    userId: "박범수",
-    courseStartTime: "11:00",
-    courseEndTime: "13:00",
-    courseDate: "2022-08-11",
-  },
-  {
-    courseId: "3",
-    courseName: "뷰",
-    courseProf: "김연수",
-    userId: "박범수",
-    courseStartTime: "14:00",
-    courseEndTime: "16:00",
-    courseDate: "2022-08-09",
-  },
-];
 
 const SchedulePage = styled.div`
   display: flex;
@@ -99,8 +70,7 @@ const SchedulePageWrapper = () => {
   const [insertSchedule, setInsertSchedule] = useState<weekClassSchedule>({
     courseId: "",
     courseName: "",
-    courseProf: "",
-    userId: "",
+    courseTeacherName: "",
     courseStartTime: "",
     courseEndTime: "",
     courseDate: "",
@@ -113,7 +83,7 @@ const SchedulePageWrapper = () => {
     {
       courseId: "",
       courseName: "",
-      courseProf: "",
+      courseTeacherName: "",
       userId: "",
       courseStartTime: "",
       courseEndTime: "",
@@ -140,70 +110,99 @@ const SchedulePageWrapper = () => {
   ];
   const handlerInserSchedule = (element: weekClassSchedule) => {
     // startTime,endTime 년-월-일 시간:분 으로 할것 (띄어쓰기 잊기 말기)
-    element.courseDate = weekList[selectDay.weekIndex];
-    setInsertSchedule(element);
-    let tempWeek = week;
-    tempWeek?.push(element);
-    let weekSchedule = weekClassState;
-    setWeek(tempWeek);
-    setIsOpenModal(false);
-    let weekClass = tempWeek;
-    for (let i = 0; i < monToFri.length; i++) {
-      for (let j = 0; j < weekClass.length; j++) {
-        if (weekClass[j].weekName === monToFri[i]) {
-          for (let k = 0; k < time.length; k++) {
-            if (time[k] === weekClass[j].courseStartTime) {
-              weekSchedule[i][k] = weekClass[j];
+    api
+      .post("/course/create", {
+        departId: 3,
+        courseName: element.courseName,
+        courseTeacherName: element.courseTeacherName,
+        courseStartTime: element.courseStartTime,
+        courseEndTime: element.courseEndTime,
+        courseDate: element.courseDate,
+      })
+      .then((res) => {
+        element.courseDate = weekList[selectDay.weekIndex];
+        const tempStart = moment(
+          element.courseStartTime,
+          "YYYY-MM-DD HH:mm"
+        ).format("HH:mm");
+        const tempEnd = moment(
+          element.courseEndTime,
+          "YYYY-MM-DD HH:mm"
+        ).format("HH:mm");
+        const e = {
+          ...element,
+          courseId: res.data.courseId,
+          courseStartTime: tempStart,
+          courseEndTime: tempEnd,
+        };
+        setInsertSchedule(e);
+        let tempWeek = week;
+        tempWeek?.push(e);
+        let weekSchedule = weekClassState;
+        setWeek(tempWeek);
+        setIsOpenModal(false);
+        let weekClass = tempWeek;
+        for (let i = 0; i < monToFri.length; i++) {
+          for (let j = 0; j < weekClass.length; j++) {
+            if (weekClass[j].weekName === monToFri[i]) {
+              for (let k = 0; k < time.length; k++) {
+                if (time[k] === weekClass[j].courseStartTime) {
+                  weekSchedule[i][k] = weekClass[j];
+                }
+              }
             }
           }
         }
-      }
-    }
-    console.log(weekSchedule);
-    setWeekClassState(weekSchedule);
+        setWeekClassState(weekSchedule);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const deleteSchedule = (element: weekClassSchedule) => {
-    let tempWeek = week;
-    let weekClass = tempWeek.filter((e: weekClassSchedule) => {
-      return e.courseId === element.courseId;
-    });
-    let weekSchedule = weekClassState;
-    for (let i = 0; i < monToFri.length; i++) {
-      for (let j = 0; j < weekClass.length; j++) {
-        if (weekClass[j].weekName === monToFri[i]) {
-          for (let k = 0; k < time.length; k++) {
-            if (time[k] === weekClass[j].courseStartTime) {
-              weekSchedule[i][k] = {
-                ...weekSchedule[i][k],
-                courseId: "",
-                courseName: "",
-                courseProf: "",
-                userId: "",
-                courseStartTime: "",
-                courseEndTime: "",
-              };
+    api
+      .delete("/course/delete/" + element.courseId)
+      .then((res) => {
+        let tempWeek = week;
+        let weekClass = tempWeek.filter((e: weekClassSchedule) => {
+          return e.courseId === element.courseId;
+        });
+        let weekSchedule = weekClassState;
+        for (let i = 0; i < monToFri.length; i++) {
+          for (let j = 0; j < weekClass.length; j++) {
+            if (weekClass[j].weekName === monToFri[i]) {
+              for (let k = 0; k < time.length; k++) {
+                if (time[k] === weekClass[j].courseStartTime) {
+                  weekSchedule[i][k] = {
+                    ...weekSchedule[i][k],
+                    courseId: "",
+                    courseName: "",
+                    courseTeacherName: "",
+                    courseStartTime: "",
+                    courseEndTime: "",
+                  };
+                }
+              }
             }
           }
         }
-      }
-    }
-    let result = tempWeek.filter((e) => {
-      return e.courseId !== element.courseId;
-    });
-    setWeek(result);
-    console.log(weekSchedule);
-    setWeekClassState(weekSchedule);
-    setIsOpenDeleteModal(false);
+        let result = tempWeek.filter((e) => {
+          return e.courseId !== element.courseId;
+        });
+        setWeek(result);
+        setWeekClassState(weekSchedule);
+        setIsOpenDeleteModal(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
-
-  const today = getMoment;
 
   let daySchedule: any = new Array(10).fill({
     courseId: "",
     courseName: "",
-    courseProf: "",
-    userId: "",
+    courseTeacherName: "",
     courseStartTime: "",
     courseEndTime: "",
     courseDate: "",
@@ -212,43 +211,60 @@ const SchedulePageWrapper = () => {
   let weekSchedule: any = [];
   useEffect(() => {
     setWeekStart(moment().day(0).format("YYYY-MM-DD"));
-    console.log(moment().day(0).format("YYYY-MM-DD"));
   }, []);
   useEffect(() => {
     if (weekStart !== undefined) {
-      let weekClass = dummyClass.map((e) => {
-        const weekName = moment(e.courseDate, "YYYY-MM-DD").format("dddd");
-        let temp = { ...e, weekName };
-        return temp;
-      });
-      monToFri.forEach((e: any) => {
-        weekSchedule.push(daySchedule.slice());
-      });
-      for (let i = 0; i < monToFri.length; i++) {
-        const startWeek = moment()
-          .day(i + 1)
-          .format("YYYY-MM-DD");
-        for (let j = 0; j < weekClass.length; j++) {
-          if (weekClass[j].weekName === monToFri[i]) {
-            for (let k = 0; k < time.length; k++) {
-              if (time[k] === weekClass[j].courseStartTime) {
-                weekSchedule[i][k] = weekClass[j];
+      api
+        .post("/course", {
+          departId: 3,
+          weekStartDate: "2022-08-14",
+        })
+        .then((res) => {
+          let weekClass = res.data.courseResList.map((e: any) => {
+            const weekName = moment(e.courseDate, "YYYY-MM-DD").format("dddd");
+            const courseStartTime = moment(
+              e.courseStartTime,
+              "YYYY-MM-DD HH:mm"
+            ).format("HH:mm");
+            const courseEndTime = moment(
+              e.courseEndTime,
+              "YYYY-MM-DD HH:mm"
+            ).format("HH:mm");
+            let temp = { ...e, weekName, courseStartTime, courseEndTime };
+
+            return temp;
+          });
+
+          monToFri.forEach((e: any) => {
+            weekSchedule.push(daySchedule.slice());
+          });
+          for (let i = 0; i < monToFri.length; i++) {
+            const startWeek = moment()
+              .day(i + 1)
+              .format("YYYY-MM-DD");
+            for (let j = 0; j < weekClass.length; j++) {
+              if (weekClass[j].weekName === monToFri[i]) {
+                for (let k = 0; k < time.length; k++) {
+                  if (time[k] === weekClass[j].courseStartTime) {
+                    weekSchedule[i][k] = weekClass[j];
+                  }
+                }
               }
             }
+            let tempWeekList = weekList;
+            if (tempWeekList.length < 5) {
+              tempWeekList.push(startWeek);
+              setWeekList(tempWeekList);
+            }
           }
-        }
-        let tempWeekList = weekList;
-        if (tempWeekList.length < 5) {
-          tempWeekList.push(startWeek);
-          setWeekList(tempWeekList);
-        }
-      }
-      console.log(weekClass);
-      setWeekClassState(weekSchedule);
-      setWeek(weekClass);
+          setWeekClassState(weekSchedule);
+          setWeek(weekClass);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     }
   }, [weekStart]);
-  console.log(weekList);
   function onClickAddSchedule(e: any) {
     setSelectDay({
       weekIndex: e.target.id,
@@ -260,7 +276,6 @@ const SchedulePageWrapper = () => {
   }
   function calcColor(index: number) {
     const result = index % 5;
-    console.log(result, index);
     if (result === 0) {
       return palette.pink_1;
     } else if (result === 1) {
@@ -313,6 +328,7 @@ const SchedulePageWrapper = () => {
           <InputSchedule
             weekList={selectDay}
             week={week}
+            oneWeek={weekList}
             handlerInserSchedule={handlerInserSchedule}
           />
         </Modal>
@@ -379,9 +395,13 @@ const SchedulePageWrapper = () => {
                             calcColor={calcColor(index)}
                           >
                             <TextWrapper calcColor={calcColor4(index)}>
-                              <div>{el.courseName}</div>
-                              <div>{el.courseProf}</div>
-                              <div>
+                              <div style={{ fontSize: "1.3em" }}>
+                                {el.courseName}
+                              </div>
+                              <div style={{ fontSize: "0.9em" }}>
+                                {el.courseTeacherName}
+                              </div>
+                              <div style={{ fontSize: "0.8em" }}>
                                 {el.courseStartTime} ~ {el.courseEndTime}
                               </div>
                             </TextWrapper>

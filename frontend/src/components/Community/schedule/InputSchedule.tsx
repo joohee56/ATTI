@@ -5,9 +5,11 @@ const InputSchedule = ({
   weekList,
   week,
   handlerInserSchedule,
+  oneWeek,
 }: //   weekClass,
 {
   weekList: any;
+  oneWeek: string[];
   handlerInserSchedule: (element: weekClassSchedule) => void;
   week: weekClassSchedule[];
   //   weekClass: weekClassSchedule;
@@ -49,6 +51,7 @@ const InputSchedule = ({
     setEndTime(time.slice(option));
     setStartEndTime({ startTime: e.target.value, endTime: e.target.value });
   };
+  const monToFri = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
   const endTimeChange = (e: any) => {
     setStartEndTime((prev: any) => ({
@@ -63,14 +66,15 @@ const InputSchedule = ({
       cousrseProfRef &&
       cousrseProfRef.current
     ) {
+      console.log(weekList);
       const content: weekClassSchedule = {
         courseId: null,
         courseName: cousrseNameRef.current.value,
-        courseStartTime: startEndTime.startTime,
-        courseEndTime: startEndTime.endTime,
-        courseProf: cousrseProfRef.current.value,
-        courseDate: weekList.weekString,
-        userId: "박범수",
+        courseStartTime:
+          oneWeek[weekList.weekIndex] + " " + startEndTime.startTime,
+        courseEndTime: oneWeek[weekList.weekIndex] + " " + startEndTime.endTime,
+        courseTeacherName: cousrseProfRef.current.value,
+        courseDate: oneWeek[weekList.weekIndex],
         weekName: weekList.weekString,
       };
       let flag = false;
@@ -78,9 +82,11 @@ const InputSchedule = ({
         console.log(week[i]);
         if (week[i].weekName === content.weekName) {
           const weekStartTime = Number(week[i].courseStartTime.slice(0, 2));
-          const contentStartTime = Number(content.courseStartTime.slice(0, 2));
+          const contentStartTime = Number(
+            content.courseStartTime.slice(11, 13)
+          );
           const weekEndTime = Number(week[i].courseEndTime.slice(0, 2));
-          const contentEndTime = Number(content.courseEndTime.slice(0, 2));
+          const contentEndTime = Number(content.courseEndTime.slice(11, 13));
           for (let j = weekStartTime; j < weekEndTime; j++) {
             for (let k = contentStartTime; k < contentEndTime; k++) {
               if (k === j || k === j) {
@@ -105,8 +111,7 @@ const InputSchedule = ({
       }
     }
   };
-  
-  const monToFri = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
   return (
     <div>
       <div>
