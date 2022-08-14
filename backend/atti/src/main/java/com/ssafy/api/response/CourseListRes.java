@@ -1,9 +1,8 @@
-package com.ssafy.api.request;
+package com.ssafy.api.response;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ssafy.api.response.CourseGetRes;
 import com.ssafy.common.model.response.BaseResponseBody;
 
 import lombok.Getter;
