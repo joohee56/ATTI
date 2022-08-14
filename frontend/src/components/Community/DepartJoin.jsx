@@ -2,6 +2,7 @@
 import styled from "styled-components"
 import { useState } from "react"
 
+import apiAcc, {api} from "../../utils/api"
 import { palette } from "../../styles/palette"
 import InputWithIcon from "../InputWithLabel"
 import { ButtonBlue } from "../ButtonStyled"
@@ -15,6 +16,14 @@ function DepartJoin({handleModal5}) {
         setDepartJoin(value)
         console.log(departJoin)
     };
+
+    //  // 채널 입장: route 이용해서 페이지 이동시켜할듯!
+    // const departGo = () => {
+    //     api.get(`/depart/${departJoin}`,
+    //     ).then((res) => {
+    //         console.log("채널 들어가기: ", res.data)
+    //     })
+    // }
 
     function departJoinFunction() {
         handleModal5()

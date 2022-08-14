@@ -8,15 +8,44 @@ import styled from 'styled-components';
 import BestChip from './BestChip';
 
 import { palette } from '../../styles/palette';
+import apiAcc, {api} from '../../utils/api';
+import { CommentOutlined } from '@material-ui/icons';
 
-function CommentList(){
+
+function CommentList({comments}){
+    const { auth } = useSelector(state => state.userInfo)
+
+    // // 단일 comment 지우기
+    // const commentDelete = (commentId) => {
+    //     api.delete(`/post/comment/delete/${commentId}`
+    //     )
+    //     .then((res) => {
+    //         console.log("댓글 지우기:", res);
+    //     });
+    // }
+
+    // // 단일 comment 좋아요
+    // const [commentLikeCount, setCommentLikeCount] = useState([])
+    // const commentLike = (commentId) => {
+    //     api.get(`/post/comment/likeBtn/${commentId}/${auth.id}`
+    //     ).then((res) => {
+    //         console.log("댓글 좋아요: ", res.data )
+    //         setCommentLikeCount(res.data)
+    //     })
+    // }
+    // useEffect(() => {
+    //     commentLike()
+    // }, [commentLikeCount]);
+
+
      const hrStyle = {
         height: "0.1px",
         backgroundColor: "gray",
         width: "100%",
         margin: "-10px 0 0 0"
     }
-    // const commentContent = useSelector(state => state.comment.comment_content)
+
+
     return(
         <CommentDiv>
             <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "space-between"}}>

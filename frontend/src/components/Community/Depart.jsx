@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+import Avatar from '@mui/material/Avatar';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { departActions } from '../../store/community/Depart';
 import DepartCreate from './DepartCreate';
@@ -104,8 +106,9 @@ function DepartList(){
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <span style={{ borderRadius: "10px", width: "120px", height: "40px", fontSize: "20px", color: "white", background: palette.main_grPurple, fontWeight: "bolder"}}>
+        <span style={{ borderRadius: "10px", width: "120px", height: "40px", fontSize: "20px", color: "black", fontWeight: "bolder"}}>
           채널선택
+          <ExpandMoreIcon/>
         </span>
         </Button>
         <Menu
@@ -125,8 +128,9 @@ function DepartList(){
             <MenuItem onClick={() => {departFunction(i)}} key={i}>{e.departName}</MenuItem> 
           ))}
         </Menu>
-        <div>
-          현재 채널: {departName}
+        <div style={{display: 'flex', flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+        <Avatar sx={{ width: 45, height: 45 }} style={{margin: "11px 10px 0 11px"}}>번호</Avatar>
+          {departName}
         </div>
       </DepartContainer>
       {isOpenModal4 && (
@@ -173,11 +177,13 @@ function DepartList(){
 // }
 
 const DepartContainer = styled.div`
-width: 220px;
 height: 100px;
 /* border: solid;
 border-radius: 5px; */
-margin: -100px 0 50px 0;
+position: absolute;
+top: 60px;
+left: 10px;
+margin: 0;
 font-size: 20px;
 font-weight: bold;
 display: flex;

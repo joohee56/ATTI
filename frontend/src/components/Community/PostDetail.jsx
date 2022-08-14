@@ -25,6 +25,8 @@ import ReactHtmlParser from 'react-html-parser'
 
 function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
     const [single, setSingle] = useState([])
+    const [comments, setComments] = useState([])
+    
     useEffect(() => {
         async function singlePost(){
             api.get(`/post/read/${postId}`
@@ -47,20 +49,27 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         //   })
         }
         singlePost();
-       },[]);
+
+        // // 댓글 list 불러오는 것
+        // api.get(`post/comment/read/${postId}`)
+        // .then((res) => {
+        //     setComments(res.data)
+        // })
+       },[comments]);
     
     function modalEvent(){
         onClickToggleModal2()
         onClickToggleModal3()
     }
-    // const categoryId = useSelector(state => state.category.categoryId)
-    // const departId = useSelector(state => state.depart.departId)
+    const categoryId = useSelector(state => state.category.categoryId)
+    const departId = useSelector(state => state.depart.departId)
+    const { auth } = useSelector(state => state.userInfo)
     const [comment, setComment] = useState({
         commentId: "",
-        postId: "",
-        categoryId: "",
-        departId: "",
-        userId: "",
+        postId: postId,
+        categoryId: categoryId,
+        departId: departId,
+        userId: auth.id,
         commentRegDate: "",
         commentDeleteInfo: "",
         commentAnoInfo: false,
@@ -82,22 +91,15 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         comment.commentAnoInfo = !comment.commentAnoInfo
         
     }
-    const getAnoInfoNum = () => {
-        if (comment.commentAnoInfo){
-            return 1
-        } 
-        else{
-            return 0
-        }
-    }
+
     const writeComment = useCallback(
         async (e) => {
         e.preventDefault();
         try {
             document.getElementById("commentInput").value=''
-            await axios
-            .post(
-                BACKEND_URL + "/post/comment/write",
+
+            await api
+            .post("/post/comment/write",
                 {
                     commentId: comment.commentId,
                     postId: comment.postId,
@@ -106,25 +108,42 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                     userId: comment.userId,
                     commentRegDate: comment.commentRegDate,
                     commentDeleteInfo: comment.commentDeleteInfo,
-                    commentAnoInfo: getAnoInfoNum(),
+                    commentAnoInfo: comment.commentAnoInfo,
                     commentContent: comment.commentContent,
                     commentGroup: comment.commentGroup,
                     commentLevel: comment.commentLevel,
                     seq: comment.seq
                 },
-                {
-                headers: {
-                    "Content-type": "application/json",
-                },
-                }
             )
+
+            // await axios
+            // .post(
+            //     BACKEND_URL + "/post/comment/write",
+            //     {
+            //         commentId: comment.commentId,
+            //         postId: comment.postId,
+            //         categoryId: comment.categoryId,
+            //         departId: comment.departId,
+            //         userId: comment.userId,
+            //         commentRegDate: comment.commentRegDate,
+            //         commentDeleteInfo: comment.commentDeleteInfo,
+            //         commentAnoInfo: getAnoInfoNum(),
+            //         commentContent: comment.commentContent,
+            //         commentGroup: comment.commentGroup,
+            //         commentLevel: comment.commentLevel,
+            //         seq: comment.seq
+            //     },
+            //     {
+            //     headers: {
+            //         "Content-type": "application/json",
+            //     },
+            //     }
+            // )
             .then((res) => {
                 console.log("response:", res);
                 dispatch(reRenderingActions.saveReRendering(
                     {cider: updateCider }
                 ))
-                
-                 
     
             });
         } catch (err) {
@@ -138,7 +157,8 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         comment.departId,
         comment.userId,
         comment.commentRegDate,
-        getAnoInfoNum(),
+        comment.commentDeleteInfo,
+        comment.commentAnoInfo,
         comment.commentContent,
         comment.commentGroup,
         comment.commentLevel,
@@ -182,6 +202,23 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         onClickToggleModal2();
         deletePost();
     }
+
+    // // 글 좋아요 부분
+    // const [postLikeCount, setPostLikeCount] = useState([])
+    // const postLike = () => {
+    //     api.get(`/post/likeBtn/${single.postId}/${auth.Id}`
+    //     )
+    //     .then((res) => {
+    //         console.log("response:", res);
+    //         setPostLikeCount(res.data)
+    //     });
+    // }
+    
+    // useEffect(() => {
+    //     postLike()
+    // }, [postLikeCount]);
+
+
 ///////////////////////////////////////////////////////////////////
     const detailStyle = {
         width: "1000px",
@@ -243,7 +280,7 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
             </ContentDiv>
             <hr style={{ height: "0.1px", backgroundColor: "gray", width: "95%", marginBottom: "0"}} />
             <br />
-            <CommentList/>
+            <CommentList comments={comments}/>
             
             <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-end", alignContent: "flex-end", margin: "10px 0 0 0"}}>
                 <div style={{display: "flex", flexDirection: "row"}}>

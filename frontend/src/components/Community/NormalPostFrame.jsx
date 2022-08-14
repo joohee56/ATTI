@@ -264,9 +264,9 @@ color: transparent;
 -webkit-background-clip: text;
 `;
 const PostContainer = styled.div`
-  width: 85vw;
+  width: 88vw;
   height: 869px;
-  margin: 25px 0;
+  margin: 25px 20px 25px 0;
   border-radius: 20px;
   background-color: white;
   /* display: flex;

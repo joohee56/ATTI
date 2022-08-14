@@ -19,7 +19,7 @@ function Community(){
   return(
     <CommunityDiv>
       <Main>
-        <div style={{display: "flex", flexDirection: "column"}}>
+        <div>
           <DepartList/>
           <Category/>
         </div>

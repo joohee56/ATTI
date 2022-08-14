@@ -22,7 +22,7 @@ export function PostUpdate({singlePost, handleModal3}) {
         postContent : "",
         postRegDate : "",
         postUpdDate : "",
-        user_id : "",
+        userId : "",
         category_id : "",
         postAnoInfo: false,
         postComBanInfo: false
@@ -33,27 +33,12 @@ export function PostUpdate({singlePost, handleModal3}) {
       post.postAnoInfo = !post.postAnoInfo
       
   }
-    const getAnoInfoNum = () => {
-      if (post.postAnoInfo){
-          return 1
-      } 
-      else{
-          return 0
-      }
-  }
 
     const getComBanInfo = () => {
       console.log("댓글금지여부 :", post.postComBanInfo)
       post.postComBanInfo = !post.postComBanInfo
   }
-    const getComBanInfoNum = () => {
-      if (post.postComBanInfo){
-          return 1
-      } 
-      else{
-          return 0
-      }
-  }
+    
     const getValue = e => {
         const {name,value} = e.target;
        
@@ -79,11 +64,10 @@ export function PostUpdate({singlePost, handleModal3}) {
                   postContent : post.postContent,
                   postRegDate : singlePost.postRegDate,
                   postUpdDate : post.postUpdDate,
-                //   user_id : singlePost.user_id,
-                  userId : "ssafy",
+                  userId : singlePost.userId,
                   category_id : singlePost.category_id,
-                  postAnoInfo: getAnoInfoNum(),
-                  postComBanInfo: getComBanInfoNum()
+                  postAnoInfo: post.postAnoInfo,
+                  postComBanInfo: post.postComBanInfo
                 },
               )
             // await axios
@@ -95,7 +79,7 @@ export function PostUpdate({singlePost, handleModal3}) {
             //       postContent : post.postContent,
             //       postRegDate : singlePost.postRegDate,
             //       postUpdDate : post.postUpdDate,
-            //     //   user_id : post.user_id,
+            //     //   userId : post.userId,
             //       userId : "ssafy",
             //       category_id : singlePost.category_id,
             //       postAnoInfo: getAnoInfoNum(),
@@ -125,10 +109,10 @@ export function PostUpdate({singlePost, handleModal3}) {
           post.postContent,
           singlePost.postRegDate,
           post.postUpdDate,
-        //   singlePost.user_id,
+          singlePost.userId,
           singlePost.category_id,
-          getAnoInfoNum(),
-          getComBanInfoNum()
+          post.postAnoInfo,
+          post.postComBanInfo
         ]
       );
     
@@ -136,29 +120,36 @@ export function PostUpdate({singlePost, handleModal3}) {
         updatePosts();
         handleModal3();
     }  
+    const categoryName = useSelector(state => state.category.categoryName)
+    const categoryAnoInfo = useSelector(state => state.category.categoryAnoInfo)
+    const categoryComInfo = useSelector(state => state.category.categoryComInfo)
     return (
         <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
             <div className="form-wrapper">
                 <Main>
                     <Top>
-                        <TopTitle>category이름+ 수정하기</TopTitle>
+                        <TopTitle>{categoryName} 수정하기</TopTitle>
                         <Top2>
+                        {categoryAnoInfo === false && (
                             <SwitchDiv>
-                                <span style={{textAlign: "center" ,fontSize: "12px", marginBottom: "5px"}}>
+                                <span style={{textAlign: "center" ,fontSize: "17px", marginBottom: "5px"}}>
                                     익명으로 글쓰기 
                                 </span>
                                 <span onClick={getAnoInfo}>
                                     {UseSwitchesBasic()}
                                 </span>
                             </SwitchDiv>
+                          )}
+                            {categoryComInfo === false && (
                             <SwitchDiv>
-                                <span style={{textAlign: "center", fontSize: "12px",  marginBottom: "5px"}}>
+                                <span style={{textAlign: "center", fontSize: "17px",  marginBottom: "5px"}}>
                                     댓글 금지하기 
                                 </span>
                                 <span onClick={getComBanInfo}>
                                     {UseSwitchesBasic()}
                                 </span>
                             </SwitchDiv>
+                          )}
                         </Top2>
                     </Top>
                     <PostTitle type="text" placeholder="제목을 입력하세요" name="postTitle" defaultValue={singlePost.postTitle} onChange={getValue}/>

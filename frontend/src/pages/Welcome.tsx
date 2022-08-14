@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useState, useCallback } from 'react';
 
+import apiAcc, {api} from '../utils/api';
 import CommunityBg from '../assets/images/communityBG.png'
 import DepartCreate from '../components/Community/DepartCreate';
 import Modal from '../components/Modal';
@@ -39,6 +40,14 @@ function Welcome(){
       setNewDepart(value)
   };
 
+    //  // 채널 입장: route 이용해서 페이지 이동시켜할듯!
+    // const departNew = () => {
+    //     api.get(`/depart/${newDepart}`,
+    //     ).then((res) => {
+    //         console.log("채널 들어가기: ", res.data)
+    //     })
+    //   }
+    
   return(
     <>
     <WelcomeDiv>

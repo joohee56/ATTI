@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react"
+import { useSelector } from "react-redux"
 import { palette } from "../../styles/palette"
 import styled from "styled-components"
-
+import { ButtonBlue } from "../ButtonStyled"
 
 import InputWithIcon from "../InputWithLabel"
+import apiAcc, { api } from "../../utils/api"
 function CategoryCreate(){
 
     const [newCategory, setNewCategory] = useState([])
@@ -18,6 +20,27 @@ function CategoryCreate(){
     const [categoryComInfo, setCategoryComInfo] = useState([]);
     const [categoryComAnoInfo, setCategoryComAnoInfo] = useState([]);
     
+    const { auth } = useSelector(state => state.userInfo);
+    const departId = useSelector(state => state.depart.departId);
+
+
+    // // 카테고리 생성: 로그인 쪽에서 하는 axios 재랜더링 시켜야
+    // const categoryCreateFunction = () => {
+    //     api.post(`/depart/category/create`,
+    //     {
+    //         categoryId: "",
+    //         categpryAnoInfo: categoryAnoInfo,
+    //         categoryComAnoInfo: categoryComAnoInfo,
+    //         categoryComInfo: categoryComInfo,
+    //         categoryName: newCategory,
+    //         cType: cType,
+    //         departId: departId,
+    //         userId: auth.id
+    //     }).then((res) => {
+    //         console.log("카테고리 생성: ", res.data)
+    //     })
+    // }
+
     // useEffect(() => {
     //     console.log('카테고리명: ', newCategory)
     //     console.log('카테고리타입: ', cType)
@@ -40,7 +63,7 @@ function CategoryCreate(){
                     <Question>1. 카테고리 이름은 무엇인가요?</Question> 
                     <span style={{fontSize: "15px", color: "gray"}}>다른 사용자에게 보여질 카테고리의 이름을 지어주세요!</span>
                     <InputDiv>
-                        <InputWithIcon borderRadius="20px" onChange={getValue} placeholder="ex) 나는야 카테고리"/>
+                        <InputWithIcon borderRadius="20px" onChange={getValue} placeholder="ex) "/>
                     </InputDiv>
                 </div>
                 <div style={{display: "flex", flexDirection: "column", alignItems:"flex-start"}}>
@@ -48,12 +71,12 @@ function CategoryCreate(){
                     <span style={{fontSize: "15px", color: "gray"}}>선택한 카테고리 형식을 배경으로 제작됩니다.</span>
                     <div style={{display: "flex", flexDirection: "column", justifyContent:"center", alignItems:"flex-start"}}>
                         <CustomDiv>
-                            <CustomButton onClick={() => {setCType("자유게시판")}} name="자유게시판">자유게시판</CustomButton>
-                            <CustomButton onClick={() => {setCType("시간표")}} name="시간표">시간표(수업 미팅실)</CustomButton>
+                            <CustomButton onClick={() => {setCType("FREE")}} name="FREE">자유게시판</CustomButton>
+                            <CustomButton onClick={() => {setCType("TIMETABLE")}} name="TIMETABLE">시간표(수업 미팅실)</CustomButton>
                         </CustomDiv>
                         <CustomDiv>
-                            <CustomButton onClick={() => {setCType("공지사항")}} name="공지사항">공지사항(관리자만 작성이 가능)</CustomButton>
-                            <CustomButton onClick={() => {setCType("자료실")}} name="자료실">자료실(첨부파일 첨부 가능)</CustomButton>
+                            <CustomButton onClick={() => {setCType("NOTICE")}} name="NOTICE">공지사항(관리자만 작성이 가능)</CustomButton>
+                            <CustomButton onClick={() => {setCType("DATA")}} name="DATA">자료실(첨부파일 첨부 가능)</CustomButton>
                         </CustomDiv>
                     </div>
                 </div>
@@ -63,26 +86,27 @@ function CategoryCreate(){
                         <SettingDiv>
                             <CustomSpan>게시글 작성 시 익명을 허용하시겠습니까?</CustomSpan>
                             <div>
-                                <button onClick={() => {setCategoryAnoInfo(1)}}>Yes</button>
-                                <button onClick={() => {setCategoryAnoInfo(0)}}>No</button>
+                                <button onClick={() => {setCategoryAnoInfo(true)}}>Yes</button>
+                                <button onClick={() => {setCategoryAnoInfo(false)}}>No</button>
                             </div>
                         </SettingDiv>
                         <SettingDiv>
                             <CustomSpan>게시글에 대한 댓글 작성을 허용하시겠습니까?</CustomSpan>
                             <div>
-                                <button onClick={() => {setCategoryComInfo(1)}}>Yes</button>
-                                <button onClick={() => {setCategoryComInfo(0)}}>No</button>
+                                <button onClick={() => {setCategoryComInfo(false)}}>Yes</button>
+                                <button onClick={() => {setCategoryComInfo(true)}}>No</button>
                             </div>
                         </SettingDiv>
                         <SettingDiv>
                             <CustomSpan>게시글애 대한 댓글 작성 시 익명을 허용하시겠습니까?</CustomSpan>
                             <div>
-                                <button onClick={() => {setCategoryComAnoInfo(1)}}>Yes</button>
-                                <button onClick={() => {setCategoryComAnoInfo(1)}}>No</button>
+                                <button onClick={() => {setCategoryComAnoInfo(true)}}>Yes</button>
+                                <button onClick={() => {setCategoryComAnoInfo(false)}}>No</button>
                             </div>
                         </SettingDiv>
                     </div>
                 </div>
+                <ButtonBlue>작성</ButtonBlue>
             </div>
         </div>
     )

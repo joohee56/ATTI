@@ -52,7 +52,7 @@ const categorySlice = createSlice({
     reducers: {
         saveCategory(state, action) {
             state.categoryId = action.payload.categoryId;
-            state.categpryAnoInfo = action.payload.categpryAnoInfo;
+            state.categoryAnoInfo = action.payload.categoryAnoInfo;
             state.categoryComAnoInfo = action.payload.categoryComAnoInfo;
             state.categoryComInfo = action.payload.categoryComInfo;
             state.categoryName = action.payload.categoryName;

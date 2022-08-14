@@ -16,8 +16,11 @@ import { ButtonBlue } from '../ButtonStyled';
 import { normalPostActions } from '../../store/community/Category'
 import { palette } from "../../styles/palette";
 import UseSwitchesBasic from "../SwitchButton"
+import { AutoFixHigh } from '@mui/icons-material';
 
 function PostEditor({handleModal1}, props) {
+    const categoryId = useSelector(state => state.category.categoryId)
+    const { auth } = useSelector(state => state.userInfo)
 
     const [post, setPost] = useState({
         postId : "",
@@ -25,8 +28,8 @@ function PostEditor({handleModal1}, props) {
         postContent : "",
         postRegDate : "",
         postUpdDate : "",
-        user_id : "",
-        category_id : "",
+        userId : auth.id,
+        category_id : categoryId,
         postAnoInfo: false,
         postComBanInfo: false
     })
@@ -36,27 +39,12 @@ function PostEditor({handleModal1}, props) {
         post.postAnoInfo = !post.postAnoInfo
         
     }
-    const getAnoInfoNum = () => {
-        if (post.postAnoInfo){
-            return 1
-        } 
-        else{
-            return 0
-        }
-    }
 
     const getComBanInfo = () => {
         console.log("댓글금지여부 :", post.postComBanInfo)
         post.postComBanInfo = !post.postComBanInfo
     }
-    const getComBanInfoNum = () => {
-        if (post.postComBanInfo){
-            return 1
-        } 
-        else{
-            return 0
-        }
-    }
+    
     const getValue = e => {
         const {name,value} = e.target;
        
@@ -80,10 +68,10 @@ function PostEditor({handleModal1}, props) {
                   postContent : editor,
                   postRegDate : post.postRegDate,
                   postUpdDate : post.postUpdDate,
-                  user_id : post.user_id,
+                  userId : post.userId,
                   category_id : post.category_id,
-                  postAnoInfo: getAnoInfoNum(),
-                  postComBanInfo: getComBanInfoNum()
+                  postAnoInfo: post.postAnoInfo,
+                  postComBanInfo: post.postComBanInfo
                 },
               )
 
@@ -96,7 +84,7 @@ function PostEditor({handleModal1}, props) {
             //       postContent : editor,
             //       postRegDate : post.postRegDate,
             //       postUpdDate : post.postUpdDate,
-            //       user_id : post.user_id,
+            //       userId : post.userId,
             //       category_id : post.category_id,
             //       postAnoInfo: getAnoInfoNum(),
             //       postComBanInfo: getComBanInfoNum()
@@ -124,10 +112,10 @@ function PostEditor({handleModal1}, props) {
           editor,
           post.postRegDate,
           post.postUpdDate,
-          post.user_id,
+          post.userId,
           post.category_id,
-          getAnoInfoNum(),
-          getComBanInfoNum()
+          post.postAnoInfo,
+          post.postComBanInfo
         ]
       );
     
@@ -211,7 +199,8 @@ function PostEditor({handleModal1}, props) {
         )
       }
     }
-
+    const categoryAnoInfo = useSelector(state => state.category.categoryAnoInfo)
+    const categoryComInfo = useSelector(state => state.category.categoryComInfo)
     return (
         <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
             <div className="form-wrapper">
@@ -219,6 +208,7 @@ function PostEditor({handleModal1}, props) {
                     <Top>
                         <TopTitle>{categoryName} 글쓰기</TopTitle>
                         <Top2>
+                          {categoryAnoInfo === false && (
                             <SwitchDiv>
                                 <span style={{textAlign: "center" ,fontSize: "17px", marginBottom: "5px"}}>
                                     익명으로 글쓰기 
@@ -226,8 +216,9 @@ function PostEditor({handleModal1}, props) {
                                 <span onClick={getAnoInfo}>
                                     {UseSwitchesBasic()}
                                 </span>
-                             
                             </SwitchDiv>
+                          )}
+                          {categoryComInfo === false && (
                             <SwitchDiv>
                                 <span style={{textAlign: "center", fontSize: "17px",  marginBottom: "5px"}}>
                                     댓글 금지하기 
@@ -236,6 +227,7 @@ function PostEditor({handleModal1}, props) {
                                     {UseSwitchesBasic()}
                                 </span>
                             </SwitchDiv>
+                          )}
                         </Top2>
                     </Top>
                     <PostTitle type="text" placeholder="제목을 입력하세요" name="postTitle" onChange={getValue}/>

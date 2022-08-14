@@ -1,6 +1,8 @@
 import styled from "styled-components"
 import { useState } from "react"
+import { useSelector } from "react-redux"
 
+import apiAcc, {api} from "../../utils/api"
 import { palette } from "../../styles/palette"
 import InputWithIcon from "../InputWithLabel"
 import { ButtonBlue } from "../ButtonStyled"
@@ -8,12 +10,35 @@ import { ButtonBlue } from "../ButtonStyled"
 
 function DepartCreate({handleModal4}) {
 
-    const [newDepart, setNewDepart] = useState([])
+    const { auth } = useSelector(state => state.userInfo)
+    const [newDepart, setNewDepart] = useState({
+        departId: "",
+        userId: auth.id,
+        departName: "",
+        departCode: ""
+
+    })
 
     const getValue = e => {
         const {value} = e.target;
-        setNewDepart(value)
+        setNewDepart(() => {
+            newDepart.departName = value
+        })
     };
+
+    // // 채널 생성
+    // const departPost = () => {
+    //     api.post(`/depart/create`,
+    //     {
+    //         departId: newDepart.departId,
+    //         userId: newDepart.userId,
+    //         departName: newDepart.departName,
+    //         departCode: newDepart.departCode
+    //     }).then((res) => {
+    //         console.log("채널 만들기: ", res.data)
+    //     })
+    // }
+    
     function departCreateFunction(){
         handleModal4()
     }
