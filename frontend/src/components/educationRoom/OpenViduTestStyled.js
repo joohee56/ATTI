@@ -1,16 +1,27 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { QnA } from "./OpenViduTest";
 
+const BigslideBox = keyframes`
+  0%{
+    height: 5vh;
+  }
+
+  100%{
+    height:90vh
+  }
+`;
 export const PeopleBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 30px;
+  margin-bottom: 0px;
   width: 450px;
-  height: 98vh;
+  height: 90vh;
+  margin-top: auto;
   background-color: #474a57;
   margin-left: auto;
   border-radius: 25px;
   align-items: center;
+  animation: ${BigslideBox} 1s 0s 1;
 `;
 
 export const ScreenText = styled.div`
@@ -47,6 +58,17 @@ export const QnABox = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: #fffce1;
+  &::-webkit-scrollbar {
+    padding-right: 15px;
+    width: 8px;
+    height: 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+  }
 `;
 
 export const QnATitle = styled.div`
@@ -60,8 +82,9 @@ export const QnAButtonWrapper = styled.span`
 `;
 
 export const QnAMessage = styled.div`
+  margin-top: 7px;
   margin-left: 3px;
-  min-height: 70%;
+  min-height: 50%;
 `;
 export const QnAButton = styled.button`
   margin-left: auto;
@@ -281,4 +304,69 @@ export const AllMicAndCamOff = styled.button`
   margin-right: 3px;
   margin-left: 3px;
   background-color: "#7A7C87";
+`;
+
+export const ReactionButton = styled.button`
+  border: none;
+  border-right: 2px solid;
+  border-left: 2px solid;
+  background: none;
+`;
+
+export const ReactionWrapper = styled.div`
+  position: fixed;
+  background-color: #dbeafe;
+
+  top: ${(props) => `${props.y}px`};
+  left: ${(props) => `${props.x}px`};
+`;
+const slideBox = keyframes`
+  0%{
+    height: 90vh;
+  }
+
+  100%{
+    height:5vh
+  }
+`;
+
+export const SmallPeopleBoxWrapper = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  width: 360px;
+  height: 5vh;
+  background-color: #474a57;
+  right: 0;
+  bottom: 0;
+  border-radius: 25px;
+  align-items: center;
+  animation: ${slideBox} 1s 0s 1;
+`;
+
+const slideButton = keyframes`
+  0%{
+    opacity: 0%;
+  }
+  70%{
+    opacity: 0%;
+  }
+  100%{
+    opacity: 100%;
+  }
+`;
+
+export const SmallMeetingAttendAndChattingWrapper = styled.span`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const SmallMeetingAttendAndChattingButton = styled(
+  MeetingAttendAndChattingButton
+)`
+  animation: ${slideButton} 1.3s 0s 1;
 `;
