@@ -37,13 +37,18 @@ import com.ssafy.api.request.AuthPhoneReq;
 import com.ssafy.api.request.KakaoUser;
 import com.ssafy.api.request.UserFindIdReq;
 import com.ssafy.api.request.UserLoginPostReq;
+import com.ssafy.api.response.CategoryListRes;
 import com.ssafy.api.response.UserDepartRes;
 import com.ssafy.api.response.UserLoginRes;
+import com.ssafy.api.service.AdminRoleService;
 import com.ssafy.api.service.AuthService;
+import com.ssafy.api.service.CategoryService;
+import com.ssafy.api.service.DepartService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.AuthPhoneUtil;
 import com.ssafy.common.util.JwtTokenUtil;
+import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.UserRepository;
@@ -64,6 +69,11 @@ public class AuthController {
 	UserService userService;
 	@Autowired
 	AuthService authService;
+	@Autowired
+	CategoryService categoryService;
+	@Autowired
+	AdminRoleService adminRoleService;
+	
 	@Autowired
 	UserRepository userRepository;
 	
@@ -91,25 +101,23 @@ public class AuthController {
 			List<UserDepartRes> userDepartList = userService.getDepartList(userId);
 			
 			// 2. 가입한 채널 리스트의 첫 번째 카테고리 리스트를 가져옴
-			List<Integer> userCategoryList;
+			// 3. 유저 아이디가 가입한 채널의 유저 권한 테이블의 아이디와 매칭되는지를 찾음
+			List<CategoryListRes> userCategoryList;
+			boolean admin = false;
+			
 			if(userDepartList != null) {
-				userCategoryList = new ArrayList<Integer>();
-				
 				Long departId = userDepartList.get(0).getDepartId();	// 가입한 채널 중 첫 번째 채널의 아이디
-				// departId 에 해당하는 Depart 가져옴
-				// 카테고리 중 Depart 에 해당하는 Category 가져옴
 				
+				userCategoryList = categoryService.getCategorList(departId);
+//				admin = adminRoleService.getAdminRole(user, departId);
 			} else {
 				userCategoryList = null;
 			}
 			
-			// 3. 첫 번쨰 카테고리에 해당하는 글 목록
-			
-			// 4. 유저 아이디가 가입한 채널의 유저 권한 테이블의 아이디와 매칭되는지를 찾음
-			boolean admin = false;
-			// departID 에 해당하는 depart 가져옴
-			// user 와 depart 를 adminRole 에서 일치하는 adminRole 을 가져옴 
-			// 있다면 관리자, 없다면 일반 학생
+			// 4. 첫 번쨰 카테고리에 해당하는 글 목록
+			if(userCategoryList != null) {
+				
+			}
 			
 			// 5. 유저 이름 가져옴
 			String userName = user.getUserName();
@@ -207,10 +215,10 @@ public class AuthController {
 		}
 		
 		// 핸드폰 번호 중복 체크 
-		boolean okPhone = userService.phoneCheck(phoneNumber);
-		if(!okPhone) {
-			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "이미 가입된 아이디가 있습니다. 아이디를 찾고 싶으시면 아이디 찾기를 진행해 주세요."));
-		}
+//		boolean okPhone = userService.phoneCheck(phoneNumber);
+//		if(!okPhone) {
+//			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "이미 가입된 아이디가 있습니다. 아이디를 찾고 싶으시면 아이디 찾기를 진행해 주세요."));
+//		}
 			
 		String fromNumber = "";
 		String verifyCode = makeVerifyCode();  // 인증 키 생성

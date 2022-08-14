@@ -12,9 +12,12 @@ import com.ssafy.api.request.CommentWriteReq;
 import com.ssafy.api.response.CommentViewReplyRes;
 import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.depart.UserCommentLike;
+import com.ssafy.db.entity.depart.UserPostLike;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.CommentRepository;
 import com.ssafy.db.repository.PostRepository;
+import com.ssafy.db.repository.UserCommentLikeRepository;
 import com.ssafy.db.repository.UserRepository;
 
 @Service
@@ -29,6 +32,10 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	// 좋아요 기능 - 주희
+	@Autowired
+	private UserCommentLikeRepository userCommentLikeRepository;
 	
 	@Override // 댓글 작성
 	public void createReply(CommentWriteReq commentWriteReq) {
@@ -77,5 +84,26 @@ public class CommentServiceImpl implements CommentService {
 			commentViewReplyRes.add(new CommentViewReplyRes(c));
 		}
 		return commentViewReplyRes;
+	}
+	
+	// 좋아요 기능 - 주희
+	@Override
+	@Transactional
+	public long postCommentLike(Long commentId, String userId) {
+		Comment comment = commentRepository.findById(commentId).orElse(null);
+		User user = userRepository.findById(userId).orElse(null);
+		
+		// UserCommentLike 에서 comment 에 해당하는 user 가 있는지 찾기
+		UserCommentLike userCommentLike = userCommentLikeRepository.findByCommentAndUser(comment, user).orElse(null);
+		
+		// 없다면, 추가
+		if(userCommentLike == null)
+			userCommentLikeRepository.save(new UserCommentLike().builder().comment(comment).user(user).build());
+		// 있다면, 삭제
+		else userCommentLikeRepository.deleteById(userCommentLike.getUserCommentLikeId());
+		
+		// 변화된 갯수 리턴
+		long count = userCommentLikeRepository.countByComment(comment);
+		return count;
 	}
 }

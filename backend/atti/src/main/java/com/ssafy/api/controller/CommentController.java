@@ -45,4 +45,11 @@ public class CommentController {
 //		commentService.viewReply(postId);
 		return new ResponseEntity<List<CommentViewReplyRes>>(commentService.viewReply(postId), HttpStatus.OK);
 	}
+	
+	// 댓글 좋아요 기능 - 주희
+	@GetMapping("/likeBtn/{commentId}/{userId}")
+	public ResponseEntity<Long> postCommentLike(@PathVariable("commentId") Long commentId, @PathVariable("userId") String userId) {
+		Long count = commentService.postCommentLike(commentId, userId);
+		return new ResponseEntity<Long>(count, HttpStatus.OK);
+	} 
 }
