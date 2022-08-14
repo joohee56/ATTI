@@ -6,7 +6,7 @@ import { ButtonBlue } from "../ButtonStyled"
 
 import InputWithIcon from "../InputWithLabel"
 import apiAcc, { api } from "../../utils/api"
-function CategoryCreate(){
+function CategoryCreate({handleModal6}){
 
     const [newCategory, setNewCategory] = useState([])
     
@@ -24,23 +24,26 @@ function CategoryCreate(){
     const departId = useSelector(state => state.depart.departId);
 
 
-    // // 카테고리 생성: 로그인 쪽에서 하는 axios 재랜더링 시켜야
-    // const categoryCreateFunction = () => {
-    //     api.post(`/depart/category/create`,
-    //     {
-    //         categoryId: "",
-    //         categpryAnoInfo: categoryAnoInfo,
-    //         categoryComAnoInfo: categoryComAnoInfo,
-    //         categoryComInfo: categoryComInfo,
-    //         categoryName: newCategory,
-    //         cType: cType,
-    //         departId: departId,
-    //         userId: auth.id
-    //     }).then((res) => {
-    //         console.log("카테고리 생성: ", res.data)
-    //     })
-    // }
+    // 카테고리 생성: 로그인 쪽에서 하는 axios 재랜더링 시켜야
+    const categoryCreateFunction = () => {
+        api.post(`/depart/category/create`,
+        {
+            categpryAnoInfo: categoryAnoInfo,
+            categoryComAnoInfo: categoryComAnoInfo,
+            categoryComInfo: categoryComInfo,
+            categoryName: newCategory,
+            type: cType,
+            departId: 1,
+            userId: "gusxo123"
+        }).then((res) => {
+            console.log("카테고리 생성: ", res.data)
+        })
+    }
 
+    function categoryFunction() {
+        categoryCreateFunction()
+        handleModal6()
+    }
     // useEffect(() => {
     //     console.log('카테고리명: ', newCategory)
     //     console.log('카테고리타입: ', cType)
@@ -106,7 +109,7 @@ function CategoryCreate(){
                         </SettingDiv>
                     </div>
                 </div>
-                <ButtonBlue>작성</ButtonBlue>
+                <ButtonBlue onClick={() => {categoryFunction()}}>작성</ButtonBlue>
             </div>
         </div>
     )

@@ -1,4 +1,4 @@
-import React, { Component, useState, useCallback } from 'react';
+import React, { Component, useState, useCallback, useEffect} from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { createAsyncThunk } from '@reduxjs/toolkit';
@@ -21,18 +21,20 @@ import { AutoFixHigh } from '@mui/icons-material';
 function PostEditor({handleModal1}, props) {
     const categoryId = useSelector(state => state.category.categoryId)
     const { auth } = useSelector(state => state.userInfo)
-
+    const departId = useSelector(state => state.depart.departId)
     const [post, setPost] = useState({
-        postId : "",
         postTitle : "",
         postContent : "",
-        postRegDate : "",
-        postUpdDate : "",
-        userId : auth.id,
-        category_id : categoryId,
+        departId : 1,
+        userId : "gusxo123",
+        categoryId : 2,
         postAnoInfo: false,
         postComBanInfo: false
     })
+    useEffect(() => {
+      console.log(post)
+      console.log("에디터: ", editor)
+    }, [post]);
 
     const getAnoInfo = () => {
         console.log("익명여부 :", post.postAnoInfo)
@@ -59,17 +61,14 @@ function PostEditor({handleModal1}, props) {
         async (e) => {
         //   e.preventDefault();
           try {
-
             await api
               .post("/post/write",
                 {
-                  postId : post.postId,
                   postTitle : post.postTitle,
                   postContent : editor,
-                  postRegDate : post.postRegDate,
-                  postUpdDate : post.postUpdDate,
+                  departId : post.departId,
                   userId : post.userId,
-                  category_id : post.category_id,
+                  categoryId : post.categoryId,
                   postAnoInfo: post.postAnoInfo,
                   postComBanInfo: post.postComBanInfo
                 },
@@ -107,13 +106,11 @@ function PostEditor({handleModal1}, props) {
           }
         },
         [
-          post.postId,
           post.postTitle,
           editor,
-          post.postRegDate,
-          post.postUpdDate,
+          post.departId,
           post.userId,
-          post.category_id,
+          post.categoryId,
           post.postAnoInfo,
           post.postComBanInfo
         ]

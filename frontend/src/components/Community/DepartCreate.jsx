@@ -12,34 +12,29 @@ function DepartCreate({handleModal4}) {
 
     const { auth } = useSelector(state => state.userInfo)
     const [newDepart, setNewDepart] = useState({
-        departId: "",
-        userId: auth.id,
+        userId: "gusxo123",
         departName: "",
-        departCode: ""
 
     })
 
     const getValue = e => {
         const {value} = e.target;
-        setNewDepart(() => {
-            newDepart.departName = value
-        })
+        newDepart.departName = value
     };
 
-    // // 채널 생성
-    // const departPost = () => {
-    //     api.post(`/depart/create`,
-    //     {
-    //         departId: newDepart.departId,
-    //         userId: newDepart.userId,
-    //         departName: newDepart.departName,
-    //         departCode: newDepart.departCode
-    //     }).then((res) => {
-    //         console.log("채널 만들기: ", res.data)
-    //     })
-    // }
+    // 채널 생성
+    const departPost = () => {
+        api.post(`/depart/create`,
+        {
+            userId: newDepart.userId,
+            departName: newDepart.departName,
+        }).then((res) => {
+            console.log("채널 만들기: ", res.data)
+        })
+    }
     
     function departCreateFunction(){
+        departPost()
         handleModal4()
     }
 

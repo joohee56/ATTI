@@ -20,24 +20,11 @@ export function PostUpdate({singlePost, handleModal3}) {
         postId : "",
         postTitle : "",
         postContent : "",
-        postRegDate : "",
-        postUpdDate : "",
-        userId : "",
-        category_id : "",
-        postAnoInfo: false,
-        postComBanInfo: false
+        userId : "gusxo123",
+        categoryId : 2,
+        departId : 1
     })
 
-    const getAnoInfo = () => {
-      console.log("익명여부 :", post.postAnoInfo)
-      post.postAnoInfo = !post.postAnoInfo
-      
-  }
-
-    const getComBanInfo = () => {
-      console.log("댓글금지여부 :", post.postComBanInfo)
-      post.postComBanInfo = !post.postComBanInfo
-  }
     
     const getValue = e => {
         const {name,value} = e.target;
@@ -57,17 +44,14 @@ export function PostUpdate({singlePost, handleModal3}) {
         async (e) => {
           try {
             await api
-              .put(`/post/update/${singlePost.postId}`,
+              .put(`/post/update`,
                 {
                   postId : singlePost.postId,
                   postTitle : post.postTitle,
                   postContent : post.postContent,
-                  postRegDate : singlePost.postRegDate,
-                  postUpdDate : post.postUpdDate,
-                  userId : singlePost.userId,
-                  category_id : singlePost.category_id,
-                  postAnoInfo: post.postAnoInfo,
-                  postComBanInfo: post.postComBanInfo
+                  userId : post.userId,                     // 전역변수에서 받아서 써야
+                  categoryId : post.categoryId,           // 전역변수에서 받아서 써야
+                  departId: post.departId                 // 전역변수에서 받아서 써야
                 },
               )
             // await axios
@@ -81,7 +65,7 @@ export function PostUpdate({singlePost, handleModal3}) {
             //       postUpdDate : post.postUpdDate,
             //     //   userId : post.userId,
             //       userId : "ssafy",
-            //       category_id : singlePost.category_id,
+            //       categoryId : singlePost.categoryId,
             //       postAnoInfo: getAnoInfoNum(),
             //       postComBanInfo: getComBanInfoNum()
             //     },
@@ -107,12 +91,10 @@ export function PostUpdate({singlePost, handleModal3}) {
           singlePost.postId,
           post.postTitle,
           post.postContent,
-          singlePost.postRegDate,
-          post.postUpdDate,
-          singlePost.userId,
-          singlePost.category_id,
-          post.postAnoInfo,
-          post.postComBanInfo
+          post.userId,
+          post.categoryId,
+          post.departId
+         
         ]
       );
     
@@ -129,28 +111,7 @@ export function PostUpdate({singlePost, handleModal3}) {
                 <Main>
                     <Top>
                         <TopTitle>{categoryName} 수정하기</TopTitle>
-                        <Top2>
-                        {categoryAnoInfo === false && (
-                            <SwitchDiv>
-                                <span style={{textAlign: "center" ,fontSize: "17px", marginBottom: "5px"}}>
-                                    익명으로 글쓰기 
-                                </span>
-                                <span onClick={getAnoInfo}>
-                                    {UseSwitchesBasic()}
-                                </span>
-                            </SwitchDiv>
-                          )}
-                            {categoryComInfo === false && (
-                            <SwitchDiv>
-                                <span style={{textAlign: "center", fontSize: "17px",  marginBottom: "5px"}}>
-                                    댓글 금지하기 
-                                </span>
-                                <span onClick={getComBanInfo}>
-                                    {UseSwitchesBasic()}
-                                </span>
-                            </SwitchDiv>
-                          )}
-                        </Top2>
+                        
                     </Top>
                     <PostTitle type="text" placeholder="제목을 입력하세요" name="postTitle" defaultValue={singlePost.postTitle} onChange={getValue}/>
                     <CKEditor
@@ -222,12 +183,12 @@ display: flex;
 flex-direction: column;
 `;
 
-const Top2 = styled.div`
-display: flex;
-flex-direction: column;
-justify-content: flex-start;
-align-items: flex-end;
-`;
+// const Top2 = styled.div`
+// display: flex;
+// flex-direction: column;
+// justify-content: flex-start;
+// align-items: flex-end;
+// `;
 
 const SubmitButton = styled(ButtonBlue)`
 width: 100px;

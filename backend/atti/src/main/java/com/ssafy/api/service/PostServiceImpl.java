@@ -124,6 +124,7 @@ public class PostServiceImpl implements PostService {
 			Long commentCount = commentRepository.countByPost(p);
 			
 			postViewAllResList.add(PostViewAllRes.builder()
+					.postId(p.getPostId())
 					.postTitle(p.getPostTitle())
 					.postContent(p.getPostContent())
 					.postRegDate(p.getPostRegDate())

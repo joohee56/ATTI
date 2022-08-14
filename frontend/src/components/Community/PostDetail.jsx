@@ -50,27 +50,23 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         }
         singlePost();
 
-        // // 댓글 list 불러오는 것
-        // api.get(`post/comment/read/${postId}`)
-        // .then((res) => {
-        //     setComments(res.data)
-        // })
-       },[comments]);
+        // 댓글 list 불러오는 것
+        api.get(`post/comment/read/${postId}`)
+        .then((res) => {
+            console.log("댓글들: ", res)
+            setComments(res.data)
+        })
+       },[]);
     
     function modalEvent(){
         onClickToggleModal2()
         onClickToggleModal3()
     }
-    const categoryId = useSelector(state => state.category.categoryId)
-    const departId = useSelector(state => state.depart.departId)
+
     const { auth } = useSelector(state => state.userInfo)
     const [comment, setComment] = useState({
-        commentId: "",
         postId: postId,
-        categoryId: categoryId,
-        departId: departId,
-        userId: auth.id,
-        commentRegDate: "",
+        userId: "gusxo123",
         commentDeleteInfo: "",
         commentAnoInfo: false,
         commentContent: "",
@@ -101,12 +97,8 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
             await api
             .post("/post/comment/write",
                 {
-                    commentId: comment.commentId,
                     postId: comment.postId,
-                    categoryId: comment.categoryId,
-                    departId: comment.departId,
                     userId: comment.userId,
-                    commentRegDate: comment.commentRegDate,
                     commentDeleteInfo: comment.commentDeleteInfo,
                     commentAnoInfo: comment.commentAnoInfo,
                     commentContent: comment.commentContent,

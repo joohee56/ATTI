@@ -22,7 +22,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
 
-function PostList({handleModal2, limit, page, getLength, getPostId}) {
+function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
   
   const categoryName = useSelector(state => state.category.categoryName)
   console.log('카테고리, 너의 이름은? ' , categoryName)
@@ -31,9 +31,9 @@ function PostList({handleModal2, limit, page, getLength, getPostId}) {
   const { auth } = useSelector(state => state.userInfo)
   
   async function getPosts(){
-    api.get(`/depart/${departId}/category/${categoryName}/user/${auth.id}`
+    api.get(`/depart/1/category/2/user/gusxo123`
     ).then((res) => {
-      console.log(res.data)
+      console.log("결과: ", res)
       setPost(res.data)
       getLength(res.data.length)
     })
@@ -59,14 +59,14 @@ function PostList({handleModal2, limit, page, getLength, getPostId}) {
   },[currentCider]);
   return (
     <>
-      <Rendering post={post} handleModal2={handleModal2} limit={limit} page={page} getPostId={getPostId} />
+      <Rendering post={post} handleModal2={handleModal2} length={length} limit={limit} page={page} getPostId={getPostId} />
     </>
   );
   
 };
 
 
-const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
+const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
 
   const offset = (page - 1) * limit;
   const postStyle = {
@@ -105,49 +105,57 @@ const Rendering = ({ post, handleModal2, limit, page, getPostId}) => {
   return `${Math.floor(betweenTimeDay / 365)}년 전`;
 }
 
-  return (
-    <>
-      {post.slice(offset, offset + limit).map((e, i) => (
-      <IndividualPost key={i}>
-        {/* {console.log(e)}
-        {console.log('-----')} */}
-        {/* {console.log(e.postId)} */}
-        {/* {console.log('postId :',  postId)} */}
-        <div style={postStyle} onClick={() => {TwoFunctions(e.postId)}}>
-             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-end",
-                padding: "10px 20px 0 "
-              }}
-            >
-              <UserIdDiv>
-                작성자: {e.user}
-              </UserIdDiv>
-              {timeForToday(e.postRegDate)}
-            </div>
-            <hr style={{width: "95%"}} />
 
-            <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "7px 20px" }}>
-              <div style={{width: "1200px", fontSize: "20px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
-                {e.postTitle}   
+  if(length === 0){
+    return (
+      <div></div>
+    )
+  }
+  else{
+    return (
+      <>
+        {post.slice(offset, offset + limit).map((e, i) => (
+        <IndividualPost key={i}>
+          {console.log(e)}
+          {console.log('-----')}
+          {console.log(e.postId)}
+          {/* {console.log('postId :',  postId)} */}
+          <div style={postStyle} onClick={() => {TwoFunctions(e.postId)}}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                  padding: "10px 20px 0 "
+                }}
+              >
+                <UserIdDiv>
+                  작성자: {e.user}
+                </UserIdDiv>
+                {timeForToday(e.postRegDate)}
               </div>
-              <div>
-              <FavoriteBorderIcon/> 24
-              &nbsp; &nbsp; &nbsp;
-              <ChatBubbleOutlineIcon/> 20
+              <hr style={{width: "95%"}} />
+  
+              <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "7px 20px" }}>
+                <div style={{width: "1200px", fontSize: "20px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+                  {e.postTitle}   
+                </div>
+                <div>
+                <FavoriteBorderIcon/> 24
+                &nbsp; &nbsp; &nbsp;
+                <ChatBubbleOutlineIcon/> 20
+                </div>
+              
               </div>
-            
+              
             </div>
             
-          </div>
-          
-      </IndividualPost>
-      ))}
-        
-    </>
-    )
+        </IndividualPost>
+        ))}
+      </>
+      )
+
+   }
   };
 function NormalPostFrame() {
 
@@ -212,7 +220,7 @@ function NormalPostFrame() {
             </div>
           </div>
           <div>
-            <PostList handleModal2={handleModal2} limit={limit} page={page} getLength={getLength} getPostId={getPostId} />
+            <PostList handleModal2={handleModal2} limit={limit} page={page} length={length} getLength={getLength} getPostId={getPostId} />
           </div>
         </div>
         <StickyFooter>

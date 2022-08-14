@@ -17,16 +17,17 @@ function DepartJoin({handleModal5}) {
         console.log(departJoin)
     };
 
-    //  // 채널 입장: route 이용해서 페이지 이동시켜할듯!
-    // const departGo = () => {
-    //     api.get(`/depart/${departJoin}`,
-    //     ).then((res) => {
-    //         console.log("채널 들어가기: ", res.data)
-    //     })
-    // }
+     // 채널 입장: route 이용해서 페이지 이동시켜할듯!
+    const departGo = () => {
+        api.get(`/depart/${departJoin}`,
+        ).then((res) => {
+            console.log("채널 들어가기: ", res.data)
+        })
+    }
 
     function departJoinFunction() {
         handleModal5()
+        departGo()
     }
     return(
         <>

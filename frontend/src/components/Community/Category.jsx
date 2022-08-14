@@ -293,7 +293,7 @@ function Category(){
                 width="1000px"
                 height="800px"
                 >
-                <CategoryCreate />
+                <CategoryCreate handleModal6={handleModal6} />
                 </Modal>
             )}
         </>

@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 public class PostViewOneRes {
 	
+	private Long postId;
+	
 	private String postTitle;
 	
 	private String postContent;
@@ -20,6 +22,7 @@ public class PostViewOneRes {
 	private String userId;
 	
 	public PostViewOneRes(Post post) {
+		this.postId = post.getPostId();
 		this.postTitle = post.getPostTitle();
 		this.postContent = post.getPostContent();
 		this.postRegDate = post.getPostRegDate();

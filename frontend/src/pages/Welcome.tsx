@@ -23,17 +23,6 @@ function Welcome(){
         return !prev}
       );
     }
-
-    const [isOpenModal5, setOpenModal5] = useState(false);
-    const onClickToggleModal5 = useCallback(() => {
-      setOpenModal5(!isOpenModal5);
-      }, [isOpenModal5]);
-
-    const handleModal5 = () => {
-      setOpenModal5((prev) => {
-        return !prev}
-      );
-    }
     const [newDepart, setNewDepart] = useState([])
     const getValue = (e: any) => {
       const {value} = e.target;
@@ -68,8 +57,8 @@ function Welcome(){
             </Title>
             <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
               <CustomInputWithIcon onChange={getValue} />
-              {/* 입장 부분 이벤트는 이게 아님, 그냥 넣어둠 */}
-              <CustomButtonBlue onClick={handleModal5}> 채널 입장</CustomButtonBlue>
+              
+              <CustomButtonBlue > 채널 입장</CustomButtonBlue>
 
             </div>
 
@@ -91,15 +80,7 @@ function Welcome(){
           <DepartCreate handleModal4={handleModal4} />
         </Modal>
       )}
-       {isOpenModal5 && (
-        <Modal
-          onClickToggleModal={onClickToggleModal5}
-          width="1000px"
-          height="800px"
-        >
-          <CategoryCreate />
-        </Modal>
-      )}
+
     </>
   );
 }
