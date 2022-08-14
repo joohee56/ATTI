@@ -49,7 +49,7 @@ import {
   QnAButton,
   QnAButtonWrapper,
 } from "./OpenViduTestStyled";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
 import FaceRetouchingOffIcon from "@mui/icons-material/FaceRetouchingOff";
 import StudentAnonymouse from "./StudentAnonymous";
@@ -67,9 +67,11 @@ export const CHATTING = "chatting";
 export const QnA = "QnA";
 
 const OpenViduTest = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  console.log(searchParams.get("courseId"));
   const navigate = useNavigate();
   const [state, setState] = useState({
-    mySessionId: "SessionA",
+    mySessionId: searchParams.get("courseId"),
     myUserName: "Participant" + Math.floor(Math.random() * 100),
     myRole: STUDENT,
     session: undefined,
@@ -1076,8 +1078,6 @@ const OpenViduTest = () => {
                         </MeetingButtonControl>
                       )}
                     </MeetingButton>
-
-                    <span>당신은 {state.myRole} 입니다!</span>
                     <MeetingButton
                       onClick={() => {
                         state.publisher.publishVideo(!turnOnCamera);
@@ -1102,8 +1102,12 @@ const OpenViduTest = () => {
                       </MeetingButtonControl>
                     </MeetingButton>
                     {/* <div>{state.mySessionId}</div> */}
-
-                    <MeetingButton onClick={requestAnonymous}>
+                    <MeetingButton
+                      onClick={requestAnonymous}
+                      disabled={
+                        anonymousMode && state.myRole === STUDENT ? true : false
+                      }
+                    >
                       {anonymousMode ? (
                         <MeetingButtonControl>
                           <FaceIcon />
@@ -1116,6 +1120,7 @@ const OpenViduTest = () => {
                         </MeetingButtonControl>
                       )}
                     </MeetingButton>
+
                     <MeetingButton onClick={leaveSession}>
                       <MeetingButtonControl>
                         <MeetingRoomIcon />
