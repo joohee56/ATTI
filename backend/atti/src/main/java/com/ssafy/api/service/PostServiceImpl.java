@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ssafy.api.request.PostWriteReq;
+import com.ssafy.api.request.ViewAllPostsReq;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.db.entity.depart.Category;
@@ -64,10 +65,11 @@ public class PostServiceImpl implements PostService {
 //				.depart(departRepository.findById(id)(postWriteReq.getDepartId()))
 //				.build();
 		postWriteReq.setPostRegDate(LocalDateTime.now());
-		
+
 		Depart depart = departRepository.getById(postWriteReq.getDepartId());
 		Category category = categoryRepository.getById(postWriteReq.getCategoryId());
 		User user = userRepository.getById(postWriteReq.getUserId());
+		
 		Post post = Post.builder()
 				.postTitle(postWriteReq.getPostTitle())
 				.postContent(postWriteReq.getPostContent())
@@ -95,8 +97,10 @@ public class PostServiceImpl implements PostService {
 //		for (Post post : entityList) {
 //			list.add(new PostViewAllRes(post));
 //		}
-		Depart depart = departRepository.findById(departId).orElse(null);
-		Category category = categoryRepository.findById(categoryId).orElse(null);
+		Depart depart = departRepository.findByDepartCode(viewAllPostsReq.getDepartCode())
+				.orElseThrow(() -> new IllegalArgumentException("post not found"));
+		Category category = categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new IllegalArgumentException("category not found"));
 		List<Post> postList = postRepository.findByDepartAndCategoryOrderByPostIdDesc(depart, category);
 		
 		List<PostViewAllRes> postViewAllResList;
@@ -106,6 +110,10 @@ public class PostServiceImpl implements PostService {
 		User user = userRepository.findById(userId).orElse(null);
 		
 		for(Post p : postList) {
+			if(p.isPostAnoInfo() == true) {
+				p.getUser().setUserId("익명");
+			}
+
 			// 내가 이 게시글에 좋아요를 눌렀는지 체크
 			UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(p, user).orElse(null);
 			boolean myLike = false;
@@ -147,11 +155,22 @@ public class PostServiceImpl implements PostService {
 		postRepository.deleteById(postId);
 	}
 
+	@Override // 카테고리 게시글 일괄 삭제
+	@Transactional
+	public void deleteAllPosts(Long categoryId) {
+		System.out.println("=====================");
+		System.out.println(categoryId);
+		System.out.println("=====================");
+		postRepository.deleteByCategory(categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new IllegalArgumentException("category not found")));
+	}
+
 	@Override // 단일 게시글 수정
 	@Transactional
 	public void editPost(Post editPost) {
 		editPost.setPostUpdDate(LocalDateTime.now());
 //		postRepository.updateOne(editPost);
+		postRepository.save(editPost);
 	}
 	
 	// 좋아요 기능 - 주희 추가
