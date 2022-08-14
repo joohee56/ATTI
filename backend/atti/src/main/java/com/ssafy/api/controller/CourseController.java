@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.CourseCreateReq;
 import com.ssafy.api.request.CourseGetReq;
-import com.ssafy.api.request.CourseListRes;
 import com.ssafy.api.request.CourseUpdateReq;
 import com.ssafy.api.response.CourseGetRes;
+import com.ssafy.api.response.CourseListRes;
 import com.ssafy.api.response.CreateCourseRes;
 import com.ssafy.api.service.CourseService;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -38,8 +38,9 @@ public class CourseController {
 	}
 	
 	// 시간표 조회
-	@GetMapping()
+	@PostMapping()
 	public ResponseEntity<CourseListRes> getCourse(@RequestBody CourseGetReq courseGetReq) {
+		System.out.println(courseGetReq.getDepartId());
 		List<CourseGetRes> courseResList = courseService.getCourse(courseGetReq);
 		
 		if(courseResList == null)

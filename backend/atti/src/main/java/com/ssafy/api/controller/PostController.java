@@ -18,13 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-<<<<<<< HEAD
-import com.ssafy.api.dto.request.PostUpdateReq;
-import com.ssafy.api.service.PostService;
-import com.ssafy.db.entity.depart.Post;
-import com.ssafy.db.entity.user.User;
-import com.ssafy.db.repository.PostRepository;
-=======
+
 import com.ssafy.api.request.PostUpdateReq;
 import com.ssafy.api.request.PostWriteReq;
 import com.ssafy.api.response.PostViewAllRes;
@@ -32,7 +26,7 @@ import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.api.service.PostService;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.user.User;
->>>>>>> 9d1bf4da2bf13af5e06b018db3d297dbf2ab62f0
+
 
 @RestController
 @RequestMapping("/post")
@@ -86,27 +80,6 @@ public class PostController {
 //	}
 	
 	@PutMapping("/update") // 게시글 수정
-<<<<<<< HEAD
-	public ResponseEntity<String> editPost(@RequestBody PostUpdateReq editPostInfo){
-		
-		System.out.println("=====================");
-		System.out.println("postContent : " + editPostInfo.getPostContent());
-		System.out.println("=====================");
-		
-		Post editPost = new Post();
-		
-		editPost.setPostId(editPostInfo.getPostId());
-		
-		User user = new User();
-		user.setUserId(editPostInfo.getUserId());
-		editPost.setUser(user);
-		
-		editPost.setPostTitle(editPostInfo.getPostTitle());
-		editPost.setPostContent(editPostInfo.getPostContent());
-		
-		postService.editPost(editPost);
-		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
-=======
     public ResponseEntity<String> editPost(@RequestBody PostUpdateReq editPostInfo){
 
         System.out.println("=====================");
@@ -134,7 +107,6 @@ public class PostController {
 	public ResponseEntity<Long> postLike(@PathVariable("postId") Long postId, @PathVariable("userId") String userId) {
 		Long count = postService.postLike(postId, userId);
 		return new ResponseEntity<Long>(count, HttpStatus.OK);
->>>>>>> 9d1bf4da2bf13af5e06b018db3d297dbf2ab62f0
 	}
 	
 	

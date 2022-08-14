@@ -161,10 +161,6 @@ public class AuthController {
 
         // 접속토큰 get
         String kakaoToken = authService.getReturnAccessToken(code);
-<<<<<<< HEAD
-        System.out.println("kakaoToken: " + kakaoToken);
-=======
->>>>>>> 9d1bf4da2bf13af5e06b018db3d297dbf2ab62f0
         
         // 접속자 정보 get
         Map<String, Object> result = authService.getUserInfo(kakaoToken);
@@ -235,13 +231,6 @@ public class AuthController {
 		String fromNumber = "01059368015";
 		String verifyCode = makeVerifyCode();  // 인증 키 생성
 		
-<<<<<<< HEAD
-		// service 로 넘김
-		userService.sendSMS(phoneNumber, fromNumber, verifyCode);
-		System.out.println("세션에 코드 저장하기 : "+ verifyCode);
-		//code session 에 저장
-		session.setAttribute("code", verifyCode);
-=======
 		if(fromNumber.equals(""))
 			return ResponseEntity.status(500).body(BaseResponseBody.of(500, "발신번호가 막혔습니다."));
 		
@@ -255,25 +244,18 @@ public class AuthController {
 		userService.setRedisStringValue("code", verifyCode);
 		
 		
->>>>>>> 9d1bf4da2bf13af5e06b018db3d297dbf2ab62f0
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "인증번호가 전송되었습니다. 받으신 인증번호를 입력하고 확인 버튼을 눌러 주세요."));
 	}
 	
 	// 사용자가 인증번호 전송
 	@GetMapping("/phone/authCode")
-<<<<<<< HEAD
-	private ResponseEntity<?> authPhoneCode(@RequestParam("code") String code, HttpSession session) {
-		String correctCode = (String)session.getAttribute("code");
-		System.out.println("세션 저장 코드 가져오기 : "+correctCode);
-		System.out.println("전송 코드 : "+code);
-=======
+
 	private ResponseEntity<?> authPhoneCode(@RequestParam("code") String code) {
 //		String correctCode = (String)session.getAttribute("code");
 		
 		// redis 에 저장되어 있는 코드 가져옴
 		String correctCode = userService.getRedisStringValue("code");
-		
->>>>>>> 9d1bf4da2bf13af5e06b018db3d297dbf2ab62f0
+
 		// 인증번호가 일치하는지 검증
 		if(code.equals(correctCode)) {
 //			session.removeAttribute("code");
