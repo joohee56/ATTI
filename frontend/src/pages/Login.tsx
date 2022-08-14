@@ -1,5 +1,5 @@
 import { api } from "../utils/api";
-import { useState, useCallback } from "react";
+import { useState, useCallback,useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
@@ -12,13 +12,14 @@ import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
 import { KAKAO_AUTH_URL } from "../constant/index";
 import InputWithPhone from "../components/account/InputWithPhone";
-import { useDispatch } from "react-redux";
-import { loginActions } from "../store/LoginSotre";
+import { useDispatch,useSelector } from "react-redux";
+import { loginActions, UserLoginState } from "../store/LoginSotre";
 import { useNavigate } from "react-router-dom";
 import { palette } from "../styles/palette";
 import InputPassword from "../components/account/InputPassword";
 import { FormHelperText, Snackbar } from "@mui/material";
 import SnacbarTell from "../components/SnacbarTell"
+import { RootState } from "../store";
 
 interface userLoginInfo {
   userId: string;
@@ -38,6 +39,7 @@ interface findPwInfo {
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { auth } = useSelector((state: RootState) => state.userInfo);
 
   // 로그인
   const [loginInfo, setLoginInfo] = useState<userLoginInfo>({
@@ -70,7 +72,7 @@ function LoginPage() {
             })
           );
           console.log(response);
-          navigate("/welcome");
+          
         }
       })
       .catch(function (error) {
@@ -78,6 +80,12 @@ function LoginPage() {
         console.log("Error", "로그인 실패!");
       });
   };
+
+  useEffect(() => {
+    if (auth) {
+      navigate("/welcome");
+    }
+  },[auth])
 
   // 카카오 로그인
   const kakaoLogin = () => {

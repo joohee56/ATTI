@@ -11,7 +11,6 @@ import {
   Avatar,
   Badge,
   IconButton,
-  Link,
   ListItemIcon,
   Menu,
   MenuItem,
@@ -20,13 +19,16 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { palette } from "../styles/palette";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { Link, useNavigate } from "react-router-dom";
 
 function HeaderNav() {
   const { auth } = useSelector((state: RootState) => state.userInfo);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const Logout = () => {
     dispatch(loginActions.logout());
+    navigate("/");
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -38,21 +40,25 @@ function HeaderNav() {
     setAnchorEl(null);
   };
 
+  const logoClick = () => {
+    navigate(auth? "/":"/community");
+  };
+
   return (
     <Main>
       <Header>
         <div style={{ display: `flex` }}>
-          <Link href={`${!auth}` ? "/" : "/community"}>
-            <LogoImg src={LogoCirce} alt="Logo Circle Img" />
-          </Link>
+        
+            <LogoImg src={LogoCirce} onClick={logoClick} alt="Logo Circle Img" />
+   
           <LogoText src={AttiText4} alt="LogoText Img" />
         </div>
         {!auth ? (
           <div>
-          <Link href="/login" underline="none">
+          <Link to="/login">
             <LoginButton>로그인</LoginButton>
           </Link>
-          <Link href="/signup" underline="none">
+          <Link to="/signup" >
           <LoginButton>회원가입</LoginButton>
         </Link>
         </div>
@@ -117,8 +123,8 @@ function HeaderNav() {
               <MenuItem>
                 <ListItemIcon onClick={Logout}>
                   <LogoutIcon fontSize="small" />
-                </ListItemIcon>
                 로그아웃
+                </ListItemIcon>
               </MenuItem>
             </Menu>
             {/* <LoginButton onClick={Logout}>로그아웃</LoginButton> */}
