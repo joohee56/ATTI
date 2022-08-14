@@ -1270,7 +1270,8 @@ const OpenViduTest = () => {
               )
             ) {
               window.location.assign(
-                OPENVIDU_SERVER_URL + "/accept-certificate"
+                // OPENVIDU_SERVER_URL + "/accept-certificate"
+                OPENVIDU_SERVER_URL + "/openvidu/accept-certificate"
               );
             }
           }

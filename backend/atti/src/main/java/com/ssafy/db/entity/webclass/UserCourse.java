@@ -15,10 +15,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.ssafy.db.entity.chat.Chat;
+//import com.ssafy.db.entity.chat.Chat;
 import com.ssafy.db.entity.chat.ChatRoom;
 import com.ssafy.db.entity.depart.Comment;
-import com.ssafy.db.entity.message.UserMessage;
+import com.ssafy.db.entity.message.Message;
 import com.ssafy.db.entity.user.Profile;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.entity.user.UserRole;
@@ -50,13 +50,13 @@ public class UserCourse {
 	@JoinColumn(name="course_id")
 	private Course course;
 	
-	public void setUser(User user) {
-		this.user = user;
-		user.getUsercourses().add(this);
-	}
-	
-	public void setCourse(Course course) {
-		this.course = course;
-		course.getUsercourses().add(this);
-	}
+//	public void setUser(User user) {
+//		this.user = user;
+//		user.getUsercourses().add(this);
+//	}
+//	
+//	public void setCourse(Course course) {
+//		this.course = course;
+//		course.getUsercourses().add(this);
+//	}
 }

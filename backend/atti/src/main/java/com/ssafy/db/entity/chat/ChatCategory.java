@@ -17,8 +17,7 @@ import javax.persistence.TemporalType;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.depart.UserPostMention;
 import com.ssafy.db.entity.message.Message;
-import com.ssafy.db.entity.message.UserMessage;
-import com.ssafy.db.entity.user.Auth;
+import com.ssafy.db.entity.message.Message;
 import com.ssafy.db.entity.user.Profile;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.entity.user.UserRole;
@@ -40,11 +39,11 @@ public class ChatCategory {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="chat_category_id")
-	private Long chatCategoryId;
+	private Long chatCategoryId;			// 채팅 카테고리 ID
 	
 	@Column(name="chat_category_name")
-	private String chatCategoryName;
+	private String chatCategoryName;		// 채팅 카테고리 이름
 	
-	@OneToMany(mappedBy = "chatcategory")
-    private List<Chat> chats = new ArrayList<>();
+//	@OneToMany(mappedBy = "chatcategory")
+//    private List<Chat> chats = new ArrayList<>();
 }

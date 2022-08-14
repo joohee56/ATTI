@@ -54,7 +54,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) {
 		auth.authenticationProvider(authenticationProvider());
-		
+	}
+	
 //		http
 //        .authorizeRequests()
 //        .anyRequest().authenticated()
@@ -69,29 +70,29 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //        .successHandler(loginSuccessHandler())//로그인 성공 후 핸들러 (해당 핸들러를 생성하여 핸들링 해준다.)
 //        .failureHandler(loginFailureHandler());//로그인 실패 후 핸들러 (해당 핸들러를 생성하여 핸들링 해준다.)
 //						.permitAll(); //사용자 정의 로그인 페이지 접근 권한 승인
-	}
 	
 	@Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().disable()
-        .csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)    // 토큰 기반 인증이므로 세션 사용하지 않음
-        .and()
-        .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
-         .authorizeRequests()
-//         .antMatchers("/api/user/signup/normal").authenticated()
+	protected void configure(HttpSecurity http) throws Exception {
+		http.httpBasic().disable()
+		.csrf().disable()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)	// 토큰 기반 인증이므로 세션 사용하지 않음
+		.and()
+		.addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
+		 .authorizeRequests()
+		 // 아래의 경로는 인증을 해야 접근이 허용된다.
+		 .antMatchers("/api/user").authenticated()
+//		 .antMatchers("/api/user/signup/normal").authenticated()
 //         .antMatchers("/api/v1/users/me").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-//                    .anyRequest().permitAll()
-         // "/api/auth" 에 대한 요청은 인증 없이 접근을 허용하겠다.
-//         .antMatchers("/api/auth/**/").permitAll()
-         // 나머지 요청들은 모두 인증되어야 한다.
-//         .anyRequest().authenticated()
-         .anyRequest().permitAll()    // 모든 요청은 인증 없이 접근을 허용한다.
+//	        	    .anyRequest().permitAll()
+		 // "/api/auth" 에 대한 요청은 인증 없이 접근을 허용하겠다.
+//		 .antMatchers("/api/auth/**/").permitAll()
+		 // 나머지 요청들은 모두 인증되어야 한다.
+//		 .anyRequest().authenticated()
+		 .anyRequest().permitAll()	// 모든 요청은 인증 없이 접근을 허용한다.
          .and().cors();
-    }
+	}
 	
 }
-
 
 
 

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.service.MessageService;
 import com.ssafy.db.entity.message.Message;
-import com.ssafy.db.entity.message.UserMessage;
 import com.ssafy.db.repository.MessageRepository;
 
 @RestController
@@ -25,9 +24,9 @@ public class MessageController {
 	private MessageService messageService;
 	
 	@GetMapping("/read/{userMessageId}") // 특정 메세지 조회
-	public ResponseEntity<List<UserMessage>> viewAllMessage(@PathVariable Long userMessageId) {
-		System.out.println(userMessageId);
-		return new ResponseEntity<List<UserMessage>>(messageService.viewAllMessage(userMessageId), HttpStatus.OK);
+	public ResponseEntity<List<Message>> viewAllMessage(@PathVariable Long messageId) {
+		System.out.println(messageId);
+		return new ResponseEntity<List<Message>>(messageService.viewAllMessage(messageId), HttpStatus.OK);
 	}
 	
 	@PostMapping("/send") // 메세지 보내기
