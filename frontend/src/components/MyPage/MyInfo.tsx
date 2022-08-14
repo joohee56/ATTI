@@ -1,7 +1,10 @@
 import { Avatar, TextField } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { RootState } from "../../store";
 import { palette } from "../../styles/palette";
+import apiAcc from "../../utils/api";
 import InputPassword from "../account/InputPassword";
 import InputWithPhone from "../account/InputWithPhone";
 import { ButtonBlue, ButtonPurple } from "../ButtonStyled";
@@ -17,7 +20,7 @@ function stringToColor(string: string) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
 
-  let color = '#';
+  let color = "#";
 
   for (i = 0; i < 3; i += 1) {
     const value = (hash >> (i * 8)) & 0xff;
@@ -33,11 +36,45 @@ function stringAvatar(name: string) {
     sx: {
       bgcolor: stringToColor(name),
     },
-    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
   };
 }
 
+interface MyInfoData {
+  userName: string;
+  email: string;
+  birth: string;
+  phone: string;
+}
+
+
 function MyPage() {
+  const { userName } = useSelector((state: RootState) => state.userInfo);
+  const { id } = useSelector((state: RootState) => state.userInfo);
+  const { accessToken } = useSelector((state: RootState) => state.userInfo);
+
+  const [mydataInfo, setMydataInfo] = useState<MyInfoData>({
+    userName: "",
+    email: "",
+    birth: "",
+    phone: "",
+  });
+
+  useEffect(()=>{
+    apiAcc
+        .get("/user/"+{id}, {
+          params: {
+            userId:{id},
+          },
+        })
+        .then(function (response) {
+           console.log("성공",response);
+        })
+        .catch(function (error) {
+          console.log("에러발생 : " + error);
+        });
+  },[]);
+
   // 모달 보이기 여부
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -63,51 +100,70 @@ function MyPage() {
     <Main>
       {!isEdit ? (
         <>
-        <Content>
-        <Avatar
-            {...stringAvatar('Kent Dodds')} 
-            sx={{
-              width: 120,
-              height: 120,
-              bgcolor: palette.yellow_3,
-              marginBottom: 5,
-              fontSize: 40,
-            }}
-          >
-            </Avatar>
-          <Grid>
-            <SpanStyle>Name</SpanStyle>
-            <InputWithLabel disabled name={""} placeholder={""} />
+          <Content>
+            <Avatar
+              {...stringAvatar("Kent Dodds")}
+              sx={{
+                width: 120,
+                height: 120,
+                bgcolor: palette.yellow_3,
+                marginBottom: 5,
+                fontSize: 40,
+              }}
+            ></Avatar>
+            <Grid>
+              <SpanStyle>Name</SpanStyle>
+              <InputWithLabel
+                disabled
+                name={""}
+                placeholder={""}
+                value={userName}
+              />
 
-            <SpanStyle>ID</SpanStyle>
-            <InputWithLabel disabled name={""} placeholder={""} />
+              <SpanStyle>ID</SpanStyle>
+              <InputWithLabel
+                disabled
+                name={""}
+                placeholder={""}
+                value={id}
+              />
 
-            <SpanStyle>Email</SpanStyle>
-            <InputWithLabel disabled name={""} placeholder={""} />
+              <SpanStyle>Email</SpanStyle>
+              <InputWithLabel
+                disabled
+                name={""}
+                placeholder={""}
+                value={"내 이메일"}
+              />
 
-            <SpanStyle>Channel</SpanStyle>
-            <InputWithLabel disabled name={""} placeholder={""} />
-          </Grid>
-          <UserEdit onClick={() => setIsEdit(true)}>회원정보수정</UserEdit>
-          {isOpenModal && (
-            <Modal onClickToggleModal={() => setOpenModal(false)}>
-              <p>정말로 탈퇴하시곘습니까?</p>
-              <p>
-                탈퇴시 관련 데이터들이 삭제 됩니다.
-                <br />
-                재가입시 데이터를 복구 할 수 없습니다.
-              </p>
-              <div>
-                <button>아니오</button>
-                <MemberWithdrawal>탈퇴</MemberWithdrawal>
-              </div>
-            </Modal>
-          )}
-        </Content>
-         <MemberWithdrawal onClick={() => setOpenModal(true)}>
-         회원탈퇴
-       </MemberWithdrawal>
-       </>
+              <SpanStyle>Channel</SpanStyle>
+              <InputWithLabel
+                disabled
+                name={""}
+                placeholder={""}
+                value={"내 채널"}
+              />
+            </Grid>
+            <UserEdit onClick={() => setIsEdit(true)}>회원정보수정</UserEdit>
+            {isOpenModal && (
+              <Modal onClickToggleModal={() => setOpenModal(false)}>
+                <p>정말로 탈퇴하시곘습니까?</p>
+                <p>
+                  탈퇴시 관련 데이터들이 삭제 됩니다.
+                  <br />
+                  재가입시 데이터를 복구 할 수 없습니다.
+                </p>
+                <div>
+                  <button>아니오</button>
+                  <MemberWithdrawal>탈퇴</MemberWithdrawal>
+                </div>
+              </Modal>
+            )}
+          </Content>
+          <MemberWithdrawal onClick={() => setOpenModal(true)}>
+            회원탈퇴
+          </MemberWithdrawal>
+        </>
       ) : (
         <Content>
           <Avatar
@@ -185,7 +241,7 @@ const Content = styled.div`
   align-items: center;
   position: absolute;
   left: 50%;
-  margin-top : 50px;
+  margin-top: 50px;
   transform: translate(-50%);
 `;
 
