@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import UseSwitchesBasic from "../SwitchButton"
 
+import apiAcc, {api} from '../../utils/api';
 import { reRenderingActions } from '../../store/community/ReRendering';
 import CommentList from './CommentList';
 import {ButtonBlue} from '../ButtonStyled';
@@ -26,18 +27,24 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
     const [single, setSingle] = useState([])
     useEffect(() => {
         async function singlePost(){
-          axios.get(
-            BACKEND_URL + `/post/read/${postId}`,
-            {
-              headers: {
-                "Content-type": "application/json",
-              },
-            }
-          ).then((res) => {
-            console.log("개별 글 list : ", res.data)
-            setSingle(res.data)
-            setSinglePost(res.data)
-          })
+            api.get(`/post/read/${postId}`
+              ).then((res) => {
+                console.log("개별 글 list : ", res.data)
+                setSingle(res.data)
+                setSinglePost(res.data)
+              })
+        //   axios.get(
+        //     BACKEND_URL + `/post/read/${postId}`,
+        //     {
+        //       headers: {
+        //         "Content-type": "application/json",
+        //       },
+        //     }
+        //   ).then((res) => {
+        //     console.log("개별 글 list : ", res.data)
+        //     setSingle(res.data)
+        //     setSinglePost(res.data)
+        //   })
         }
         singlePost();
        },[]);
@@ -144,21 +151,31 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
     const updateCider = !currentCider
 
     const deletePost = () => {
-        axios.delete(
-                BACKEND_URL + `/post/delete/${single.postId}`,
-                {
-                headers: {
-                    "Content-type": "application/json",
-                },
-                }
-            )
-            .then((res) => {
-                console.log("response:", res);
-                dispatch(reRenderingActions.saveReRendering(
-                    {cider: updateCider }
-                ))
+
+        api.delete(`/post/delete/${single.postId}`,
+        )
+        .then((res) => {
+            console.log("response:", res);
+            dispatch(reRenderingActions.saveReRendering(
+                {cider: updateCider }
+            ))
+        });
+
+        // axios.delete(
+        //         BACKEND_URL + `/post/delete/${single.postId}`,
+        //         {
+        //         headers: {
+        //             "Content-type": "application/json",
+        //         },
+        //         }
+        //     )
+        //     .then((res) => {
+        //         console.log("response:", res);
+        //         dispatch(reRenderingActions.saveReRendering(
+        //             {cider: updateCider }
+        //         ))
     
-            });
+        //     });
         }
     
     function DeleteFunction(){

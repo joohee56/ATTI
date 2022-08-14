@@ -23,19 +23,32 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
 function PostList({handleModal2, limit, page, getLength, getPostId}) {
+  
+  const categoryName = useSelector(state => state.category.categoryName)
+  console.log('카테고리, 너의 이름은? ' , categoryName)
+  const departId = useSelector(state => state.depart.departId)
+  console.log('채널, 너의 아이디는? ' , departId)
+  
   async function getPosts(){
-    axios.get(
-      BACKEND_URL + "/post",
-      {
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
+    api.get(`/depart/${departId}/category/${categoryName}/post`
     ).then((res) => {
       console.log(res.data)
       setPost(res.data)
       getLength(res.data.length)
     })
+
+    // axios.get(
+    //   BACKEND_URL + "/post",
+    //   {
+    //     headers: {
+    //       "Content-type": "application/json",
+    //     },
+    //   }
+    // ).then((res) => {
+    //   console.log(res.data)
+    //   setPost(res.data)
+    //   getLength(res.data.length)
+    // })
   }
   const currentCider = useSelector(state => state.reRendering.cider)
   const [post,setPost] = useState([])
@@ -184,10 +197,6 @@ function NormalPostFrame() {
   const [singlePost, setSinglePost] = useState([])
 
   const categoryName = useSelector(state => state.category.categoryName)
-  console.log('카테고리, 너의 이름은? ' , categoryName)
-  const departName = useSelector(state => state.depart.departName)
-  console.log('채널, 너의 이름은? ' , departName)
-  
   return (
     <>
       <PostContainer>

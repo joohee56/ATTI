@@ -6,6 +6,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios from 'axios';
 
+import apiAcc, {api} from '../../utils/api';
 import { reRenderingActions } from '../../store/community/ReRendering';
 import { BACKEND_URL } from "../../constant";
 import { ButtonBlue } from '../ButtonStyled';
@@ -70,27 +71,42 @@ export function PostUpdate({singlePost, handleModal3}) {
     const updatePosts = useCallback(
         async (e) => {
           try {
-            await axios
-              .put(
-                BACKEND_URL + "/post/update",
+            await api
+              .put(`/post/update/${singlePost.postId}`,
                 {
                   postId : singlePost.postId,
                   postTitle : post.postTitle,
                   postContent : post.postContent,
                   postRegDate : singlePost.postRegDate,
                   postUpdDate : post.postUpdDate,
-                //   user_id : post.user_id,
+                //   user_id : singlePost.user_id,
                   userId : "ssafy",
                   category_id : singlePost.category_id,
                   postAnoInfo: getAnoInfoNum(),
                   postComBanInfo: getComBanInfoNum()
                 },
-                {
-                  headers: {
-                    "Content-type": "application/json",
-                  },
-                }
               )
+            // await axios
+            //   .put(
+            //     BACKEND_URL + "/post/update",
+            //     {
+            //       postId : singlePost.postId,
+            //       postTitle : post.postTitle,
+            //       postContent : post.postContent,
+            //       postRegDate : singlePost.postRegDate,
+            //       postUpdDate : post.postUpdDate,
+            //     //   user_id : post.user_id,
+            //       userId : "ssafy",
+            //       category_id : singlePost.category_id,
+            //       postAnoInfo: getAnoInfoNum(),
+            //       postComBanInfo: getComBanInfoNum()
+            //     },
+            //     {
+            //       headers: {
+            //         "Content-type": "application/json",
+            //       },
+            //     }
+            //   )
               .then((res) => {
                 console.log("response:", res);
                 dispatch(reRenderingActions.saveReRendering(

@@ -5,9 +5,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios from 'axios';
+import { Button } from '@mui/material';
 
 // import UploadAdapter from './UploadAdaptor';
-import { Button } from '@mui/material';
+import apiAcc, {api} from '../../utils/api';
 import MyEditor from './MyEditor';
 import { reRenderingActions } from '../../store/community/ReRendering';
 import { BACKEND_URL } from "../../constant";
@@ -70,9 +71,9 @@ function PostEditor({handleModal1}, props) {
         async (e) => {
         //   e.preventDefault();
           try {
-            await axios
-              .post(
-                BACKEND_URL + "/post/write",
+
+            await api
+              .post("/post/write",
                 {
                   postId : post.postId,
                   postTitle : post.postTitle,
@@ -84,12 +85,28 @@ function PostEditor({handleModal1}, props) {
                   postAnoInfo: getAnoInfoNum(),
                   postComBanInfo: getComBanInfoNum()
                 },
-                {
-                  headers: {
-                    "Content-type": "application/json",
-                  },
-                }
               )
+
+            // await axios
+            //   .post(
+            //     BACKEND_URL + "/post/write",
+            //     {
+            //       postId : post.postId,
+            //       postTitle : post.postTitle,
+            //       postContent : editor,
+            //       postRegDate : post.postRegDate,
+            //       postUpdDate : post.postUpdDate,
+            //       user_id : post.user_id,
+            //       category_id : post.category_id,
+            //       postAnoInfo: getAnoInfoNum(),
+            //       postComBanInfo: getComBanInfoNum()
+            //     },
+            //     {
+            //       headers: {
+            //         "Content-type": "application/json",
+            //       },
+            //     }
+            //   )
               .then((res) => {
                 console.log("response:", res);
                 dispatch(reRenderingActions.saveReRendering(
