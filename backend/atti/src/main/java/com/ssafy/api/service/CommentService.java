@@ -12,4 +12,7 @@ public interface CommentService {
 	void createReply(CommentReq comment); // 댓글쓰기
 	
 	void deleteFindOne(Long commentId); // 댓글 삭제
+	
+	// 좋아요 - 주희
+	long postCommentLike(Long commentId, String userId);
 }
