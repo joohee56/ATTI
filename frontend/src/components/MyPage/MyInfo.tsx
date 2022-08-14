@@ -1,14 +1,80 @@
 import { Avatar, TextField } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { RootState } from "../../store";
 import { palette } from "../../styles/palette";
+import apiAcc from "../../utils/api";
 import InputPassword from "../account/InputPassword";
 import InputWithPhone from "../account/InputWithPhone";
 import { ButtonBlue, ButtonPurple } from "../ButtonStyled";
 import InputWithLabel from "../InputWithLabel";
 import Modal from "../Modal";
 
+function stringToColor(string: string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name: string) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+  };
+}
+
+interface MyInfoData {
+  userName: string;
+  email: string;
+  birth: string;
+  phone: string;
+}
+
+
 function MyPage() {
+  const { userName } = useSelector((state: RootState) => state.userInfo);
+  const { id } = useSelector((state: RootState) => state.userInfo);
+  const { accessToken } = useSelector((state: RootState) => state.userInfo);
+
+  const [mydataInfo, setMydataInfo] = useState<MyInfoData>({
+    userName: "",
+    email: "",
+    birth: "",
+    phone: "",
+  });
+
+  useEffect(()=>{
+    apiAcc
+        .get("/user/"+{id}, {
+          params: {
+            userId:{id},
+          },
+        })
+        .then(function (response) {
+           console.log("성공",response);
+        })
+        .catch(function (error) {
+          console.log("에러발생 : " + error);
+        });
+  },[]);
+
   // 모달 보이기 여부
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -31,32 +97,52 @@ function MyPage() {
   const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
 
   return (
-    <>
-      <Main>
-        {!isEdit ? (
-          <>
+    <Main>
+      {!isEdit ? (
+        <>
+          <Content>
             <Avatar
+              {...stringAvatar("Kent Dodds")}
               sx={{
-                width: 100,
-                height: 100,
-                bgcolor: palette.gray_2,
-                marginBottom: 2,
+                width: 120,
+                height: 120,
+                bgcolor: palette.yellow_3,
+                marginBottom: 5,
+                fontSize: 40,
               }}
-            >
-              PP
-            </Avatar>
+            ></Avatar>
             <Grid>
               <SpanStyle>Name</SpanStyle>
-              <InputWithLabel disabled name={""} placeholder={""} />
+              <InputWithLabel
+                disabled
+                name={""}
+                placeholder={""}
+                value={userName}
+              />
 
               <SpanStyle>ID</SpanStyle>
-              <InputWithLabel disabled name={""} placeholder={""} />
+              <InputWithLabel
+                disabled
+                name={""}
+                placeholder={""}
+                value={id}
+              />
 
               <SpanStyle>Email</SpanStyle>
-              <InputWithLabel disabled name={""} placeholder={""} />
+              <InputWithLabel
+                disabled
+                name={""}
+                placeholder={""}
+                value={"내 이메일"}
+              />
 
               <SpanStyle>Channel</SpanStyle>
-              <InputWithLabel disabled name={""} placeholder={""} />
+              <InputWithLabel
+                disabled
+                name={""}
+                placeholder={""}
+                value={"내 채널"}
+              />
             </Grid>
             <UserEdit onClick={() => setIsEdit(true)}>회원정보수정</UserEdit>
             {isOpenModal && (
@@ -73,80 +159,90 @@ function MyPage() {
                 </div>
               </Modal>
             )}
-             <MemberWithdrawal onClick={() => setOpenModal(true)}>
-              회원탈퇴
-            </MemberWithdrawal>
-          </>
-        ) : (
-          <>
-            <Avatar
-              sx={{
-                width: 100,
-                height: 100,
-                bgcolor: palette.gray_2,
-                marginBottom: 2,
-              }}
-            >
-              수정
-            </Avatar>
-            <StyledPage>
-              <StyledContent>
-                <Grid>
-                  <SpanStyle>Name</SpanStyle>
-                  <InputWithLabel name={""} placeholder={""} value={"이름"} />
+          </Content>
+          <MemberWithdrawal onClick={() => setOpenModal(true)}>
+            회원탈퇴
+          </MemberWithdrawal>
+        </>
+      ) : (
+        <Content>
+          <Avatar
+            sx={{
+              width: 100,
+              height: 100,
+              bgcolor: palette.gray_2,
+              marginBottom: 2,
+            }}
+          >
+            수정
+          </Avatar>
+          <StyledPage>
+            <StyledContent>
+              <Grid>
+                <SpanStyle>Name</SpanStyle>
+                <InputWithLabel name={""} placeholder={""} value={"이름"} />
 
-                  <SpanStyle>ID</SpanStyle>
-                  <InputWithLabel disabled name={""} placeholder={""} />
-                  <SpanStyle>Password</SpanStyle>
-                  <InputPassword
-                    name="password"
-                    placeholder="비밀번호"
-                    value={"비밀번호"}
-                    // onChange={onChangePassword}
-                  />
+                <SpanStyle>ID</SpanStyle>
+                <InputWithLabel disabled name={""} placeholder={""} />
+                <SpanStyle>Password</SpanStyle>
+                <InputPassword
+                  name="password"
+                  placeholder="비밀번호"
+                  value={"비밀번호"}
+                  // onChange={onChangePassword}
+                />
 
-                  <SpanStyle>Email</SpanStyle>
-                  <InputWithLabel
-                    name="password확인"
-                    placeholder="비밀번호 확인"
-                    type="password"
-                    value={""}
-                  />
-                </Grid>
-              </StyledContent>
-              <StyledContent>
-                <Grid>
-                  <SpanStyle>Email</SpanStyle>
-                  <InputWithLabel name={""} placeholder={""} value={"Email"} />
+                <SpanStyle>Email</SpanStyle>
+                <InputWithLabel
+                  name="password확인"
+                  placeholder="비밀번호 확인"
+                  type="password"
+                  value={""}
+                />
+              </Grid>
+            </StyledContent>
+            <StyledContent>
+              <Grid>
+                <SpanStyle>Email</SpanStyle>
+                <InputWithLabel name={""} placeholder={""} value={"Email"} />
 
-                  <SpanStyle>Phone</SpanStyle>
-                  <InputWithPhone
-                    name="phoneNumber"
-                    placeholder="폰 번호"
-                    phonNumber={phoneNumber}
-                    onChange={onChangePhonNumber}
-                    isCertifiedSuccess={setIsPhoneNumber}
-                  />
+                <SpanStyle>Phone</SpanStyle>
+                <InputWithPhone
+                  name="phoneNumber"
+                  placeholder="폰 번호"
+                  phonNumber={phoneNumber}
+                  onChange={onChangePhonNumber}
+                  isCertifiedSuccess={setIsPhoneNumber}
+                />
 
-                  <SpanStyle>Channel</SpanStyle>
-                  <InputWithLabel name={""} placeholder={""} />
-                </Grid>
-              </StyledContent>
-            </StyledPage>
-            <UserEdit onClick={InfoSubmit}>저장하기</UserEdit>
-          </>
-        )}
-      </Main>
-    </>
+                <SpanStyle>Channel</SpanStyle>
+                <InputWithLabel name={""} placeholder={""} />
+              </Grid>
+            </StyledContent>
+          </StyledPage>
+          <UserEdit onClick={InfoSubmit}>저장하기</UserEdit>
+        </Content>
+      )}
+    </Main>
   );
 }
 
 const Main = styled.main`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  min-height: 70vh;
+  min-height: 80vh;
+  position: relative;
+`;
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  margin-top: 50px;
+  transform: translate(-50%);
 `;
 
 const Grid = styled.div`
@@ -156,6 +252,13 @@ const Grid = styled.div`
   row-gap: 20px;
   column-gap: 50px;
   align-items: stretch;
+`;
+
+const ProfileImg = styled(Avatar)`
+  width: 150;
+  height: 150;
+  background-color: ${palette.yellow_3};
+  margin-bottom: 6px;
 `;
 
 const SpanStyle = styled.span`

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.api.request.CommentReq;
+import com.ssafy.api.request.CommentWriteReq;
 import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Post;
 
@@ -34,7 +34,7 @@ public class CommentRepository2 {
 	}
 	
 	// 댓글 작성
-	public void insertWriting(CommentReq comment) {
+	public void insertWriting(CommentWriteReq comment) {
 		em.persist(comment);
 		
 	}

@@ -23,7 +23,6 @@ import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.api.service.PostService;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.user.User;
-import com.ssafy.db.repository.PostRepository2;
 
 @RestController
 @RequestMapping("/post")
@@ -64,9 +63,9 @@ public class PostController {
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/delete") // 전체 게시글 삭제
-	public ResponseEntity<String> deleteAll() {
-		postService.deleteAll();
+	@DeleteMapping("/delete/category/{categoryId}") // 카테고리 게시글 일괄 삭제
+	public ResponseEntity<String> deleteAll(@PathVariable Long categoryId) {
+		postService.deleteAllPosts(categoryId);
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	
@@ -79,7 +78,7 @@ public class PostController {
 
         Post editPost = new Post();
 
-        editPost.setPostId(editPostInfo.getPostId());
+//        editPost.setPostId(editPostInfo.getPostId());
 
         User user = new User();
         user.setUserId(editPostInfo.getUserId());
@@ -91,5 +90,15 @@ public class PostController {
         postService.editPost(editPost);
         return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
     }
+	
+	// 좋아요 기능 - 주희 추가
+	// 좋아요 버튼 누름
+	@GetMapping("/likeBtn/{postId}/{userId}")
+	public ResponseEntity<Long> postLike(@PathVariable("postId") Long postId, @PathVariable("userId") String userId) {
+		Long count = postService.postLike(postId, userId);
+		return new ResponseEntity<Long>(count, HttpStatus.OK);
+	}
+	
+	
 	
 }

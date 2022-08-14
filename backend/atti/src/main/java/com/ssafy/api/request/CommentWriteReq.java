@@ -1,19 +1,25 @@
 package com.ssafy.api.request;
 
+import java.time.LocalDateTime;
+
 import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.user.User;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class CommentReq {
+@Setter
+public class CommentWriteReq {
 	
 	private  boolean commentAnoInfo;
 	
 	private String commentContent;
 	
 	private boolean commentDeleteInfo;
+	
+	private LocalDateTime commentRegDate;
 	
 	private int commentGroup;
 	
@@ -31,6 +37,7 @@ public class CommentReq {
 				.commentAnoInfo(commentAnoInfo)
 				.commentContent(commentContent)
 				.commentDeleteInfo(commentDeleteInfo)
+				.commentRegDate(commentRegDate)
 				.commentGroup(commentGroup)
 				.commentLevel(commentLevel)
 				.seq(seq)
