@@ -43,10 +43,10 @@ public class DepartController {
 		return new ResponseEntity<String>(departService.joinChannel(departId), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{departId}/category/{categoryId}/post") // 게시글 전체 조회
-	public ResponseEntity<List<PostViewAllRes>> viewAllPosts(@PathVariable Long departId, @PathVariable Long categoryId) {
+	@GetMapping("/{departId}/category/{categoryId}/user/{userId}") // 게시글 전체 조회
+	public ResponseEntity<List<PostViewAllRes>> viewAllPosts(@PathVariable Long departId, @PathVariable Long categoryId, @PathVariable String userId) {
 		System.out.println("===========================" + departId + "=============================");
 		System.out.println("===========================" + categoryId + "=============================");
-		return new ResponseEntity<List<PostViewAllRes>>(postService.viewAllPosts(departId, categoryId), HttpStatus.OK);
+		return new ResponseEntity<List<PostViewAllRes>>(postService.viewAllPosts(departId, categoryId, userId), HttpStatus.OK);
 	}
 }

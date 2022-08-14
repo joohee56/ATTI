@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,10 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.CourseCreateReq;
+import com.ssafy.api.request.CourseGetReq;
+import com.ssafy.api.request.CourseListRes;
 import com.ssafy.api.request.CourseUpdateReq;
+import com.ssafy.api.response.CourseGetRes;
 import com.ssafy.api.response.CreateCourseRes;
 import com.ssafy.api.service.CourseService;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -32,9 +38,13 @@ public class CourseController {
 	}
 	
 	// 시간표 조회
-	@GetMapping
-	public void getCourse() {
+	@GetMapping()
+	public ResponseEntity<CourseListRes> getCourse(@RequestBody CourseGetReq courseGetReq) {
+		List<CourseGetRes> courseResList = courseService.getCourse(courseGetReq);
 		
+		if(courseResList == null)
+			return ResponseEntity.status(200).body(CourseListRes.of(200, "조회할 시간표가 없습니다.", null));
+		return ResponseEntity.status(200).body(CourseListRes.of(200, "success", courseResList));
 	}
 	
 	// 시간표 삭제

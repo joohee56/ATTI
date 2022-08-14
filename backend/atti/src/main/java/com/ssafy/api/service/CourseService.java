@@ -1,12 +1,19 @@
 package com.ssafy.api.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.CourseCreateReq;
+import com.ssafy.api.request.CourseGetReq;
 import com.ssafy.api.request.CourseUpdateReq;
+import com.ssafy.api.response.CourseGetRes;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.webclass.Course;
 import com.ssafy.db.repository.CourseRepository;
@@ -53,6 +60,35 @@ public class CourseService {
 	// 시간표 삭제
 	public void deleteCourse(Long courseId) {
 		courseRepository.deleteById(courseId);
+	}
+	
+	// 시간표 조회
+	public List<CourseGetRes> getCourse(CourseGetReq courseGetReq) {
+		LocalDate startDate = courseGetReq.getWeekStartDate().plusDays(1);	// 2022-08-14 ~ 2022-08-20
+		LocalDate endDate = startDate.plusDays(5);
+		
+//		System.out.println("startDate: " + startDate + ", endDate: " + endDate);
+		// course 중에 departId 에 해당하는 course 중 start Date between end Date 에 해당하는 리스트 뽑기
+		Depart depart = departRepository.findById(courseGetReq.getDepartId()).orElse(null);
+		if(depart == null) return null;
+		
+		List<Course> courseList = courseRepository.findAllByDepartAndCourseDateBetween(depart, startDate, endDate);
+		
+		if(courseList.isEmpty()) return null;
+		
+		List<CourseGetRes> courseResList = new ArrayList<>();
+		for(Course c : courseList) {
+			courseResList.add(CourseGetRes.builder()
+					.courseId(c.getCourseId())
+					.courseName(c.getCourseName())
+					.courseTeacherName(c.getCourseTeacherName())
+					.courseStartTime(c.getCourseStartTime())
+					.courseEndTime(c.getCourseEndTime())
+					.courseDate(c.getCourseDate()).build());
+		}
+		
+		return courseResList;
+		
 	}
 	
 	

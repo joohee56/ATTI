@@ -12,21 +12,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CourseUpdateReq {
-	private Long courseId;
-	private String courseName;
-	private String courseTeacherName;
+public class CourseGetReq {
+	private Long departId;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-	private Date courseStartTime;
-	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-	private Date courseEndTime;
-	
-//	@JsonFormat(pattern = "yyyy-MM-dd")
-//	private Date courseDate;
 	@JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate courseDate;
-
+	private LocalDate weekStartDate;
 }
