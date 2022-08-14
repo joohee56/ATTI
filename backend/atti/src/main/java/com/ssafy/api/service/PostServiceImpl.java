@@ -113,10 +113,13 @@ public class PostServiceImpl implements PostService {
 		postRepository.deleteById(postId);
 	}
 
-	@Override // 전체 게시글 일괄 삭제
+	@Override // 카테고리 게시글 일괄 삭제
 	@Transactional
-	public void deleteAll() {
-		postRepository.deleteAll();
+	public void deleteAllPosts(Long categoryId) {
+		System.out.println("=====================");
+		System.out.println(categoryId);
+		System.out.println("=====================");
+		
 	}
 
 	@Override // 단일 게시글 수정

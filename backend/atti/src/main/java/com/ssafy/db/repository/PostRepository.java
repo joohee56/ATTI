@@ -12,4 +12,6 @@ import com.ssafy.db.entity.depart.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>{
 	List<Post> findByDepartAndCategoryOrderByPostIdDesc(Depart depart, Category category);
+
+//	void deleteByPost(Post post);
 }

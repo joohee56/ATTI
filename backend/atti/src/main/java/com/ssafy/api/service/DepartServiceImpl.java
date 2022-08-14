@@ -62,13 +62,13 @@ public class DepartServiceImpl implements DepartService {
 		} else {
 			return "FAIL";
 		}
-		
-		// 무덤
-//		if(departRepository.joinChannel(departId) != null) {
-//			return "SUCCESS";
-//		} else {
-//			return "FAIL";
-//		}
 	}
+
+	@Override
+	public String departCodeCheck() {
+		return null;
+	}
+	
+	
 
 }

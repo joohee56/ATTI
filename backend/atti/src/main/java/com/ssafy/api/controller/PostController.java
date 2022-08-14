@@ -22,7 +22,6 @@ import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.api.service.PostService;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.user.User;
-import com.ssafy.db.repository.PostRepository2;
 
 @RestController
 @RequestMapping("/post")
@@ -62,9 +61,9 @@ public class PostController {
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/delete") // 전체 게시글 삭제
-	public ResponseEntity<String> deleteAll() {
-		postService.deleteAll();
+	@DeleteMapping("/delete/category/{categoryId}") // 카테고리 게시글 일괄 삭제
+	public ResponseEntity<String> deleteAll(@PathVariable Long categoryId) {
+		postService.deleteAllPosts(categoryId);
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	

@@ -83,9 +83,9 @@ public class Post {
 	private Depart depart;				// 채널 ID (FK)
 	/////////////////////////////////////////////////////
 	
-//	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
-//	@JsonIgnore
-//    private List<Comment> comments = new ArrayList<>();
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+	@JsonIgnore
+    private List<Comment> comments = new ArrayList<>();
 //	
 //	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 //    private List<Image> images = new ArrayList<>();
