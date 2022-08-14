@@ -16,9 +16,11 @@ interface inputInfo {
   placeholder: string;
   value?: string | number | readonly string[] | undefined;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  
 }
 
-export default function InputPassword({ placeholder, ...rest }: inputInfo) {
+export default function InputPassword({ placeholder,  textBool,
+  helperText, ...rest }: inputInfo) {
   const [values, setValues] = React.useState<State>({
     showPassword: false,
   });
