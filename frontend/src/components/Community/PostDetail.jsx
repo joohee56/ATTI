@@ -26,37 +26,24 @@ import ReactHtmlParser from 'react-html-parser'
 function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
     const [single, setSingle] = useState([])
     const [comments, setComments] = useState([])
-    
-    useEffect(() => {
-        async function singlePost(){
-            api.get(`/post/read/${postId}`
-              ).then((res) => {
-                console.log("개별 글 list : ", res.data)
-                setSingle(res.data)
-                setSinglePost(res.data)
-              })
-        //   axios.get(
-        //     BACKEND_URL + `/post/read/${postId}`,
-        //     {
-        //       headers: {
-        //         "Content-type": "application/json",
-        //       },
-        //     }
-        //   ).then((res) => {
-        //     console.log("개별 글 list : ", res.data)
-        //     setSingle(res.data)
-        //     setSinglePost(res.data)
-        //   })
-        }
-        singlePost();
+    const currentCider = useSelector(state => state.reRendering.cider)
+    const updateCider = !currentCider
 
+    useEffect(() => {
+        // 개별 글 불러오는 것
+        api.get(`/post/read/${postId}`
+            ).then((res) => {
+            console.log("개별 글 list : ", res.data)
+            setSingle(res.data)
+            setSinglePost(res.data)
+            })
         // 댓글 list 불러오는 것
         api.get(`post/comment/read/${postId}`)
         .then((res) => {
             console.log("댓글들: ", res)
             setComments(res.data)
         })
-       },[]);
+       },[currentCider]);
     
     function modalEvent(){
         onClickToggleModal2()
@@ -136,8 +123,6 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
     );
     
     const dispatch = useDispatch()
-    const currentCider = useSelector(state => state.reRendering.cider)
-    const updateCider = !currentCider
 
     const deletePost = () => {
 
@@ -149,12 +134,12 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
                 {cider: updateCider }
             ))
         });
-        }
+    }
     
     function DeleteFunction(){
         onClickToggleModal2();
         deletePost();
-    }
+        }
 
 
 ///////////////////////////////////////////////////////////////////
@@ -193,7 +178,7 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
                     <Avatar sx={{ width: 50, height: 50 }}>BS</Avatar>
                     <div style={{display: "flex", flexDirection: "column", margin: "0 0 0 20px"}}>
                         <div style={{margin: "0 0 10px 0"}}>
-                            사용자 이름 이 나와야함...아직 데이터가 없어서 못 나옴
+                            {single.userId}
                         </div>
                         <div>
                             <span>

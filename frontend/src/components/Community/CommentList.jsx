@@ -15,14 +15,14 @@ import { CommentOutlined } from '@material-ui/icons';
 function CommentList({comments}){
     const { auth } = useSelector(state => state.userInfo)
 
-    // 단일 comment 지우기
-    const commentDelete = (commentId) => {
-        api.delete(`/post/comment/delete/${commentId}`
-        )
-        .then((res) => {
-            console.log("댓글 지우기:", res);
-        });
-    }
+    // // 단일 comment 지우기
+    // const commentDelete = (commentId) => {
+    //     api.delete(`/post/comment/delete/${commentId}`
+    //     )
+    //     .then((res) => {
+    //         console.log("댓글 지우기:", res);
+    //     });
+    // }
 
     // // 단일 comment 좋아요
     // const [commentLikeCount, setCommentLikeCount] = useState([])
@@ -76,7 +76,7 @@ function CommentList({comments}){
             <CommentDiv>
                 {comments.map((e,i) => (
                     <>
-                    {console.log(e)}
+                    {console.log( "개별 댓글: ", e)}
                     <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "space-between"}}>
                         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                             <div style={{display: "flex", flexDirection: "row", height: "40px"}}>

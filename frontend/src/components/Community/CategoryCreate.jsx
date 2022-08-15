@@ -3,6 +3,7 @@ import { useSelector } from "react-redux"
 import { palette } from "../../styles/palette"
 import styled from "styled-components"
 import { ButtonBlue } from "../ButtonStyled"
+import { ButtonPurple } from "../ButtonStyled"
 
 import InputWithIcon from "../InputWithLabel"
 import apiAcc, { api } from "../../utils/api"
@@ -14,16 +15,37 @@ function CategoryCreate({handleModal6}){
         const {value} = e.target;
         setNewCategory(value)
     };
-    const [changeCss, setChangeCss] = useState(1);
+
     const [cType, setCType] = useState([]);
     const [categoryAnoInfo, setCategoryAnoInfo] = useState([]);
     const [categoryComInfo, setCategoryComInfo] = useState([]);
     const [categoryComAnoInfo, setCategoryComAnoInfo] = useState([]);
     
-    const { auth } = useSelector(state => state.userInfo);
+    const { id } = useSelector(state => state.userInfo);
     const departId = useSelector(state => state.depart.departId);
-
-
+    
+    const [changeCss1, setChangeCss1] = useState(0);
+    const [changeCss2, setChangeCss2] = useState(0);
+    const [changeCss3, setChangeCss3] = useState(0);
+    const [changeCss4, setChangeCss4] = useState(0);
+    function cTypeFunction (i, j){
+        setChangeCss1(i)
+        setCType(j)
+    }
+    function categoryAnoInfoFunction(i, j){
+        setChangeCss2(i)
+        setCategoryAnoInfo(j)
+    }
+    function categoryComInfoFunction(i, j){
+        setChangeCss3(i)
+        setCategoryComInfo(j)
+    }
+    function categoryComAnoInfoFunction(i, j){
+        setChangeCss4(i)
+        setCategoryComAnoInfo(j)
+    }
+    
+    
     // 카테고리 생성: 로그인 쪽에서 하는 axios 재랜더링 시켜야
     const categoryCreateFunction = () => {
         api.post(`/depart/category/create`,
@@ -34,28 +56,28 @@ function CategoryCreate({handleModal6}){
             categoryName: newCategory,
             type: cType,
             departId: 1,
-            userId: "gusxo123"
+            userId: id
         }).then((res) => {
             console.log("카테고리 생성: ", res.data)
         })
     }
-
+    
     function categoryFunction() {
         categoryCreateFunction()
         handleModal6()
     }
-    // useEffect(() => {
-    //     console.log('카테고리명: ', newCategory)
-    //     console.log('카테고리타입: ', cType)
-    //     console.log('익명여부: ', categoryAnoInfo)
-    //     console.log('댓글금지여부: ', categoryComInfo)
-    //     console.log('댓글익명여부: ', categoryComAnoInfo)
-    // },
-    // [cType, categoryAnoInfo, categoryComInfo, categoryComAnoInfo]
-    // )
+    useEffect(() => {
+        console.log('카테고리명: ', newCategory)
+        console.log('카테고리타입: ', cType)
+        console.log('익명여부: ', categoryAnoInfo)
+        console.log('댓글금지여부: ', categoryComInfo)
+        console.log('댓글익명여부: ', categoryComAnoInfo)
+    },
+    [cType, categoryAnoInfo, categoryComInfo, categoryComAnoInfo]
+    )
 
     return(
-        <div style={{width: "900px"}}>  
+        <div style={{width: "900px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>  
             <div style={{display: "flex", justifyContent: "center", alignItems:"center"}}>
                 <Title>
                     카테고리 생성
@@ -74,12 +96,24 @@ function CategoryCreate({handleModal6}){
                     <span style={{fontSize: "15px", color: "gray"}}>선택한 카테고리 형식을 배경으로 제작됩니다.</span>
                     <div style={{display: "flex", flexDirection: "column", justifyContent:"center", alignItems:"flex-start"}}>
                         <CustomDiv>
-                            <CustomButton onClick={() => {setCType("FREE")}} name="FREE">자유게시판</CustomButton>
-                            <CustomButton onClick={() => {setCType("TIMETABLE")}} name="TIMETABLE">시간표(수업 미팅실)</CustomButton>
+                            {changeCss1 === 1? 
+                            <ClickButton onClick={() => {cTypeFunction(0, "FREE")}} name="FREE">자유게시판</ClickButton>:
+                            <NoClickButton onClick={() => {cTypeFunction(1, "FREE")}} name="FREE">자유게시판</NoClickButton>
+                            }
+                            {changeCss1 === 2? 
+                            <ClickButton onClick={() => {cTypeFunction(0, "TIMETABLE")}} name="TIMETABLE">시간표(수업 미팅실)</ClickButton>:
+                            <NoClickButton onClick={() => {cTypeFunction(2, "TIMETABLE")}} name="TIMETABLE">시간표(수업 미팅실)</NoClickButton>
+                            }
                         </CustomDiv>
                         <CustomDiv>
-                            <CustomButton onClick={() => {setCType("NOTICE")}} name="NOTICE">공지사항(관리자만 작성이 가능)</CustomButton>
-                            <CustomButton onClick={() => {setCType("DATA")}} name="DATA">자료실(첨부파일 첨부 가능)</CustomButton>
+                            {changeCss1 === 3?
+                            <ClickButton onClick={() => {cTypeFunction(0, "NOTICE")}} name="NOTICE">공지사항(관리자만 작성이 가능)</ClickButton>:
+                            <NoClickButton onClick={() => {cTypeFunction(3, "NOTICE")}} name="NOTICE">공지사항(관리자만 작성이 가능)</NoClickButton>
+                            }
+                            {changeCss1 === 4?
+                            <ClickButton onClick={() => {cTypeFunction(0, "DATA")}} name="DATA">자료실(첨부파일 첨부 가능)</ClickButton>:
+                            <NoClickButton onClick={() => {cTypeFunction(4, "DATA")}} name="DATA">자료실(첨부파일 첨부 가능)</NoClickButton>
+                            }
                         </CustomDiv>
                     </div>
                 </div>
@@ -89,28 +123,47 @@ function CategoryCreate({handleModal6}){
                         <SettingDiv>
                             <CustomSpan>게시글 작성 시 익명을 허용하시겠습니까?</CustomSpan>
                             <div>
-                                <button onClick={() => {setCategoryAnoInfo(true)}}>Yes</button>
-                                <button onClick={() => {setCategoryAnoInfo(false)}}>No</button>
+                                {changeCss2 === 5?
+                                <ClickButtonCheck onClick={() => {categoryAnoInfoFunction(0, true)}}>Yes</ClickButtonCheck>:
+                                <NoClickButtonCheck onClick={() => {categoryAnoInfoFunction(5, true)}}>Yes</NoClickButtonCheck>
+                                }
+                                {changeCss2 === 6?
+                                <ClickButtonCheck onClick={() => {categoryAnoInfoFunction(0, false)}}>No</ClickButtonCheck>:
+                                <NoClickButtonCheck onClick={() => {categoryAnoInfoFunction(6, false)}}>No</NoClickButtonCheck>
+                                }
                             </div>
                         </SettingDiv>
                         <SettingDiv>
                             <CustomSpan>게시글에 대한 댓글 작성을 허용하시겠습니까?</CustomSpan>
                             <div>
-                                <button onClick={() => {setCategoryComInfo(false)}}>Yes</button>
-                                <button onClick={() => {setCategoryComInfo(true)}}>No</button>
+                                {changeCss3 === 7?
+                                <ClickButtonCheck onClick={() => {categoryComInfoFunction(0, false)}}>Yes</ClickButtonCheck>:
+                                <NoClickButtonCheck onClick={() => {categoryComInfoFunction(7, false)}}>Yes</NoClickButtonCheck>
+                                }
+                                {changeCss3 === 8? 
+                                <ClickButtonCheck onClick={() => {categoryComInfoFunction(0, true)}}>No</ClickButtonCheck>:
+                                <NoClickButtonCheck onClick={() => {categoryComInfoFunction(8, true)}}>No</NoClickButtonCheck>
+                                }
                             </div>
                         </SettingDiv>
                         <SettingDiv>
                             <CustomSpan>게시글애 대한 댓글 작성 시 익명을 허용하시겠습니까?</CustomSpan>
                             <div>
-                                <button onClick={() => {setCategoryComAnoInfo(true)}}>Yes</button>
-                                <button onClick={() => {setCategoryComAnoInfo(false)}}>No</button>
+                                {changeCss4 === 9?
+                                <ClickButtonCheck onClick={() => {categoryComAnoInfoFunction(0, true)}}>Yes</ClickButtonCheck>:
+                                <NoClickButtonCheck onClick={() => {categoryComAnoInfoFunction(9, true)}}>Yes</NoClickButtonCheck>
+                                }
+                                {changeCss4 === 10?
+                                <ClickButtonCheck onClick={() => {categoryComAnoInfoFunction(0, false)}}>No</ClickButtonCheck>:
+                                <NoClickButtonCheck onClick={() => {categoryComAnoInfoFunction(10, false)}}>No</NoClickButtonCheck>
+                                }
                             </div>
                         </SettingDiv>
                     </div>
                 </div>
-                <ButtonBlue onClick={() => {categoryFunction()}}>작성</ButtonBlue>
             </div>
+                <CustomButtonBlue onClick={() => {categoryFunction()}}>
+                    <span style={{fontSize: "20px"}}>작성</span></CustomButtonBlue>
         </div>
     )
 }
@@ -131,8 +184,8 @@ const Question = styled.span`
 
 const InputDiv = styled.div`
     width: 35vw;
-    height: 10vh;
-    margin: 10px 0;
+    height: 4vh;
+    margin: 20px 0;
 `
 const CustomDiv = styled.div`
     display: flex;
@@ -142,7 +195,7 @@ const CustomDiv = styled.div`
     width: 500px;
 `
 
-const CustomButton = styled.button`
+const NoClickButton = styled.button`
     width: 240px;
     height: 50px;
     margin: 10px;
@@ -155,6 +208,21 @@ const CustomButton = styled.button`
   cursor: pointer
  }
 `
+
+const ClickButton = styled.button`
+    width: 240px;
+    height: 50px;
+    margin: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    background: ${palette.pink_1};
+    border: 1px solid;
+    border-radius: 20px;
+    &:hover{  
+  cursor: pointer
+ }
+`
+
 const CustomSpan = styled.span`
     font-size: 20px;
     margin: 10px 0;
@@ -165,5 +233,32 @@ const SettingDiv = styled.div`
     justify-content: space-between;
     align-items: center;
     width: 750px;
+`
+const ClickButtonCheck = styled(ButtonPurple)`
+    width: 50px;
+    height: 30px;
+    margin: 7px;
+`
+
+const NoClickButtonCheck = styled.button`
+    width: 50px;
+    height: 30px;
+    color: black;
+    border-radius: 1rem;
+    border: 0px solid;
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 7px;
+
+`
+
+const CustomButtonBlue = styled(ButtonBlue)`
+    width: 120px;
+    height: 50px;
+    margin: 40px 0 0 0;
+    
+
 `
 export default CategoryCreate

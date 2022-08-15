@@ -120,7 +120,7 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
                 }}
               >
                 <UserIdDiv>
-                  작성자: {e.user}
+                  작성자: {e.userId}
                 </UserIdDiv>
                 {timeForToday(e.postRegDate)}
               </div>
