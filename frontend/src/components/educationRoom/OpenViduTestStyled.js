@@ -384,3 +384,14 @@ export const AttendsListConnectionDiv = styled.div`
   margin-left: 15px;
   font-size: small;
 `;
+
+export const QestionAnswerCommentInput = styled.input`
+  width: 90%;
+  height: 25px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid;
+  background-color: none;
+  background: none;
+`;

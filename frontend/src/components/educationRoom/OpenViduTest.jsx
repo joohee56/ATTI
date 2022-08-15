@@ -51,6 +51,7 @@ import {
   SmallPeopleBoxWrapper,
   SmallMeetingAttendAndChattingWrapper,
   SmallMeetingAttendAndChattingButton,
+  QestionAnswerCommentInput,
 } from "./OpenViduTestStyled";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
@@ -118,11 +119,37 @@ const OpenViduTest = () => {
   // QnA인지 채팅인지 선택
   const [chattingSelect, setChattingSelect] = useState(CHATTING);
   const [QnAState, setQnAState] = useState(undefined);
-  const reactionRef = useRef(null);
+  const answerRef = useRef(null);
   const [receiveReaction, setReceiveReaction] = useState(null);
   const [allOff, setAllOff] = useState(false);
-  const [connectionList, setConnectionList] = useState([]);
-  const [notConnectionList, setNotConnectionList] = useState([]);
+  const [answerPostNum, setAnswerPostNum] = useState("");
+  const [questionAnswer, setQuestionAnswer] = useState(false);
+
+  function handlerAnswer() {
+    setQuestionAnswer(true);
+  }
+
+  function QnAComment() {
+    api
+      .post("/post/comment/write", {
+        commentAnoInfo: 0,
+        commentContent: answerRef.current.value,
+        commentDeleteInfo: 0,
+        commentGroup: 1,
+        commentLevel: 0,
+        seq: 1,
+        userId: userInfo.id,
+        postId: answerPostNum,
+      })
+      .then((res) => {
+        setQuestionAnswer(false);
+        setQnAState(undefined);
+        answerRef.current.value = "";
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
 
   useEffect(() => {
     if (!openAttentList && !openChattingList) {
@@ -279,8 +306,13 @@ const OpenViduTest = () => {
         setSaveSubscriber(event.from);
       });
       state.session.on("signal:QnA", (event) => {
+        let temp = event.data.indexOf(")");
+        let question = event.data.slice(temp + 1);
+        console.log("질문 빳다죠", question);
+        console.log("글번호 빳다죠", event.data.slice(0, temp));
+        setAnswerPostNum(event.data.slice(0, temp));
         setQnAState({
-          message: event.data,
+          message: question,
           from: JSON.parse(event.from.data).clientData,
         });
       });
@@ -589,21 +621,6 @@ const OpenViduTest = () => {
   }
   function leaveSession() {
     const mySession = state.session;
-
-    // if (mySession) {
-    //   mySession
-    //     .signal({
-    //       data: "hello world!",
-    //       to: [],
-    //       type: "disconnectUser",
-    //     })
-    //     .then(() => {
-    //       console.log("Message send success");
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // }
     mySession.disconnect();
     OV = null;
 
@@ -656,7 +673,7 @@ const OpenViduTest = () => {
       console.error(e);
     }
   }
-  function sendMessage() {
+  async function sendMessage() {
     const mySession = state.session;
     if (
       messageRef.current.value.length > 0 &&
@@ -716,39 +733,28 @@ const OpenViduTest = () => {
           const timeString = hours + "시" + minutes + "분" + seconds + "초";
           const message = messageRef.current.value;
           console.log(categoryList[1].categoryId);
-          api
-            .post(
-              "/post/write",
-              {
-                postTitle: message,
-                postContent:
-                  dateString + " " + timeString + " 에 작성된 게시물입니다.",
-                postAnoInfo: 0,
-                postComBanInfo: 1,
-                departId: departId,
-                categoryId: categoryList[1].categoryId,
-                userId: userInfo.id,
-              },
-              {
-                headers: {
-                  "Content-type": "application/json",
-                },
-              }
-            )
-            .then((res) => {
-              console.log(res);
-              mySession
-                .signal({
-                  data: message,
-                  to: [],
-                  type: "QnA",
-                })
-                .then(() => {
-                  console.log("QnA 질문 끝!");
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
+          const res = await api.post("/post/write", {
+            postTitle: message,
+            postContent:
+              dateString + " " + timeString + " 에 작성된 게시물입니다.",
+            postAnoInfo: 0,
+            postComBanInfo: 1,
+            departId: departId,
+            categoryId: categoryList[1].categoryId,
+            userId: userInfo.id,
+          });
+          console.log(res);
+          mySession
+            .signal({
+              data: res.data + ")" + message,
+              to: [],
+              type: "QnA",
+            })
+            .then(() => {
+              console.log("QnA 질문 끝!");
+            })
+            .catch((error) => {
+              console.log(error);
             });
         }
       }
@@ -1332,13 +1338,33 @@ const OpenViduTest = () => {
                           <QnAWrapper>
                             <QnABox>
                               <QnATitle>{`Q&A - ${QnAState.from}님`}</QnATitle>
-                              <QnAMessage>{QnAState.message}</QnAMessage>
+                              {questionAnswer ? (
+                                <QnAMessage>
+                                  <div style={{ textAlign: "center" }}>
+                                    <QestionAnswerCommentInput
+                                      ref={answerRef}
+                                    ></QestionAnswerCommentInput>
+                                  </div>
+                                </QnAMessage>
+                              ) : (
+                                <QnAMessage>{QnAState.message}</QnAMessage>
+                              )}
+
                               {state.myRole === PROFESSOR ? (
                                 <QnAButtonWrapper>
-                                  <QnAButton>답변</QnAButton>
+                                  {questionAnswer ? (
+                                    <QnAButton onClick={QnAComment}>
+                                      답변(댓글이 달림)
+                                    </QnAButton>
+                                  ) : (
+                                    <QnAButton onClick={handlerAnswer}>
+                                      답변
+                                    </QnAButton>
+                                  )}
                                   <QnAButton
                                     onClick={() => {
                                       setQnAState(undefined);
+                                      setQuestionAnswer(false);
                                     }}
                                   >
                                     닫기
@@ -1349,6 +1375,7 @@ const OpenViduTest = () => {
                                   <QnAButton
                                     onClick={() => {
                                       setQnAState(undefined);
+                                      setQuestionAnswer(false);
                                     }}
                                   >
                                     닫기

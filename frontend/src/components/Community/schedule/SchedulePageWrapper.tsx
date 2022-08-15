@@ -108,11 +108,11 @@ const SchedulePageWrapper = () => {
   const navigate = useNavigate();
 
   async function connectMeeting(e: any) {
-    // await api.put("/course/enterCourse", {
-    //   courseId: e.target.value,
-    //   userId: userInfo.id,
-    //   clickDate: moment().format("YYYY-MM-DD HH:mm"),
-    // });
+    await api.put("/course/enterCourse", {
+      courseId: e.target.value,
+      userId: userInfo.id,
+      clickDate: moment().format("YYYY-MM-DD HH:mm"),
+    });
     await api
       .get("/course/attendence/" + departId)
       .then((res) => {
@@ -124,7 +124,7 @@ const SchedulePageWrapper = () => {
       .catch((e) => {
         console.log(e);
       });
-    navigate("/classmeeting?courseId=" + e.target.value);
+    // navigate("/classmeeting?courseId=" + e.target.value);
   }
 
   useEffect(() => {
