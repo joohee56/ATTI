@@ -11,5 +11,5 @@ public interface DepartService {
 	Long createChannel(DepartCreateReq departCreateReq); // 채널 생성
 	
 	List<CategoryListRes> joinChannel(String departCode, String userId); // 채널 입장
-	
+	Long getDepartIdByCode(String departCode);
 }

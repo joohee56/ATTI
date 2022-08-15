@@ -21,11 +21,16 @@ public class PostViewOneRes {
 	
 	private String userId;
 	
-	public PostViewOneRes(Post post) {
+	boolean myPostLike;
+	Long postLikeCount;
+	
+	public PostViewOneRes(Post post, boolean myPostLike, Long postLikeCount) {
 		this.postId = post.getPostId();
 		this.postTitle = post.getPostTitle();
 		this.postContent = post.getPostContent();
 		this.postRegDate = post.getPostRegDate();
 		this.userId = post.getUser().getUserId();
+		this.myPostLike = myPostLike;
+		this.postLikeCount = postLikeCount;
 	}
 }
