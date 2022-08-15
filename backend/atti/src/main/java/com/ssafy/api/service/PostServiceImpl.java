@@ -181,14 +181,22 @@ public class PostServiceImpl implements PostService {
 		Post post = postRepository.findById(postId).orElse(null);
 		User user = userRepository.findById(userId).orElse(null);
 		
+		System.out.println("========================");
+		System.out.println("1");
+		System.out.println("=========================");
+		
 		// UserPostLike 에서 Post 에 해당하는 user 가 있는지 찾기
 		UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
 		
+		System.out.println("========================");
+		System.out.println("2");
+		System.out.println("=========================");
+		
 		// 없다면, 추가
 		if(userPostLike == null)
-			userPostLikeRepository.save(new UserPostLike().builder().post(post).user(user).build());
+			userPostLikeRepository.save(UserPostLike.builder().post(post).user(user).build());
 		// 있다면, 삭제
-		userPostLikeRepository.deleteById(userPostLike.getUserPostLikeId());
+		else userPostLikeRepository.deleteById(userPostLike.getUserPostLikeId());
 		
 		// 변화된 갯수 리턴
 		long count = userPostLikeRepository.countByPost(post);
