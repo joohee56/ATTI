@@ -3,7 +3,7 @@ import { palette } from "../../styles/palette";
 import { ButtonBlue } from "../ButtonStyled";
 import InputWithLabel from "../InputWithLabel";
 
-function MyPage() {
+function ContactAdmin() {
   return (
     <>
     <Main>
@@ -78,4 +78,4 @@ const Button = styled(ButtonBlue)`
 `;
 
 
-export default MyPage;
+export default ContactAdmin;
