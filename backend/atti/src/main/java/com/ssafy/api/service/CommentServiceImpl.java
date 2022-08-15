@@ -81,6 +81,9 @@ public class CommentServiceImpl implements CommentService {
 		else commentViewReplyRes = new ArrayList<CommentViewReplyRes>();
 		
 		for(Comment c : commentList) {
+			if(c.isCommentAnoInfo() == true) {
+				c.setUser(null);
+			}
 			commentViewReplyRes.add(new CommentViewReplyRes(c));
 		}
 		return commentViewReplyRes;

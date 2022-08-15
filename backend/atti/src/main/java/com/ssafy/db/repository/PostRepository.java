@@ -1,6 +1,7 @@
 package com.ssafy.db.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,5 +14,5 @@ import com.ssafy.db.entity.depart.Post;
 public interface PostRepository extends JpaRepository<Post, Long>{
 	List<Post> findByDepartAndCategoryOrderByPostIdDesc(Depart depart, Category category);
 
-//	void deleteByPost(Post post);
+	Optional<Post> deleteByCategory(Category category);
 }
