@@ -47,7 +47,7 @@ public class DepartController {
 		System.out.println("===========================" + departCreateReq.getUserId() + "=============================");
 		Long departId = departService.createChannel(departCreateReq);
 		
-		List<CategoryListRes> categoryList = categoryService.getCategorList(departId);
+		List<CategoryListRes> categoryList = categoryService.getCategoryList(departId);
 		
 		return new ResponseEntity<List<CategoryListRes>>(categoryList, HttpStatus.OK);
 	}
