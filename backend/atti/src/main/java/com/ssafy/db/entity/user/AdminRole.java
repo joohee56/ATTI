@@ -24,6 +24,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class AdminRole {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)

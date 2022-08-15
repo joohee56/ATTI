@@ -86,8 +86,6 @@ function LoginPage() {
       });
   };
 
-  
-
   // 카카오 로그인
   const kakaoLogin = () => {
     window.location.href = KAKAO_AUTH_URL;

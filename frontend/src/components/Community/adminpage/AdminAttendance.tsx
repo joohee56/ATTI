@@ -36,7 +36,7 @@ function AdminAttendance() {
           <div>
             <div>{pickDay}</div>
             <div>
-              <AdminCalendarModal />
+              <AdminCalendarModal pickDay={pickDay} />
             </div>
           </div>
         </Modal>

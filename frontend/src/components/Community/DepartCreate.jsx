@@ -10,9 +10,9 @@ import { ButtonBlue } from "../ButtonStyled"
 
 function DepartCreate({handleModal4}) {
 
-    const { auth } = useSelector(state => state.userInfo)
+    const { id } = useSelector(state => state.userInfo)
     const [newDepart, setNewDepart] = useState({
-        userId: "gusxo123",
+        userId: id,
         departName: "",
 
     })

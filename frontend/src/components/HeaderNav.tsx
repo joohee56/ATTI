@@ -22,11 +22,18 @@ import { Link, useNavigate } from "react-router-dom";
 function HeaderNav() {
   const { auth } = useSelector((state: RootState) => state.userInfo);
   const myPage = useSelector((state: RootState) => state.reRendering.setMyPage)
-  console.log(myPage)
+  const adminPage = useSelector((state: RootState) => state.reRendering.setAdminPage)
   const getMyPage = (i: any) => {
     return !i
   }
+  const getAdminPage = (j: any) => {
+    return false}
 
+  function myPageFunction(){
+    dispatch(reRenderingActions.saveSetMyPage({setMyPage: getMyPage(myPage)}))
+    dispatch(reRenderingActions.saveSetAdminPage({setAdminPage: getAdminPage(myPage)}))
+  }  
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -123,7 +130,7 @@ function HeaderNav() {
               transformOrigin={{ horizontal: "right", vertical: "top" }}
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-              <MenuItem onClick={() => {dispatch(reRenderingActions.saveSetMyPage({setMyPage: getMyPage(myPage) }))}}>
+              <MenuItem onClick={() => {myPageFunction()}}>
                 <Avatar /> My Profile
               </MenuItem>
               <MenuItem>

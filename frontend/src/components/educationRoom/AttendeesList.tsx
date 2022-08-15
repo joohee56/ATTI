@@ -4,6 +4,11 @@ import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+import {
+  AttendsListConnection,
+  AttendsListConnectionDiv,
+  AttendsListNotConnection,
+} from "./OpenViduTestStyled";
 
 interface peopleListInterface {
   data: string;
@@ -24,6 +29,7 @@ type peopleProps = {
     connectionId: string;
   }) => void;
   openChattingList: boolean;
+  notConnectionList: any;
   // children: React.ReactNode;
 };
 interface styledProps {
@@ -75,6 +81,7 @@ const AttendeesList = ({
   peopleList,
   setChattingInfo,
   openChattingList,
+  notConnectionList,
 }: peopleProps) => {
   console.log(peopleList);
   const onClick = (event: any) => {
@@ -89,6 +96,7 @@ const AttendeesList = ({
     <AttendeesWrapper openChattingList={openChattingList}>
       {peopleList !== undefined && peopleList.length > 0 ? (
         <AttendeesListDiv>
+          <AttendsListConnection>참석</AttendsListConnection>
           {peopleList.map((e, i) => (
             <AttendWrapper key={i}>
               <NickNameWrapper>
@@ -116,6 +124,14 @@ const AttendeesList = ({
               ) : null}
             </AttendWrapper>
           ))}
+          <AttendsListNotConnection>불참석</AttendsListNotConnection>
+          <div>
+            {Object.keys(notConnectionList).map((e: string, i: number) => (
+              <AttendsListConnectionDiv key={i}>
+                {notConnectionList[Number(e)]}
+              </AttendsListConnectionDiv>
+            ))}
+          </div>
         </AttendeesListDiv>
       ) : null}
     </AttendeesWrapper>

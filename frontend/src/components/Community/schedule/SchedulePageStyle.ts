@@ -143,3 +143,9 @@ export const AdminScheduleErrorText = styled.div`
   color: #ed8687;
   font-weight: bolder;
 `;
+
+export const AdminSheduleDeleteButton = styled(AdminScheduleAddButton)`
+  margin-right: 15px;
+  margin-left: 15px;
+  margin-top: 250px;
+`;

@@ -26,39 +26,28 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
   
-  const categoryName = useSelector(state => state.category.categoryName)
-  console.log('카테고리, 너의 이름은? ' , categoryName)
+  const categoryId = useSelector(state => state.category.categoryId)
+  console.log('카테고리, 너의 아이디는? ' , categoryId)
   const departId = useSelector(state => state.depart.departId)
   console.log('채널, 너의 아이디는? ' , departId)
-  const { auth } = useSelector(state => state.userInfo)
+  const { id } = useSelector(state => state.userInfo)
   
   async function getPosts(){
-    api.get(`/depart/1/category/2/user/gusxosmsdy`
+    api.get(`/depart/${departId}/category/${categoryId}/user/${id}`
     ).then((res) => {
       console.log("결과: ", res)
       setPost(res.data)
       getLength(res.data.length)
     })
-
-    // axios.get(
-    //   BACKEND_URL + "/post",
-    //   {
-    //     headers: {
-    //       "Content-type": "application/json",
-    //     },
-    //   }
-    // ).then((res) => {
-    //   console.log(res.data)
-    //   setPost(res.data)
-    //   getLength(res.data.length)
-    // })
   }
+  
   const currentCider = useSelector(state => state.reRendering.cider)
   const [post,setPost] = useState([])
+  
   useEffect(() => {
     console.log('확인중입니다')
     getPosts();
-  },[currentCider]);
+  },[currentCider, categoryId]);
   return (
     <>
       <Rendering post={post} handleModal2={handleModal2} length={length} limit={limit} page={page} getPostId={getPostId} />
@@ -80,8 +69,8 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
     boxShadow: "2px 2px 2px grey"
   };
  function TwoFunctions(id){
-  handleModal2();
-  getPostId(id);
+  handleModal2()
+  getPostId(id)
  }
 
  function timeForToday(value) {
@@ -132,7 +121,7 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
                 }}
               >
                 <UserIdDiv>
-                  작성자: {e.user}
+                  작성자: {e.userId}
                 </UserIdDiv>
                 {timeForToday(e.postRegDate)}
               </div>
@@ -201,6 +190,24 @@ function NormalPostFrame() {
   const getPostId = (postId) => {
     setPostId(postId)
   }
+
+   // 글 좋아요 부분
+   const [postLikeCount, setPostLikeCount] = useState([])
+   const postLike = () => {
+       console.log(postId)
+       api.get(`/post/likeBtn/${postId}/gusxosmsdy`
+       )
+       .then((res) => {
+           console.log("response:", res);
+           setPostLikeCount(res.data)
+       });
+   }
+   
+   const currentCider = useSelector(state => state.reRendering.cider)
+   useEffect(() => {
+       postLike()
+   }, [currentCider]);
+
 
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(1);
@@ -271,7 +278,7 @@ function NormalPostFrame() {
             width="1000px"
             height="680px"
           >
-            <PostDetail postId={postId} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
+            <PostDetail postId={postId} postLike={postLike} postLikeCount={postLikeCount} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
           </Modal>
         )}
         {isOpenModal3 && (
@@ -299,7 +306,7 @@ color: transparent;
 `;
 const PostContainer = styled.div`
   width: 88vw;
-  height: 869px;
+  height: 868px;
   margin: 25px 20px 25px 0;
   border-radius: 20px;
   background-color: white;

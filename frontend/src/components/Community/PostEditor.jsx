@@ -20,22 +20,17 @@ import { AutoFixHigh } from '@mui/icons-material';
 
 function PostEditor({handleModal1}, props) {
     const categoryId = useSelector(state => state.category.categoryId)
-    const { auth } = useSelector(state => state.userInfo)
+    const { id } = useSelector(state => state.userInfo)
     const departId = useSelector(state => state.depart.departId)
     const [post, setPost] = useState({
         postTitle : "",
         postContent : "",
-        departId : 1,
-        userId : "gusxo123",
-        categoryId : 2,
+        departId : departId,
+        userId : id,
+        categoryId : categoryId,
         postAnoInfo: false,
         postComBanInfo: false
     })
-    useEffect(() => {
-      console.log(post)
-      console.log("에디터: ", editor)
-    }, [post]);
-
     const getAnoInfo = () => {
         console.log("익명여부 :", post.postAnoInfo)
         post.postAnoInfo = !post.postAnoInfo
@@ -73,27 +68,6 @@ function PostEditor({handleModal1}, props) {
                   postComBanInfo: post.postComBanInfo
                 },
               )
-
-            // await axios
-            //   .post(
-            //     BACKEND_URL + "/post/write",
-            //     {
-            //       postId : post.postId,
-            //       postTitle : post.postTitle,
-            //       postContent : editor,
-            //       postRegDate : post.postRegDate,
-            //       postUpdDate : post.postUpdDate,
-            //       userId : post.userId,
-            //       category_id : post.category_id,
-            //       postAnoInfo: getAnoInfoNum(),
-            //       postComBanInfo: getComBanInfoNum()
-            //     },
-            //     {
-            //       headers: {
-            //         "Content-type": "application/json",
-            //       },
-            //     }
-            //   )
               .then((res) => {
                 console.log("response:", res);
                 dispatch(reRenderingActions.saveReRendering(

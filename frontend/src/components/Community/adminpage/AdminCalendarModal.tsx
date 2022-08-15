@@ -14,9 +14,11 @@ import {
 } from "./adminStyle/AdminCalendarModalInputstyled";
 import { palette } from "../../../styles/palette";
 import { TextWrapper } from "../schedule/SchedulePageStyle";
+import { api } from "../../../utils/api/index";
 
 export interface studentAttendState {
-  name: string;
+  userId: string;
+  userName: string;
   attend: string;
 }
 export interface classStudentList {
@@ -25,35 +27,8 @@ export interface classStudentList {
   class: studentAttendState[];
 }
 
-const dummyClass = [
-  {
-    courseId: "1",
-    courseName: "Spring Boot",
-    courseProf: "이현태",
-    courseStartTime: "2022-08-12 09:00",
-    courseEndTime: "2022-08-12 12:00",
-    courseDate: "2022-08-12",
-  },
-  {
-    courseId: "2",
-    courseName: "운영체제",
-    courseProf: "이현태",
-    courseStartTime: "2022-08-12 14:00",
-    courseEndTime: "2022-08-12 16:00",
-    courseDate: "2022-08-12",
-  },
-  {
-    courseId: "3",
-    courseName: "React",
-    courseProf: "이현태",
-    courseStartTime: "2022-08-12 16:00",
-    courseEndTime: "2022-08-12 18:00",
-    courseDate: "2022-08-12",
-  },
-];
-
 const time = ["09", "10", "11", "12", "13", "14", "15", "16", "17", "18"];
-const AdminCalendarModal = () => {
+const AdminCalendarModal = ({ pickDay }: { pickDay: string }) => {
   const [classList, setClassList] = useState<weekClassAttend[] | undefined>(
     undefined
   );
@@ -61,30 +36,55 @@ const AdminCalendarModal = () => {
   const [courseId, setCourseId] = useState<number>(0);
   const [dayClassList, setDayClassList] = useState<any>();
   useEffect(() => {
-    let temp = dummyClass.map((e) => {
-      e.courseStartTime = e.courseStartTime.slice(11);
-      e.courseEndTime = e.courseEndTime.slice(11);
-      return e;
-    });
-    let dayClass = new Array(9).fill({
-      courseId: "",
-      courseName: "",
-      courseProf: "",
-      courseStartTime: "",
-      courseEndTime: "",
-      courseDate: "",
-    });
-    for (let i = 0; i < time.length; i++) {
-      for (let j = 0; j < temp.length; j++) {
-        if (temp[j].courseStartTime.slice(0, 2) === time[i]) {
-          dayClass[i] = temp[j];
-        }
-      }
-    }
+    api
+      .post("/admin/getOneDayCourseList", {
+        departId: 2,
+        attenDate: pickDay,
+      })
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.courseResList !== null) {
+          let temp = res.data.courseResList.map((e: any) => {
+            e.courseStartTime = e.courseStartTime.slice(11);
+            e.courseEndTime = e.courseEndTime.slice(11);
+            return e;
+          });
+          let dayClass = new Array(9).fill({
+            courseId: "",
+            courseName: "",
+            courseProf: "",
+            courseStartTime: "",
+            courseEndTime: "",
+            courseDate: "",
+          });
+          for (let i = 0; i < time.length; i++) {
+            for (let j = 0; j < temp.length; j++) {
+              if (temp[j].courseStartTime.slice(0, 2) === time[i]) {
+                dayClass[i] = temp[j];
+              }
+            }
+          }
 
-    console.log(dayClass);
-    setClassList(temp);
-    setDayClassList(dayClass);
+          console.log(dayClass);
+          setClassList(temp);
+          setDayClassList(dayClass);
+        } else {
+          let dayClass = new Array(9).fill({
+            courseId: "",
+            courseName: "",
+            courseProf: "",
+            courseStartTime: "",
+            courseEndTime: "",
+            courseDate: "",
+          });
+          console.log(dayClass);
+          setClassList(dayClass);
+          setDayClassList(dayClass);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }, []);
 
   const handlerStudentList = (e: React.MouseEvent<HTMLButtonElement>) => {
