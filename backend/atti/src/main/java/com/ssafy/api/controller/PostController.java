@@ -21,6 +21,7 @@ import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.user.User;
 
+
 @RestController
 @RequestMapping("/post")
 public class PostController {

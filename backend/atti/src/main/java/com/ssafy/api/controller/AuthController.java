@@ -249,12 +249,13 @@ public class AuthController {
 	
 	// 사용자가 인증번호 전송
 	@GetMapping("/phone/authCode")
+
 	private ResponseEntity<?> authPhoneCode(@RequestParam("code") String code) {
 //		String correctCode = (String)session.getAttribute("code");
 		
 		// redis 에 저장되어 있는 코드 가져옴
 		String correctCode = userService.getRedisStringValue("code");
-		
+
 		// 인증번호가 일치하는지 검증
 		if(code.equals(correctCode)) {
 //			session.removeAttribute("code");
