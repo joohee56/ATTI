@@ -1,15 +1,15 @@
-import { Avatar, TextField } from "@mui/material";
+import { Avatar, FormHelperText, TextField } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { RootState } from "../../store";
 import { palette } from "../../styles/palette";
-import apiAcc, { api } from "../../utils/api";
+import { api } from "../../utils/api";
 import InputPassword from "../account/InputPassword";
 import InputWithChannelOut from "../account/InputWithChannelOut";
 import InputWithPhone from "../account/InputWithPhone";
-import { ButtonBlue, ButtonPurple } from "../ButtonStyled";
+import { ButtonBlue } from "../ButtonStyled";
 import InputWithLabel from "../InputWithLabel";
 import Modal from "../Modal";
 import SnacbarTell from "../SnacbarTell";
@@ -23,10 +23,11 @@ interface MyInfoData {
 
 function MyPage() {
   const navigate = useNavigate();
-  
+
   // 데이터 받아오기
   const { userName } = useSelector((state: RootState) => state.userInfo);
   const { id } = useSelector((state: RootState) => state.userInfo);
+  const { departName } = useSelector((state: RootState) => state.depart);
 
   const [mydataInfo, setMydataInfo] = useState<MyInfoData>({
     userName: "",
@@ -36,11 +37,11 @@ function MyPage() {
   });
 
   useEffect(() => {
-    //console.log(id);
-    apiAcc
+    console.log(id);
+    api
       .get(`/user/${id}`)
       .then(function (response) {
-        //console.log("성공", response);
+        console.log("성공", response);
         setMydataInfo({
           ...mydataInfo,
           userName: response.data.userName,
@@ -63,7 +64,7 @@ function MyPage() {
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
   // 채널 나가기 모달
   const [isChannelOUtModal, setChannelOUtModal] = useState<boolean>(false);
- 
+
   // 수정하기 눌렀나
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
@@ -111,11 +112,11 @@ function MyPage() {
   //const [phoneNumberMessage, setPhoneNumberMessage] = useState<string>("");
 
   // 유효성 검사
-  const [isName, setIsName] = useState<boolean>(false);
+  const [isName, setIsName] = useState<boolean>(true);
   const [isPassword, setIsPassword] = useState<boolean>(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(false);
-  const [isEmail, setIsEmail] = useState<boolean>(false);
-  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
+  const [isEmail, setIsEmail] = useState<boolean>(true);
+  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(true);
 
   // 수정 정규식
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -189,7 +190,6 @@ function MyPage() {
       });
   };
 
-
   return (
     <Main>
       <SnacbarTell
@@ -198,7 +198,7 @@ function MyPage() {
         message="회원정보가 수정 되었습니다."
         type="success"
       />
-        <SnacbarTell
+      <SnacbarTell
         open={openNoEdit}
         setOpen={setNoEditOpen}
         message="회원정보 수정에 실패했습니다."
@@ -243,7 +243,7 @@ function MyPage() {
                 disabled
                 name={""}
                 placeholder={""}
-                value={"내 채널가져오기 현태형 Merge후"}
+                value={departName}
               />
             </Grid>
             <UserEdit onClick={() => setIsEdit(true)}>회원정보수정</UserEdit>
@@ -268,105 +268,72 @@ function MyPage() {
           <StyledPage>
             <div>
               <SetGrid>
-                <SpanGrid>
-                  <SpanStyle>Name</SpanStyle>
-                  <SpanStyle>ID</SpanStyle>
-                  <SpanStyle>Password</SpanStyle>
-                  <SpanStyle>Password 확인</SpanStyle>
-                </SpanGrid>
-
-                <InputGrid>
-                  <div>
-                    <InputWithLabel
-                      name={"name"}
-                      placeholder={userName}
-                      value={name}
-                      onChange={onChangeName}
-                      textBool={true}
-                      helperText={name.length > 0 && !isName ? nameMessage : ""}
-                    />
-                  </div>
-                  <InputWithLabel
-                    disabled
-                    name={"id"}
-                    placeholder={"ID"}
-                    textBool={true}
-                    value={id}
-                  />
-                  <div>
-                    <InputPassword
-                      name="password"
-                      placeholder="비밀번호"
-                      value={password}
-                      onChange={onChangePassword}
-                      textBool={true}
-                      helperText={
-                        password.length > 0 && !isPassword
-                          ? passwordMessage
-                          : "."
-                      }
-                    />
-                  </div>
-                  <div>
-                    <InputWithLabel
-                      name="password2"
-                      placeholder="비밀번호 확인"
-                      type="password"
-                      value={passwordConfirm}
-                      onChange={onChangePasswordConfirm}
-                      textBool={true}
-                      helperText={
-                        passwordConfirm.length > 0 && !isPasswordConfirm
-                          ? passwordConfirmMessage
-                          : "."
-                      }
-                    />
-                  </div>
-                </InputGrid>
+                <SpanStyle>Name</SpanStyle>
+                <InputWithLabel
+                  name={"name"}
+                  placeholder={userName}
+                  value={name}
+                  onChange={onChangeName}
+                />
+                <SpanStyle>ID</SpanStyle>
+                <InputWithLabel
+                  disabled
+                  name={"id"}
+                  placeholder={"ID"}
+                  value={id}
+                />
+                <SpanStyle>Password</SpanStyle>
+                <InputPassword
+                  name="password"
+                  placeholder="비밀번호"
+                  value={password}
+                  onChange={onChangePassword}
+                />
+                <SpanStyle>Password 확인</SpanStyle>
+                <InputWithLabel
+                  name="password2"
+                  placeholder="비밀번호 확인"
+                  type="password"
+                  value={passwordConfirm}
+                  onChange={onChangePasswordConfirm}
+                />
               </SetGrid>
             </div>
             <Vline />
             <div>
               <SetGrid>
-                <SpanGrid>
-                  <SpanStyle>Birth</SpanStyle>
-                  <SpanStyle>Email</SpanStyle>
-                  <SpanStyle>Channel</SpanStyle>
-                  <SpanStyle>Phone</SpanStyle>
-                </SpanGrid>
-                <InputGrid>
-                  <div>
-                    <InputWithLabel
-                      name={""}
-                      placeholder={mydataInfo.birth.replace(
-                        /(\d{4})(\d{2})(\d{2})/,
-                        "$1-$2-$3"
-                      )}
-                      value={birthState}
-                      onChange={onChangeBirth}
-                    />
-                  </div>
-                  <div>
-                    <InputWithLabel
-                      name="email"
-                      placeholder="이메일"
-                      type="email"
-                      value={email}
-                      onChange={onChangeEmail}
-                      textBool={true}
-                      helperText={
-                        email.length > 0 && !isEmail ? emailMessage : ""
-                      }
-                    />
-                  </div>
-                  <InputWithChannelOut
-                    disabled
-                    name={""}
-                    placeholder={""}
-                    value={"채널이름"}
-                    onClick={() => setChannelOUtModal(true)}
-                  />
-                </InputGrid>
+                <SpanStyle>Birth</SpanStyle>
+                <InputWithLabel
+                  name={""}
+                  placeholder={mydataInfo.birth.replace(
+                    /(\d{4})(\d{2})(\d{2})/,
+                    "$1-$2-$3"
+                  )}
+                  value={birthState.replace(
+                    /(\d{4})(\d{2})(\d{2})/,
+                    "$1-$2-$3"
+                  )}
+                  onChange={onChangeBirth}
+                />
+
+                <SpanStyle>Email</SpanStyle>
+                <InputWithLabel
+                  name="email"
+                  placeholder="이메일"
+                  type="email"
+                  value={email}
+                  onChange={onChangeEmail}
+                />
+                <SpanStyle>Channel</SpanStyle>
+                <InputWithChannelOut
+                  disabled
+                  name={""}
+                  placeholder={""}
+                  value={departName}
+                  onClick={() => setChannelOUtModal(true)}
+                />
+
+                <SpanStyle>Phone</SpanStyle>
               </SetGrid>
             </div>
           </StyledPage>
@@ -379,7 +346,62 @@ function MyPage() {
               isCertifiedSuccess={setIsPhoneNumber}
             />
           </InputWithPhone_Phone>
-          <UserEdit onClick={InfoSubmit}>저장하기</UserEdit>
+          <NameHelperText>
+            {name.length > 0 && !isName && (
+              <FormHelperText disabled variant="filled">
+                {nameMessage}{" "}
+              </FormHelperText>
+            )}
+          </NameHelperText>
+          <PwHelperText>
+            {password.length > 0 && !isPassword && (
+              <FormHelperText disabled variant="filled">
+                {passwordMessage}
+              </FormHelperText>
+            )}
+          </PwHelperText>
+          <PwCheckHelperText>
+            {passwordConfirm.length > 0 && !isPasswordConfirm && (
+              <FormHelperText disabled variant="filled">
+                {passwordConfirmMessage}
+              </FormHelperText>
+            )}
+          </PwCheckHelperText>
+          <EmailHelperText>
+            {email.length > 0 && !isEmail && (
+              <FormHelperText disabled variant="filled">
+                {emailMessage}
+              </FormHelperText>
+            )}
+          </EmailHelperText>
+          <UserEdit onClick={InfoSubmit}
+          disabled={
+                !(
+                  (
+                    isName &&
+                    isPassword &&
+                    isPasswordConfirm &&
+                    isEmail &&
+                    isPhoneNumber
+                  )
+                )
+              }
+            >
+              저장하기
+            </UserEdit>
+            {!(
+              (
+                isName &&
+                isPassword &&
+                isPasswordConfirm &&
+                isEmail &&
+                isPhoneNumber
+              )
+            ) && (
+              <p style={{ color: `${palette.red}` }}>
+                정보를 수정하려면 올바르게 입력해주세요.
+              </p>
+            )}
         </Content>
       )}
       {isOpenModal && (
@@ -396,15 +418,18 @@ function MyPage() {
           </div>
         </Modal>
       )}
-      {/* {isChannelOUtModal && (
-        <Modal width="500px" onClickToggleModal={() => setOpenModal(false)}>
+      {isChannelOUtModal && (
+        <Modal
+          width="500px"
+          onClickToggleModal={() => setChannelOUtModal(false)}
+        >
           <span>채널 나가기 안내</span>
           <p>정말로 채널을 나가시겠습니까?</p>
           <div>
-            <MemberWithdrawal>채널 나가기</MemberWithdrawal>
+            <button>채널 나가기</button>
           </div>
         </Modal>
-      )} */}
+      )}
     </Main>
   );
 }
@@ -440,21 +465,7 @@ const SetGrid = styled.div`
   grid-template-columns: 115px 300px;
   grid-template-rows: repeat(4, 1fr);
   column-gap: 30px;
-  
-  //align-items: stretch;
-`;
-
-const SpanGrid = styled.div`
-  display: grid;
-  grid-template-columns: 115px;
-  grid-template-rows: repeat(4, 1fr);
-  align-items: stretch;
-`;
-
-const InputGrid = styled.div`
-  display: grid;
-  grid-template-columns: 300px;
-  grid-template-rows: repeat(4, 1fr);
+  row-gap: 40px;
   align-items: stretch;
 `;
 
@@ -475,7 +486,35 @@ const InputWithPhone_Phone = styled.div`
   width: 300px;
   position: absolute;
   right: 0%;
-  margin-top: 348.5px;
+  margin-top: 440px;
+`;
+
+const NameHelperText = styled.span`
+  width: 320px;
+  position: absolute;
+  left: 14.2%;
+  margin-top: 237px;
+`;
+
+const PwHelperText = styled.span`
+  width: 300px;
+  position: absolute;
+  left: 14.2%;
+  margin-top: 402px;
+`;
+
+const PwCheckHelperText = styled.span`
+  width: 300px;
+  position: absolute;
+  left: 14.2%;
+  margin-top: 486px;
+`;
+
+const EmailHelperText = styled.span`
+  width: 300px;
+  position: absolute;
+  right: 0.5%;
+  margin-top: 322.5px;
 `;
 
 const MemberWithdrawal = styled.button`
@@ -489,7 +528,7 @@ const MemberWithdrawal = styled.button`
 
   position: absolute;
   right: 2%;
-  margin-top: 535px;
+  margin-top: 730px;
 
   cursor: pointer;
   &:active,
@@ -502,19 +541,18 @@ const MemberWithdrawal = styled.button`
 const UserEdit = styled(ButtonBlue)`
   font-size: 0.8rem;
   padding: 0.8rem 1.2rem;
-  margin-top: 60px;
+  margin-top: 80px;
 `;
 
 const StyledPage = styled.div`
   display: flex;
   column-gap: 50px;
-  height: 250px;
+  height: 330px;
 `;
 
 const Vline = styled.div`
-  border-left: 1px dashed ${palette.gray_2};
+  border-left: 1px dashed ${palette.gray_3};
   height: 100%;
 `;
-
 
 export default MyPage;

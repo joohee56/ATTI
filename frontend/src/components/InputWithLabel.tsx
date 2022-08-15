@@ -92,7 +92,6 @@ const InputWithIcon = ({
     {textBool &&
       (helperText ? (
         <FormHelperText disabled variant="filled">
-          {" "}
           {helperText}
         </FormHelperText>
       ) : (

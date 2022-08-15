@@ -8,7 +8,8 @@ import MyPage from "./MyInfo";
 function MyPageComponent() {
   const [value, setValue] = useState(0);
 
-  const tabContArr = [<MyPage />, <ContactAdmin />, <AdminContactHistory />];
+  //const tabContArr = [<MyPage />, <ContactAdmin />, <AdminContactHistory />];
+  const tabContArr = [<MyPage />];
 
   return (
     <>
@@ -32,9 +33,9 @@ function MyPageComponent() {
             }
             onClick={() => setValue(1)}
           >
-            관리자와 1:1문의하기
+           ATTI에게 문의하기
           </Tab>
-          <Tab
+          {/* <Tab
             style={
               value == 2
                 ? { background: `${palette.main_grPurple}` }
@@ -43,7 +44,7 @@ function MyPageComponent() {
             onClick={() => setValue(2)}
           >
             문의 내역
-          </Tab>
+          </Tab> */}
         </ul>
       </div>
       <div>{tabContArr[value]}</div>
