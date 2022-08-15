@@ -10,6 +10,7 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.api.request.AttendanceChangeReq;
 import com.ssafy.api.request.CourseCreateReq;
 import com.ssafy.api.request.CourseEnterReq;
 import com.ssafy.api.request.CourseGetReq;
@@ -216,6 +217,21 @@ public class CourseService {
 		
 		return null;
 		
+	}
+	
+	public boolean changeAttendance(AttendanceChangeReq attendanceChangeReq) {
+		Course course = courseRepository.findById(attendanceChangeReq.getCourseId()).orElse(null);
+		User user = userRepository.findById(attendanceChangeReq.getUserId()).orElse(null);
+		
+		if(course == null || user == null) return false;
+		
+		Attendance attendance = attendanceRepository.findByUserAndCourse(user, course).orElse(null);
+		if(attendance == null) return false;
+		
+		attendance.updateAttendancedContent(attendanceChangeReq.getAttendancedContent());
+		
+		attendanceRepository.save(attendance);
+		return true;
 	}
 	
 }

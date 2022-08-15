@@ -14,6 +14,5 @@ import com.ssafy.db.entity.webclass.Course;
 @Repository
 public interface AttendanceRepository extends JpaRepository<Attendance, Long>{
 	public List<Attendance> findByCourse(Course course);
-	public List<Attendance> findByCourseAndUser(Course course, User user);
 	public Optional<Attendance> findByUserAndCourse(User user, Course course);
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.request.AttendanceChangeReq;
 import com.ssafy.api.request.CourseCreateReq;
 import com.ssafy.api.request.CourseEnterReq;
 import com.ssafy.api.request.CourseGetReq;
@@ -80,6 +81,15 @@ public class CourseController {
 		if(res==null)
 			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "잘못된 접근입니다."));
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, res));
+	}
+	
+	// 출석 변경
+	@PutMapping("/changeAttendance")
+	public ResponseEntity<BaseResponseBody> changeAttendance(@RequestBody AttendanceChangeReq attendanceChangeReq){
+		boolean res = courseService.changeAttendance(attendanceChangeReq);
+		
+		if(!res) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "잘못된 접근입니다."));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "변경이 완료되었습니다"));
 	}
 	
 	
