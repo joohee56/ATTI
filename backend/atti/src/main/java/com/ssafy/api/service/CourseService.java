@@ -18,10 +18,14 @@ import com.ssafy.api.response.CourseAttendenceRes;
 import com.ssafy.api.response.CourseGetRes;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.depart.UserDepart;
+import com.ssafy.db.entity.user.User;
+import com.ssafy.db.entity.webclass.Attendance;
 import com.ssafy.db.entity.webclass.Course;
+import com.ssafy.db.repository.AttendanceRepository;
 import com.ssafy.db.repository.CourseRepository;
 import com.ssafy.db.repository.DepartRepository;
 import com.ssafy.db.repository.UserDepartRepository;
+import com.ssafy.db.repository.UserRepository;
 
 
 @Service
@@ -31,7 +35,9 @@ public class CourseService {
 	@Autowired
 	DepartRepository departRepository;
 	@Autowired
-	UserDepartRepository userDepartReposity;
+	UserDepartRepository userDepartRepository;
+	@Autowired
+	AttendanceRepository attendanceRepository;
 	
 	// 시간표 생성
 	public Long createCourse(CourseCreateReq courseReq) {
@@ -46,6 +52,17 @@ public class CourseService {
 				.courseDate(courseReq.getCourseDate()).build();
 		
 		Long courseId = courseRepository.save(course).getCourseId();
+		
+		// 강의에 포함된 채널에 속한 유저들은 출석 명단에 오름
+		List<UserDepart> attendanceList = userDepartRepository.findByDepart(depart);
+		
+		for(UserDepart a : attendanceList) {
+			attendanceRepository.save(Attendance.builder()
+					.attendancedContent("결석")
+					.user(a.getUser())
+					.course(course).build());
+		}
+		
 		return courseId;
 	}
 	
@@ -120,7 +137,7 @@ public class CourseService {
 	
 	public List<CourseAttendenceRes> getAttendence(Long departId){
 		Depart depart = departRepository.findById(departId).orElse(null);
-		List<UserDepart> userDepartList = userDepartReposity.findByDepart(depart);
+		List<UserDepart> userDepartList = userDepartRepository.findByDepart(depart);
 		
 		List<CourseAttendenceRes> attendenceList = new ArrayList<CourseAttendenceRes>();
 		
