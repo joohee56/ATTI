@@ -10,4 +10,5 @@ public class KakaoUser {
 	private String snsId;
 	private String email;
 	private String userName;
+	private String birth;
 }

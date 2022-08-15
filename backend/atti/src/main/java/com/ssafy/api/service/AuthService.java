@@ -71,7 +71,7 @@ public class AuthService {
 	
 	// 카카오에서 토큰을 사용해 사용자 정보 담아서 반환
 	public Map<String,Object> getUserInfo(String access_token) {
-        Map<String,Object> resultMap =new HashMap<>();
+        Map<String,Object> resultMap = new HashMap<>();
         String reqURL = "https://kapi.kakao.com/v2/user/me";
          try {
              URL url = new URL(reqURL);
@@ -93,7 +93,9 @@ public class AuthService {
                  result += br_line;
              }
             System.out.println("response:" + result);
-
+            
+            // 카카오 에게서 가져올 수 있는 것
+            // profile_nickname, account_email, birthday
 
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
@@ -104,10 +106,13 @@ public class AuthService {
             String id = element.getAsJsonObject().get("id").getAsString();
             String nickname = properties.getAsJsonObject().get("nickname").getAsString();
             String email = kakao_account.getAsJsonObject().get("email").getAsString();
+            String birthday = kakao_account.getAsJsonObject().get("birthday").getAsString();
+            
 //            log.warn("email:: " + email);
-            resultMap.put("id", id);
+            resultMap.put("id", email);
             resultMap.put("nickname", nickname);
             resultMap.put("email", email); 
+            resultMap.put("birthday", birthday);
             
 // 			    우리 서비스에서 필요한 정보
 //            v nickname: String (닉네임) - 프로필 정보(닉네임/프로필 사진)또는 닉네임

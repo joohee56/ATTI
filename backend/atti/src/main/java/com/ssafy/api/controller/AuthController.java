@@ -218,6 +218,7 @@ public class AuthController {
         String snsId = (String) result.get("id");
         String userName = (String) result.get("nickname");
         String email = (String) result.get("email");
+        String birthday = (String) result.get("birthday");
         
         System.out.println("SNS ID : " + snsId);
         
@@ -230,7 +231,7 @@ public class AuthController {
         System.out.println(userService.findKakaoId(snsId));
         
         if(user == null) {
-        	KakaoUser kakaoUser = new KakaoUser(snsId, email, userName);
+        	KakaoUser kakaoUser = new KakaoUser(snsId, email, userName, birthday);
         	userService.signUpKakao(kakaoUser);
         } 
 
