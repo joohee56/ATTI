@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.CourseCreateReq;
 import com.ssafy.api.request.CourseGetReq;
+import com.ssafy.api.request.CourseOneDayReq;
 import com.ssafy.api.request.CourseUpdateReq;
 import com.ssafy.api.response.CourseAttendenceRes;
 import com.ssafy.api.response.CourseGetRes;
@@ -93,6 +94,28 @@ public class CourseService {
 		}
 		
 		return courseResList;
+	}
+	
+	// 날짜 클릭 시 하루 시간표 조회
+	public List<CourseGetRes> getOneDayCourse(CourseOneDayReq courseOneDayReq){
+		Depart depart = departRepository.findById(courseOneDayReq.getDepartId()).orElse(null);
+		if(depart == null) return null;
+		
+		List<Course> coursOneDayList = courseRepository.findAllByDepartAndCourseDate(depart, courseOneDayReq.getAttenDate());
+		if(coursOneDayList.isEmpty()) return null;
+		
+		List<CourseGetRes> courseResList = new ArrayList<CourseGetRes>();
+		for(Course c : coursOneDayList) {
+			courseResList.add(CourseGetRes.builder()
+					.courseId(c.getCourseId())
+					.courseName(c.getCourseName())
+					.courseTeacherName(c.getCourseTeacherName())
+					.courseStartTime(c.getCourseStartTime())
+					.courseEndTime(c.getCourseEndTime())
+					.courseDate(c.getCourseDate()).build());
+		}
+		return courseResList;
+		
 	}
 	
 	public List<CourseAttendenceRes> getAttendence(Long departId){
