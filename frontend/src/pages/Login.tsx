@@ -1,10 +1,6 @@
 import { api } from "../utils/api";
-import { useState, useCallback, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useState, useCallback } from "react";
 import styled from "styled-components";
-
-import HomeIcon from "@mui/icons-material/Home";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import Logo from "../assets/images/logoComputer.png";
 import { ButtonBlue } from "../components/ButtonStyled";
 import { ButtonPurple } from "../components/ButtonStyled";
@@ -12,14 +8,14 @@ import InputWithLabel from "../components/InputWithLabel";
 import Modal from "../components/Modal";
 import { KAKAO_AUTH_URL } from "../constant/index";
 import InputWithPhone from "../components/account/InputWithPhone";
-import { useDispatch, useSelector } from "react-redux";
-import { loginActions, UserLoginState } from "../store/LoginStore";
+import { useDispatch } from "react-redux";
+import { loginActions } from "../store/LoginStore";
 import { useNavigate } from "react-router-dom";
 import { palette } from "../styles/palette";
 import InputPassword from "../components/account/InputPassword";
-import { FormHelperText, Snackbar } from "@mui/material";
+import { FormHelperText } from "@mui/material";
 import SnacbarTell from "../components/SnacbarTell";
-import { RootState } from "../store";
+import SwitchButton from "../components/SwitchButton";
 
 interface userLoginInfo {
   userId: string;
@@ -39,13 +35,7 @@ interface findPwInfo {
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { auth } = useSelector((state: RootState) => state.userInfo);
-
-  useEffect(() => {
-    if (auth) {
-      navigate("/community/sdf/sdf");
-    }
-  }, [auth]);
+  const dispatch = useDispatch();
 
   // 로그인
   const [loginInfo, setLoginInfo] = useState<userLoginInfo>({
@@ -71,7 +61,11 @@ function LoginPage() {
       })
       .then(async function (response) {
         if (response.status === 200) {
-          console.log("response:", response.data);
+          // console.log("response:", response.data);
+          if (isLoiginAuto) {
+            localStorage.setItem("AccessToken", response.data.accessToken);
+            localStorage.setItem("userId", loginInfo.userId);
+          }
           dispatch(
             loginActions.login({
               id: loginInfo.userId,
@@ -83,6 +77,7 @@ function LoginPage() {
             })
           );
         }
+        navigate("/community/sdf/sdf");
       })
       .catch(function (error) {
         console.log("Error", error);
@@ -227,6 +222,8 @@ function LoginPage() {
         console.log("비밀번호가 변경되었습니다.");
         setPassword("");
         setPasswordConfirm("");
+        setOpen(true);
+        setOpenModal(false);
       })
       .catch(function (error) {
         setFindPW("error가 발생");
@@ -236,8 +233,6 @@ function LoginPage() {
         setPasswordConfirm("");
       });
   };
-
-  const dispatch = useDispatch();
 
   // 아이디 찾기, 비밀번호 찾기
   const [findValue, setFindValue] = useState<string>("");
@@ -255,6 +250,9 @@ function LoginPage() {
     setFindValue(value);
     onClickToggleModal();
   };
+
+  // 자동 로그인
+  const [isLoiginAuto, setLoiginAuto] = useState<boolean>(false);
 
   return (
     <>
@@ -282,9 +280,18 @@ function LoginPage() {
             alt="네이버로 로그인"
           />
           <hr /> */}
-          <div>
-            자동로그인
-            <input type="checkbox" id="switch" value="off" />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "right",
+              textAlign: "center",
+              alignItems: "center",
+            }}
+          >
+            자동 로그인
+            <span onClick={() => setLoiginAuto(!isLoiginAuto)}>
+              <SwitchButton />
+            </span>
           </div>
 
           <div>
@@ -324,7 +331,7 @@ function LoginPage() {
           </div>
 
           <ButtonBlue onClick={loginClick}>로그인</ButtonBlue>
-          {isSuccessLogin&& <p style={{color:"red"}}>{isSuccessLogin}</p>}
+          {isSuccessLogin && <p style={{ color: "red" }}>{isSuccessLogin}</p>}
 
           <p>다른 서비스를 이용한 로그인</p>
           <div>
@@ -415,7 +422,6 @@ function LoginPage() {
                       onChange={onChangePhonNumber}
                       isCertifiedSuccess={setIsPhoneNumber}
                     />
-
                     {isPhoneNumber &&
                       findPwInfo.findPw_name.length > 0 &&
                       findPwInfo.findPw_Id.length > 0 && (

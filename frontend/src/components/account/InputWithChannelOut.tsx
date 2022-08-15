@@ -9,7 +9,7 @@ import styled from "styled-components";
 interface inputInfo {
   name: string;
   placeholder: string;
-  value?: string;
+  value?: string | number | readonly string[] | undefined;
   disabled?: boolean;
   onClick?:React.MouseEventHandler<HTMLButtonElement> | undefined;
 }

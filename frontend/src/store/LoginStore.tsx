@@ -60,9 +60,6 @@ const userSlice = createSlice({
       state.categoryList = action.payload.categoryList;
       state.departList= action.payload.departList;
       state.auth = true;
-      
-      localStorage.setItem("AccessToken", state.accessToken);
-      localStorage.setItem("userId", state.id);
       console.log(action.payload);
     },
     logout: (state) => {
