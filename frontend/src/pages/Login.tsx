@@ -13,7 +13,7 @@ import Modal from "../components/Modal";
 import { KAKAO_AUTH_URL } from "../constant/index";
 import InputWithPhone from "../components/account/InputWithPhone";
 import { useDispatch, useSelector } from "react-redux";
-import { loginActions, UserLoginState } from "../store/LoginSotre";
+import { loginActions, UserLoginState } from "../store/LoginStore";
 import { useNavigate } from "react-router-dom";
 import { palette } from "../styles/palette";
 import InputPassword from "../components/account/InputPassword";
@@ -59,6 +59,7 @@ function LoginPage() {
       [event.target.name]: event.target.value,
     });
   };
+  const [isSuccessLogin, setIsSuccessLogin] = useState<string>("");
 
   // 일반 로그인
   const loginClick = async (event: any) => {
@@ -86,6 +87,7 @@ function LoginPage() {
       .catch(function (error) {
         console.log("Error", error);
         console.log("Error", "로그인 실패!");
+        setIsSuccessLogin("로그인에 실패하였습니다.");
       });
   };
 
@@ -325,6 +327,7 @@ function LoginPage() {
           </div>
 
           <ButtonBlue onClick={loginClick}>로그인</ButtonBlue>
+          {isSuccessLogin&& <p style={{color:"red"}}>{isSuccessLogin}</p>}
 
           <p>다른 서비스를 이용한 로그인</p>
           <div>

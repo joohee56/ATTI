@@ -169,8 +169,8 @@ function SignupPage() {
       .then(function (response) {
         console.log("response:", response);
         if (response.status === 200) {
-          // navigate("/login");
           setOpen(true);
+          navigate("/login");
         }
       })
       .catch(function (error) {
