@@ -1,6 +1,7 @@
 import { Avatar, TextField } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { RootState } from "../../store";
 import { palette } from "../../styles/palette";
@@ -8,7 +9,6 @@ import apiAcc, { api } from "../../utils/api";
 import InputPassword from "../account/InputPassword";
 import InputWithChannelOut from "../account/InputWithChannelOut";
 import InputWithPhone from "../account/InputWithPhone";
-import ModalTitle from "../account/ModalTitle";
 import { ButtonBlue, ButtonPurple } from "../ButtonStyled";
 import InputWithLabel from "../InputWithLabel";
 import Modal from "../Modal";
@@ -22,6 +22,8 @@ interface MyInfoData {
 }
 
 function MyPage() {
+  const navigate = useNavigate();
+  
   // 데이터 받아오기
   const { userName } = useSelector((state: RootState) => state.userInfo);
   const { id } = useSelector((state: RootState) => state.userInfo);
@@ -166,6 +168,21 @@ function MyPage() {
   const onChangeBirth = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBirth(e.target.value);
   };
+
+  // 탈퇴
+  const userOut = async (e: any) => {
+    e.preventDefault();
+    await api
+      .put(`/user/delete/${id}`)
+      .then(function (response) {
+        console.log("response:", response);
+        navigate("/");
+      })
+      .catch(function (error) {
+        console.log("Error", error);
+      });
+  };
+
 
   return (
     <Main>
@@ -363,7 +380,7 @@ function MyPage() {
           </p>
           <div>
             <button>아니오</button>
-            <MemberWithdrawal>탈퇴</MemberWithdrawal>
+            <MemberWithdrawal onClick={userOut}>탈퇴</MemberWithdrawal>
           </div>
         </Modal>
       )}
