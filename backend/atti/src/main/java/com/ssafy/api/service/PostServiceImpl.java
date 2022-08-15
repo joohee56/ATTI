@@ -138,10 +138,16 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override // 게시글 상세 조회
-	public PostViewOneRes viewFindOne(Long postId) {
+	public PostViewOneRes viewFindOne(Long postId, String userId) {
 		Post post = postRepository.findById(postId).orElse(null);
+		User user = userRepository.findById(userId).orElse(null);
+		UserPostLike like = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
+		boolean myPostLike = false;
+		if(like != null)
+			myPostLike = true;
 		
-		return new PostViewOneRes(post);
+		Long postLikeCount = userPostLikeRepository.countByPost(post);
+		return new PostViewOneRes(post, myPostLike, postLikeCount);
 	}
 
 	@Override // 이름으로 게시글 검색
