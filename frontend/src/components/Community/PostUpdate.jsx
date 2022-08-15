@@ -15,7 +15,6 @@ import { palette } from "../../styles/palette";
 import UseSwitchesBasic from "../SwitchButton"
 
 export function PostUpdate({singlePost, handleModal3}) {
-  
     const [post, setPost] = useState({
         postId : "",
         postTitle : "",

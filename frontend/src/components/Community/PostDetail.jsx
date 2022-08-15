@@ -156,6 +156,28 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
         width: "95%",
         
     }
+    function timeForToday(value) {
+        const today = new Date();
+        const timeValue = new Date(value);
+      
+        const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
+        if (betweenTime < 1) return '방금 전';
+        if (betweenTime < 60) {
+            return `${betweenTime}분 전`;
+        }
+      
+        const betweenTimeHour = Math.floor(betweenTime / 60);
+        if (betweenTimeHour < 24) {
+            return `${betweenTimeHour}시간 전`;
+        }
+      
+        const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+        if (betweenTimeDay < 365) {
+            return `${betweenTimeDay}일 전`;
+        }
+      
+        return `${Math.floor(betweenTimeDay / 365)}년 전`;
+      }
     return(
         <div style={detailStyle}>
             <div>
@@ -182,10 +204,10 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
                         </div>
                         <div>
                             <span>
-                               작성: {single.postRegDate} /  
+                               작성: {timeForToday(single.postRegDate)} /  
                             </span>
                             <span>
-                                {single.postUpdDate}
+                                수정: {timeForToday(single.postUpdDate)}
                             </span>
                         </div>
                     </div>
@@ -203,7 +225,7 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
             </ContentDiv>
             <hr style={{ height: "0.1px", backgroundColor: "gray", width: "95%", marginBottom: "0"}} />
             <br />
-            <CommentList comments={comments}/>
+            <CommentList postId={postId} comments={comments}/>
             
             <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-end", alignContent: "flex-end", margin: "10px 0 0 0"}}>
                 <div style={{display: "flex", flexDirection: "row"}}>
