@@ -3,15 +3,11 @@ package com.ssafy.api.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ssafy.api.request.PostWriteReq;
-import com.ssafy.api.request.ViewAllPostsReq;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.db.entity.depart.Category;
@@ -20,12 +16,9 @@ import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.depart.UserPostLike;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.CategoryRepository;
-import com.ssafy.db.repository.CategoryRepository2;
 import com.ssafy.db.repository.CommentRepository;
 import com.ssafy.db.repository.DepartRepository;
-import com.ssafy.db.repository.DepartRepository2;
 import com.ssafy.db.repository.PostRepository;
-import com.ssafy.db.repository.PostRepository2;
 import com.ssafy.db.repository.UserPostLikeRepository;
 import com.ssafy.db.repository.UserRepository;
 
@@ -113,7 +106,7 @@ public class PostServiceImpl implements PostService {
 			if(p.isPostAnoInfo() == true) {
 				p.getUser().setUserId("익명");
 			}
-
+			
 			// 내가 이 게시글에 좋아요를 눌렀는지 체크
 			UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(p, user).orElse(null);
 			boolean myLike = false;
@@ -182,8 +175,16 @@ public class PostServiceImpl implements PostService {
 		Post post = postRepository.findById(postId).orElse(null);
 		User user = userRepository.findById(userId).orElse(null);
 		
+		System.out.println("========================");
+		System.out.println("1");
+		System.out.println("=========================");
+		
 		// UserPostLike 에서 Post 에 해당하는 user 가 있는지 찾기
 		UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
+		
+		System.out.println("========================");
+		System.out.println("2");
+		System.out.println("=========================");
 		
 		// 없다면, 추가
 		if(userPostLike == null)

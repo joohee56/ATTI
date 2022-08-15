@@ -98,22 +98,22 @@ public class AuthService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 //            log.warn("element:: " + element);
-//            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
-//            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
+            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
+            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 //            log.warn("id:: "+element.getAsJsonObject().get("id").getAsString());
             String id = element.getAsJsonObject().get("id").getAsString();
-//            String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-//            String email = kakao_account.getAsJsonObject().get("email").getAsString();
+            String nickname = properties.getAsJsonObject().get("nickname").getAsString();
+            String email = kakao_account.getAsJsonObject().get("email").getAsString();
 //            log.warn("email:: " + email);
 //            resultMap.put("nickname", nickname);
             resultMap.put("id", id);
 //            resultMap.put("email", email); 
             
 // 			    우리 서비스에서 필요한 정보
-//            nickname: String (닉네임) - 프로필 정보(닉네임/프로필 사진)또는 닉네임
-//            profile_image_url : String (프로필 사진 URL) 640px * 640px / 480px*480px
+//            v nickname: String (닉네임) - 프로필 정보(닉네임/프로필 사진)또는 닉네임
+//            x profile_image_url : String (프로필 사진 URL) 640px * 640px / 480px*480px
 //            name:  String (카카오계정 이름) - 이름
-//            email: String (카카오 계정 대표 이메일) - 카카오 계정(이메일)
+//            v email: String (카카오 계정 대표 이메일) - 카카오 계정(이메일)
 //            birthyear: String (출생연도) YYYY 형식 - 출생 연도
 //            birthday: String (생일) MMDD 형식 - 생일
 //            phone_number (카카오 계정의 전화번호) +82-00-0000-0000 형식 - 카카오계정(전화번호)

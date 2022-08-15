@@ -12,4 +12,5 @@ import com.ssafy.db.entity.webclass.Course;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long>{
 	List<Course>findAllByDepartAndCourseDateBetween(Depart depart, LocalDate startDate, LocalDate endDate);
+	List<Course>findAllByDepartAndCourseDate(Depart depart, LocalDate attenDate);
 }

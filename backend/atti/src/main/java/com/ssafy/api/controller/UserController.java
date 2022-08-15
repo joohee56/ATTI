@@ -42,9 +42,9 @@ import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.db.entity.user.User;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+//import io.swagger.annotations.Api;
+//import io.swagger.annotations.ApiResponse;
+//import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 //@Api(value = "유저 API", tags = {"User"})
@@ -159,23 +159,24 @@ public class UserController {
 		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
 	}
 	
+	
+	
 	// 회원 정보 조회 + spring security + access token
 //	@GetMapping()
 //	public ResponseEntity<? extends BaseResponseBody> getUserInfo(Authentication authentication){
 //		
+//		System.out.println("GET USER INFO");
 //		AttiUserDetails attiDetails = (AttiUserDetails) authentication.getDetails();
 //		String userId = attiDetails.getUser().getUserId();
 //		
 //		System.out.println("==============================");
 //		System.out.println("userId :" + userId);
 //		System.out.println("==============================");
-//		
-////		User user = userService.findByUserId(userId);
-//		
-////		if(user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "회원 정보를 불러오지 못했습니다."));
-//		
-//		return null;
-////		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
+		
+//		User user = userService.findByUserId(userId);
+		
+//		if(user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "회원 정보를 불러오지 못했습니다."));
+//		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
 //	}
 }
 
