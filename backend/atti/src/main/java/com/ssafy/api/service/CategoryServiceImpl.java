@@ -66,7 +66,10 @@ public class CategoryServiceImpl implements CategoryService {
 			dtoList.add(CategoryListRes.builder()
 					.categoryId(c.getCategoryId())
 					.categoryName(c.getCategoryName())
-					.cType(c.getCtype()).build());
+					.cType(c.getCtype())
+					.categoryAnoInfo(c.isCategoryAnoInfo())
+					.categoryComInfo(c.isCategoryComInfo())
+					.categoryComAnoInfo(c.isCategoryComAnoInfo()).build());
 		}
 		
 		return dtoList;
