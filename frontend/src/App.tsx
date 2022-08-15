@@ -20,7 +20,7 @@ function App() {
     <Route path="/" element={ <Homepage />} />
     <Route path="/login" element={ <LoginPage />} />
     <Route path="/signup" element={ <SignupPage />} />
-    <Route path="/community/:departName/:categoryName" element={<PrivateRoute  authenticated={auth} component={<Community />}/>} />
+    <Route path="/community/:departId/:categoryId" element={<PrivateRoute  authenticated={auth} component={<Community />}/>} />
     <Route path="/classmeeting" element={<PrivateRoute  authenticated={auth} component={<ClassMeeting />}/>} />
     <Route path="/welcome" element={<PrivateRoute  authenticated={auth} component={<WelcomePage />}/>} />
     <Route path="/modaltest" element={ <ModalTest />} />

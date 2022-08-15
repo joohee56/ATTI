@@ -18,6 +18,10 @@ const departSlice = createSlice({
             state.departCode = action.payload.departCode;
          
         },
+        initialSaveDepart(state, action){
+            state.departId = action.payload.departId;
+            state.departName = action.payload.departName;
+        }
     }
 });
 

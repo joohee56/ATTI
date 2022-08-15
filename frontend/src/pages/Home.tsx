@@ -49,8 +49,8 @@ function HomePage() {
               })
             );
           }
-          //if(response.data.departList==null) navigate("/welcome");     
-          //else navigate("/");
+          if(response.data.departList==null) navigate("/welcome");     
+          else navigate(`/community/${response.data.departList[0].departId}/${response.data.categoryList[0].categoryId}`);
       })
       .catch(function (error) {
         console.log("Error",error)

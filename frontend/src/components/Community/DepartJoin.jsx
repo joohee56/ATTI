@@ -1,6 +1,7 @@
 
 import styled from "styled-components"
 import { useState } from "react"
+import { useSelector } from "react-redux"
 
 import apiAcc, {api} from "../../utils/api"
 import { palette } from "../../styles/palette"
@@ -9,7 +10,7 @@ import { ButtonBlue } from "../ButtonStyled"
 import { ButtonPurple } from "../ButtonStyled"
 
 function DepartJoin({handleModal5}) {
-
+    const {id} = useSelector(state => state.userInfo)
     const [departJoin, setDepartJoin] = useState([])
     const getValue = e => {
         const {value} = e.target;
@@ -19,7 +20,7 @@ function DepartJoin({handleModal5}) {
 
      // 채널 입장: route 이용해서 페이지 이동시켜할듯!
     const departGo = () => {
-        api.get(`/depart/${departJoin}`,
+        api.get(`/depart/${departJoin}/${id}`,
         ).then((res) => {
             console.log("채널 들어가기: ", res.data)
         })
@@ -33,10 +34,6 @@ function DepartJoin({handleModal5}) {
         <>
         <Title>채널 가입</Title>
         <DepartDiv>
-            <span style={{fontSize: "30px", fontWeight: "bold", margin: "0 0 30px 0"}}>채널 검색</span>
-            <DepartSearchDiv>
-                채널 검색 부분 만들 것인가 못 만들 것인가?
-            </DepartSearchDiv>
             <span style={{fontSize: "30px", fontWeight: "bold", margin: "0 0 30px 0"}}>초대코드 입력</span>
             <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                 <InputDiv>

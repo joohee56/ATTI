@@ -306,7 +306,7 @@ color: transparent;
 `;
 const PostContainer = styled.div`
   width: 88vw;
-  height: 868px;
+  height: 863px;
   margin: 25px 20px 25px 0;
   border-radius: 20px;
   background-color: white;

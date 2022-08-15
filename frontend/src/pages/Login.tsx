@@ -16,6 +16,7 @@ import InputPassword from "../components/account/InputPassword";
 import { FormHelperText } from "@mui/material";
 import SnacbarTell from "../components/SnacbarTell";
 import SwitchButton from "../components/SwitchButton";
+import { departActions } from "../store/community/Depart";
 
 interface userLoginInfo {
   userId: string;
@@ -61,7 +62,7 @@ function LoginPage() {
       })
       .then(async function (response) {
         if (response.status === 200) {
-          // console.log("response:", response.data);
+          console.log("response:", response.data);
           if (isLoiginAuto) {
             localStorage.setItem("AccessToken", response.data.accessToken);
             localStorage.setItem("userId", loginInfo.userId);
@@ -74,10 +75,17 @@ function LoginPage() {
               admin: response.data.admin,
               categoryList: response.data.categoryList,
               departList: response.data.departList,
-            })
+            }),
           );
         }
-        navigate("/community/sdf/sdf");
+        if(response.data.departList==null) navigate("/welcome");     
+          else{
+            dispatch(departActions.initialSaveDepart({
+              departId: response.data.departList[0].departId,
+              departName: response.data.departList[0].departName
+          }))
+           navigate(`/community/${response.data.departList[0].departId}/${response.data.categoryList[0].categoryId}`);
+        }
       })
       .catch(function (error) {
         console.log("Error", error);

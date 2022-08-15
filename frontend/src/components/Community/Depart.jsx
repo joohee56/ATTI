@@ -24,6 +24,7 @@ function DepartList(){
   const { id } = useSelector(state => state.userInfo)
   const dispatch = useDispatch()
 
+
     const handleClose = () => {
       setAnchorEl(null);
     };
@@ -128,7 +129,7 @@ function DepartList(){
         <Modal
           onClickToggleModal={onClickToggleModal5}
           width="800px"
-          height="700px"
+          height="400px"
         >
           <DepartJoin handleModal5={handleModal5} />
         </Modal>

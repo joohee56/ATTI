@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useState, useCallback } from 'react';
-
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 import apiAcc, {api} from '../utils/api';
 import CommunityBg from '../assets/images/communityBG.png'
 import DepartCreate from '../components/Community/DepartCreate';
@@ -29,13 +30,14 @@ function Welcome(){
       setNewDepart(value)
   };
 
-    //  // 채널 입장: route 이용해서 페이지 이동시켜할듯!
-    // const departNew = () => {
-    //     api.get(`/depart/${newDepart}`,
-    //     ).then((res) => {
-    //         console.log("채널 들어가기: ", res.data)
-    //     })
-    //   }
+     // 채널 입장: route 이용해서 페이지 이동시켜할듯!
+    const {id} = useSelector((state: RootState) => state.userInfo)
+    const departNew = () => {
+        api.get(`/depart/${newDepart}/${id}`,
+        ).then((res) => {
+            console.log("채널 들어가기: ", res.data)
+        })
+      }
     
   return(
     <>
@@ -58,7 +60,7 @@ function Welcome(){
             <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
               <CustomInputWithIcon onChange={getValue} />
               
-              <CustomButtonBlue > 채널 입장</CustomButtonBlue>
+              <CustomButtonBlue onClick={() => {departNew()}}> 채널 입장</CustomButtonBlue>
 
             </div>
 
