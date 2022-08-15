@@ -40,7 +40,7 @@ public class Attendance {
 	private User user;
 	
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="course_id")
 	private Course course;
 	
