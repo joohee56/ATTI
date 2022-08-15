@@ -73,7 +73,9 @@ export const QnA = "QnA";
 
 const OpenViduTest = () => {
   const userInfo = useSelector((store) => store.userInfo);
+  const studentList = useSelector((store) => store.studentList);
   console.log(userInfo);
+  console.log(studentList);
   let myRole = undefined;
   if (userInfo.admin === false) {
     myRole = STUDENT;
@@ -85,7 +87,7 @@ const OpenViduTest = () => {
   const navigate = useNavigate();
   const [state, setState] = useState({
     mySessionId: searchParams.get("courseId"),
-    myUserName: userInfo.userName,
+    myUserName: userInfo.userName + "(" + userInfo.id + ")",
     myRole: myRole,
     session: undefined,
     mainStreamManager: undefined,
@@ -116,6 +118,8 @@ const OpenViduTest = () => {
   const reactionRef = useRef(null);
   const [receiveReaction, setReceiveReaction] = useState(null);
   const [allOff, setAllOff] = useState(false);
+  const [connectionList, setConnectionList] = useState([]);
+  const [notConnectionList, setNotConnectionList] = useState([]);
 
   useEffect(() => {
     if (!openAttentList && !openChattingList) {
@@ -372,18 +376,65 @@ const OpenViduTest = () => {
     }
   }, [turnOnCamera, turnOnAudio, state.session]);
   useEffect(() => {
-    if (state.publisher !== undefined) {
+    if (state.publisher !== undefined && studentList !== undefined) {
       let people = state.publisher.stream.connection;
-      let peoples = state.subscribers.map((e) => {
-        console.log(e);
-        return e.stream.connection;
-      });
+      let peoples = [];
+      let notConnection = [];
+      if (state.subscribers.length === 0) {
+        for (let i = 0; i < studentList.userList.length; i++) {
+          let studentName =
+            studentList.userList[i].userName +
+            "(" +
+            studentList.userList[i].userId +
+            ")";
+          notConnection.push(studentName);
+        }
+      } else {
+        for (let i = 0; i < studentList.userList.length; i++) {
+          for (let j = 0; j < state.subscribers.length; j++) {
+            let temp = JSON.parse(
+              state.subscribers[j].stream.session.connection.data
+            ).clientData;
+            let studentName =
+              studentList.userList[i].userName +
+              "(" +
+              studentList.userList[i].userId +
+              ")";
+            if (temp === studentName) {
+              peoples.push(state.subscribers[j].stream.connection);
+            } else {
+              notConnection.push(state.subscribers[j].stream.connection);
+            }
+          }
+        }
+      }
+      // state.subscribers.forEach((e) => {
+      //   console.log(e);
+      //   for (let i = 0; i < studentList.userList.length; i++) {
+      //     let temp = JSON.parse(e.stream.session.connection.data).clientData;
+      //     let studentName =
+      //       studentList.userList[i].userName +
+      //       "(" +
+      //       studentList.userList[i].userId +
+      //       ")";
+
+      //     console.log(studentList.userList[i]);
+      //     console.log(studentName);
+      //     if (temp === studentName) {
+      //       peoples.push(e.stream.connection);
+      //     } else {
+      //       notConnection.push(e.stream.connection);
+      //     }
+      //   }
+      // });
+      console.log("접속하지 않은 사람 ", notConnection);
       console.log("배열 합치기", [people, ...peoples]);
       if (peoples.length === 0) {
         setPeopleList([people]);
       } else {
         setPeopleList([people, ...peoples]);
       }
+      setNotConnectionList(notConnection);
     }
   }, [state.publisher, state.subscribers, state.subscribers.length]);
   useEffect(() => {
@@ -1248,7 +1299,7 @@ const OpenViduTest = () => {
                       }}
                       isClick={openAttentList}
                     >
-                      참가자({peopleList.length})
+                      회원목록({peopleList.length})
                     </SmallMeetingAttendAndChattingButton>
 
                     <SmallMeetingAttendAndChattingButton
@@ -1274,7 +1325,7 @@ const OpenViduTest = () => {
                       }}
                       isClick={openAttentList}
                     >
-                      참가자({peopleList.length})
+                      회원목록({peopleList.length})
                     </MeetingAttendAndChattingButton>
 
                     <MeetingAttendAndChattingButton
@@ -1293,6 +1344,7 @@ const OpenViduTest = () => {
                       peopleList={peopleList}
                       setChattingInfo={setChattingInfo}
                       openChattingList={openChattingList}
+                      notConnectionList={notConnectionList}
                     />
                   ) : null}
                   {state.myRole === PROFESSOR ? (

@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import { palette } from "../../../styles/palette";
 import { api } from "../../../utils/api";
+import { useDispatch } from "react-redux";
+import { setStudentList } from "../../../store/classMeeting/studentList";
 
 export interface weekClassSchedule {
   courseId: string | null;
@@ -67,6 +69,9 @@ const SchedulePageWrapper = () => {
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [selectDeleteSchedule, setSeleteDeleteSchedule] = useState<any>();
   const [weekStart, setWeekStart] = useState<string | undefined>(undefined);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [goTo, setGoto] = useState("");
   const [insertSchedule, setInsertSchedule] = useState<weekClassSchedule>({
     courseId: "",
     courseName: "",
@@ -94,8 +99,25 @@ const SchedulePageWrapper = () => {
   const navigate = useNavigate();
 
   function connectMeeting(e: any) {
-    navigate("/classmeeting?courseId=" + e.target.value);
+    api
+      .get("/course/attendence/2")
+      .then((res) => {
+        console.log(res.data);
+        dispatch(setStudentList({ userList: [...res.data.attendenceList] }));
+        setGoto(e.target.value);
+        setLoading(true);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
+
+  useEffect(() => {
+    if (loading && goTo !== "") {
+      navigate("/classmeeting?courseId=" + goTo);
+    }
+  }, [loading]);
+
   const time = [
     "09:00",
     "10:00",

@@ -5,21 +5,21 @@ import loginReducer from "./LoginStore";
 import categoryReducer from "./community/Category";
 import departReducer from "./community/Depart";
 import reRenderingReducer from "./community/ReRendering";
+import studentListReducer from "./classMeeting/studentList";
 
-// 유저 정보(ID, 이름, 관리자유무(userRole-객체)), access token, 채널 리스트, 카테고리 리스트 
+// 유저 정보(ID, 이름, 관리자유무(userRole-객체)), access token, 채널 리스트, 카테고리 리스트
 const rootReducer = combineReducers({
-  userInfo : loginReducer,
-  category : categoryReducer,
-  depart : departReducer,
+  userInfo: loginReducer,
+  category: categoryReducer,
+  depart: departReducer,
   reRendering: reRenderingReducer,
+  studentList: studentListReducer,
+});
 
-
-})
-
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = ReturnType<typeof rootReducer>;
 
 const store = configureStore({
-    reducer: rootReducer,
+  reducer: rootReducer,
 });
 
 export default store;
