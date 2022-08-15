@@ -1,6 +1,7 @@
 package com.ssafy.api.request;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -18,10 +19,10 @@ public class CourseUpdateReq {
 	private String courseTeacherName;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-	private Date courseStartTime;
+	private LocalDateTime courseStartTime;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-	private Date courseEndTime;
+	private LocalDateTime courseEndTime;
 	
 //	@JsonFormat(pattern = "yyyy-MM-dd")
 //	private Date courseDate;
