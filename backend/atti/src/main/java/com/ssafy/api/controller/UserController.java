@@ -159,6 +159,8 @@ public class UserController {
 		return ResponseEntity.status(200).body(UserInfoRes.of(200, "success", user.getUserName(), user.getEmail(), user.getBirth(), user.getPhone()));
 	}
 	
+	
+	
 	// 회원 정보 조회 + spring security + access token
 //	@GetMapping()
 //	public ResponseEntity<? extends BaseResponseBody> getUserInfo(Authentication authentication){
