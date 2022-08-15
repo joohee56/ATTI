@@ -17,6 +17,7 @@ import { ButtonBlue } from "../ButtonStyled";
 import { palette } from "../../styles/palette";
 import Pagination from "./pagenation";
 import MyPageComponent from "../MyPage/MyPageComponent";
+import AdminPageWrapper from "./adminpage/AdminPageWrapper";
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -208,12 +209,21 @@ function NormalPostFrame() {
 
   const categoryName = useSelector(state => state.category.categoryName)
   const myPage = useSelector(state => state.reRendering.setMyPage)
-
+  const adminPage = useSelector(state => state.reRendering.setAdminPage)
   if(myPage === true){
     return(
       <>
         <PostContainer>
           <MyPageComponent/>
+        </PostContainer>
+      </>
+    )
+  }
+  else if(adminPage === true) {
+    return(
+      <>
+        <PostContainer>
+          <AdminPageWrapper/>
         </PostContainer>
       </>
     )
