@@ -105,9 +105,9 @@ public class AuthService {
             String nickname = properties.getAsJsonObject().get("nickname").getAsString();
             String email = kakao_account.getAsJsonObject().get("email").getAsString();
 //            log.warn("email:: " + email);
-//            resultMap.put("nickname", nickname);
             resultMap.put("id", id);
-//            resultMap.put("email", email); 
+            resultMap.put("nickname", nickname);
+            resultMap.put("email", email); 
             
 // 			    우리 서비스에서 필요한 정보
 //            v nickname: String (닉네임) - 프로필 정보(닉네임/프로필 사진)또는 닉네임
