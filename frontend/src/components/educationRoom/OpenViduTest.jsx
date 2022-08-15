@@ -56,7 +56,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
 import FaceRetouchingOffIcon from "@mui/icons-material/FaceRetouchingOff";
 import StudentAnonymouse from "./StudentAnonymous";
-
+import { useSelector } from "react-redux";
 
 // const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
 // const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -72,13 +72,21 @@ export const CHATTING = "chatting";
 export const QnA = "QnA";
 
 const OpenViduTest = () => {
+  const userInfo = useSelector((store) => store.userInfo);
+  console.log(userInfo);
+  let myRole = undefined;
+  if (userInfo.admin === false) {
+    myRole = STUDENT;
+  } else {
+    myRole = PROFESSOR;
+  }
   const [searchParams, setSearchParams] = useSearchParams();
   console.log(searchParams.get("courseId"));
   const navigate = useNavigate();
   const [state, setState] = useState({
     mySessionId: searchParams.get("courseId"),
-    myUserName: "Participant" + Math.floor(Math.random() * 100),
-    myRole: STUDENT,
+    myUserName: userInfo.userName,
+    myRole: myRole,
     session: undefined,
     mainStreamManager: undefined,
     publisher: undefined,
@@ -402,8 +410,8 @@ const OpenViduTest = () => {
     const sessionId_1 = await createSession(state.mySessionId);
     return createToken(sessionId_1);
   }
-  async function joinSession(e) {
-    e.preventDefault();
+  async function joinSession() {
+    // e.preventDefault();
     OV = new OpenVidu();
     setChatList({
       type: "public",
@@ -866,6 +874,83 @@ const OpenViduTest = () => {
       sendMessage();
     }
   };
+  useEffect(() => {
+    OV = new OpenVidu();
+    setChatList({
+      type: "public",
+      from: "안내",
+      message: "수업실에 입장하셨습니다.",
+    });
+    const mySession = OV.initSession();
+    setState((prevState) => ({
+      ...prevState,
+      session: mySession,
+    }));
+    // mySession.on("connectionCreated", (event) => {
+    //   let peoples = peopleList;
+    //   peoples.push(event.connection);
+    //   setPeopleList(peoples);
+    // });
+    mySession.on("streamCreated", (event) => {
+      let subscriber = mySession.subscribe(event.stream, "subscriber");
+      let subscribers = state.subscribers;
+
+      subscribers.push(subscriber);
+      if (subscriber.stream.typeOfVideo === "SCREEN") {
+        setState((prevState) => ({
+          ...prevState,
+          subscribers: subscribers,
+          mainStreamManager: subscriber,
+        }));
+      } else {
+        setState((prevState) => ({
+          ...prevState,
+          subscribers: subscribers,
+        }));
+      }
+    });
+
+    mySession.on("streamDestroyed", (event) => {
+      deleteSubScriber(event.stream.streamManager);
+    });
+    getToken().then((token) => {
+      mySession
+        .connect(token, { clientData: state.myUserName })
+        .then(async () => {
+          let devices = await OV.getDevices();
+          let videoDevices = devices.filter(
+            (device) => device.kind === "videoinput"
+          );
+          let publisher = OV.initPublisher(undefined, {
+            audioSource: undefined, // The source of audio. If undefined default microphone
+            videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
+            publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+            publishVideo: true, // Whether you want to start publishing with your video enabled or not
+            resolution: "640x480", // The resolution of your video
+            frameRate: 30, // The frame rate of your video
+            insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+            mirror: false, // Whether to mirror your local video or not
+          });
+
+          // --- 6) Publish your stream ---
+
+          mySession.publish(publisher);
+          setState((prevState) => ({
+            ...prevState,
+            currentVideoDevice: videoDevices[0],
+            // mainStreamManager: publisher,
+            publisher: publisher,
+          }));
+        })
+        .catch((error) => {
+          console.log("세션에 연결할 수 없습니다.:", error.code, error.message);
+        });
+    });
+
+    mySession.on("exception", (exception) => {
+      console.warn(exception);
+    });
+  }, []);
   return (
     <MeetingRoom id="test">
       {state.session === undefined ? (

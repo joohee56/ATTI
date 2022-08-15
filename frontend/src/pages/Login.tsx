@@ -43,7 +43,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (auth) {
-      navigate("/welcome");
+      navigate("/classmeeting?courseId=1");
     }
   }, [auth]);
 
@@ -88,8 +88,6 @@ function LoginPage() {
         console.log("Error", "로그인 실패!");
       });
   };
-
- 
 
   // 카카오 로그인
   const kakaoLogin = () => {
@@ -293,7 +291,6 @@ function LoginPage() {
                 name="userId"
                 placeholder="ID"
                 onChange={onChangeLogin}
-                
               />
               <InputWithLabel
                 name="password"
