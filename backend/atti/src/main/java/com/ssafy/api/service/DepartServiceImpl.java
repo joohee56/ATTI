@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.api.request.DepartCreateReq;
+import com.ssafy.api.response.CategoryListRes;
 import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.depart.UserDepart;
@@ -36,6 +38,9 @@ public class DepartServiceImpl implements DepartService {
 	
 	@Autowired
 	private UserDepartRepository userDepartRepository;
+	
+	@Autowired
+	private CategoryService categoryService;
 	
 	@Override // 채널 생성
 	public Long createChannel(DepartCreateReq departCreateReq) { //, String userId
@@ -117,12 +122,26 @@ public class DepartServiceImpl implements DepartService {
 	}
 
 	@Override // 채널 입장
-	public String joinChannel(String departCode) {
-		if(departRepository.findByDepartCode(departCode) != null) {
-			return "SUCCESS";
-		} else {
-			return "FAIL";
-		}
+	public List<CategoryListRes> joinChannel(String departCode, String userId) {
+		Depart depart = departRepository.findByDepartCode(departCode).orElse(null);
+//				.orElseThrow(() -> new IllegalArgumentException("joinChannel - departCode not found"));
+		
+		// 채널 코드에 맞는 게 없음
+		if(depart == null) return null;
+		
+		Long departId = depart.getDepartId();
+		
+		// 채널 가입
+		User user = userRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("joinChannel - no User"));
+		
+		UserDepart ud = UserDepart.builder().user(user).depart(depart).build();
+		
+		userDepartRepository.save(ud);
+		
+		// 채널 가입 시 채널 카테고리 리스트 넘김
+		List<CategoryListRes> categoryList = categoryService.getCategorList(departId);
+		
+		return categoryList;
 	}
 	
 
