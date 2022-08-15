@@ -63,10 +63,13 @@ function MyPage() {
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
   // 채널 나가기 모달
   const [isChannelOUtModal, setChannelOUtModal] = useState<boolean>(false);
+ 
+  // 수정하기 눌렀나
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   // 회원정보 수정 알림
   const [openEdit, setEditOpen] = useState(false);
+  const [openNoEdit, setNoEditOpen] = useState(false);
 
   const InfoSubmit = async (e: any) => {
     e.preventDefault();
@@ -85,6 +88,7 @@ function MyPage() {
         console.log("response:", response);
       })
       .catch(function (error) {
+        setNoEditOpen(true);
         console.log("Error", error);
       });
   };
@@ -170,6 +174,8 @@ function MyPage() {
   };
 
   // 탈퇴
+  const [openOut, setOpenOut] = useState(false);
+
   const userOut = async (e: any) => {
     e.preventDefault();
     await api
@@ -191,6 +197,12 @@ function MyPage() {
         setOpen={setEditOpen}
         message="회원정보가 수정 되었습니다."
         type="success"
+      />
+        <SnacbarTell
+        open={openNoEdit}
+        setOpen={setNoEditOpen}
+        message="회원정보 수정에 실패했습니다."
+        type="error"
       />
       {!isEdit ? (
         <>
