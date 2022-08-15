@@ -28,9 +28,11 @@ function OAuth2RedirectHandler() {
             admin: response.data.admin,
             categoryList: response.data.categoryList,
             departList: response.data.departList,
+            postList: response.data.postList,
           })
         );
-        navigate("/community/sdf/sdf");
+        if(response.data.departList==null) navigate("/welcome");     
+        else navigate(`/cummunity/${response.data.departList[0].departId}/${response.data.categoryList[0].categoryId}`);
       }
     })
     .catch(function (error) {

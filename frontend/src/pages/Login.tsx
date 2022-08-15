@@ -61,7 +61,7 @@ function LoginPage() {
       })
       .then(async function (response) {
         if (response.status === 200) {
-          // console.log("response:", response.data);
+           console.log("response:", response.data);
           if (isLoiginAuto) {
             localStorage.setItem("AccessToken", response.data.accessToken);
             localStorage.setItem("userId", loginInfo.userId);
@@ -74,10 +74,12 @@ function LoginPage() {
               admin: response.data.admin,
               categoryList: response.data.categoryList,
               departList: response.data.departList,
+              postList: response.data.postList,
             })
           );
         }
-        navigate("/community/sdf/sdf");
+        if(response.data.departList==null) navigate("/welcome");     
+        else navigate(`/community/${response.data.departList[0].departId}/${response.data.categoryList[0].categoryId}`);
       })
       .catch(function (error) {
         console.log("Error", error);

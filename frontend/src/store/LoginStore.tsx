@@ -11,6 +11,10 @@ export interface UserLoginState {
     ctype: string;
   }[];
   departList:{
+    departId:string;
+    departName:string;
+  }[];
+  postList:{
     postContent:string;
     postRegDate:string;
     postTitle:string;
@@ -26,6 +30,7 @@ const initialState: UserLoginState = {
   accessToken: "",
   categoryList: [],
   departList:[],
+  postList:[],
   auth: false,
 };
 
@@ -46,6 +51,10 @@ const userSlice = createSlice({
           ctype: string;
         }[];
         departList:{
+          departId:string;
+          departName:string;
+        }[];
+        postList:{
           postContent:string;
           postRegDate:string;
           postTitle:string;

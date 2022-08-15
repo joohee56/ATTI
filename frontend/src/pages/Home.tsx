@@ -46,11 +46,12 @@ function HomePage() {
                 admin: response.data.admin,
                 categoryList: response.data.categoryList,
                 departList: response.data.departList,
+                postList: response.data.postList,
               })
             );
           }
-          //if(response.data.departList==null) navigate("/welcome");     
-          //else navigate("/");
+          if(response.data.departList==null) navigate("/welcome");     
+          else navigate(`/community/${response.data.departList[0].departId}/${response.data.categoryList[0].categoryId}`);
       })
       .catch(function (error) {
         console.log("Error",error)

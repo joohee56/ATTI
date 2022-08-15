@@ -21,8 +21,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 function HeaderNav() {
   const { auth } = useSelector((state: RootState) => state.userInfo);
+  const departList = useSelector((state: RootState) => state.userInfo.departList);
+  const categoryList = useSelector((state: RootState) => state.userInfo.categoryList);
   const myPage = useSelector((state: RootState) => state.reRendering.setMyPage)
-  const adminPage = useSelector((state: RootState) => state.reRendering.setAdminPage)
+  //const adminPage = useSelector((state: RootState) => state.reRendering.setAdminPage)
+  
   const getMyPage = (i: any) => {
     return !i
   }
@@ -54,7 +57,7 @@ function HeaderNav() {
   };
 
   const logoClick = () => {
-    navigate(!auth? "/":"/community/ref/ref");
+    navigate(!auth? "/":`/community/${departList[0].departId}/${categoryList[0].categoryId}`);
   };
 
   return (
