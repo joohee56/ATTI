@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import styled from "styled-components";
 import { ButtonBlue } from "./ButtonStyled";
 import LogoCirce from "../assets/images/logoCirce.png";
@@ -16,8 +15,6 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import MailIcon from "@mui/icons-material/Mail";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { palette } from "../styles/palette";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link, useNavigate } from "react-router-dom";
@@ -35,6 +32,8 @@ function HeaderNav() {
 
   const Logout = () => {
     dispatch(loginActions.logout());
+    localStorage.removeItem("AccessToken");
+    localStorage.removeItem("userId");
     navigate("/");
   };
 
@@ -48,7 +47,7 @@ function HeaderNav() {
   };
 
   const logoClick = () => {
-    navigate(!auth? "/":"/community");
+    navigate(!auth? "/":"/community/ref/ref");
   };
 
   return (
@@ -86,7 +85,7 @@ function HeaderNav() {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar sx={{ width: 30, height: 30, bgcolor: palette.yellow_3 }}>
+              <Avatar sx={{ width: 40, height: 40, bgcolor: palette.yellow_3 }}>
                 M
               </Avatar>
             </IconButton>
@@ -148,17 +147,17 @@ const Main = styled.div`
 `;
 
 const Header = styled.header`
-  width: 90%;
+  width: 100%;
   height: 30px;
-  max-width: 1600px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 5vw;
+  max-width: 1700px;
+  padding: 12px 0px;
+  margin: auto;
   font-weight: bold;
   display: flex;
   background-color: transparent;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid ${palette.gray_2};
 `;
 
 const LogoImg = styled.img`
