@@ -5,7 +5,7 @@ import { ButtonBlue } from "./ButtonStyled";
 import LogoCirce from "../assets/images/logoCirce.png";
 import AttiText4 from "../assets/images/Text/AttiText4.png";
 import { useDispatch, useSelector } from "react-redux";
-import { loginActions } from "../store/LoginSotre";
+import { loginActions } from "../store/LoginStore";
 import { RootState } from "../store";
 import {
   Avatar,
