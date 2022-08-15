@@ -3,13 +3,21 @@ import { createSlice, configureStore, createAsyncThunk, createReducer } from '@r
 const reRenderingSlice = createSlice({
     name: 'reRendering',
     initialState: {
-        cider: true
+        cider: false,
+        setAdminPage: false,
+        setMyPage: false,
     },
     reducers: {
         saveReRendering(state, action) {
             state.cider = action.payload.cider;
          
         },
+        saveSetAdminPage(state, action){
+            state.setAdminPage = action.payload.setAdminPage;
+        },
+        saveSetMyPage(state, action) {
+            state.setMyPage = action.payload.setMyPage
+        }
     }
 });
 

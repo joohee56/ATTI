@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { palette } from "../../styles/palette";
 import { SosOutlined } from '@mui/icons-material';
+import { reRenderingActions } from '../../store/community/ReRendering';
 
 
 
@@ -126,6 +127,16 @@ function CategoryList(dummyCategory){
                 cType: dummyCategory[i].cType,
                 departId: dummyCategory[i].departId,
                 userId: dummyCategory[i].userId}
+            ))
+            dispatch(reRenderingActions.saveSetMyPage(
+                {
+                    setMyPage: false
+                }
+            ))
+            dispatch(reRenderingActions.saveSetAdminPage(
+                {
+                    setAdminPage: false
+                }
             ))
         }
         const result = [];

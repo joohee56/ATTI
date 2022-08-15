@@ -43,7 +43,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (auth) {
-      navigate("/welcome");
+      navigate("/community/sdf/sdf");
     }
   }, [auth]);
 

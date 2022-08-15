@@ -28,8 +28,8 @@ function DepartCreate({handleModal4}) {
         {
             userId: newDepart.userId,
             departName: newDepart.departName,
-        }).then((res) => {
-            console.log("채널 만들기: ", res.data)
+        }).then(function (response) {
+            console.log("response:", response);
         })
     }
     
