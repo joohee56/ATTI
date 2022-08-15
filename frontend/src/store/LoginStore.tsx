@@ -62,6 +62,7 @@ const userSlice = createSlice({
       state.auth = true;
       
       localStorage.setItem("AccessToken", state.accessToken);
+      localStorage.setItem("userId", state.id);
       console.log(action.payload);
     },
     logout: (state) => {

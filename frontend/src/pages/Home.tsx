@@ -24,25 +24,22 @@ const Main = styled.div`
 function HomePage() {
   const navigate = useNavigate();
 
-  // useEffect(()=>{
-  //   const token=localStorage.getItem("AccessToken");
-  //   //console.log(token);
-  //   {token && api
-  //     .post("토큰 있을 경우 자동로그인", {
-  //       userId: token,
-  //     })
-  //     .then(async function (response) {
-  //       if (response.status === 200) {
-  //         // console.log("response:", response.data);
-        
-  //         navigate("/welcome");
-  //       }
-  //     })
-  //     .catch(function (error) {
-        
-  //     });
-  //   }
-  // },[]);
+  useEffect(()=>{
+    const userId=localStorage.getItem("userId");
+    //console.log(token);
+    {userId && api
+      .post("/auth/auto", {
+        userId: userId,
+      })
+      .then(async function (response) {
+          console.log("response:", response.data);
+          //navigate("/welcome");     
+      })
+      .catch(function (error) {
+        console.log("Error",error)
+      });
+    }
+  },[]);
 
   return (
     <>

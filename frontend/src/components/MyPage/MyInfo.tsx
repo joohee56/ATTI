@@ -392,7 +392,7 @@ function MyPage() {
           </p>
           <div>
             <button>아니오</button>
-            <MemberWithdrawal onClick={userOut}>탈퇴</MemberWithdrawal>
+            <button onClick={userOut}>탈퇴</button>
           </div>
         </Modal>
       )}
