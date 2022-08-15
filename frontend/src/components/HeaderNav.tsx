@@ -7,6 +7,7 @@ import AttiText4 from "../assets/images/Text/AttiText4.png";
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../store/LoginStore";
 import { RootState } from "../store";
+import { reRenderingActions } from "../store/community/ReRendering";
 import {
   Avatar,
   Badge,
@@ -23,6 +24,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 function HeaderNav() {
   const { auth } = useSelector((state: RootState) => state.userInfo);
+  const myPage = useSelector((state: RootState) => state.reRendering.setMyPage)
+  console.log(myPage)
+  const getMyPage = (i: any) => {
+    return !i
+  }
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -117,7 +124,7 @@ function HeaderNav() {
               transformOrigin={{ horizontal: "right", vertical: "top" }}
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-              <MenuItem>
+              <MenuItem onClick={() => {dispatch(reRenderingActions.saveSetMyPage({setMyPage: getMyPage(myPage) }))}}>
                 <Avatar /> My Profile
               </MenuItem>
               <MenuItem>

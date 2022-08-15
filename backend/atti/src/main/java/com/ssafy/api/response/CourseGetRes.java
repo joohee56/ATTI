@@ -14,7 +14,6 @@ public class CourseGetRes {
 	private Long courseId;
 	private String courseName;
 	private String courseTeacherName;
-	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private Date courseStartTime;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")

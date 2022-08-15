@@ -63,7 +63,7 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         onClickToggleModal3()
     }
 
-    const { auth } = useSelector(state => state.userInfo)
+    const { id } = useSelector(state => state.userInfo)
     const [comment, setComment] = useState({
         postId: postId,
         userId: "gusxo123",
@@ -195,20 +195,21 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         deletePost();
     }
 
-    // // 글 좋아요 부분
-    // const [postLikeCount, setPostLikeCount] = useState([])
-    // const postLike = () => {
-    //     api.get(`/post/likeBtn/${single.postId}/${auth.Id}`
-    //     )
-    //     .then((res) => {
-    //         console.log("response:", res);
-    //         setPostLikeCount(res.data)
-    //     });
-    // }
+    // 글 좋아요 부분
+    const [postLikeCount, setPostLikeCount] = useState([])
+    const postLike = () => {
+        console.log(single.postId)
+        api.get(`/post/likeBtn/${single.postId}/gusxosmsdy`
+        )
+        .then((res) => {
+            console.log("response:", res);
+            setPostLikeCount(res.data)
+        });
+    }
     
-    // useEffect(() => {
-    //     postLike()
-    // }, [postLikeCount]);
+    useEffect(() => {
+        postLike()
+    }, [postLikeCount]);
 
 
 ///////////////////////////////////////////////////////////////////
@@ -236,8 +237,8 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                         <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
                         <span style={{margin: "10px 0 0 0"}}>24</span>
                         &nbsp; &nbsp; 
-                        <Checkbox style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                        <span style={{margin: "10px 0 0 0"}}>22</span>
+                        <Checkbox style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite onClick={postLike}/>}/> 
+                        <span style={{margin: "10px 0 0 0"}}>{postLikeCount}</span>
                     </div>
                 </div>
                 <hr style={hrStyle} />

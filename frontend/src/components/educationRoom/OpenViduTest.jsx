@@ -15,6 +15,7 @@ import BorderAllIcon from "@mui/icons-material/BorderAll";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import Modal from "../Modal";
+import { BACKEND_URL } from "../../constant";
 import {
   LayoutButton,
   PeopleBox,
@@ -47,16 +48,21 @@ import {
   QnAMessage,
   QnAButton,
   QnAButtonWrapper,
+  SmallPeopleBoxWrapper,
+  SmallMeetingAttendAndChattingWrapper,
+  SmallMeetingAttendAndChattingButton,
 } from "./OpenViduTestStyled";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
 import FaceRetouchingOffIcon from "@mui/icons-material/FaceRetouchingOff";
 import StudentAnonymouse from "./StudentAnonymous";
 
-const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
-// const OPENVIDU_SERVER_URL = "https://i7b107.p.ssafy.io";
-// const OPENVIDU_SERVER_SECRET = "atti";
+
+// const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
+// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const OPENVIDU_SERVER_URL = "https://i7b107.p.ssafy.io:8443";
+const OPENVIDU_SERVER_SECRET = "atti";
+
 // 도메인: https://i7b107.p.ssafy.io
 
 const STUDENT = "student";
@@ -66,9 +72,11 @@ export const CHATTING = "chatting";
 export const QnA = "QnA";
 
 const OpenViduTest = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  console.log(searchParams.get("courseId"));
   const navigate = useNavigate();
   const [state, setState] = useState({
-    mySessionId: "SessionA",
+    mySessionId: searchParams.get("courseId"),
     myUserName: "Participant" + Math.floor(Math.random() * 100),
     myRole: STUDENT,
     session: undefined,
@@ -97,6 +105,25 @@ const OpenViduTest = () => {
   // QnA인지 채팅인지 선택
   const [chattingSelect, setChattingSelect] = useState(CHATTING);
   const [QnAState, setQnAState] = useState(undefined);
+  const reactionRef = useRef(null);
+  const [receiveReaction, setReceiveReaction] = useState(null);
+  const [allOff, setAllOff] = useState(false);
+
+  useEffect(() => {
+    if (!openAttentList && !openChattingList) {
+      setAllOff(true);
+    } else {
+      setAllOff(false);
+    }
+  }, [openAttentList, openChattingList]);
+
+  useEffect(() => {
+    if (state.session !== undefined) {
+      state.session.on("signal:sendToReaction", (event) => {
+        setReceiveReaction({ data: event.data, from: event.from });
+      });
+    }
+  }, [state.publisher, state.session]);
 
   function setChattingInfo({ data, connectionId }) {
     setSendToUser(data);
@@ -244,11 +271,19 @@ const OpenViduTest = () => {
       });
       state.session.on("signal:my-chat", (event) => {
         console.log(JSON.parse(event.from.data).clientData);
-        setChatList({
-          type: "public",
-          message: event.data,
-          from: JSON.parse(event.from.data).clientData,
-        });
+        if (anonymousMode) {
+          setChatList({
+            type: "public",
+            message: event.data,
+            from: "익명",
+          });
+        } else {
+          setChatList({
+            type: "public",
+            message: event.data,
+            from: JSON.parse(event.from.data).clientData,
+          });
+        }
         console.log(anonymousMode);
       });
       state.session.on("signal", (event) => {
@@ -650,17 +685,51 @@ const OpenViduTest = () => {
               console.log(error);
             });
         } else {
-          mySession
-            .signal({
-              data: messageRef.current.value,
-              to: [],
-              type: "QnA",
-            })
-            .then(() => {
-              console.log("QnA 질문 끝!");
-            })
-            .catch((error) => {
-              console.log(error);
+          let today = new Date();
+          const year = today.getFullYear();
+          const month = ("0" + (today.getMonth() + 1)).slice(-2);
+          const day = ("0" + today.getDate()).slice(-2);
+
+          const dateString = year + "년" + month + "월" + day + "일";
+
+          const hours = ("0" + today.getHours()).slice(-2);
+          const minutes = ("0" + today.getMinutes()).slice(-2);
+          const seconds = ("0" + today.getSeconds()).slice(-2);
+
+          const timeString = hours + "시" + minutes + "분" + seconds + "초";
+          const message = messageRef.current.value;
+          axios
+            .post(
+              BACKEND_URL + "/post/write",
+              {
+                postAnoInfo: 0,
+                postComBanInfo: 1,
+                postContent:
+                  dateString + " " + timeString + " 에 작성된 게시물입니다.",
+                postTitle: message,
+                category_id: "1",
+                user_id: "password123",
+              },
+              {
+                headers: {
+                  "Content-type": "application/json",
+                },
+              }
+            )
+            .then((res) => {
+              console.log(res);
+              mySession
+                .signal({
+                  data: message,
+                  to: [],
+                  type: "QnA",
+                })
+                .then(() => {
+                  console.log("QnA 질문 끝!");
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
             });
         }
       }
@@ -934,11 +1003,7 @@ const OpenViduTest = () => {
               ) : null}
               <VideoBox id="VideoBox">
                 {state.mainStreamManager !== undefined &&
-                fullScreenLayoutMode &&
-                !openModal &&
-                !onClickToggleModal &&
-                !reqeustPresent &&
-                !receivePresent ? null : (
+                fullScreenLayoutMode ? null : (
                   <SubStream
                     mainStream={
                       state.mainStreamManager !== undefined ? true : false
@@ -956,28 +1021,30 @@ const OpenViduTest = () => {
                     ) : null}
                     {state.subscribers &&
                       !fullScreenLayoutMode &&
-                      !openModal &&
-                      !onClickToggleModal &&
-                      !reqeustPresent &&
-                      !receivePresent &&
                       state.subscribers.map((sub, i) => (
                         <div
                           className="col-md-6"
                           key={i}
                           onClick={() => handleMainVideoStream(sub)}
                         >
-                          <UserVideoComponent streamManager={sub} main="sub" />
+                          <UserVideoComponent
+                            streamManager={sub}
+                            main="sub"
+                            receiveReaction={
+                              receiveReaction !== null &&
+                              receiveReaction.connectionId ===
+                                sub.stream.connection.data
+                                ? receiveReaction
+                                : null
+                            }
+                          />
                         </div>
                       ))}
                   </SubStream>
                 )}
 
                 <div>
-                  {state.mainStreamManager !== undefined &&
-                  !openModal &&
-                  !onClickToggleModal &&
-                  !reqeustPresent &&
-                  !receivePresent ? (
+                  {state.mainStreamManager !== undefined ? (
                     <div
                       onClick={() => {
                         setState((prev) => ({
@@ -1033,8 +1100,6 @@ const OpenViduTest = () => {
                         </MeetingButtonControl>
                       )}
                     </MeetingButton>
-
-                    <span>당신은 {state.myRole} 입니다!</span>
                     <MeetingButton
                       onClick={() => {
                         state.publisher.publishVideo(!turnOnCamera);
@@ -1059,8 +1124,12 @@ const OpenViduTest = () => {
                       </MeetingButtonControl>
                     </MeetingButton>
                     {/* <div>{state.mySessionId}</div> */}
-
-                    <MeetingButton onClick={requestAnonymous}>
+                    <MeetingButton
+                      onClick={requestAnonymous}
+                      disabled={
+                        anonymousMode && state.myRole === STUDENT ? true : false
+                      }
+                    >
                       {anonymousMode ? (
                         <MeetingButtonControl>
                           <FaceIcon />
@@ -1073,6 +1142,7 @@ const OpenViduTest = () => {
                         </MeetingButtonControl>
                       )}
                     </MeetingButton>
+
                     <MeetingButton onClick={leaveSession}>
                       <MeetingButtonControl>
                         <MeetingRoomIcon />
@@ -1082,142 +1152,172 @@ const OpenViduTest = () => {
                   </MeetingButtons>
                 </MeetingButtonWrapper>
               </VideoBox>
+              {allOff ? (
+                <SmallPeopleBoxWrapper>
+                  <SmallMeetingAttendAndChattingWrapper>
+                    <SmallMeetingAttendAndChattingButton
+                      onClick={() => {
+                        setOpenAttentList((prev) => {
+                          return !prev;
+                        });
+                      }}
+                      isClick={openAttentList}
+                    >
+                      참가자({peopleList.length})
+                    </SmallMeetingAttendAndChattingButton>
 
-              <PeopleBox>
-                <MeetingAttendAndChattingWrapper>
-                  <MeetingAttendAndChattingButton
-                    onClick={() => {
-                      setOpenAttentList((prev) => {
-                        return !prev;
-                      });
-                    }}
-                    isClick={openAttentList}
-                  >
-                    참가자({peopleList.length})
-                  </MeetingAttendAndChattingButton>
-
-                  <MeetingAttendAndChattingButton
-                    onClick={() => {
-                      setOpenChattingList((prev) => {
-                        return !prev;
-                      });
-                    }}
-                    isClick={openChattingList}
-                  >
-                    채팅
-                  </MeetingAttendAndChattingButton>
-                </MeetingAttendAndChattingWrapper>
-                {openAttentList ? (
-                  <AttendeesList
-                    peopleList={peopleList}
-                    setChattingInfo={setChattingInfo}
-                    openChattingList={openChattingList}
-                  />
-                ) : null}
-                {state.myRole === PROFESSOR ? (
+                    <SmallMeetingAttendAndChattingButton
+                      onClick={() => {
+                        setOpenChattingList((prev) => {
+                          return !prev;
+                        });
+                      }}
+                      isClick={openChattingList}
+                    >
+                      채팅
+                    </SmallMeetingAttendAndChattingButton>
+                  </SmallMeetingAttendAndChattingWrapper>
+                </SmallPeopleBoxWrapper>
+              ) : (
+                <PeopleBox>
                   <MeetingAttendAndChattingWrapper>
-                    <AllMicAndCamOff onClick={allMicOff}>
-                      전체 마이크 끄기
-                    </AllMicAndCamOff>
-                    <AllMicAndCamOff onClick={allCamOff}>
-                      전체 카메라 끄기
-                    </AllMicAndCamOff>
+                    <MeetingAttendAndChattingButton
+                      onClick={() => {
+                        setOpenAttentList((prev) => {
+                          return !prev;
+                        });
+                      }}
+                      isClick={openAttentList}
+                    >
+                      참가자({peopleList.length})
+                    </MeetingAttendAndChattingButton>
+
+                    <MeetingAttendAndChattingButton
+                      onClick={() => {
+                        setOpenChattingList((prev) => {
+                          return !prev;
+                        });
+                      }}
+                      isClick={openChattingList}
+                    >
+                      채팅
+                    </MeetingAttendAndChattingButton>
                   </MeetingAttendAndChattingWrapper>
-                ) : null}
+                  {openAttentList ? (
+                    <AttendeesList
+                      peopleList={peopleList}
+                      setChattingInfo={setChattingInfo}
+                      openChattingList={openChattingList}
+                    />
+                  ) : null}
+                  {state.myRole === PROFESSOR ? (
+                    <MeetingAttendAndChattingWrapper>
+                      <AllMicAndCamOff onClick={allMicOff}>
+                        전체 마이크 끄기
+                      </AllMicAndCamOff>
+                      <AllMicAndCamOff onClick={allCamOff}>
+                        전체 카메라 끄기
+                      </AllMicAndCamOff>
+                    </MeetingAttendAndChattingWrapper>
+                  ) : null}
 
-                {openChattingList ? (
-                  <ChattingBox id="ChattingBox" openAttentList={openAttentList}>
-                    <ChattinBoxgWrapper>
-                      <ChattingName>
-                        <ChatIcon />
-                        채팅
-                      </ChattingName>
-                      {QnAState !== undefined && (
-                        <QnAWrapper>
-                          <QnABox>
-                            <QnATitle>{`Q&A - ${QnAState.from}님`}</QnATitle>
-                            <QnAMessage>{QnAState.message}</QnAMessage>
-                            {state.myRole === PROFESSOR ? (
-                              <QnAButtonWrapper>
-                                <QnAButton>답변</QnAButton>
-                                <QnAButton
-                                  onClick={() => {
-                                    setQnAState(undefined);
-                                  }}
-                                >
-                                  닫기
-                                </QnAButton>
-                              </QnAButtonWrapper>
-                            ) : (
-                              <QnAButtonWrapper>
-                                <QnAButton
-                                  onClick={() => {
-                                    setQnAState(undefined);
-                                  }}
-                                >
-                                  닫기
-                                </QnAButton>
-                              </QnAButtonWrapper>
-                            )}
-                          </QnABox>
-                        </QnAWrapper>
-                      )}
-                      <ChattingWrapper
-                        chatList={chatList}
-                        anonymousMode={anonymousMode}
-                        QnAState={QnAState}
-                      />
-                    </ChattinBoxgWrapper>
-                    <ChattingInputBox chattingSelect={chattingSelect}>
-                      <ChattingAndQnAWrapper>
-                        {sendToUser !== "" ? (
-                          <span>{sendToUser}님에게 1대1 메시지 전송</span>
-                        ) : (
-                          <ChattingAndQnASelect
-                            onChange={handleChangeChatting}
-                            chattingSelect={chattingSelect}
-                          >
-                            <option key={CHATTING} value={CHATTING}>
-                              #채팅
-                            </option>
-                            <option key={QnA} value={QnA}>
-                              #QnA
-                            </option>
-                          </ChattingAndQnASelect>
+                  {openChattingList ? (
+                    <ChattingBox
+                      id="ChattingBox"
+                      openAttentList={openAttentList}
+                    >
+                      <ChattinBoxgWrapper>
+                        <ChattingName>
+                          <ChatIcon />
+                          채팅
+                        </ChattingName>
+                        {QnAState !== undefined && (
+                          <QnAWrapper>
+                            <QnABox>
+                              <QnATitle>{`Q&A - ${QnAState.from}님`}</QnATitle>
+                              <QnAMessage>{QnAState.message}</QnAMessage>
+                              {state.myRole === PROFESSOR ? (
+                                <QnAButtonWrapper>
+                                  <QnAButton>답변</QnAButton>
+                                  <QnAButton
+                                    onClick={() => {
+                                      setQnAState(undefined);
+                                    }}
+                                  >
+                                    닫기
+                                  </QnAButton>
+                                </QnAButtonWrapper>
+                              ) : (
+                                <QnAButtonWrapper>
+                                  <QnAButton
+                                    onClick={() => {
+                                      setQnAState(undefined);
+                                    }}
+                                  >
+                                    닫기
+                                  </QnAButton>
+                                </QnAButtonWrapper>
+                              )}
+                            </QnABox>
+                          </QnAWrapper>
                         )}
-                      </ChattingAndQnAWrapper>
-                      <ChattingInput
-                        type="text"
-                        id="message"
-                        ref={messageRef}
-                        onKeyPress={onKeyPress}
-                        chattingSelect={chattingSelect}
-                      />
+                        <ChattingWrapper
+                          chatList={chatList}
+                          anonymousMode={anonymousMode}
+                          QnAState={QnAState}
+                        />
+                      </ChattinBoxgWrapper>
+                      <ChattingInputBox chattingSelect={chattingSelect}>
+                        <ChattingAndQnAWrapper>
+                          {sendToUser !== "" ? (
+                            <span>{sendToUser}님에게 1대1 메시지 전송</span>
+                          ) : (
+                            <ChattingAndQnASelect
+                              onChange={handleChangeChatting}
+                              chattingSelect={chattingSelect}
+                            >
+                              <option key={CHATTING} value={CHATTING}>
+                                #채팅
+                              </option>
+                              <option key={QnA} value={QnA}>
+                                #QnA
+                              </option>
+                            </ChattingAndQnASelect>
+                          )}
+                        </ChattingAndQnAWrapper>
+                        <ChattingInput
+                          type="text"
+                          id="message"
+                          ref={messageRef}
+                          onKeyPress={onKeyPress}
+                          chattingSelect={chattingSelect}
+                        />
 
-                      {sendToUser !== "" ? (
-                        <ChattingAndCancleButtonWrapper>
-                          <ChattingSendButton
-                            onClick={() => {
-                              setSendToUser("");
-                            }}
-                          >
-                            취소
-                          </ChattingSendButton>
+                        {sendToUser !== "" ? (
+                          <ChattingAndCancleButtonWrapper>
+                            <ChattingSendButton
+                              onClick={() => {
+                                setSendToUser("");
+                              }}
+                            >
+                              취소
+                            </ChattingSendButton>
+                            <ChattingSendButton onClick={sendMessage}>
+                              전송
+                            </ChattingSendButton>
+                          </ChattingAndCancleButtonWrapper>
+                        ) : (
                           <ChattingSendButton onClick={sendMessage}>
                             전송
                           </ChattingSendButton>
-                        </ChattingAndCancleButtonWrapper>
-                      ) : (
-                        <ChattingSendButton onClick={sendMessage}>
-                          전송
-                        </ChattingSendButton>
-                      )}
+                        )}
 
-                      {/* <button onClick={testSpeech}>메시지 읽어주기</button> */}
-                    </ChattingInputBox>
-                  </ChattingBox>
-                ) : null}
-              </PeopleBox>
+                        {/* <button onClick={testSpeech}>메시지 읽어주기</button> */}
+                      </ChattingInputBox>
+                    </ChattingBox>
+                  ) : null}
+                </PeopleBox>
+              )}
             </OpenviduBox>
           </div>
         </>
@@ -1270,8 +1370,7 @@ const OpenViduTest = () => {
               )
             ) {
               window.location.assign(
-                // OPENVIDU_SERVER_URL + "/accept-certificate"
-                OPENVIDU_SERVER_URL + "/openvidu/accept-certificate"
+                OPENVIDU_SERVER_URL + "/accept-certificate"
               );
             }
           }

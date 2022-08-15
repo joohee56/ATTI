@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { palette } from "../../styles/palette";
 import { SosOutlined } from '@mui/icons-material';
+import { reRenderingActions } from '../../store/community/ReRendering';
 
 
 
@@ -126,6 +127,16 @@ function CategoryList(dummyCategory){
                 cType: dummyCategory[i].cType,
                 departId: dummyCategory[i].departId,
                 userId: dummyCategory[i].userId}
+            ))
+            dispatch(reRenderingActions.saveSetMyPage(
+                {
+                    setMyPage: false
+                }
+            ))
+            dispatch(reRenderingActions.saveSetAdminPage(
+                {
+                    setAdminPage: false
+                }
             ))
         }
         const result = [];
@@ -252,7 +263,19 @@ function Category(){
         return !prev}
       );
     }
-
+    const adminPage = useSelector(state => state.reRendering.setAdminPage)
+    const getAdminPage = (i) => {
+        return !i
+      }
+    const dispatch = useDispatch()
+    function adminPageFunction(){
+        setChangeCss(9999)
+        dispatch(reRenderingActions.saveSetAdminPage(
+            {
+                setAdminPage: getAdminPage(adminPage)
+            }
+        ))
+    }
     return(
         <>
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", width: "210px", height: "700px"}}>
@@ -270,7 +293,7 @@ function Category(){
                         </div>
                     </StyledLink>
                 <div style={{position: "absolute", bottom: "50px"}}>
-                    <StyledLink to={`/community/`+ departName + `/관리자페이지`} onClick={() => { setChangeCss(99999)}}>
+                    <StyledLink to={`/community/`+ departName + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
                         <div style={noClickStyle}>
                             <div style={ Bar }></div>
                             <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>

@@ -16,6 +16,8 @@ import SearchBar from "./SearchBar";
 import { ButtonBlue } from "../ButtonStyled";
 import { palette } from "../../styles/palette";
 import Pagination from "./pagenation";
+import MyPageComponent from "../MyPage/MyPageComponent";
+import AdminPageWrapper from "./adminpage/AdminPageWrapper";
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -31,7 +33,7 @@ function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
   const { auth } = useSelector(state => state.userInfo)
   
   async function getPosts(){
-    api.get(`/depart/1/category/2/user/gusxo123`
+    api.get(`/depart/1/category/2/user/gusxosmsdy`
     ).then((res) => {
       console.log("결과: ", res)
       setPost(res.data)
@@ -206,63 +208,86 @@ function NormalPostFrame() {
   const [singlePost, setSinglePost] = useState([])
 
   const categoryName = useSelector(state => state.category.categoryName)
-  return (
-    <>
-      <PostContainer>
-        <div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Title> {categoryName} </Title>
-            <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
-              <SearchBar />
-              <WriteButton onClick={onClickToggleModal1}>
-                글쓰기
-              </WriteButton>
+  const myPage = useSelector(state => state.reRendering.setMyPage)
+  const adminPage = useSelector(state => state.reRendering.setAdminPage)
+  if(myPage === true){
+    return(
+      <>
+        <PostContainer>
+          <MyPageComponent/>
+        </PostContainer>
+      </>
+    )
+  }
+  else if(adminPage === true) {
+    return(
+      <>
+        <PostContainer>
+          <AdminPageWrapper/>
+        </PostContainer>
+      </>
+    )
+  }
+  else{
+    return (
+      <>
+        <PostContainer>
+          <div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Title> {categoryName} </Title>
+              <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
+                <SearchBar />
+                <WriteButton onClick={onClickToggleModal1}>
+                  글쓰기
+                </WriteButton>
+              </div>
+            </div>
+            <div>
+              <PostList handleModal2={handleModal2} limit={limit} page={page} length={length} getLength={getLength} getPostId={getPostId} />
             </div>
           </div>
-          <div>
-            <PostList handleModal2={handleModal2} limit={limit} page={page} length={length} getLength={getLength} getPostId={getPostId} />
-          </div>
-        </div>
-        <StickyFooter>
-        <Pagination
-          total={length}
-          limit={limit}
-          page={page}
-          setPage={setPage}
-        />
-      </StickyFooter>
-      {isOpenModal1 && (
-        <Modal
-          onClickToggleModal={onClickToggleModal1}
-          width="65vw"
-          height="800px"
-        >
-          <PostEditor handleModal1={handleModal1} />
-        </Modal>
-      )}
-      </PostContainer>
+          <StickyFooter>
+          <Pagination
+            total={length}
+            limit={limit}
+            page={page}
+            setPage={setPage}
+          />
+        </StickyFooter>
+        {isOpenModal1 && (
+          <Modal
+            onClickToggleModal={onClickToggleModal1}
+            width="65vw"
+            height="800px"
+          >
+            <PostEditor handleModal1={handleModal1} />
+          </Modal>
+        )}
+        </PostContainer>
+  
+        {isOpenModal2 && (
+          <Modal
+            onClickToggleModal={onClickToggleModal2}
+            width="1000px"
+            height="680px"
+          >
+            <PostDetail postId={postId} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
+          </Modal>
+        )}
+        {isOpenModal3 && (
+          <Modal
+            onClickToggleModal={onClickToggleModal3}
+            width="1000px"
+            height="680px"
+          >
+            <PostUpdate singlePost={singlePost} handleModal3={handleModal3} />
+          </Modal>
+        )}
+        {console.log('postId : ' , postId)}
+      </>
+    );
 
-      {isOpenModal2 && (
-        <Modal
-          onClickToggleModal={onClickToggleModal2}
-          width="1000px"
-          height="680px"
-        >
-          <PostDetail postId={postId} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
-        </Modal>
-      )}
-      {isOpenModal3 && (
-        <Modal
-          onClickToggleModal={onClickToggleModal3}
-          width="1000px"
-          height="680px"
-        >
-          <PostUpdate singlePost={singlePost} handleModal3={handleModal3} />
-        </Modal>
-      )}
-      {console.log('postId : ' , postId)}
-    </>
-  );
+  }
 }
 
 const UserIdDiv = styled.div`
