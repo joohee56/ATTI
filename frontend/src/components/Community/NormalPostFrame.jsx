@@ -27,6 +27,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
   
   const categoryId = useSelector(state => state.category.categoryId)
+  
   console.log('카테고리, 너의 아이디는? ' , categoryId)
   const departId = useSelector(state => state.depart.departId)
   console.log('채널, 너의 아이디는? ' , departId)
@@ -42,12 +43,13 @@ function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
   }
   
   const currentCider = useSelector(state => state.reRendering.cider)
-  const [post,setPost] = useState([])
+  const postList = useSelector(state => state.notice.postList )
+  const [post,setPost] = useState(postList)
   
   useEffect(() => {
     console.log('확인중입니다')
     getPosts();
-  },[currentCider, categoryId]);
+  },[currentCider, categoryId, departId]);
   return (
     <>
       <Rendering post={post} handleModal2={handleModal2} length={length} limit={limit} page={page} getPostId={getPostId} />

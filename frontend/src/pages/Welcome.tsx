@@ -79,7 +79,7 @@ function Welcome(){
           width="800px"
           height="400px"
         >
-          <DepartCreate handleModal4={handleModal4} />
+          <DepartCreate newDepartFrame={null} handleModal4={handleModal4} />
         </Modal>
       )}
 

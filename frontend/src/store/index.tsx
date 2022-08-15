@@ -6,6 +6,7 @@ import categoryReducer from "./community/Category";
 import departReducer from "./community/Depart";
 import reRenderingReducer from "./community/ReRendering";
 import studentListReducer from "./classMeeting/studentList";
+import noticeReducer from "./community/Notice";
 
 // 유저 정보(ID, 이름, 관리자유무(userRole-객체)), access token, 채널 리스트, 카테고리 리스트
 const rootReducer = combineReducers({
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   depart: departReducer,
   reRendering: reRenderingReducer,
   studentList: studentListReducer,
+  notice: noticeReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

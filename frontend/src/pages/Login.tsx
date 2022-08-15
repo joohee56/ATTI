@@ -17,6 +17,7 @@ import { FormHelperText } from "@mui/material";
 import SnacbarTell from "../components/SnacbarTell";
 import SwitchButton from "../components/SwitchButton";
 import { departActions } from "../store/community/Depart";
+import { noticeActions } from "../store/community/Notice";
 
 interface userLoginInfo {
   userId: string;
@@ -77,6 +78,12 @@ function LoginPage() {
               departList: response.data.departList,
             }),
           );
+          dispatch(
+            noticeActions.savePostList({
+              postList: response.data.postList
+            })
+
+          )
         }
         if(response.data.departList==null) navigate("/welcome");     
           else{

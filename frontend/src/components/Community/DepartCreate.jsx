@@ -1,21 +1,25 @@
 import styled from "styled-components"
 import { useState } from "react"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 
 import apiAcc, {api} from "../../utils/api"
 import { palette } from "../../styles/palette"
 import InputWithIcon from "../InputWithLabel"
 import { ButtonBlue } from "../ButtonStyled"
+import { reRenderingActions } from "../../store/community/ReRendering"
 
-
-function DepartCreate({handleModal4}) {
+function DepartCreate({handleModal4, newDepartFrame}) {
 
     const { id } = useSelector(state => state.userInfo)
+    const { departList } = useSelector(state => state.userInfo)
     const [newDepart, setNewDepart] = useState({
         userId: id,
         departName: "",
 
     })
+    const currentCider = useSelector(state => state.reRendering.cider)
+    const updateCider = !currentCider
+    const dispatch = useDispatch()
 
     const getValue = e => {
         const {value} = e.target;
@@ -29,7 +33,11 @@ function DepartCreate({handleModal4}) {
             userId: newDepart.userId,
             departName: newDepart.departName,
         }).then(function (response) {
-            console.log("response:", response);
+            console.log("채널 생성 결과:", response)
+            newDepartFrame.push(newDepart)
+            dispatch(reRenderingActions.saveReRendering(
+                {cider: updateCider }
+            ))
         })
     }
     

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
@@ -19,11 +19,20 @@ import Fade from '@mui/material/Fade';
 
 
 function DepartList(){
-  
+  const [ newDepartFrame, setNewDepartFrame ] = useState([])
   const { departList } = useSelector(state => state.userInfo)
   const { id } = useSelector(state => state.userInfo)
   const dispatch = useDispatch()
 
+  function updateDepartList() {
+    const newDepartList = departList
+    return newDepartList
+  }
+  
+  useEffect(() => {
+    updateDepartList() 
+    console.log(departList);
+  }, [departList])
 
     const handleClose = () => {
       setAnchorEl(null);
@@ -44,7 +53,7 @@ function DepartList(){
        }
     ))
     }
-
+    
     const departName = useSelector(state => state.depart.departName)
 
     const [isOpenModal4, setOpenModal4] = useState(false);
@@ -76,7 +85,8 @@ function DepartList(){
       handleClose()
       onClickToggleModal5()
     }
-
+    const departFrame = newDepartFrame
+    console.log("합체!: ",departFrame)
     const departId = useSelector(state => state.depart.departId)
     const findId = (e) => e.departId === departId
     return (
@@ -122,7 +132,7 @@ function DepartList(){
           width="800px"
           height="400px"
         >
-          <DepartCreate handleModal4={handleModal4} />
+          <DepartCreate newDepartFrame={newDepartFrame} handleModal4={handleModal4} />
         </Modal>
       )}
        {isOpenModal5 && (

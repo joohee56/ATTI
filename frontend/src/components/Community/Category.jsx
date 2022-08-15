@@ -29,7 +29,7 @@ function CategoryList(){
     const dispatch = useDispatch()
     const departName = useSelector(state => state.depart.departName)
 
-    const [changeCss, setChangeCss] = useState(null);
+    const [changeCss, setChangeCss] = useState(1);
    
     const rendering = () => {
         const noClickStyle = {
@@ -114,7 +114,7 @@ function CategoryList(){
 
 function Category(){
     const departName = useSelector(state => state.depart.departName)
-    const [changeCss, setChangeCss] = useState(0);
+    const [changeCss, setChangeCss] = useState(1);
     const noClickStyle = {
         display: "flex",
         flexDirection: "row",

@@ -44,7 +44,7 @@ const categorySlice = createSlice({
         categoryAnoInfo: null,
         categoryComAnoInfo: null,
         categoryComInfo: null,
-        categoryName: null,
+        categoryName: "공지사항",
         cType: null,
         departId: null,
         userId: null
