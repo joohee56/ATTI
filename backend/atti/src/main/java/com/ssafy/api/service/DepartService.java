@@ -12,4 +12,5 @@ public interface DepartService {
 	
 	List<CategoryListRes> joinChannel(String departCode, String userId); // 채널 입장
 	
+	Long getDepartIdByCode(String departCode);
 }

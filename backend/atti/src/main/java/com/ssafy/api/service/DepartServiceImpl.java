@@ -139,9 +139,16 @@ public class DepartServiceImpl implements DepartService {
 		userDepartRepository.save(ud);
 		
 		// 채널 가입 시 채널 카테고리 리스트 넘김
-		List<CategoryListRes> categoryList = categoryService.getCategorList(departId);
+		List<CategoryListRes> categoryList = categoryService.getCategoryList(departId);
 		
 		return categoryList;
+	}
+	
+	@Override
+	public Long getDepartIdByCode(String departCode) {
+		Depart depart = departRepository.findByDepartCode(departCode).orElse(null);
+		if(depart == null) return null;
+		return depart.getDepartId();
 	}
 	
 

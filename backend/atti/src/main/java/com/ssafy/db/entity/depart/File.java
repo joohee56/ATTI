@@ -1,5 +1,7 @@
 package com.ssafy.db.entity.depart;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,6 +33,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class File {
 	
+	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="file_id")
 	private Long fileId;					// 첨부 파일 ID
@@ -44,9 +47,23 @@ public class File {
 	@Column(name="file_folder")
 	private String fileFolder;				// 저장 폴더
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="post_id")
-	private Post post;						// 게시글 ID (FK)
+	@Column(name="post_title")
+	private String postTitle;
 	
+	@Column(name="post_reg_date")
+	private LocalDateTime postRegDate;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_id")
+	@JsonIgnore
+	private User user;	
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="category_id")
+	private Category category;	
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="depart_id")
+	private Depart depart;
 	/////////////////////////////////////////////////////// 
 }

@@ -15,6 +15,7 @@ import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.depart.UserPostLike;
 import com.ssafy.db.entity.user.User;
+import com.ssafy.db.entity.webclass.Course;
 import com.ssafy.db.repository.CategoryRepository;
 import com.ssafy.db.repository.CommentRepository;
 import com.ssafy.db.repository.DepartRepository;
@@ -78,7 +79,13 @@ public class PostServiceImpl implements PostService {
 		
 //		post.setUser(user); 무덤
 	}
-
+	
+	@Override	// 카테고리 ID 에 해당하는 게시글 조회
+	public List<Post> findByCategory(Category category){
+		List<Post> post = postRepository.findByCategory(category);
+		return post;
+	}
+	
 	@Override // 게시글 전체 조회
 	public List<PostViewAllRes> viewAllPosts(Long departId, Long categoryId, String userId) {
 
@@ -131,10 +138,16 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override // 게시글 상세 조회
-	public PostViewOneRes viewFindOne(Long postId) {
+	public PostViewOneRes viewFindOne(Long postId, String userId) {
 		Post post = postRepository.findById(postId).orElse(null);
+		User user = userRepository.findById(userId).orElse(null);
+		UserPostLike like = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
+		boolean myPostLike = false;
+		if(like != null)
+			myPostLike = true;
 		
-		return new PostViewOneRes(post);
+		Long postLikeCount = userPostLikeRepository.countByPost(post);
+		return new PostViewOneRes(post, myPostLike, postLikeCount);
 	}
 
 	@Override // 이름으로 게시글 검색

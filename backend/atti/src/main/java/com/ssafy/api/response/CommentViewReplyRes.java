@@ -23,12 +23,15 @@ public class CommentViewReplyRes {
 	
 	private String userId = "익명";
 	
-	public CommentViewReplyRes(Comment comment) {
+	boolean myCommentLike;
+	
+	public CommentViewReplyRes(Comment comment, boolean myCommentLike) {
 		this.commentId = comment.getCommentId();
 		this.commentContent = comment.getCommentContent();
 		this.commentRegDate = comment.getCommentRegDate();
 		this.commentGroup = comment.getCommentGroup();
 		this.commentLevel = comment.getCommentLevel();
+		this.myCommentLike = myCommentLike;
 		this.seq = comment.isSeq();
 		if(comment.getUser() != null) {
 			this.userId = comment.getUser().getUserId();

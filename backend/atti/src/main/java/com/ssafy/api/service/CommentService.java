@@ -8,7 +8,7 @@ import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Post;
 
 public interface CommentService {
-	List<CommentViewReplyRes> viewReply(Long postId); // 댓글 보기
+	List<CommentViewReplyRes> viewReply(Long postId, String userId); // 댓글 보기
 	
 	void createReply(CommentWriteReq commentWriteReq); // 댓글쓰기
 	
