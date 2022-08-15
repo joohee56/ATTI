@@ -17,10 +17,13 @@ import com.ssafy.api.request.DepartCreateReq;
 import com.ssafy.api.request.DepartJoinReq;
 import com.ssafy.api.request.ViewAllPostsReq;
 import com.ssafy.api.response.CategoryListRes;
+import com.ssafy.api.response.DepartJoinListRes;
 import com.ssafy.api.response.PostViewAllRes;
+import com.ssafy.api.response.UserInfoRes;
 import com.ssafy.api.service.CategoryService;
 import com.ssafy.api.service.DepartService;
 import com.ssafy.api.service.PostService;
+import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.depart.Depart;
 
 @RestController // depart/{depart_code}/category/{category_name}/post
@@ -47,10 +50,13 @@ public class DepartController {
 		return new ResponseEntity<List<CategoryListRes>>(categoryList, HttpStatus.OK);
 	}
 	
-	@GetMapping("/{departCode}") // 채널 입장 
-	public ResponseEntity<String> joinChannel(@PathVariable String departCode) {
+	@GetMapping("/{departCode}/{userId}") // 채널 입장 
+	public ResponseEntity<? extends BaseResponseBody> joinChannel(@PathVariable String departCode, @PathVariable String userId) {
 //		System.out.println("===========================" + departId + "=============================");
-		return new ResponseEntity<String>(departService.joinChannel(departCode), HttpStatus.OK);
+		List<CategoryListRes> categoryList = departService.joinChannel(departCode, userId);
+		if(categoryList == null)
+			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "채널 코드와 일치하는 채널이 없습니다."));
+		return ResponseEntity.status(200).body(DepartJoinListRes.of(200, "success",categoryList));
 	}
 	
 	@GetMapping("/{departId}/category/{categoryId}/user/{userId}") // 게시글 전체 조회
