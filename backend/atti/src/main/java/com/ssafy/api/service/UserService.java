@@ -163,7 +163,7 @@ public class UserService {
 		List<UserDepartRes> dtoList = new ArrayList<>();
 		
 		for(UserDepart d : list) {
-			dtoList.add(new UserDepartRes(d.getDepart().getDepartId(), d.getUser().getUserId()));
+			dtoList.add(new UserDepartRes(d.getDepart().getDepartId(), d.getDepart().getDepartName()));
 		}
 		
 		return dtoList;
