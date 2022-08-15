@@ -61,12 +61,12 @@ public class Course {
 //	@Temporal(TemporalType.TIME)
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	@Column(name="course_start_time")	
-	private Date courseStartTime;				// 시작 시간
+	private LocalDateTime courseStartTime;				// 시작 시간
 	
 //	@Temporal(TemporalType.TIME)
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	@Column(name="course_end_time")
-	private Date courseEndTime;					// 종료 시간
+	private LocalDateTime courseEndTime;					// 종료 시간
 	
 //	@DateTimeFormat(pattern = "yyyy-MM-dd")
 ////	@Temporal(TemporalType.DATE)

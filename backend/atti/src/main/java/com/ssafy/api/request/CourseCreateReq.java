@@ -26,10 +26,10 @@ public class CourseCreateReq {
 	private String courseTeacherName;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-	private Date courseStartTime;
+	private LocalDateTime courseStartTime;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-	private Date courseEndTime;
+	private LocalDateTime courseEndTime;
 	
 //	@JsonFormat(pattern = "yyyy-MM-dd")
 //	private Date courseDate; 
