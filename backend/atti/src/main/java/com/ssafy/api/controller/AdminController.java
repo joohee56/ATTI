@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.CourseOneDayReq;
@@ -19,7 +18,6 @@ import com.ssafy.api.response.CourseGetRes;
 import com.ssafy.api.response.CourseListRes;
 import com.ssafy.api.service.AdminService;
 import com.ssafy.api.service.CourseService;
-import com.ssafy.db.entity.webclass.Attendance;
 
 @RestController
 @RequestMapping("/admin")
