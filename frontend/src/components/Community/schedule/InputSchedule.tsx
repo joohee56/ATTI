@@ -1,6 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import { weekClassSchedule } from "./SchedulePageWrapper";
-
+import {
+  AdminScheduleAddButton,
+  AdminScheduleAddText,
+  AdminScheduleErrorText,
+  AdminScheduleInput,
+  AdminScheduleLeftDiv,
+  AdminScherduleInputButtonWrapper,
+  AdminScherduleInputWrapper,
+  AdminSheduleSelect,
+} from "./SchedulePageStyle";
+import { ButtonBlue } from "../../ButtonStyled";
 const InputSchedule = ({
   weekList,
   week,
@@ -113,57 +123,65 @@ const InputSchedule = ({
   };
 
   return (
-    <div>
-      <div>
-        <span>
-          <div>과목명</div>
-          <div>
-            <input id="cousrseName" ref={cousrseNameRef} />
-          </div>
-        </span>
-      </div>
-      <div>
-        <span>
-          <div>시작시간</div>
-          <div>
-            <select onChange={onChange} defaultValue={time[weekList.timeIndex]}>
-              {time.map((e: string, i: number) => (
-                <option value={e} key={e} id={i.toString()}>
-                  {e}
-                </option>
-              ))}
-            </select>
-          </div>
-        </span>
-      </div>
-      <div>
-        <span>
-          <div>종료시간</div>
-          <div>
-            <select
-              onChange={endTimeChange}
-              defaultValue={time[saveStartTimeIndex]}
-            >
-              {endTime.map((e) => (
-                <option value={e} key={e}>
-                  {e}
-                </option>
-              ))}
-            </select>
-          </div>
-        </span>
-      </div>
-      <div>
-        <span>
-          <div>교수명</div>
-          <div>
-            <input id="courseProf" ref={cousrseProfRef} />
-          </div>
-        </span>
-      </div>
-      {checkClass && <div>같은 시간에 수업이 있습니다.</div>}
-      <button onClick={onClick}>추가</button>
-    </div>
+    <>
+      <AdminScheduleAddText>시간표 추가</AdminScheduleAddText>
+      <AdminScheduleLeftDiv>
+        <AdminScherduleInputButtonWrapper>
+          과목명
+        </AdminScherduleInputButtonWrapper>
+        <AdminScherduleInputWrapper>
+          <AdminScheduleInput id="cousrseName" ref={cousrseNameRef} />
+        </AdminScherduleInputWrapper>
+      </AdminScheduleLeftDiv>
+      <AdminScheduleLeftDiv>
+        <AdminScherduleInputButtonWrapper>
+          시작시간
+        </AdminScherduleInputButtonWrapper>
+        <AdminScherduleInputWrapper>
+          <AdminSheduleSelect
+            onChange={onChange}
+            defaultValue={time[weekList.timeIndex]}
+          >
+            {time.map((e: string, i: number) => (
+              <option value={e} key={e} id={i.toString()}>
+                {e}
+              </option>
+            ))}
+          </AdminSheduleSelect>
+        </AdminScherduleInputWrapper>
+      </AdminScheduleLeftDiv>
+      <AdminScheduleLeftDiv>
+        <AdminScherduleInputButtonWrapper>
+          종료시간
+        </AdminScherduleInputButtonWrapper>
+        <AdminScherduleInputWrapper>
+          <AdminSheduleSelect
+            onChange={endTimeChange}
+            defaultValue={time[saveStartTimeIndex]}
+          >
+            {endTime.map((e) => (
+              <option value={e} key={e}>
+                {e}
+              </option>
+            ))}
+          </AdminSheduleSelect>
+        </AdminScherduleInputWrapper>
+      </AdminScheduleLeftDiv>
+      <AdminScheduleLeftDiv>
+        <AdminScherduleInputButtonWrapper>
+          교수명
+        </AdminScherduleInputButtonWrapper>
+        <AdminScherduleInputWrapper>
+          <AdminScheduleInput id="courseProf" ref={cousrseProfRef} />
+        </AdminScherduleInputWrapper>
+      </AdminScheduleLeftDiv>
+      {checkClass && (
+        <AdminScheduleErrorText>
+          같은 시간에 수업이 있습니다.
+        </AdminScheduleErrorText>
+      )}
+      <AdminScheduleAddButton onClick={onClick}>추가</AdminScheduleAddButton>
+    </>
   );
 };
 

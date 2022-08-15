@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { palette } from "../../../styles/palette";
+import { ButtonBlue } from "../../ButtonStyled";
 
 export const LeftBar = styled.div`
   width: 100px;
@@ -82,4 +83,63 @@ export const TextWrapper = styled.div<{
 }>`
   text-align: center;
   color: ${(props) => `${props.calcColor}`};
+`;
+
+export const AdminScheduleLeftDiv = styled.div`
+  display: flex;
+`;
+
+export const AdminScherduleInputButtonWrapper = styled.div`
+  width: 100px;
+  background-color: #eaeffe;
+  border-radius: 16px;
+  height: 50px;
+  margin-right: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+`;
+
+export const AdminScherduleInputWrapper = styled.div`
+  width: 250px;
+  height: 45px;
+`;
+
+export const AdminScheduleInput = styled.input`
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  border: 1px solid #bfbfbf;
+  background-color: #f7f8f8;
+`;
+
+export const AdminSheduleSelect = styled.select`
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  border: 1px solid #bfbfbf;
+  background-color: #f7f8f8;
+  text-align: center;
+`;
+
+export const AdminScheduleAddButton = styled(ButtonBlue)`
+  width: 100px;
+  height: 50px;
+  border-radius: 20px;
+  margin-top: 50px;
+`;
+
+export const AdminScheduleAddText = styled.div`
+  font-size: xx-large;
+  font-weight: bolder;
+  margin-bottom: 35px;
+  background: ${palette.main_grBlue};
+  color: transparent;
+  -webkit-background-clip: text;
+`;
+
+export const AdminScheduleErrorText = styled.div`
+  color: #ed8687;
+  font-weight: bolder;
 `;

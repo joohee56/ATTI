@@ -220,45 +220,65 @@ const SchedulePageWrapper = () => {
           weekStartDate: "2022-08-14",
         })
         .then((res) => {
-          let weekClass = res.data.courseResList.map((e: any) => {
-            const weekName = moment(e.courseDate, "YYYY-MM-DD").format("dddd");
-            const courseStartTime = moment(
-              e.courseStartTime,
-              "YYYY-MM-DD HH:mm"
-            ).format("HH:mm");
-            const courseEndTime = moment(
-              e.courseEndTime,
-              "YYYY-MM-DD HH:mm"
-            ).format("HH:mm");
-            let temp = { ...e, weekName, courseStartTime, courseEndTime };
+          if (res.data.courseResList !== null) {
+            let weekClass = res.data.courseResList.map((e: any) => {
+              const weekName = moment(e.courseDate, "YYYY-MM-DD").format(
+                "dddd"
+              );
+              const courseStartTime = moment(
+                e.courseStartTime,
+                "YYYY-MM-DD HH:mm"
+              ).format("HH:mm");
+              const courseEndTime = moment(
+                e.courseEndTime,
+                "YYYY-MM-DD HH:mm"
+              ).format("HH:mm");
+              let temp = { ...e, weekName, courseStartTime, courseEndTime };
 
-            return temp;
-          });
+              return temp;
+            });
 
-          monToFri.forEach((e: any) => {
-            weekSchedule.push(daySchedule.slice());
-          });
-          for (let i = 0; i < monToFri.length; i++) {
-            const startWeek = moment()
-              .day(i + 1)
-              .format("YYYY-MM-DD");
-            for (let j = 0; j < weekClass.length; j++) {
-              if (weekClass[j].weekName === monToFri[i]) {
-                for (let k = 0; k < time.length; k++) {
-                  if (time[k] === weekClass[j].courseStartTime) {
-                    weekSchedule[i][k] = weekClass[j];
+            monToFri.forEach((e: any) => {
+              weekSchedule.push(daySchedule.slice());
+            });
+            for (let i = 0; i < monToFri.length; i++) {
+              const startWeek = moment()
+                .day(i + 1)
+                .format("YYYY-MM-DD");
+              for (let j = 0; j < weekClass.length; j++) {
+                if (weekClass[j].weekName === monToFri[i]) {
+                  for (let k = 0; k < time.length; k++) {
+                    if (time[k] === weekClass[j].courseStartTime) {
+                      weekSchedule[i][k] = weekClass[j];
+                    }
                   }
                 }
               }
+              let tempWeekList = weekList;
+              if (tempWeekList.length < 5) {
+                tempWeekList.push(startWeek);
+                setWeekList(tempWeekList);
+              }
             }
-            let tempWeekList = weekList;
-            if (tempWeekList.length < 5) {
-              tempWeekList.push(startWeek);
-              setWeekList(tempWeekList);
+            setWeekClassState(weekSchedule);
+            setWeek(weekClass);
+          } else {
+            monToFri.forEach((e: any) => {
+              weekSchedule.push(daySchedule.slice());
+            });
+            for (let i = 0; i < monToFri.length; i++) {
+              const startWeek = moment()
+                .day(i + 1)
+                .format("YYYY-MM-DD");
+
+              let tempWeekList = weekList;
+              if (tempWeekList.length < 5) {
+                tempWeekList.push(startWeek);
+                setWeekList(tempWeekList);
+              }
             }
+            setWeekClassState(weekSchedule);
           }
-          setWeekClassState(weekSchedule);
-          setWeek(weekClass);
         })
         .catch((e) => {
           console.log(e);
@@ -324,6 +344,7 @@ const SchedulePageWrapper = () => {
           onClickToggleModal={() => {
             setIsOpenModal(false);
           }}
+          height="55vh"
         >
           <InputSchedule
             weekList={selectDay}

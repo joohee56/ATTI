@@ -31,7 +31,7 @@ function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
   const { auth } = useSelector(state => state.userInfo)
   
   async function getPosts(){
-    api.get(`/depart/1/category/2/user/gusxo123`
+    api.get(`/depart/2/category/1/user/test1234`
     ).then((res) => {
       console.log("결과: ", res)
       setPost(res.data)

@@ -10,6 +10,7 @@ import Class from "../components/Community/Class";
 import CommunityBg from "../assets/images/communityBG.png";
 import { categoryState } from "../store/community/Category";
 import { departState } from "../store/community/Depart";
+import AdminPageWrapper from "../components/Community/adminpage/AdminPageWrapper";
 
 function Community() {
   // const departName = useSelector(categoryState => categoryState.depart.departName)
@@ -26,7 +27,8 @@ function Community() {
         {(categoryName.categoryName === "공지사항" ||
           categoryName.categoryName === "질문" ||
           categoryName.categoryName === "자유게시판" ||
-          categoryName.categoryName === "자료실") && <NormalPostFrame />}
+          categoryName.categoryName === "자료실") && <AdminPageWrapper />}
+        {/* {categoryName.categoryName === "관리자페이지" && <AdminPageWrapper />} */}
         {/* {categoryName.categoryName === "수업실" && (
           <Class/>
         )} */}
