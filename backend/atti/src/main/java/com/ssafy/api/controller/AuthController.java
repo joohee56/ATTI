@@ -42,6 +42,7 @@ import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.response.CategoryListRes;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.UserDepartRes;
+import com.ssafy.api.response.UserKakaoLoginRes;
 import com.ssafy.api.response.UserLoginRes;
 import com.ssafy.api.service.AdminRoleService;
 import com.ssafy.api.service.AuthService;
@@ -205,7 +206,7 @@ public class AuthController {
 	
 	// 카카오로그인
 	@GetMapping("/login/kakao")
-    public ResponseEntity<UserLoginRes> redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
         System.out.println("code:: " + code);
 
         // 접속토큰 get
@@ -239,7 +240,7 @@ public class AuthController {
         user = userService.findByUserId(snsId);
         // 0. 탈퇴한 회원인지 확인
  		if(user.isUserDeleteInfo()==true)
- 			return ResponseEntity.status(404).body(UserLoginRes.failOf(404, "탈퇴한 회원입니다."));
+ 			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "탈퇴한 회원입니다."));
      		
  		// 1. 가입한 채널 리스트 가져옴
  			List<UserDepartRes> userDepartList = userService.getDepartList(snsId);
@@ -270,7 +271,7 @@ public class AuthController {
 		// 5. 유저 이름 가져옴
 		String kakaoUserName = user.getUserName();
 		
-		return ResponseEntity.ok(UserLoginRes.of(200, "Success", kakaoToken, userDepartList, userCategoryList, postList, admin, userName));	//토큰 넘김	
+		return ResponseEntity.ok(UserKakaoLoginRes.of(200, "Success", kakaoToken, userDepartList, userCategoryList, postList, admin, userName, snsId));	//토큰 넘김	
     }
 
 	
@@ -312,7 +313,6 @@ public class AuthController {
 	
 	// 사용자가 인증번호 전송
 	@GetMapping("/phone/authCode")
-
 	private ResponseEntity<?> authPhoneCode(@RequestParam("code") String code) {
 //		String correctCode = (String)session.getAttribute("code");
 		
