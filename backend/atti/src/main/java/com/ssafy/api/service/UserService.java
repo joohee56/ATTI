@@ -65,6 +65,7 @@ public class UserService {
 				.userId(kakaoUser.getSnsId())
 				.userName(kakaoUser.getUserName())
 				.email(kakaoUser.getEmail())
+				.social(kakaoUser.getSnsId())
 				.birth(kakaoUser.getBirth()).build();
 		
 		userRepository.save(user);
