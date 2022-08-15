@@ -23,7 +23,7 @@ import { palette } from '../../styles/palette';
 
 import ReactHtmlParser from 'react-html-parser'
 
-function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
+function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
     const [single, setSingle] = useState([])
     const [comments, setComments] = useState([])
     
@@ -108,29 +108,6 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                 },
             )
 
-            // await axios
-            // .post(
-            //     BACKEND_URL + "/post/comment/write",
-            //     {
-            //         commentId: comment.commentId,
-            //         postId: comment.postId,
-            //         categoryId: comment.categoryId,
-            //         departId: comment.departId,
-            //         userId: comment.userId,
-            //         commentRegDate: comment.commentRegDate,
-            //         commentDeleteInfo: comment.commentDeleteInfo,
-            //         commentAnoInfo: getAnoInfoNum(),
-            //         commentContent: comment.commentContent,
-            //         commentGroup: comment.commentGroup,
-            //         commentLevel: comment.commentLevel,
-            //         seq: comment.seq
-            //     },
-            //     {
-            //     headers: {
-            //         "Content-type": "application/json",
-            //     },
-            //     }
-            // )
             .then((res) => {
                 console.log("response:", res);
                 dispatch(reRenderingActions.saveReRendering(
@@ -164,7 +141,7 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
 
     const deletePost = () => {
 
-        api.delete(`/post/delete/${single.postId}`,
+        api.delete(`/post/delete/${postId}`,
         )
         .then((res) => {
             console.log("response:", res);
@@ -172,44 +149,12 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                 {cider: updateCider }
             ))
         });
-
-        // axios.delete(
-        //         BACKEND_URL + `/post/delete/${single.postId}`,
-        //         {
-        //         headers: {
-        //             "Content-type": "application/json",
-        //         },
-        //         }
-        //     )
-        //     .then((res) => {
-        //         console.log("response:", res);
-        //         dispatch(reRenderingActions.saveReRendering(
-        //             {cider: updateCider }
-        //         ))
-    
-        //     });
         }
     
     function DeleteFunction(){
         onClickToggleModal2();
         deletePost();
     }
-
-    // 글 좋아요 부분
-    const [postLikeCount, setPostLikeCount] = useState([])
-    const postLike = () => {
-        console.log(single.postId)
-        api.get(`/post/likeBtn/${single.postId}/gusxosmsdy`
-        )
-        .then((res) => {
-            console.log("response:", res);
-            setPostLikeCount(res.data)
-        });
-    }
-    
-    useEffect(() => {
-        postLike()
-    }, [postLikeCount]);
 
 
 ///////////////////////////////////////////////////////////////////
@@ -237,7 +182,7 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                         <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
                         <span style={{margin: "10px 0 0 0"}}>24</span>
                         &nbsp; &nbsp; 
-                        <Checkbox style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite onClick={postLike}/>}/> 
+                        <Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
                         <span style={{margin: "10px 0 0 0"}}>{postLikeCount}</span>
                     </div>
                 </div>

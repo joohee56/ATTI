@@ -187,9 +187,9 @@ public class PostServiceImpl implements PostService {
 		
 		// 없다면, 추가
 		if(userPostLike == null)
-			userPostLikeRepository.save(new UserPostLike().builder().post(post).user(user).build());
+			userPostLikeRepository.save(UserPostLike.builder().post(post).user(user).build());
 		// 있다면, 삭제
-		userPostLikeRepository.deleteById(userPostLike.getUserPostLikeId());
+		else userPostLikeRepository.deleteById(userPostLike.getUserPostLikeId());
 		
 		// 변화된 갯수 리턴
 		long count = userPostLikeRepository.countByPost(post);

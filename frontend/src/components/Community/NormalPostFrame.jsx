@@ -39,20 +39,8 @@ function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
       setPost(res.data)
       getLength(res.data.length)
     })
-
-    // axios.get(
-    //   BACKEND_URL + "/post",
-    //   {
-    //     headers: {
-    //       "Content-type": "application/json",
-    //     },
-    //   }
-    // ).then((res) => {
-    //   console.log(res.data)
-    //   setPost(res.data)
-    //   getLength(res.data.length)
-    // })
   }
+  
   const currentCider = useSelector(state => state.reRendering.cider)
   const [post,setPost] = useState([])
   useEffect(() => {
@@ -80,8 +68,8 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
     boxShadow: "2px 2px 2px grey"
   };
  function TwoFunctions(id){
-  handleModal2();
-  getPostId(id);
+  handleModal2()
+  getPostId(id)
  }
 
  function timeForToday(value) {
@@ -202,6 +190,24 @@ function NormalPostFrame() {
     setPostId(postId)
   }
 
+   // 글 좋아요 부분
+   const [postLikeCount, setPostLikeCount] = useState([])
+   const postLike = () => {
+       console.log(postId)
+       api.get(`/post/likeBtn/${postId}/gusxosmsdy`
+       )
+       .then((res) => {
+           console.log("response:", res);
+           setPostLikeCount(res.data)
+       });
+   }
+   
+   const currentCider = useSelector(state => state.reRendering.cider)
+   useEffect(() => {
+       postLike()
+   }, [currentCider]);
+
+
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(1);
   
@@ -271,7 +277,7 @@ function NormalPostFrame() {
             width="1000px"
             height="680px"
           >
-            <PostDetail postId={postId} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
+            <PostDetail postId={postId} postLike={postLike} postLikeCount={postLikeCount} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
           </Modal>
         )}
         {isOpenModal3 && (

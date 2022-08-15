@@ -264,15 +264,24 @@ function Category(){
       );
     }
     const adminPage = useSelector(state => state.reRendering.setAdminPage)
+    const myPage = useSelector(state => state.reRendering.setMyPage)
     const getAdminPage = (i) => {
         return !i
       }
+    const getMyPage = (j) => {
+        return false
+    }
     const dispatch = useDispatch()
     function adminPageFunction(){
         setChangeCss(9999)
         dispatch(reRenderingActions.saveSetAdminPage(
             {
                 setAdminPage: getAdminPage(adminPage)
+            }
+        ))
+        dispatch(reRenderingActions.saveSetMyPage(
+            {
+                setMyPage : getMyPage(myPage)
             }
         ))
     }
