@@ -74,4 +74,9 @@ public class CategoryServiceImpl implements CategoryService {
 		
 		return dtoList;
 	}
+	
+	@Override
+	public Category getByCategoryId(Long categoryId) {
+		return categoryRepository.findById(categoryId).orElse(null);
+	}
 }

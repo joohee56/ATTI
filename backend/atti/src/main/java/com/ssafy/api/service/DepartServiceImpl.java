@@ -144,5 +144,12 @@ public class DepartServiceImpl implements DepartService {
 		return categoryList;
 	}
 	
+	@Override
+	public Long getDepartIdByCode(String departCode) {
+		Depart depart = departRepository.findByDepartCode(departCode).orElse(null);
+		if(depart == null) return null;
+		return depart.getDepartId();
+	}
+	
 
 }

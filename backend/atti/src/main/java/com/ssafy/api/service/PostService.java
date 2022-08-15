@@ -7,6 +7,7 @@ import com.ssafy.api.request.PostWriteReq;
 import com.ssafy.api.request.ViewAllPostsReq;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.PostViewOneRes;
+import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Post;
 
 public interface PostService {
@@ -25,4 +26,6 @@ public interface PostService {
 	void editPost(Post editPost); // 단일 게시글 수정
 	
 	long postLike(Long postId, String userId);	// 좋아요 기능 - 주희
+	
+	public List<Post> findByCategory(Category category); // 카테고리 ID에 해당하는 게시글 조회
 }
