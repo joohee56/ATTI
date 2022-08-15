@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.ssafy.common.model.response.BaseResponseBody;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModel;
+//import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 /**
@@ -15,9 +15,9 @@ import lombok.*;
 
 @Getter
 @Setter
-@ApiModel("UserLoginPostResponse")
+//@ApiModel("UserLoginPostResponse")
 public class UserLoginRes extends BaseResponseBody {
-	@ApiModelProperty(name="JWT 인증 토큰" , example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
+//	@ApiModelProperty(name="JWT 인증 토큰" , example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
 	String accessToken;
 	
 	// 가입한 채널 리스트

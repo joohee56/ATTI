@@ -13,9 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DepartCreateReq {
 	
-	private String departName;
+	private String departName;	// 채널명
 	
-	private String userId;
+	private String userId;		// 관리자 ID
 	
 	@Builder
 	public DepartCreateReq(String departName, String userId) {
