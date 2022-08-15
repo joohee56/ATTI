@@ -80,4 +80,7 @@ public class Course {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="depart_course")
 	private Depart depart;						// 채널 ID (FK)
+	
+	@OneToMany(mappedBy = "course",cascade = CascadeType.ALL,orphanRemoval = true)
+	private List<Attendance> attendanceList = new ArrayList<>();
 }

@@ -1,5 +1,6 @@
 package com.ssafy.db.entity.webclass;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,7 +39,8 @@ public class Attendance {
 	@JoinColumn(name="user_id")
 	private User user;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name="course_id")
 	private Course course;
 	
