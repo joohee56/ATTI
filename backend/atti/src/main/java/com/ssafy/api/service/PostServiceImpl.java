@@ -49,7 +49,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override // 글쓰기
 	@Transactional // 쓰기가 필요할땐 그냥 Transactional
-	public void createWriting(PostWriteReq postWriteReq) {
+	public Long createWriting(PostWriteReq postWriteReq) {
 //		Post post = Post.builder()
 //				.postTitle(postWriteReq.getPostTitle())
 //				.postContent(postWriteReq.getPostContent())
@@ -74,10 +74,11 @@ public class PostServiceImpl implements PostService {
 				.category(category)
 				.user(user)
 				.build();
+		Long postId = postRepository.save(post).getPostId();
 		
-		postRepository.save(post);
 		
 //		post.setUser(user); 무덤
+		return postId;
 	}
 	
 	@Override	// 카테고리 ID 에 해당하는 게시글 조회
