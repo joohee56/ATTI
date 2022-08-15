@@ -35,7 +35,11 @@ const AdminAttendStudentList = ({
         .then((e) => {
           console.log(e.data.courseResList);
           // e.data.courseResList
-          setStudentList(e.data.courseResList);
+          let temp = e.data.courseResList.map((element: any) => {
+            return { ...element, attend: element.attendancedContent };
+          });
+          console.log(temp);
+          setStudentList(temp);
           setLoading(true);
         })
         .catch((e) => {
@@ -43,7 +47,21 @@ const AdminAttendStudentList = ({
         });
     }
   }, [courseId]);
-
+  const onChange = (e: any) => {
+    console.log(e.target.id, e.target.value);
+    api
+      .put("/course/changeAttendance", {
+        courseId,
+        userId: e.target.id,
+        attendancedContent: e.target.value,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
   return (
     <div>
       {courseName === "" ? (
@@ -74,10 +92,20 @@ const AdminAttendStudentList = ({
                   {studentList[e].userName}
                 </AdminAttednTableTd>
                 <td>
-                  <AdminSelect>
-                    <option value="출석">출석</option>
-                    <option value="지각">지각</option>
-                    <option value="결석">결석</option>
+                  <AdminSelect
+                    id={studentList[e].userId}
+                    onChange={onChange}
+                    defaultValue={studentList[e].attend}
+                  >
+                    <option key="출석" value="출석">
+                      출석
+                    </option>
+                    <option key="지각" value="지각">
+                      지각
+                    </option>
+                    <option key="결석" value="결석">
+                      결석
+                    </option>
                   </AdminSelect>
                 </td>
               </AdminAttendTableTr>

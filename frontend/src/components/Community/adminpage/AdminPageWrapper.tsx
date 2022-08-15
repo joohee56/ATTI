@@ -7,9 +7,9 @@ import AdminSchedule from "./AdminSchedule";
 import styled from "styled-components";
 
 const AdminPageWrapperDiv = styled.div`
-  background-color: white;
-  width: 75%;
-  height: 90vh;
+  /* background-color: white; */
+  width: 100%;
+  /* height: 90vh; */
   border-radius: 30px;
   margin-top: 15px;
   margin-bottom: 15px;

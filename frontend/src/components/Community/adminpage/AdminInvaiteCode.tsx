@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { api } from "../../../utils/api";
 
 const MainContent = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 70vh;
+  height: 100%;
 `;
 
 const ContentWrapper = styled.div`
@@ -15,7 +17,9 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 65%;
+  width: 100%;
+  margin-top: 25vh;
+  /* margin-left: 25%;  */
 `;
 
 const Input = styled.input`
@@ -25,16 +29,42 @@ const Input = styled.input`
 `;
 
 function AdminInvaiteCode() {
+  const [departCode, setDepartCode] = useState<string>("");
+  useEffect(() => {
+    api("/admin/depart/check/3").then((res) => {
+      setDepartCode(res.data.departCode);
+    });
+  }, []);
   return (
     <MainContent>
       <ContentWrapper>
-        <div>초대 코드</div>
-        <div>SSAFY 7기 채널에 입장할 수 있는 초대 코드입니다.</div>
-        <div>
+        <div
+          style={{
+            fontSize: "xx-large",
+            fontWeight: "bolder",
+            marginBottom: "5vh",
+          }}
+        >
+          초대 코드
+        </div>
+        <div
+          style={{
+            fontSize: "large",
+            fontWeight: "bold",
+            marginBottom: "3vh",
+          }}
+        >
+          SSAFY 7기 채널에 입장할 수 있는 초대 코드입니다.
+        </div>
+        <div
+          style={{
+            marginBottom: "3vh",
+          }}
+        >
           (가입된 채널이 없을 시의 홈 화면이나 채널 추가 버튼을 클릭 시 나오는
           입력창에 입력하여 현재 채널에 입장할 수 있습니다.)
         </div>
-        <Input disabled={true} value="Q456S46712341fasd"></Input>
+        <Input disabled={true} value={departCode}></Input>
       </ContentWrapper>
     </MainContent>
   );
