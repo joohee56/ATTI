@@ -78,6 +78,7 @@ const SchedulePageWrapper = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [goTo, setGoto] = useState("");
+  const departId = useSelector((store: RootState) => store.depart.departId);
   const [insertSchedule, setInsertSchedule] = useState<weekClassSchedule>({
     courseId: "",
     courseName: "",
@@ -107,13 +108,13 @@ const SchedulePageWrapper = () => {
   const navigate = useNavigate();
 
   async function connectMeeting(e: any) {
-    await api.put("/course/enterCourse", {
-      courseId: e.target.value,
-      userId: userInfo.id,
-      clickDate: moment().format("YYYY-MM-DD HH:mm"),
-    });
+    // await api.put("/course/enterCourse", {
+    //   courseId: e.target.value,
+    //   userId: userInfo.id,
+    //   clickDate: moment().format("YYYY-MM-DD HH:mm"),
+    // });
     await api
-      .get("/course/attendence/2")
+      .get("/course/attendence/" + departId)
       .then((res) => {
         console.log(res.data);
         dispatch(setStudentList({ userList: [...res.data.attendenceList] }));
@@ -123,6 +124,7 @@ const SchedulePageWrapper = () => {
       .catch((e) => {
         console.log(e);
       });
+    navigate("/classmeeting?courseId=" + e.target.value);
   }
 
   useEffect(() => {
@@ -147,7 +149,7 @@ const SchedulePageWrapper = () => {
     // startTime,endTime 년-월-일 시간:분 으로 할것 (띄어쓰기 잊기 말기)
     api
       .post("/course/create", {
-        departId: 3,
+        departId: departId,
         courseName: element.courseName,
         courseTeacherName: element.courseTeacherName,
         courseStartTime: element.courseStartTime,
@@ -213,6 +215,7 @@ const SchedulePageWrapper = () => {
   };
 
   const deleteSchedule = (element: weekClassSchedule) => {
+    console.log(element.courseId);
     api
       .delete("/course/delete/" + element.courseId)
       .then((res) => {
@@ -268,8 +271,8 @@ const SchedulePageWrapper = () => {
     if (weekStart !== undefined) {
       api
         .post("/course", {
-          departId: 3,
-          weekStartDate: "2022-08-14",
+          departId: departId,
+          weekStartDate: weekStart,
         })
         .then((res) => {
           if (res.data.courseResList !== null) {

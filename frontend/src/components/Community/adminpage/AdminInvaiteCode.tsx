@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { api } from "../../../utils/api";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 const MainContent = styled.div`
   display: flex;
@@ -30,8 +32,9 @@ const Input = styled.input`
 
 function AdminInvaiteCode() {
   const [departCode, setDepartCode] = useState<string>("");
+  const departId = useSelector((store: RootState) => store.depart.departId);
   useEffect(() => {
-    api("/admin/depart/check/3").then((res) => {
+    api("/admin/depart/check/" + departId).then((res) => {
       setDepartCode(res.data.departCode);
     });
   }, []);

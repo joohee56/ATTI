@@ -96,7 +96,7 @@ const AttendeesList = ({
     <AttendeesWrapper openChattingList={openChattingList}>
       {peopleList !== undefined && peopleList.length > 0 ? (
         <AttendeesListDiv>
-          <AttendsListConnection>참석</AttendsListConnection>
+          <AttendsListConnection>현재참가자</AttendsListConnection>
           {peopleList.map((e, i) => (
             <AttendWrapper key={i}>
               <NickNameWrapper>
@@ -124,13 +124,15 @@ const AttendeesList = ({
               ) : null}
             </AttendWrapper>
           ))}
-          <AttendsListNotConnection>불참석</AttendsListNotConnection>
+          <AttendsListNotConnection>전체 명단</AttendsListNotConnection>
           <div>
-            {Object.keys(notConnectionList).map((e: string, i: number) => (
-              <AttendsListConnectionDiv key={i}>
-                {notConnectionList[Number(e)]}
-              </AttendsListConnectionDiv>
-            ))}
+            {Object.keys(notConnectionList.userList).map(
+              (e: string, i: number) => (
+                <AttendsListConnectionDiv key={i}>
+                  {notConnectionList.userList[Number(e)].userName}
+                </AttendsListConnectionDiv>
+              )
+            )}
           </div>
         </AttendeesListDiv>
       ) : null}

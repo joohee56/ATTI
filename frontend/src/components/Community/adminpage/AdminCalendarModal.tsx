@@ -15,6 +15,8 @@ import {
 import { palette } from "../../../styles/palette";
 import { TextWrapper } from "../schedule/SchedulePageStyle";
 import { api } from "../../../utils/api/index";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 export interface studentAttendState {
   userId: string;
@@ -35,10 +37,11 @@ const AdminCalendarModal = ({ pickDay }: { pickDay: string }) => {
   const [courseName, setCourseName] = useState<string>("");
   const [courseId, setCourseId] = useState<number>(0);
   const [dayClassList, setDayClassList] = useState<any>();
+  const departId = useSelector((store: RootState) => store.depart.departId);
   useEffect(() => {
     api
       .post("/admin/getOneDayCourseList", {
-        departId: 2,
+        departId: departId,
         attenDate: pickDay,
       })
       .then((res) => {

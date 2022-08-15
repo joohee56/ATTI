@@ -15,7 +15,7 @@ import BorderAllIcon from "@mui/icons-material/BorderAll";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import Modal from "../Modal";
-import { BACKEND_URL } from "../../constant";
+import { api } from "../../utils/api";
 import {
   LayoutButton,
   PeopleBox,
@@ -82,6 +82,8 @@ const OpenViduTest = () => {
   } else {
     myRole = PROFESSOR;
   }
+  const { categoryList } = useSelector((state) => state.userInfo);
+  console.log(categoryList);
   const [searchParams, setSearchParams] = useSearchParams();
   console.log(searchParams.get("courseId"));
   const navigate = useNavigate();
@@ -94,6 +96,7 @@ const OpenViduTest = () => {
     publisher: undefined,
     subscribers: [],
   });
+  const departId = useSelector((store) => store.depart.departId);
   const [reqeustPresent, setReqeustPresent] = useState(false);
   const [receivePresent, setReceivePresent] = useState(false);
   const [saveSubscriber, setSaveSubscriber] = useState(undefined);
@@ -376,65 +379,20 @@ const OpenViduTest = () => {
     }
   }, [turnOnCamera, turnOnAudio, state.session]);
   useEffect(() => {
-    if (state.publisher !== undefined && studentList !== undefined) {
+    if (state.publisher !== undefined) {
       let people = state.publisher.stream.connection;
       let peoples = [];
-      let notConnection = [];
-      if (state.subscribers.length === 0) {
-        for (let i = 0; i < studentList.userList.length; i++) {
-          let studentName =
-            studentList.userList[i].userName +
-            "(" +
-            studentList.userList[i].userId +
-            ")";
-          notConnection.push(studentName);
-        }
-      } else {
-        for (let i = 0; i < studentList.userList.length; i++) {
-          for (let j = 0; j < state.subscribers.length; j++) {
-            let temp = JSON.parse(
-              state.subscribers[j].stream.session.connection.data
-            ).clientData;
-            let studentName =
-              studentList.userList[i].userName +
-              "(" +
-              studentList.userList[i].userId +
-              ")";
-            if (temp === studentName) {
-              peoples.push(state.subscribers[j].stream.connection);
-            } else {
-              notConnection.push(state.subscribers[j].stream.connection);
-            }
-          }
-        }
-      }
-      // state.subscribers.forEach((e) => {
-      //   console.log(e);
-      //   for (let i = 0; i < studentList.userList.length; i++) {
-      //     let temp = JSON.parse(e.stream.session.connection.data).clientData;
-      //     let studentName =
-      //       studentList.userList[i].userName +
-      //       "(" +
-      //       studentList.userList[i].userId +
-      //       ")";
 
-      //     console.log(studentList.userList[i]);
-      //     console.log(studentName);
-      //     if (temp === studentName) {
-      //       peoples.push(e.stream.connection);
-      //     } else {
-      //       notConnection.push(e.stream.connection);
-      //     }
-      //   }
-      // });
-      console.log("접속하지 않은 사람 ", notConnection);
+      state.subscribers.forEach((e) => {
+        peoples.push(e.stream.connection);
+      });
+
       console.log("배열 합치기", [people, ...peoples]);
       if (peoples.length === 0) {
         setPeopleList([people]);
       } else {
         setPeopleList([people, ...peoples]);
       }
-      setNotConnectionList(notConnection);
     }
   }, [state.publisher, state.subscribers, state.subscribers.length]);
   useEffect(() => {
@@ -757,17 +715,19 @@ const OpenViduTest = () => {
 
           const timeString = hours + "시" + minutes + "분" + seconds + "초";
           const message = messageRef.current.value;
-          axios
+          console.log(categoryList[1].categoryId);
+          api
             .post(
-              BACKEND_URL + "/post/write",
+              "/post/write",
               {
-                postAnoInfo: 0,
-                postComBanInfo: 1,
+                postTitle: message,
                 postContent:
                   dateString + " " + timeString + " 에 작성된 게시물입니다.",
-                postTitle: message,
-                category_id: "1",
-                user_id: "password123",
+                postAnoInfo: 0,
+                postComBanInfo: 1,
+                departId: departId,
+                categoryId: categoryList[1].categoryId,
+                userId: userInfo.id,
               },
               {
                 headers: {
@@ -1344,7 +1304,7 @@ const OpenViduTest = () => {
                       peopleList={peopleList}
                       setChattingInfo={setChattingInfo}
                       openChattingList={openChattingList}
-                      notConnectionList={notConnectionList}
+                      notConnectionList={studentList}
                     />
                   ) : null}
                   {state.myRole === PROFESSOR ? (
