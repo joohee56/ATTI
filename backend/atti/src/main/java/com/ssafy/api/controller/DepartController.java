@@ -16,6 +16,7 @@ import com.ssafy.api.request.CategoryCreateReq;
 import com.ssafy.api.request.DepartCreateReq;
 import com.ssafy.api.request.DepartJoinReq;
 import com.ssafy.api.request.ViewAllPostsReq;
+import com.ssafy.api.response.CategoryListRes;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.service.CategoryService;
 import com.ssafy.api.service.DepartService;
@@ -36,11 +37,14 @@ public class DepartController {
 	private CategoryService categoryService;
 	
 	@PostMapping("/create") // 채널 생성
-	public ResponseEntity<String> createChannel(@RequestBody DepartCreateReq departCreateReq) {
+	public ResponseEntity<List<CategoryListRes>> createChannel(@RequestBody DepartCreateReq departCreateReq) {
 		System.out.println("===========================" + departCreateReq.getDepartName() + "=============================");
 		System.out.println("===========================" + departCreateReq.getUserId() + "=============================");
-		departService.createChannel(departCreateReq); //, userId
-		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		Long departId = departService.createChannel(departCreateReq);
+		
+		List<CategoryListRes> categoryList = categoryService.getCategorList(departId);
+		
+		return new ResponseEntity<List<CategoryListRes>>(categoryList, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{departCode}") // 채널 입장 
