@@ -23,6 +23,8 @@ import { palette } from "../../../styles/palette";
 import { api } from "../../../utils/api";
 import { useDispatch } from "react-redux";
 import { setStudentList } from "../../../store/classMeeting/studentList";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 export interface weekClassSchedule {
   courseId: string | null;
@@ -88,6 +90,7 @@ const SchedulePageWrapper = () => {
   });
   const [week, setWeek] = useState<weekClassSchedule[]>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const userInfo = useSelector((store: RootState) => store.userInfo);
 
   const [weekClassState, setWeekClassState] = useState<any>([
     {
@@ -103,8 +106,13 @@ const SchedulePageWrapper = () => {
   ]);
   const navigate = useNavigate();
 
-  function connectMeeting(e: any) {
-    api
+  async function connectMeeting(e: any) {
+    await api.put("/course/enterCourse", {
+      courseId: e.target.value,
+      userId: userInfo.id,
+      clickDate: moment().format("YYYY-MM-DD HH:mm"),
+    });
+    await api
       .get("/course/attendence/2")
       .then((res) => {
         console.log(res.data);
