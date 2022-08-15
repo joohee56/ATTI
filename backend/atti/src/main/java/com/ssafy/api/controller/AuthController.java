@@ -116,7 +116,7 @@ public class AuthController {
 			if(userDepartList != null) {
 				departId = userDepartList.get(0).getDepartId();	// 가입한 채널 중 첫 번째 채널의 아이디
 				
-				userCategoryList = categoryService.getCategorList(departId);
+				userCategoryList = categoryService.getCategoryList(departId);
 //				admin = adminRoleService.getAdminRole(user, departId);
 			} else {
 				userCategoryList = null;
@@ -165,7 +165,7 @@ public class AuthController {
 		if(userDepartList != null) {
 			departId = userDepartList.get(0).getDepartId();	// 가입한 채널 중 첫 번째 채널의 아이디
 			
-			userCategoryList = categoryService.getCategorList(departId);
+			userCategoryList = categoryService.getCategoryList(departId);
 			admin = adminRoleService.getAdminRole(user, departId);
 		} else {
 			userCategoryList = null;
@@ -254,7 +254,7 @@ public class AuthController {
 		if(userDepartList != null) {
 			departId = userDepartList.get(0).getDepartId();	// 가입한 채널 중 첫 번째 채널의 아이디
 			
-			userCategoryList = categoryService.getCategorList(departId);
+			userCategoryList = categoryService.getCategoryList(departId);
 // 					admin = adminRoleService.getAdminRole(user, departId);
 		} else {
 			userCategoryList = null;

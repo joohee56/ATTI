@@ -94,7 +94,7 @@ public class DepartController {
 	// 채널 클릭 시 카테고리 리스트 리턴
 	@GetMapping("/getCategoryList/{departId}")
 	public ResponseEntity<List<CategoryListRes>> getCategoryList(@PathVariable("departId") Long departId){
-		List<CategoryListRes> list = categoryService.getCategorList(departId);
+		List<CategoryListRes> list = categoryService.getCategoryList(departId);
 		if(list == null)
 			new ResponseEntity<String>("잘못된 채널 아이디이거나 해당하는 카테고리 리스트가 없습니다.", HttpStatus.OK);
 		return new ResponseEntity<List<CategoryListRes>>(list, HttpStatus.OK);
