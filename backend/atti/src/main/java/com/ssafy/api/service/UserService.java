@@ -60,10 +60,13 @@ public class UserService {
 	}
 	
 	// 카카오로 회원가입
-	public void signUpKakao(KakaoUser user) {
-		// 보안을 위해서 유저 패스워드 암호화하여 디비에 저장
-//		user.setPassword(passwordEncorder.encode(user.getPassword()));
-//		userRepository.signUpKakao(user);
+	public void signUpKakao(KakaoUser kakaoUser) {
+		User user = User.builder()
+				.userId(kakaoUser.getSnsId())
+				.userName(kakaoUser.getUserName())
+				.email(kakaoUser.getEmail()).build();
+		
+		userRepository.save(user);
 	}
 	
 	// 아이디에 해당하는 유저찾기
