@@ -1,6 +1,7 @@
 package com.ssafy.api.response;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -16,8 +17,8 @@ public class CourseGetRes {
 	private String courseTeacherName;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-	private Date courseStartTime;
+	private LocalDateTime courseStartTime;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-	private Date courseEndTime;
+	private LocalDateTime courseEndTime;
 	private LocalDate courseDate;
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.CourseCreateReq;
+import com.ssafy.api.request.CourseEnterReq;
 import com.ssafy.api.request.CourseGetReq;
 import com.ssafy.api.request.CourseOneDayReq;
 import com.ssafy.api.request.CourseUpdateReq;
@@ -38,6 +39,8 @@ public class CourseService {
 	UserDepartRepository userDepartRepository;
 	@Autowired
 	AttendanceRepository attendanceRepository;
+	@Autowired
+	UserRepository userRepository;
 	
 	// 시간표 생성
 	public Long createCourse(CourseCreateReq courseReq) {
@@ -135,6 +138,7 @@ public class CourseService {
 		
 	}
 	
+	// 수업 참여자 명단 조회
 	public List<CourseAttendenceRes> getAttendence(Long departId){
 		Depart depart = departRepository.findById(departId).orElse(null);
 		List<UserDepart> userDepartList = userDepartRepository.findByDepart(depart);
@@ -152,6 +156,66 @@ public class CourseService {
 		}
 		
 		return attendenceList;
+	}
+	
+	// 수업 입장 클릭
+	public String clickEnterCourse(CourseEnterReq courseEnterReq) {
+		Long courseId = courseEnterReq.getCourseId();
+		String userId = courseEnterReq.getUserId();
+		LocalDateTime clickDate = courseEnterReq.getClickDate();
+		
+		// 수업의 시작 시간과 끝나는 시간을 가져옴
+		Course course = courseRepository.findById(courseId).orElse(null);
+		
+		LocalDateTime courseStartTime = course.getCourseStartTime();
+		LocalDateTime courseEndTime = course.getCourseEndTime();
+		
+		LocalDateTime tempAccept = courseStartTime.minusMinutes(30);
+		
+		Date acceptTime = new Date();
+		acceptTime = java.sql.Timestamp.valueOf(tempAccept);
+		
+		Date startTime = java.sql.Timestamp.valueOf(courseStartTime);
+		Date endTime = java.sql.Timestamp.valueOf(courseEndTime);
+		Date clickTime = java.sql.Timestamp.valueOf(clickDate);
+		
+		System.out.println("수업 시작 시간 : " + courseStartTime);
+		System.out.println("출석 인정 시간 (시작 30분 전) : " + acceptTime);
+		System.out.println("수업 끝나는 시간 : " + courseEndTime);
+		System.out.println("클릭 누른 시간 : " + clickDate);
+		
+		// 출석
+		if((clickTime.after(acceptTime) && clickTime.before(startTime)) || clickTime.equals(startTime) || clickTime.equals(acceptTime)) {
+			User user = userRepository.findById(userId).orElse(null);
+			
+			if(user == null) return null;
+			
+			Attendance attendance = attendanceRepository.findByUserAndCourse(user, course).orElse(null);
+			
+			if(attendance == null) return null;
+			
+			attendance.updateAttendancedContent("출석");
+			attendanceRepository.save(attendance);
+			return attendance.getAttendancedContent();
+		}
+		
+		// 지각
+		if(clickTime.after(startTime) && clickTime.before(endTime)) {
+			User user = userRepository.findById(userId).orElse(null);
+			
+			if(user == null) return null;
+			
+			Attendance attendance = attendanceRepository.findByUserAndCourse(user, course).orElse(null);
+			
+			if(attendance == null) return null;
+			
+			attendance.updateAttendancedContent("지각");
+			attendanceRepository.save(attendance);
+			return attendance.getAttendancedContent();
+		}
+		
+		return null;
+		
 	}
 	
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.CourseCreateReq;
+import com.ssafy.api.request.CourseEnterReq;
 import com.ssafy.api.request.CourseGetReq;
 import com.ssafy.api.request.CourseUpdateReq;
 import com.ssafy.api.response.CourseAttendenceListRes;
@@ -71,4 +72,16 @@ public class CourseController {
 		List<CourseAttendenceRes> attendenceList = courseService.getAttendence(departId);
 		return ResponseEntity.status(200).body(CourseAttendenceListRes.of(200, "success", attendenceList));
 	}
+	
+	//유저 출석 클릭
+	@PutMapping("/enterCourse")
+	public ResponseEntity<BaseResponseBody> clickEnterCourse(@RequestBody CourseEnterReq courseEnterReq) {
+		String res = courseService.clickEnterCourse(courseEnterReq);
+		if(res==null)
+			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "잘못된 접근입니다."));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, res));
+	}
+	
+	
+	
 }
