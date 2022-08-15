@@ -57,8 +57,8 @@ import com.ssafy.db.entity.depart.UserDepart;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.UserRepository;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+//import io.swagger.annotations.Api;
+//import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 
 /*

@@ -9,4 +9,6 @@ import com.ssafy.db.entity.depart.Depart;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	public List<Category> findByDepart(Depart depart);
+
+//	public void deleteFindOne(Long categoryId);
 }

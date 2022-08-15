@@ -13,6 +13,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PostViewAllRes {
 	
+	private Long postId;
+	
 	private String postTitle;
 	
 	private String postContent;
@@ -27,6 +29,7 @@ public class PostViewAllRes {
 	private boolean myLike; 
 	
 	public PostViewAllRes(Post post) {
+		this.postId = post.getPostId();
 		this.postTitle = post.getPostTitle();
 		this.postContent = post.getPostContent();
 		this.postRegDate = post.getPostRegDate();

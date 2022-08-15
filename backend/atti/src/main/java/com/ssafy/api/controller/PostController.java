@@ -61,7 +61,7 @@ public class PostController {
 	
 	@DeleteMapping("/delete/category/{categoryId}") // 카테고리 게시글 일괄 삭제
 	public ResponseEntity<String> deleteAll(@PathVariable Long categoryId) {
-//		postService.deleteAllPosts(categoryId);
+		postService.deleteAllPosts(categoryId);
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	

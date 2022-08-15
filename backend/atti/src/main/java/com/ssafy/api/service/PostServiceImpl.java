@@ -3,15 +3,11 @@ package com.ssafy.api.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ssafy.api.request.PostWriteReq;
-import com.ssafy.api.request.ViewAllPostsReq;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.PostViewOneRes;
 import com.ssafy.db.entity.depart.Category;
@@ -20,12 +16,9 @@ import com.ssafy.db.entity.depart.Post;
 import com.ssafy.db.entity.depart.UserPostLike;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.repository.CategoryRepository;
-import com.ssafy.db.repository.CategoryRepository2;
 import com.ssafy.db.repository.CommentRepository;
 import com.ssafy.db.repository.DepartRepository;
-import com.ssafy.db.repository.DepartRepository2;
 import com.ssafy.db.repository.PostRepository;
-import com.ssafy.db.repository.PostRepository2;
 import com.ssafy.db.repository.UserPostLikeRepository;
 import com.ssafy.db.repository.UserRepository;
 
@@ -124,6 +117,7 @@ public class PostServiceImpl implements PostService {
 			Long commentCount = commentRepository.countByPost(p);
 			
 			postViewAllResList.add(PostViewAllRes.builder()
+					.postId(p.getPostId())
 					.postTitle(p.getPostTitle())
 					.postContent(p.getPostContent())
 					.postRegDate(p.getPostRegDate())
