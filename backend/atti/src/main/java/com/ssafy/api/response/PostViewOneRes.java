@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 public class PostViewOneRes {
 	
+	private Long postId;
+	
 	private String postTitle;
 	
 	private String postContent;
