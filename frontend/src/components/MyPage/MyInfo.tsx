@@ -1,6 +1,7 @@
 import { Avatar, TextField } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { RootState } from "../../store";
 import { palette } from "../../styles/palette";
@@ -8,7 +9,6 @@ import apiAcc, { api } from "../../utils/api";
 import InputPassword from "../account/InputPassword";
 import InputWithChannelOut from "../account/InputWithChannelOut";
 import InputWithPhone from "../account/InputWithPhone";
-import ModalTitle from "../account/ModalTitle";
 import { ButtonBlue, ButtonPurple } from "../ButtonStyled";
 import InputWithLabel from "../InputWithLabel";
 import Modal from "../Modal";
@@ -22,6 +22,8 @@ interface MyInfoData {
 }
 
 function MyPage() {
+  const navigate = useNavigate();
+  
   // 데이터 받아오기
   const { userName } = useSelector((state: RootState) => state.userInfo);
   const { id } = useSelector((state: RootState) => state.userInfo);
@@ -61,10 +63,13 @@ function MyPage() {
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
   // 채널 나가기 모달
   const [isChannelOUtModal, setChannelOUtModal] = useState<boolean>(false);
+ 
+  // 수정하기 눌렀나
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   // 회원정보 수정 알림
   const [openEdit, setEditOpen] = useState(false);
+  const [openNoEdit, setNoEditOpen] = useState(false);
 
   const InfoSubmit = async (e: any) => {
     e.preventDefault();
@@ -83,6 +88,7 @@ function MyPage() {
         console.log("response:", response);
       })
       .catch(function (error) {
+        setNoEditOpen(true);
         console.log("Error", error);
       });
   };
@@ -167,6 +173,23 @@ function MyPage() {
     setBirth(e.target.value);
   };
 
+  // 탈퇴
+  const [openOut, setOpenOut] = useState(false);
+
+  const userOut = async (e: any) => {
+    e.preventDefault();
+    await api
+      .put(`/user/delete/${id}`)
+      .then(function (response) {
+        console.log("response:", response);
+        navigate("/");
+      })
+      .catch(function (error) {
+        console.log("Error", error);
+      });
+  };
+
+
   return (
     <Main>
       <SnacbarTell
@@ -174,6 +197,12 @@ function MyPage() {
         setOpen={setEditOpen}
         message="회원정보가 수정 되었습니다."
         type="success"
+      />
+        <SnacbarTell
+        open={openNoEdit}
+        setOpen={setNoEditOpen}
+        message="회원정보 수정에 실패했습니다."
+        type="error"
       />
       {!isEdit ? (
         <>
@@ -363,7 +392,7 @@ function MyPage() {
           </p>
           <div>
             <button>아니오</button>
-            <MemberWithdrawal>탈퇴</MemberWithdrawal>
+            <MemberWithdrawal onClick={userOut}>탈퇴</MemberWithdrawal>
           </div>
         </Modal>
       )}

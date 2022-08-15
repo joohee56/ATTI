@@ -27,7 +27,7 @@ function Community() {
         {(categoryName.categoryName === "공지사항" ||
           categoryName.categoryName === "질문" ||
           categoryName.categoryName === "자유게시판" ||
-          categoryName.categoryName === "자료실") && <AdminPageWrapper />}
+          categoryName.categoryName === "자료실") && <NormalPostFrame />}
         {/* {categoryName.categoryName === "관리자페이지" && <AdminPageWrapper />} */}
         {/* {categoryName.categoryName === "수업실" && (
           <Class/>

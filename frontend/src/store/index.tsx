@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
 // 1. 관리할 Slice 데이터 가져오기
-import loginReducer from "./LoginSotre";
+import loginReducer from "./LoginStore";
 import categoryReducer from "./community/Category";
 import departReducer from "./community/Depart";
 import reRenderingReducer from "./community/ReRendering";

@@ -15,29 +15,14 @@ function App() {
   const access = localStorage.getItem("AccessToken");
   return (
     <Routes>
-      <Route path="/" element={<Homepage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route
-        path="/community/:departName/:categoryName"
-        element={
-          <PrivateRoute authenticated={access} component={<Community />} />
-        }
-      />
-      <Route
-        path="/classmeeting"
-        element={
-          <PrivateRoute authenticated={access} component={<ClassMeeting />} />
-        }
-      />
-      <Route
-        path="/welcome"
-        element={
-          <PrivateRoute authenticated={access} component={<WelcomePage />} />
-        }
-      />
-      <Route path="/modaltest" element={<ModalTest />} />
-      <Route path="/oauth/callback/kakao" element={<OAuth2RedirectHandler />} />
+    <Route path="/" element={ <Homepage />} />
+    <Route path="/login" element={ <LoginPage />} />
+    <Route path="/signup" element={ <SignupPage />} />
+    <Route path="/community/:departName/:categoryName" element={<PrivateRoute  authenticated={access} component={<Community />}/>} />
+    <Route path="/classmeeting" element={<PrivateRoute  authenticated={access} component={<ClassMeeting />}/>} />
+    <Route path="/welcome" element={<PrivateRoute  authenticated={access} component={<WelcomePage />}/>} />
+    <Route path="/modaltest" element={ <ModalTest />} />
+    <Route path="/oauth/callback/kakao" element={<OAuth2RedirectHandler/>}/>
     </Routes>
   );
 }
