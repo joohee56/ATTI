@@ -71,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override // 댓글 조회
 	@Transactional(readOnly = true)
-	public List<CommentViewReplyRes> viewReply(Long postId) {
+	public List<CommentViewReplyRes> viewReply(Long postId, String userId) {
 //		return commentRepository.findComment(postId);
 		Post post = postRepository.findById(postId).orElse(null);
 		List<Comment> commentList = commentRepository.findByPostOrderByCommentIdDesc(post);
@@ -80,11 +80,17 @@ public class CommentServiceImpl implements CommentService {
 		if(commentList.isEmpty()) return null;
 		else commentViewReplyRes = new ArrayList<CommentViewReplyRes>();
 		
+		User user = userRepository.findById(userId).orElse(null);
 		for(Comment c : commentList) {
 			if(c.isCommentAnoInfo() == true) {
 				c.setUser(null);
 			}
-			commentViewReplyRes.add(new CommentViewReplyRes(c));
+			UserCommentLike ucl = userCommentLikeRepository.findByCommentAndUser(c, user).orElse(null);
+			boolean myCommentLike = false;
+			if(ucl != null)
+				myCommentLike = true;
+			
+			commentViewReplyRes.add(new CommentViewReplyRes(c, myCommentLike));
 		}
 		return commentViewReplyRes;
 	}

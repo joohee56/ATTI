@@ -35,21 +35,21 @@ public class PostController {
 //	}
 	
 	@PostMapping("/write") // 게시글 쓰기
-	public ResponseEntity<String> createWriting(@RequestBody PostWriteReq postWriteReq) {
+	public ResponseEntity<Long> createWriting(@RequestBody PostWriteReq postWriteReq) {
 //		System.out.println(post);
-		postService.createWriting(postWriteReq);
+//		postService.createWriting(postWriteReq);
 //		System.out.println(post);
-		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		return new ResponseEntity<Long>(postService.createWriting(postWriteReq), HttpStatus.OK);
 	}
 	
-	@GetMapping("/read/{postId}") // 게시글 상세 조회
-	public ResponseEntity<PostViewOneRes> viewFindOne(@PathVariable Long postId) {
+	@GetMapping("/read/{postId}/{userId}") // 게시글 상세 조회
+	public ResponseEntity<PostViewOneRes> viewFindOne(@PathVariable Long postId, @PathVariable String userId) {
 //		if(postService.viewFindOne(postId).getPostId() == postId) {
 //			
 //		}
 //		Post test = new Post();
 		System.out.println(postId);
-		return new ResponseEntity<PostViewOneRes>(postService.viewFindOne(postId), HttpStatus.OK);
+		return new ResponseEntity<PostViewOneRes>(postService.viewFindOne(postId, userId), HttpStatus.OK);
 //		return new ResponseEntity<Post>(test, HttpStatus.OK);
 	}
 	

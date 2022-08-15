@@ -54,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	// 채널 ID 에 해당하는 카테고리 리스트를 가져옴
 	@Override
-	public List<CategoryListRes> getCategorList(Long departId) {
+	public List<CategoryListRes> getCategoryList(Long departId) {
 		Depart depart = departRepository.findById(departId).orElse(null);
 		if(depart == null) return null;
 		
@@ -64,6 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
 		List<CategoryListRes> dtoList = new ArrayList<>();
 		for(Category c : categoryList) {
 			dtoList.add(CategoryListRes.builder()
+					.departId(departId)
 					.categoryId(c.getCategoryId())
 					.categoryName(c.getCategoryName())
 					.cType(c.getCtype())
@@ -73,5 +74,10 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 		
 		return dtoList;
+	}
+	
+	@Override
+	public Category getByCategoryId(Long categoryId) {
+		return categoryRepository.findById(categoryId).orElse(null);
 	}
 }

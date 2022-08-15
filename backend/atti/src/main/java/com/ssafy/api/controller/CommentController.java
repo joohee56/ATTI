@@ -40,10 +40,10 @@ public class CommentController {
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 	
-	@GetMapping("/read/{postId}") // 한 게시글의 댓글 보기
-	public ResponseEntity<List<CommentViewReplyRes>> viewReply(@PathVariable Long postId){
+	@GetMapping("/read/{postId}/{userId}") // 한 게시글의 댓글 보기
+	public ResponseEntity<List<CommentViewReplyRes>> viewReply(@PathVariable Long postId, @PathVariable("userId") String userId){
 //		commentService.viewReply(postId);
-		return new ResponseEntity<List<CommentViewReplyRes>>(commentService.viewReply(postId), HttpStatus.OK);
+		return new ResponseEntity<List<CommentViewReplyRes>>(commentService.viewReply(postId, userId), HttpStatus.OK);
 	}
 	
 	// 댓글 좋아요 기능 - 주희

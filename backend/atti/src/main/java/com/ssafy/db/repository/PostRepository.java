@@ -16,4 +16,6 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	List<Post> findByDepartAndCategoryOrderByPostIdDesc(Depart depart, Category category);
 
 	Optional<Post> deleteByCategory(Category category);
+	
+	List<Post> findByCategory(Category category);
 }

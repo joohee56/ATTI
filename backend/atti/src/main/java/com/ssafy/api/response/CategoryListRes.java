@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class CategoryListRes {
+	private Long departId;
 	private Long categoryId;
 	private String categoryName;
 	private String cType;

@@ -23,6 +23,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.user.User;
 
@@ -80,4 +82,7 @@ public class Course {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="depart_course")
 	private Depart depart;						// 채널 ID (FK)
+	
+	@OneToMany(mappedBy = "course",cascade = CascadeType.ALL,orphanRemoval = true)
+	private List<Attendance> attendanceList = new ArrayList<>();
 }

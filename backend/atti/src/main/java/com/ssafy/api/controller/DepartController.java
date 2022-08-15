@@ -24,7 +24,9 @@ import com.ssafy.api.service.CategoryService;
 import com.ssafy.api.service.DepartService;
 import com.ssafy.api.service.PostService;
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Depart;
+import com.ssafy.db.entity.depart.Post;
 
 @RestController // depart/{depart_code}/category/{category_name}/post
 @RequestMapping("/depart")
@@ -45,7 +47,7 @@ public class DepartController {
 		System.out.println("===========================" + departCreateReq.getUserId() + "=============================");
 		Long departId = departService.createChannel(departCreateReq);
 		
-		List<CategoryListRes> categoryList = categoryService.getCategorList(departId);
+		List<CategoryListRes> categoryList = categoryService.getCategoryList(departId);
 		
 		return new ResponseEntity<List<CategoryListRes>>(categoryList, HttpStatus.OK);
 	}
@@ -53,10 +55,21 @@ public class DepartController {
 	@GetMapping("/{departCode}/{userId}") // 채널 입장 
 	public ResponseEntity<? extends BaseResponseBody> joinChannel(@PathVariable String departCode, @PathVariable String userId) {
 //		System.out.println("===========================" + departId + "=============================");
+		Long departId = departService.getDepartIdByCode(departCode);
+		if(departId == null)
+			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "채널 코드와 일치하는 채널이 없습니다."));
+		
 		List<CategoryListRes> categoryList = departService.joinChannel(departCode, userId);
+		
 		if(categoryList == null)
 			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "채널 코드와 일치하는 채널이 없습니다."));
-		return ResponseEntity.status(200).body(DepartJoinListRes.of(200, "success",categoryList));
+		
+		Long categoryId = categoryList.get(0).getCategoryId();
+		Category category = categoryService.getByCategoryId(categoryId);
+		
+		List<Post> postList = postService.findByCategory(category);
+		
+		return ResponseEntity.status(200).body(DepartJoinListRes.of(200, "success",categoryList, departId, postList));
 	}
 	
 	@GetMapping("/{departId}/category/{categoryId}/user/{userId}") // 게시글 전체 조회
@@ -76,5 +89,14 @@ public class DepartController {
 		
 		categoryService.createCategory(categoryCreateReq);
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+	}
+	
+	// 채널 클릭 시 카테고리 리스트 리턴
+	@GetMapping("/getCategoryList/{departId}")
+	public ResponseEntity<List<CategoryListRes>> getCategoryList(@PathVariable("departId") Long departId){
+		List<CategoryListRes> list = categoryService.getCategoryList(departId);
+		if(list == null)
+			new ResponseEntity<String>("잘못된 채널 아이디이거나 해당하는 카테고리 리스트가 없습니다.", HttpStatus.OK);
+		return new ResponseEntity<List<CategoryListRes>>(list, HttpStatus.OK);
 	}
 }
