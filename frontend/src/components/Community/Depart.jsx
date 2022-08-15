@@ -20,29 +20,10 @@ import Fade from '@mui/material/Fade';
 
 function DepartList(){
   
+  const { departList } = useSelector(state => state.userInfo)
+  const { id } = useSelector(state => state.userInfo)
   const dispatch = useDispatch()
 
-  const dummyDepart = [
-    {
-      departId: 1,
-      userId: "",
-      departName: "싸피",
-      departCode: ""
-    },
-    {
-      departId: 2,
-      userId: "",
-      departName: "대전1반",
-      departCode: ""
-    },
-    {
-      departId: 3,
-      userId: "",
-      departName: "대전3반",
-      departCode: ""
-    },
-  
-  ]
     const handleClose = () => {
       setAnchorEl(null);
     };
@@ -56,10 +37,9 @@ function DepartList(){
     function departFunction(i){
       handleClose()
       dispatch(departActions.saveDepart(
-        {departId: dummyDepart[i].departId,
-        userId: dummyDepart[i].userId,
-        departName: dummyDepart[i].departName,
-        departCode: dummyDepart[i].departCode,
+        {departId: departList[i].departId,
+        userId: id,
+        departName: departList[i].departName,
        }
     ))
     }
@@ -96,6 +76,8 @@ function DepartList(){
       onClickToggleModal5()
     }
 
+    const departId = useSelector(state => state.depart.departId)
+    const findId = (e) => e.departId === departId
     return (
       <>
       <DepartContainer>
@@ -124,12 +106,12 @@ function DepartList(){
           <MenuItem onClick={() => {departCreateFunction()}}> <AddBoxIcon/>&nbsp; 채널생성</MenuItem>
           <MenuItem onClick={() => {departJoinFunction()}}><GroupAddIcon/>&nbsp; 채널가입</MenuItem>
          
-          {dummyDepart.map((e,i) => (
+          {departList.map((e,i) => (
             <MenuItem onClick={() => {departFunction(i)}} key={i}>{e.departName}</MenuItem> 
           ))}
         </Menu>
         <div style={{display: 'flex', flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-        <Avatar sx={{ width: 45, height: 45 }} style={{margin: "11px 10px 0 11px"}}>번호</Avatar>
+        <Avatar sx={{ width: 45, height: 45 }} style={{margin: "11px 10px 0 11px"}}>{departList.findIndex(findId)+1}</Avatar>
           {departName}
         </div>
       </DepartContainer>

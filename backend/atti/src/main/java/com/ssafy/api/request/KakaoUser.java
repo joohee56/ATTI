@@ -5,11 +5,10 @@ import javax.persistence.Entity;
 import lombok.*;
 
 @Getter
-@Setter
+@AllArgsConstructor
 public class KakaoUser {
-	private String userId;
 	private String snsId;
 	private String email;
-	private String password;
 	private String userName;
+	private String birth;
 }

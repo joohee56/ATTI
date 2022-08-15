@@ -42,6 +42,7 @@ import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.response.CategoryListRes;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.UserDepartRes;
+import com.ssafy.api.response.UserKakaoLoginRes;
 import com.ssafy.api.response.UserLoginRes;
 import com.ssafy.api.service.AdminRoleService;
 import com.ssafy.api.service.AuthService;
@@ -205,59 +206,72 @@ public class AuthController {
 	
 	// 카카오로그인
 	@GetMapping("/login/kakao")
-    public ResponseEntity<UserLoginRes> redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
         System.out.println("code:: " + code);
 
         // 접속토큰 get
         String kakaoToken = authService.getReturnAccessToken(code);
         
-        // 접속자 정보 get
+        // 접속자 정보 kakao 에게서 get
         Map<String, Object> result = authService.getUserInfo(kakaoToken);
         
-//        log.info("result:: " + result);
+        // 다른 항목들은 막혀있음..
         String snsId = (String) result.get("id");
-//        String userName = (String) result.get("nickname");
-//        String email = (String) result.get("email");
-        String userpw = snsId;
+        String userName = (String) result.get("nickname");
+        String email = (String) result.get("email");
+        String birthday = (String) result.get("birthday");
         
         System.out.println("SNS ID : " + snsId);
-        // 분기
-        KakaoUser kakaoUser = new KakaoUser();
-//         일치하는 snsId 없을 시 회원가입
-        System.out.println(userService.findKakaoId(snsId));
-//        List<User> userList = userService.findKakaoId(snsId);
-//        if (userList.isEmpty()) {
-////            log.warn("카카오로 회원가입");
-////        	kakaoUser.setUserId(email);
-//        	kakaoUser.setPassword(userpw);
-////        	kakaoUser.setUserName(userName);
-//        	kakaoUser.setSnsId(snsId);
-////        	kakaoUser.setEmail(email);
-//            userService.signUpKakao(kakaoUser);
-//        }
-
-        // 일치하는 snsId가 있으면 멤버객체에 담음.
-//        log.warn("카카오로 로그인");
-//        String userid = memberService.findUserIdBy2(snsId);
-//        MemberVO vo = memberService.findByUserId(userid);
-////        log.warn("member:: " + vo);
-//            /*Security Authentication에 붙이는 과정*/
-//        CustomUser user = new CustomUser(vo);
-////        log.warn("user : " + user);
-//        List<GrantedAuthority> roles = CustomUser.getList(vo);
-//        Authentication auth = new UsernamePasswordAuthenticationToken(user, null, roles);
-////        log.warn("auth : " + auth);
-//        SecurityContextHolder.getContext().setAuthentication(auth);
-//
-//        /* 로그아웃 처리 시, 사용할 토큰 값 */
-//        session.setAttribute("kakaoToken", kakaoToken);
-//
-//        return "redirect:/";
-        //snsId 에 해당하는 아이디 가져옴
-        String userId = snsId;
         
-        return null;
-//        return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));	//토큰 넘김
+//      일치하는 snsId 없을 시 회원가입
+        User user = userService.findKakaoId(snsId).orElse(null);
+        
+        // 카카오 아이디가 우리 서비스 아이디와 중복됨 (다른 사람 카카오 계정의 아이디를 우리 서비스의 다른 사람이 아이디로 쓰고 있는 경우)
+        // 어떡하지....
+        
+        System.out.println(userService.findKakaoId(snsId));
+        
+        if(user == null) {
+        	KakaoUser kakaoUser = new KakaoUser(snsId, email, userName, birthday);
+        	userService.signUpKakao(kakaoUser);
+        } 
+
+        // 로그인 정보 response
+        user = userService.findByUserId(snsId);
+        // 0. 탈퇴한 회원인지 확인
+ 		if(user.isUserDeleteInfo()==true)
+ 			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "탈퇴한 회원입니다."));
+     		
+ 		// 1. 가입한 채널 리스트 가져옴
+ 			List<UserDepartRes> userDepartList = userService.getDepartList(snsId);
+ 			
+		// 2. 가입한 채널 리스트의 첫 번째 카테고리 리스트를 가져옴
+		// 3. 유저 아이디가 가입한 채널의 유저 권한 테이블의 아이디와 매칭되는지를 찾음
+		List<CategoryListRes> userCategoryList;
+		boolean admin = false;
+		Long departId=(long) 0;
+		
+		if(userDepartList != null) {
+			departId = userDepartList.get(0).getDepartId();	// 가입한 채널 중 첫 번째 채널의 아이디
+			
+			userCategoryList = categoryService.getCategorList(departId);
+// 					admin = adminRoleService.getAdminRole(user, departId);
+		} else {
+			userCategoryList = null;
+		}
+		
+		// 4. 첫 번쨰 카테고리에 해당하는 글 목록
+		List<PostViewAllRes> postList;
+		if(userCategoryList != null) {
+			postList = new ArrayList<PostViewAllRes>();
+			postList = postService.viewAllPosts(departId, userCategoryList.get(0).getCategoryId(), snsId);
+		} else 
+			postList = null;
+		
+		// 5. 유저 이름 가져옴
+		String kakaoUserName = user.getUserName();
+		
+		return ResponseEntity.ok(UserKakaoLoginRes.of(200, "Success", kakaoToken, userDepartList, userCategoryList, postList, admin, userName, snsId));	//토큰 넘김	
     }
 
 	
@@ -299,7 +313,6 @@ public class AuthController {
 	
 	// 사용자가 인증번호 전송
 	@GetMapping("/phone/authCode")
-
 	private ResponseEntity<?> authPhoneCode(@RequestParam("code") String code) {
 //		String correctCode = (String)session.getAttribute("code");
 		

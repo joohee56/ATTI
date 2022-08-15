@@ -23,40 +23,27 @@ import { palette } from '../../styles/palette';
 
 import ReactHtmlParser from 'react-html-parser'
 
-function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
+function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
     const [single, setSingle] = useState([])
     const [comments, setComments] = useState([])
-    
-    useEffect(() => {
-        async function singlePost(){
-            api.get(`/post/read/${postId}`
-              ).then((res) => {
-                console.log("개별 글 list : ", res.data)
-                setSingle(res.data)
-                setSinglePost(res.data)
-              })
-        //   axios.get(
-        //     BACKEND_URL + `/post/read/${postId}`,
-        //     {
-        //       headers: {
-        //         "Content-type": "application/json",
-        //       },
-        //     }
-        //   ).then((res) => {
-        //     console.log("개별 글 list : ", res.data)
-        //     setSingle(res.data)
-        //     setSinglePost(res.data)
-        //   })
-        }
-        singlePost();
+    const currentCider = useSelector(state => state.reRendering.cider)
+    const updateCider = !currentCider
 
+    useEffect(() => {
+        // 개별 글 불러오는 것
+        api.get(`/post/read/${postId}`
+            ).then((res) => {
+            console.log("개별 글 list : ", res.data)
+            setSingle(res.data)
+            setSinglePost(res.data)
+            })
         // 댓글 list 불러오는 것
         api.get(`post/comment/read/${postId}`)
         .then((res) => {
             console.log("댓글들: ", res)
             setComments(res.data)
         })
-       },[]);
+       },[currentCider]);
     
     function modalEvent(){
         onClickToggleModal2()
@@ -108,29 +95,6 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                 },
             )
 
-            // await axios
-            // .post(
-            //     BACKEND_URL + "/post/comment/write",
-            //     {
-            //         commentId: comment.commentId,
-            //         postId: comment.postId,
-            //         categoryId: comment.categoryId,
-            //         departId: comment.departId,
-            //         userId: comment.userId,
-            //         commentRegDate: comment.commentRegDate,
-            //         commentDeleteInfo: comment.commentDeleteInfo,
-            //         commentAnoInfo: getAnoInfoNum(),
-            //         commentContent: comment.commentContent,
-            //         commentGroup: comment.commentGroup,
-            //         commentLevel: comment.commentLevel,
-            //         seq: comment.seq
-            //     },
-            //     {
-            //     headers: {
-            //         "Content-type": "application/json",
-            //     },
-            //     }
-            // )
             .then((res) => {
                 console.log("response:", res);
                 dispatch(reRenderingActions.saveReRendering(
@@ -159,12 +123,10 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
     );
     
     const dispatch = useDispatch()
-    const currentCider = useSelector(state => state.reRendering.cider)
-    const updateCider = !currentCider
 
     const deletePost = () => {
 
-        api.delete(`/post/delete/${single.postId}`,
+        api.delete(`/post/delete/${postId}`,
         )
         .then((res) => {
             console.log("response:", res);
@@ -172,44 +134,12 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                 {cider: updateCider }
             ))
         });
-
-        // axios.delete(
-        //         BACKEND_URL + `/post/delete/${single.postId}`,
-        //         {
-        //         headers: {
-        //             "Content-type": "application/json",
-        //         },
-        //         }
-        //     )
-        //     .then((res) => {
-        //         console.log("response:", res);
-        //         dispatch(reRenderingActions.saveReRendering(
-        //             {cider: updateCider }
-        //         ))
-    
-        //     });
-        }
+    }
     
     function DeleteFunction(){
         onClickToggleModal2();
         deletePost();
-    }
-
-    // 글 좋아요 부분
-    const [postLikeCount, setPostLikeCount] = useState([])
-    const postLike = () => {
-        console.log(single.postId)
-        api.get(`/post/likeBtn/${single.postId}/gusxosmsdy`
-        )
-        .then((res) => {
-            console.log("response:", res);
-            setPostLikeCount(res.data)
-        });
-    }
-    
-    useEffect(() => {
-        postLike()
-    }, [postLikeCount]);
+        }
 
 
 ///////////////////////////////////////////////////////////////////
@@ -226,6 +156,28 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
         width: "95%",
         
     }
+    function timeForToday(value) {
+        const today = new Date();
+        const timeValue = new Date(value);
+      
+        const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
+        if (betweenTime < 1) return '방금 전';
+        if (betweenTime < 60) {
+            return `${betweenTime}분 전`;
+        }
+      
+        const betweenTimeHour = Math.floor(betweenTime / 60);
+        if (betweenTimeHour < 24) {
+            return `${betweenTimeHour}시간 전`;
+        }
+      
+        const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+        if (betweenTimeDay < 365) {
+            return `${betweenTimeDay}일 전`;
+        }
+      
+        return `${Math.floor(betweenTimeDay / 365)}년 전`;
+      }
     return(
         <div style={detailStyle}>
             <div>
@@ -237,7 +189,7 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                         <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
                         <span style={{margin: "10px 0 0 0"}}>24</span>
                         &nbsp; &nbsp; 
-                        <Checkbox style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite onClick={postLike}/>}/> 
+                        <Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
                         <span style={{margin: "10px 0 0 0"}}>{postLikeCount}</span>
                     </div>
                 </div>
@@ -248,14 +200,14 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
                     <Avatar sx={{ width: 50, height: 50 }}>BS</Avatar>
                     <div style={{display: "flex", flexDirection: "column", margin: "0 0 0 20px"}}>
                         <div style={{margin: "0 0 10px 0"}}>
-                            사용자 이름 이 나와야함...아직 데이터가 없어서 못 나옴
+                            {single.userId}
                         </div>
                         <div>
                             <span>
-                               작성: {single.postRegDate} /  
+                               작성: {timeForToday(single.postRegDate)} /  
                             </span>
                             <span>
-                                {single.postUpdDate}
+                                수정: {timeForToday(single.postUpdDate)}
                             </span>
                         </div>
                     </div>
@@ -273,7 +225,7 @@ function PostDetail({postId, onClickToggleModal2, onClickToggleModal3, setSingle
             </ContentDiv>
             <hr style={{ height: "0.1px", backgroundColor: "gray", width: "95%", marginBottom: "0"}} />
             <br />
-            <CommentList comments={comments}/>
+            <CommentList postId={postId} comments={comments}/>
             
             <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-end", alignContent: "flex-end", margin: "10px 0 0 0"}}>
                 <div style={{display: "flex", flexDirection: "row"}}>

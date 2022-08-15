@@ -15,7 +15,6 @@ import { palette } from "../../styles/palette";
 import UseSwitchesBasic from "../SwitchButton"
 
 export function PostUpdate({singlePost, handleModal3}) {
-  
     const [post, setPost] = useState({
         postId : "",
         postTitle : "",
@@ -39,7 +38,9 @@ export function PostUpdate({singlePost, handleModal3}) {
     const dispatch = useDispatch()
     const currentCider = useSelector(state => state.reRendering.cider)
     const updateCider = !currentCider
-
+    const { id } = useSelector(state => state.userInfo)
+    const categoryId = useSelector(state => state.category.categoryId)
+    const departId = useSelector(state => state.depart.departId)
     const updatePosts = useCallback(
         async (e) => {
           try {
@@ -49,32 +50,12 @@ export function PostUpdate({singlePost, handleModal3}) {
                   postId : singlePost.postId,
                   postTitle : post.postTitle,
                   postContent : post.postContent,
-                  userId : post.userId,                     // 전역변수에서 받아서 써야
-                  categoryId : post.categoryId,           // 전역변수에서 받아서 써야
-                  departId: post.departId                 // 전역변수에서 받아서 써야
+                  userId : id ,                     // 전역변수에서 받아서 써야
+                  categoryId : categoryId,           // 전역변수에서 받아서 써야
+                  departId: departId                 // 전역변수에서 받아서 써야
                 },
               )
-            // await axios
-            //   .put(
-            //     BACKEND_URL + "/post/update",
-            //     {
-            //       postId : singlePost.postId,
-            //       postTitle : post.postTitle,
-            //       postContent : post.postContent,
-            //       postRegDate : singlePost.postRegDate,
-            //       postUpdDate : post.postUpdDate,
-            //     //   userId : post.userId,
-            //       userId : "ssafy",
-            //       categoryId : singlePost.categoryId,
-            //       postAnoInfo: getAnoInfoNum(),
-            //       postComBanInfo: getComBanInfoNum()
-            //     },
-            //     {
-            //       headers: {
-            //         "Content-type": "application/json",
-            //       },
-            //     }
-            //   )
+            
               .then((res) => {
                 console.log("response:", res);
                 dispatch(reRenderingActions.saveReRendering(
