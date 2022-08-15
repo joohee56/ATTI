@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { palette } from "../../styles/palette";
 import AdminContactHistory from "./AdminContactHistory";
+import AttiAsk from "./AttiAsk";
 import ContactAdmin from "./ContactAdmin";
 import MyPage from "./MyInfo";
 
@@ -9,7 +10,7 @@ function MyPageComponent() {
   const [value, setValue] = useState(0);
 
   //const tabContArr = [<MyPage />, <ContactAdmin />, <AdminContactHistory />];
-  const tabContArr = [<MyPage />];
+  const tabContArr = [<MyPage />, <AttiAsk/>];
 
   return (
     <>
