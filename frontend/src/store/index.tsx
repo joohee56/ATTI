@@ -12,8 +12,6 @@ const rootReducer = combineReducers({
   category : categoryReducer,
   depart : departReducer,
   reRendering: reRenderingReducer,
-
-
 })
 
 export type RootState = ReturnType<typeof rootReducer>

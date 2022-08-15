@@ -303,8 +303,6 @@ function SignupPage() {
                     isEmail &&
                     isPhoneNumber
                   )
-                  // &&
-                  // isPhoneNumber
                 )
               }
             >
@@ -319,8 +317,6 @@ function SignupPage() {
                 isEmail &&
                 isPhoneNumber
               )
-              // &&
-              // isPhoneNumber
             ) && (
               <p style={{ color: `${palette.red}` }}>
                 회원가입하려면 모두 입력해주세요.
