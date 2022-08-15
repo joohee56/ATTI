@@ -23,6 +23,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.db.entity.depart.Comment;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.user.User;
 
