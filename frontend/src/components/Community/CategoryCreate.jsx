@@ -55,7 +55,7 @@ function CategoryCreate({handleModal6}){
             categoryComInfo: categoryComInfo,
             categoryName: newCategory,
             type: cType,
-            departId: 1,
+            departId: 8,
             userId: id
         }).then((res) => {
             console.log("카테고리 생성: ", res.data)
@@ -147,7 +147,7 @@ function CategoryCreate({handleModal6}){
                             </div>
                         </SettingDiv>
                         <SettingDiv>
-                            <CustomSpan>게시글애 대한 댓글 작성 시 익명을 허용하시겠습니까?</CustomSpan>
+                            <CustomSpan>게시글에 대한 댓글 작성 시 익명을 허용하시겠습니까?</CustomSpan>
                             <div>
                                 {changeCss4 === 9?
                                 <ClickButtonCheck onClick={() => {categoryComAnoInfoFunction(0, true)}}>Yes</ClickButtonCheck>:

@@ -71,7 +71,7 @@ function LoginPage() {
       })
       .then(async function (response) {
         if (response.status === 200) {
-          // console.log("response:", response.data);
+          console.log("response:", response.data);
           dispatch(
             loginActions.login({
               id: loginInfo.userId,

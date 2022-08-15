@@ -1,9 +1,11 @@
 import { createSlice, configureStore, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
+import { useSelector } from 'react-redux';
+
 
 const departSlice = createSlice({
     name: 'depart',
     initialState: {
-        departId: null,
+        departId: "",
         userId: null,
         departName: "싸피",
         departCode: null

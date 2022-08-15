@@ -21,63 +21,11 @@ import { SosOutlined } from '@mui/icons-material';
 import { reRenderingActions } from '../../store/community/ReRendering';
 
 
-
-
-const dummyCategory = [
-    {
-        categoryId: 1,
-        categoryAnoInfo: 1,
-        categoryComAnoInfo: false,
-        categoryComInfo: 1,
-        categoryName: '공지사항',
-        cType: '공지사항',
-        departId: null,
-        userId: null
-    },
-    {
-        categoryId: 2,
-        categoryAnoInfo: 0,
-        categoryComAnoInfo: false,
-        categoryComInfo: 1,
-        categoryName: '질문',
-        cType: '자유게시판',
-        departId: null,
-        userId: null
-    },
-    {
-        categoryId: 3,
-        categoryAnoInfo: 0,
-        categoryComAnoInfo: false,
-        categoryComInfo: 0,
-        categoryName: '자료실',
-        cType: '자료실',
-        departId: null,
-        userId: null
-    },
-    {
-        categoryId: 4,
-        categoryAnoInfo: 0,
-        categoryComAnoInfo: false,
-        categoryComInfo: 0,
-        categoryName: '자유게시판',
-        cType: '자유게시판',
-        departId: null,
-        userId: null
-    },
-    {
-        categoryId: 5,
-        categoryAnoInfo: false,
-        categoryComAnoInfo: false,
-        categoryComInfo: false,
-        categoryName: '수업실',
-        cType: '시간표',
-        departId: null,
-        userId: null
-    },
-]
-
-function CategoryList(dummyCategory){
+function CategoryList(){
     
+    const { categoryList } = useSelector(state => state.userInfo );
+    const { id } = useSelector(state => state.userInfo);
+    console.log("카테고리리스트: ", categoryList)
     const dispatch = useDispatch()
     const departName = useSelector(state => state.depart.departName)
 
@@ -119,14 +67,13 @@ function CategoryList(dummyCategory){
         function CategoryFunction(i){
             setChangeCss(i+1)
             dispatch(categoryActions.saveCategory(
-                {categoryId: dummyCategory[i].categoryId,
-                categoryAnoInfo: dummyCategory[i].categoryAnoInfo,
-                categoryComAnoInfo: dummyCategory[i].categoryComAnoInfo,
-                categoryComInfo: dummyCategory[i].categoryComInfo,
-                categoryName: dummyCategory[i].categoryName,
-                cType: dummyCategory[i].cType,
-                departId: dummyCategory[i].departId,
-                userId: dummyCategory[i].userId}
+                {categoryId: categoryList[i].categoryId,
+                categoryAnoInfo: categoryList[i].categoryAnoInfo,
+                categoryComAnoInfo: categoryList[i].categoryComAnoInfo,
+                categoryComInfo: categoryList[i].categoryComInfo,
+                categoryName: categoryList[i].categoryName,
+                cType: categoryList[i].cType,
+                userId: id}
             ))
             dispatch(reRenderingActions.saveSetMyPage(
                 {
@@ -140,67 +87,67 @@ function CategoryList(dummyCategory){
             ))
         }
         const result = [];
-        for (let i = 0; i < dummyCategory.length; i++) {
+        for (let i = 0; i < categoryList.length; i++) {
           result.push(
                 <>  
-                    {dummyCategory[i].categoryName === "공지사항" && (
-                        <StyledLink to={`/community/` + departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
+                    {categoryList[i].categoryName === "공지사항" && (
+                        <StyledLink to={`/community/` + departName + `/` + categoryList[i].categoryName} onClick={() => { CategoryFunction(i)}}>
                              <div key={i} style={changeCss === 1 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 1 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <CampaignIcon/>
                                     &nbsp; 
-                                    {dummyCategory[i].categoryName}
+                                    {categoryList[i].categoryName}
                                     {console.log(changeCss)}
     
                                 </div>
                             </div>
                         </StyledLink>
                     )}
-                    {dummyCategory[i].categoryName === "질문" && (
-                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
+                    {categoryList[i].categoryName === "질문" && (
+                        <StyledLink to={`/community/`+ departName + `/` + categoryList[i].categoryName} onClick={() => { CategoryFunction(i)}}>
                             <div key={i} style={changeCss === 2 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 2 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <ContactSupportOutlinedIcon/>
                                     &nbsp; 
-                                    {dummyCategory[i].categoryName}
+                                    {categoryList[i].categoryName}
                                 </div>
                             </div>
                         </StyledLink>
                     )}
-                    {dummyCategory[i].categoryName === "자료실" && (
-                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i) }}>
+                    {/* {categoryList[i].categoryName === "자료실" && (
+                        <StyledLink to={`/community/`+ departName + `/` + categoryList[i].categoryName} onClick={() => { CategoryFunction(i) }}>
                             <div key={i} style={changeCss === 3 ? clickStyle : noClickStyle}>
                                 <div style={changeCss === 3 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <FolderOutlinedIcon/>
                                     &nbsp; 
-                                    {dummyCategory[i].categoryName}
+                                    {categoryList[i].categoryName}
                                 </div>
                             </div>
                         </StyledLink>
-                    )}
-                    {dummyCategory[i].categoryName === "자유게시판" && (
-                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i) }}>
-                            <div key={i} style={changeCss === 4 ? clickStyle : noClickStyle}>
-                                <div style={changeCss === 4 ? null : purpleBar }></div>
+                    )} */}
+                    {categoryList[i].categoryName === "자유게시판" && (
+                        <StyledLink to={`/community/`+ departName + `/` + categoryList[i].categoryName} onClick={() => { CategoryFunction(i) }}>
+                            <div key={i} style={changeCss === 3 ? clickStyle : noClickStyle}>
+                                <div style={changeCss === 3 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <ArticleOutlinedIcon/>
                                     &nbsp;
-                                    {dummyCategory[i].categoryName}
+                                    {categoryList[i].categoryName}
                                 </div>
                             </div>
                         </StyledLink>
                     )}
-                    {dummyCategory[i].categoryName === "수업실" && (
-                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
-                            <div key={i} style={changeCss === 5 ? clickStyle : noClickStyle}>
-                                <div style={changeCss === 5 ? null : purpleBar }></div>
+                    {categoryList[i].categoryName === "수업실" && (
+                        <StyledLink to={`/community/`+ departName + `/` + categoryList[i].categoryName} onClick={() => { CategoryFunction(i)}}>
+                            <div key={i} style={changeCss === 4 ? clickStyle : noClickStyle}>
+                                <div style={changeCss === 4 ? null : purpleBar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <VideocamOutlinedIcon/>
                                      &nbsp;
-                                    {dummyCategory[i].categoryName}
+                                    {categoryList[i].categoryName}
                                 </div>
                             </div>
                         </StyledLink>
@@ -288,7 +235,7 @@ function Category(){
     return(
         <>
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", width: "210px", height: "700px"}}>
-                {CategoryList(dummyCategory)}
+                {CategoryList()}
                 <StyledLink to={`/community/`+ departName + `/관리자페이지`} onClick={() => { setChangeCss(99999)}}>
                         <div style={noClickStyle}>
                             <div style={ Bar }></div>
