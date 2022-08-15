@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.api.request.DepartCreateReq;
-import com.ssafy.api.response.DepartCreateRes;
 import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.depart.UserDepart;
@@ -39,7 +38,7 @@ public class DepartServiceImpl implements DepartService {
 	private UserDepartRepository userDepartRepository;
 	
 	@Override // 채널 생성
-	public DepartCreateRes createChannel(DepartCreateReq departCreateReq) { //, String userId
+	public Long createChannel(DepartCreateReq departCreateReq) { //, String userId
 
 		int leftLimit = 48; // numeral '0'
 		int rightLimit = 122; // letter 'z'
@@ -80,15 +79,15 @@ public class DepartServiceImpl implements DepartService {
 				.build();
 		
 		Category category2 = Category.builder()
-				.categoryName("질문1")
+				.categoryName("질문")
 				.categoryAnoInfo(true)
-				.ctype("FREE")
+				.ctype("QNA")
 				.user(user)
 				.depart(createDepart)
 				.build();
 		
 		Category category3 = Category.builder()
-				.categoryName("질문1")
+				.categoryName("자유게시판")
 				.categoryAnoInfo(true)
 				.ctype("FREE")
 				.user(user)
@@ -96,14 +95,14 @@ public class DepartServiceImpl implements DepartService {
 				.build();
 		
 		Category category4 = Category.builder()
-				.categoryName("질문1")
+				.categoryName("수업실")
 				.categoryAnoInfo(true)
-				.ctype("FREE")
+				.ctype("TIMETABLE")
 				.user(user)
 				.depart(createDepart)
 				.build();
 		
-		Long categoryId = categoryRepository.save(category1).getCategoryId();
+		categoryRepository.save(category1);
 		categoryRepository.save(category2);
 		categoryRepository.save(category3);
 		categoryRepository.save(category4);
@@ -114,7 +113,7 @@ public class DepartServiceImpl implements DepartService {
 //		depart.setDepartCode(generatedString);
 //		depart.setUser(userRepository.findById(userId));
 		
-		return new DepartCreateRes(departId, categoryId);
+		return departId;
 	}
 
 	@Override // 채널 입장
