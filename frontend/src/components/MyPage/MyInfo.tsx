@@ -36,11 +36,11 @@ function MyPage() {
   });
 
   useEffect(() => {
-    console.log(id);
+    //console.log(id);
     apiAcc
       .get(`/user/${id}`)
       .then(function (response) {
-        console.log("성공", response);
+        //console.log("성공", response);
         setMydataInfo({
           ...mydataInfo,
           userName: response.data.userName,
@@ -209,8 +209,8 @@ function MyPage() {
           <Content>
             <Avatar
               sx={{
-                width: 120,
-                height: 120,
+                width: 150,
+                height: 150,
                 bgcolor: palette.yellow_3,
                 marginBottom: 6,
                 fontSize: 40,
@@ -256,8 +256,8 @@ function MyPage() {
         <Content>
           <Avatar
             sx={{
-              width: 120,
-              height: 120,
+              width: 150,
+              height: 150,
               bgcolor: palette.yellow_3,
               marginBottom: 6,
               fontSize: 40,
@@ -422,7 +422,7 @@ const Content = styled.div`
   align-items: center;
   position: absolute;
   left: 50%;
-  margin-top: 30px;
+  margin-top: 50px;
   transform: translate(-50%);
 `;
 
@@ -430,7 +430,7 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 115px 300px;
   grid-template-rows: minmax(1fr, auto);
-  row-gap: 20px;
+  row-gap: 40px;
   column-gap: 30px;
   align-items: stretch;
 `;
@@ -440,7 +440,8 @@ const SetGrid = styled.div`
   grid-template-columns: 115px 300px;
   grid-template-rows: repeat(4, 1fr);
   column-gap: 30px;
-  align-items: stretch;
+  
+  //align-items: stretch;
 `;
 
 const SpanGrid = styled.div`
@@ -501,13 +502,13 @@ const MemberWithdrawal = styled.button`
 const UserEdit = styled(ButtonBlue)`
   font-size: 0.8rem;
   padding: 0.8rem 1.2rem;
-  margin-top: 45px;
+  margin-top: 60px;
 `;
 
 const StyledPage = styled.div`
   display: flex;
-  column-gap: 30px;
-  height: 235px;
+  column-gap: 50px;
+  height: 250px;
 `;
 
 const Vline = styled.div`
