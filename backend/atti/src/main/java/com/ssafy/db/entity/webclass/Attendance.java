@@ -32,11 +32,20 @@ public class Attendance {
 	
 	@Lob
 	@Column(name="attendance_content")
-	private String attendancdContent;
+	private String attendancedContent;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	private User user;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="course_id")
+	private Course course;
+	
+	// entity 는 setter 있는 게 안좋다고 함..
+	public void updateAttendancedContent(String change) {
+		this.attendancedContent = change;
+	}
 	
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name="webclass_id")

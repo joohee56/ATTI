@@ -102,8 +102,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	
-	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
-	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
 	implementation("com.auth0:java-jwt:3.10.3")
 	implementation("com.google.guava:guava:29.0-jre")
 	
@@ -160,10 +158,6 @@ dependencies {
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'it.ozimov:embedded-redis:0.7.2'
-	
-	// file
-	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
-	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 	
 }
 
