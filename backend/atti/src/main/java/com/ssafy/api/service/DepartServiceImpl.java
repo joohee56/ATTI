@@ -135,22 +135,34 @@ public class DepartServiceImpl implements DepartService {
 		Depart depart = departRepository.findByDepartCode(departCode).orElse(null);
 //				.orElseThrow(() -> new IllegalArgumentException("joinChannel - departCode not found"));
 		
-		// 채널 코드에 맞는 게 없음
-		if(depart == null) return null;
-		
 		Long departId = depart.getDepartId();
 		
 		// 채널 가입
 		User user = userRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("joinChannel - no User"));
 		
-		UserDepart ud = UserDepart.builder().user(user).depart(depart).build();
+		UserDepart ud = UserDepart.builder()
+				.user(user)
+				.depart(depart).build();
 		
 		userDepartRepository.save(ud);
 		
-		// 채널 가입 시 채널 카테고리 리스트 넘김
+		// 채널 카테고리 리스트 넘김
 		List<CategoryListRes> categoryList = categoryService.getCategoryList(departId);
 		
 		return categoryList;
+	}
+	
+	@Override
+	// 채널에 가입된 회원인지 여부 리턴
+	public boolean isOnChannelUser(Long departId, String userId) {
+		User user = userRepository.findById(userId).orElse(null);
+		Depart depart = departRepository.findById(departId).orElse(null);
+		
+		UserDepart ud = userDepartRepository.findByDepartAndUser(depart, user).orElse(null);
+		
+		if(ud == null) // 가입된 회원이 아님
+			return false;
+		else return true;
 	}
 	
 	@Override

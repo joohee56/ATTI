@@ -14,9 +14,9 @@ import lombok.Setter;
 public class DepartJoinListRes extends BaseResponseBody{
 	private List<CategoryListRes> categoryList = new ArrayList<CategoryListRes>();
 	private Long departId;
-	private List<Post> postList = new ArrayList<>();
+	private List<PostViewAllRes> postList = new ArrayList<>();
 	
-	public static DepartJoinListRes of(Integer statusCode, String message, List<CategoryListRes> categoryList, Long departId, List<Post> postList) {
+	public static DepartJoinListRes of(Integer statusCode, String message, List<CategoryListRes> categoryList, Long departId, List<PostViewAllRes> postList) {
 		DepartJoinListRes res = new DepartJoinListRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);
