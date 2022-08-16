@@ -10,6 +10,6 @@ import com.ssafy.db.entity.depart.Post;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long>{
-	List<Comment> findByPostOrderByCommentIdDesc(Post post);
+	List<Comment> findByPostOrderByCommentId(Post post);
 	long countByPost(Post post);
 }

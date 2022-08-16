@@ -74,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
 	public List<CommentViewReplyRes> viewReply(Long postId, String userId) {
 //		return commentRepository.findComment(postId);
 		Post post = postRepository.findById(postId).orElse(null);
-		List<Comment> commentList = commentRepository.findByPostOrderByCommentIdDesc(post);
+		List<Comment> commentList = commentRepository.findByPostOrderByCommentId(post);
 		
 		List<CommentViewReplyRes> commentViewReplyRes;
 		if(commentList.isEmpty()) return null;
