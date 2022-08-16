@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { ButtonBlue } from "./ButtonStyled";
-import LogoCirce from "../assets/images/logoCirce.png";
+import LogoCirce from "../assets/images/logoCircle.png";
 import AttiText4 from "../assets/images/Text/AttiText4.png";
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../store/LoginStore";
@@ -21,22 +20,35 @@ import { Link, useNavigate } from "react-router-dom";
 
 function HeaderNav() {
   const { auth } = useSelector((state: RootState) => state.userInfo);
-  const departList = useSelector((state: RootState) => state.userInfo.departList);
-  const categoryList = useSelector((state: RootState) => state.userInfo.categoryList);
-  const myPage = useSelector((state: RootState) => state.reRendering.setMyPage)
+  const { userName } = useSelector((state: RootState) => state.userInfo);
+  const { randomColor } = useSelector((state: RootState) => state.userInfo);
+  const departList = useSelector(
+    (state: RootState) => state.userInfo.departList
+  );
+  const categoryList = useSelector(
+    (state: RootState) => state.userInfo.categoryList
+  );
+  const myPage = useSelector((state: RootState) => state.reRendering.setMyPage);
   //const adminPage = useSelector((state: RootState) => state.reRendering.setAdminPage)
-  
-  const getMyPage = (i: any) => {
-    return !i
-  }
-  const getAdminPage = (j: any) => {
-    return false}
 
-  function myPageFunction(){
-    dispatch(reRenderingActions.saveSetMyPage({setMyPage: getMyPage(myPage)}))
-    dispatch(reRenderingActions.saveSetAdminPage({setAdminPage: getAdminPage(myPage)}))
-  }  
-  
+  const getMyPage = (i: any) => {
+    return !i;
+  };
+  const getAdminPage = (j: any) => {
+    return false;
+  };
+
+  function myPageFunction() {
+    dispatch(
+      reRenderingActions.saveSetMyPage({ setMyPage: getMyPage(myPage) })
+    );
+    dispatch(
+      reRenderingActions.saveSetAdminPage({
+        setAdminPage: getAdminPage(myPage),
+      })
+    );
+  }
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -57,27 +69,28 @@ function HeaderNav() {
   };
 
   const logoClick = () => {
-    navigate(!auth? "/":`/community/${departList[0].departId}/${categoryList[0].categoryId}`);
+    navigate(
+      !auth
+        ? "/"
+        : `/community/${departList[0].departId}/${categoryList[0].categoryId}`
+    );
   };
 
   return (
     <Main>
       <Header>
         <div style={{ display: `flex` }}>
-        
-            <LogoImg src={LogoCirce} onClick={logoClick} alt="Logo Circle Img" />
-   
+          <LogoImg src={LogoCirce} onClick={logoClick} alt="Logo Circle Img" />
+
           <LogoText src={AttiText4} alt="LogoText Img" />
         </div>
         {!auth ? (
           <div>
-          <Link to="/login">
-            <LoginButton>로그인</LoginButton>
-          </Link>
-          <Link to="/signup" >
-          <LoginButton>회원가입</LoginButton>
-        </Link>
-        </div>
+            <LoginButton onClick={() => navigate("/login")}>로그인</LoginButton>
+            <LoginButton onClick={() => navigate("/signup")}>
+              회원가입
+            </LoginButton>
+          </div>
         ) : (
           // 쪽지 // 알림 // 프로필이미지
           <div style={{ display: `flex` }}>
@@ -95,8 +108,9 @@ function HeaderNav() {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar sx={{ width: 40, height: 40, bgcolor: palette.yellow_3 }}>
-                M
+              <SpanText style={{ marginRight: "10px" }}>{userName}님</SpanText>
+              <Avatar sx={{ width: 30, height: 30, bgcolor: randomColor }}>
+                {userName.substring(0, 1)}
               </Avatar>
             </IconButton>
             <Menu
@@ -133,17 +147,20 @@ function HeaderNav() {
               transformOrigin={{ horizontal: "right", vertical: "top" }}
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-              <MenuItem onClick={() => {myPageFunction()}}>
+              <MenuItem
+                onClick={() => {
+                  myPageFunction();
+                }}
+              >
                 <Avatar /> My Profile
               </MenuItem>
               <MenuItem>
                 <ListItemIcon onClick={Logout}>
                   <LogoutIcon fontSize="small" />
-                로그아웃
+                  로그아웃
                 </ListItemIcon>
               </MenuItem>
             </Menu>
-            {/* <LoginButton onClick={Logout}>로그아웃</LoginButton> */}
           </div>
         )}
       </Header>
@@ -167,7 +184,19 @@ const Header = styled.header`
   background-color: transparent;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid ${palette.gray_2};
+`;
+
+const SpanText = styled.span`
+  width: 100%;
+  height: 30px;
+  max-width: 1700px;
+  padding: 12px 0px;
+  margin: auto;
+  font-weight: bold;
+  display: flex;
+  background-color: transparent;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const LogoImg = styled.img`
@@ -186,11 +215,24 @@ const LogoText = styled.img`
   src={AttiText4} */
 `;
 
+const LinkStyle = styled(Link)`
+  text-align: center;
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+    color: ${palette.gray_5};
+  }
+`;
+
 const LoginButton = styled.span`
   font-weight: bold;
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   padding: 10px 24px;
   border-radius: 8px;
+  cursor: pointer;
 `;
 
 export default HeaderNav;
