@@ -92,6 +92,14 @@ public class DepartServiceImpl implements DepartService {
 				.build();
 		
 		Category category3 = Category.builder()
+				.categoryName("자료실")
+				.categoryAnoInfo(false)
+				.ctype("DATA")
+				.user(user)
+				.depart(createDepart)
+				.build();
+		
+		Category category4 = Category.builder()
 				.categoryName("자유게시판")
 				.categoryAnoInfo(true)
 				.ctype("FREE")
@@ -99,7 +107,7 @@ public class DepartServiceImpl implements DepartService {
 				.depart(createDepart)
 				.build();
 		
-		Category category4 = Category.builder()
+		Category category5 = Category.builder()
 				.categoryName("수업실")
 				.categoryAnoInfo(true)
 				.ctype("TIMETABLE")
@@ -111,6 +119,7 @@ public class DepartServiceImpl implements DepartService {
 		categoryRepository.save(category2);
 		categoryRepository.save(category3);
 		categoryRepository.save(category4);
+		categoryRepository.save(category5);
 //		Optional<Depart> depart2 = departRepository.findById((long) 1);
 //		Depart depart3 = departRepository.findById((long)1).orElse(null);
 		
