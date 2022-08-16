@@ -31,9 +31,9 @@ function HomePage() {
                   userName: response.data.userName,
                   accessToken: response.data.accessToken,
                   admin: response.data.admin,
-                  categoryList: response.data.categoryList,
-                  departList: response.data.departList,
-                  postList: response.data.postList,
+                  //categoryList: response.data.categoryList,
+                  //departList: response.data.departList,
+                  //postList: response.data.postList,
                 })
               );
             }
