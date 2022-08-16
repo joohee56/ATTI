@@ -1,4 +1,4 @@
-import React, { useState, useCallback, PropsWithChildren } from "react";
+import React, { useState, useCallback, PropsWithChildren,useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import DepartList from "../components/Community/Depart";
@@ -16,17 +16,22 @@ import { RootState } from "../store";
 
 function Community() {
   // const departName = useSelector(categoryState => categoryState.depart.departName)
-  const categoryList = useSelector((state: RootState) => state.userInfo);
-  
- 
+  const categoryList = useSelector((state: RootState) => state.category.categoryList);
+  const [changeState, setChangeState] = useState(false);
+  useEffect(() => {
+    console.log("커뮤니티의 찬기를 바꿉니다.")
+    setChangeState((prev) => {
+      return !prev;
+    })
+  },[categoryList])
   return (
     <CommunityDiv>
       <Main>
         <div>
           <DepartList />
-          <Category />
+          <Category changeState={changeState } />
         </div>
-         <NormalPostFrame />
+        <NormalPostFrame changeState={changeState} />
       </Main>
     </CommunityDiv>
   );

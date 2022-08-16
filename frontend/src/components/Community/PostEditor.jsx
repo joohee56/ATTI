@@ -70,8 +70,8 @@ function PostEditor({handleModal1}, props) {
               )
               .then((res) => {
                 console.log("response:", res);
-                dispatch(reRenderingActions.saveReRendering(
-                    {cider: updateCider }
+                dispatch(reRenderingActions.saveSetPost(
+                    {setPost: updateSetPost }
                 ))
 
               });
@@ -91,8 +91,8 @@ function PostEditor({handleModal1}, props) {
       );
     
     const dispatch = useDispatch()
-    const currentCider = useSelector(state => state.reRendering.cider)
-    const updateCider = !currentCider
+    const currentSetPost = useSelector(state => state.reRendering.setPost)
+    const updateSetPost = !currentSetPost
    
    
     function EditFunction(){

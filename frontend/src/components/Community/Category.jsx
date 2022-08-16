@@ -21,7 +21,7 @@ import { SosOutlined } from '@mui/icons-material';
 import { reRenderingActions } from '../../store/community/ReRendering';
 
 
-function CategoryList(){
+function CategoryList(changeState){
     
     const  categoryList  = useSelector(state => state.category.categoryList );
     console.log("카테고리리스트: ", categoryList)
@@ -31,15 +31,23 @@ function CategoryList(){
     const departId = useSelector(state => state.depart.departId)
     const currentCider = useSelector(state => state.reRendering.cider)
 
-    const [category, setCategory] = useState(categoryList)
+    const [category, setCategory] = useState([])
+    
     const [changeCss, setChangeCss] = useState(1);
+
+    const [changeResult, setChangeResult] = useState(false);
    
+
+    useEffect(() => {
+        setCategory(categoryList);
+    },[])
     useEffect(() => {
         setCategory(categoryLists)
+        setChangeResult(true);
     }, [currentCider])
 
 
-    const rendering = () => {
+    const Rendering = (changeState, changeResult,setChangeResult) => {
         const noClickStyle = {
             display: "flex",
             flexDirection: "row",
@@ -72,8 +80,18 @@ function CategoryList(){
             backgroundColor: palette.purlue_2,
            
         }
-        
-        function CategoryFunction(i){
+        console.log("changeState는?", changeState);
+        useEffect(() => {
+            if (changeResult) {
+                console.log("찬기")
+                console.log(category);
+                CategoryFunction(0)
+                setChangeResult(false);
+            }
+            
+        },[changeState,changeResult])
+        function CategoryFunction(i) {
+            
             setChangeCss(i+1)
             dispatch(categoryActions.saveCategory(
                 {categoryId: category[i].categoryId,
@@ -119,10 +137,11 @@ function CategoryList(){
         return result;
       };
     
-    return rendering();
+    return Rendering(changeState,changeResult,setChangeResult);
     }
 
-function Category(){
+function Category({changeState }){
+    console.log("카테고리의 찬기",changeState)
     const departId = useSelector(state => state.depart.departId)
     const [changeCss, setChangeCss] = useState(1);
     const noClickStyle = {
@@ -197,7 +216,7 @@ function Category(){
     return(
         <>
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", width: "210px", height: "700px"}}>
-                {CategoryList()}
+                {CategoryList(changeState)}
                 
                 {admin && (
                     <div style={{position: "absolute", bottom: "50px"}}>

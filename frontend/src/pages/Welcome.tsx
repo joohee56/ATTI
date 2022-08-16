@@ -16,6 +16,7 @@ function Welcome(){
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [isOpenModal4, setOpenModal4] = useState(false);
+  const [newDepartCreate, setNewDepartCreate] = useState(false);
     const onClickToggleModal4 = useCallback(() => {
       setOpenModal4(!isOpenModal4);
       }, [isOpenModal4]);
@@ -84,7 +85,7 @@ function Welcome(){
           width="800px"
           height="400px"
         >
-          <DepartCreate newDepartFrame={null} handleModal4={handleModal4} />
+          <DepartCreate  handleModal4={handleModal4} setNewDepartCreate={setNewDepartCreate} newDepartCreate={newDepartCreate} />
         </Modal>
       )}
 

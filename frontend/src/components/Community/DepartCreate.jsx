@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import { useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
 import apiAcc, {api} from "../../utils/api"
 import { palette } from "../../styles/palette"
@@ -11,10 +12,9 @@ import { departActions} from "../../store/community/Depart"
 import { categoryActions } from "../../store/community/Category"
 import { resolvePath } from "react-router-dom"
 
-function DepartCreate({handleModal4, newDepartFrame}) {
-
+function DepartCreate({handleModal4, setNewDepartCreate, newDepartCreate}) {
+    const navigate = useNavigate()
     const { id } = useSelector(state => state.userInfo)
-    const { departList } = useSelector(state => state.userInfo) //로그인 했을 때 사용자의 채널들을 가져옴 -> 추가하기 전
     const [newDepart, setNewDepart] = useState({ // 추가할 채널의 정보
         userId: id,
         departName: "",
@@ -38,12 +38,12 @@ function DepartCreate({handleModal4, newDepartFrame}) {
             departName: newDepart.departName,
         }).then(function (response) {
             console.log("채널 생성 결과:", response)
-            // newDepartFrame.push(newDepart)
             console.log("새로운 채널을 생성하는데요?", newDepart.departName)
-            dispatch(departActions.saveDepart(           // 새로운 채널의 이름 저장, 생성자도 저장
+            dispatch(departActions.saveDepart(           // 새로운 채널의 이름,id 저장, 생성자도 저장
                 {
                     userId: newDepart.userId,
-                    departName: newDepart.departName
+                    departName: newDepart.departName,
+                    departId: response.data[0].departId
                 }
             ))
             dispatch(categoryActions.saveCategoryList(   // 새로운 채널에 들어있는 기본 카테고리 저장
@@ -54,6 +54,14 @@ function DepartCreate({handleModal4, newDepartFrame}) {
             dispatch(reRenderingActions.saveReRendering( // 리렌더링을 하도록 트리거 설정
                 {cider: updateCider }
             ))
+            // dispatch(departActions.initialSaveDepart({
+            //     departId: response.data[0].departId,
+            //     departName: response.data[0].departName
+            // }))
+            setNewDepartCreate((prev)=>{
+                return !prev;
+            });
+            navigate(`/community/${response.data[0].departId}/${response.data[0].categoryId}`)
         })
     }
     

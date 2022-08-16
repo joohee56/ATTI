@@ -22,28 +22,49 @@ import Fade from '@mui/material/Fade';
 
 
 function DepartList(){
-
+  
+  const [isOpenModal4, setOpenModal4] = useState(false);
   const departList  = useSelector(state => state.depart.departList)
   const { id } = useSelector(state => state.userInfo)
   const dispatch = useDispatch()
-  const newDepartUserId = useSelector(state => state.depart.userId)
+  const newDepartId = useSelector(state => state.depart.departId)
   const newDepartName = useSelector(state => state.depart.departName)
-  const [departs, setDeparts] = useState(departList)
+  const [newDepartCreate, setNewDepartCreate] = useState(false);
+  const [departs, setDeparts] = useState([])
+
+  useEffect(() => {
+    setDeparts(departList);
+  },[])
 
   function updateDepartList() {
+    console.log("새로운 채널 생성", newDepartId);
+
     const newList = []
     newList.push({
-      userId: newDepartUserId,
-      departName: newDepartName
+      departId: newDepartId,
+      departName: newDepartName,
     })
-    const combineList = [...departList, ...newList]
+    let combineList = []
+    if (departList !== null ) {
+      
+      combineList = [...departList, ...newList];
+    } else {
+      combineList = [...newList];
+    }
+    dispatch(departActions.saveDepartList(
+      {
+        departList: combineList
+      }
+    ))
     console.log(combineList);
     setDeparts(combineList)
   }
   
   useEffect(() => {
-    updateDepartList();
-  }, [newDepartName])
+       
+      updateDepartList();
+    
+  }, [newDepartCreate])
 
     const handleClose = () => {
       setAnchorEl(null);
@@ -81,7 +102,6 @@ function DepartList(){
     }
     const departName = useSelector(state => state.depart.departName)
 
-    const [isOpenModal4, setOpenModal4] = useState(false);
     const onClickToggleModal4 = useCallback(() => {
       setOpenModal4(!isOpenModal4);
       }, [isOpenModal4]);
@@ -141,12 +161,13 @@ function DepartList(){
           <MenuItem onClick={() => {departCreateFunction()}}> <AddBoxIcon/>&nbsp; 채널생성</MenuItem>
           <MenuItem onClick={() => {departJoinFunction()}}><GroupAddIcon/>&nbsp; 채널가입</MenuItem>
          
-          {Object.keys(departs).map((e,i) => (
-            <MenuItem onClick={() => {departFunction(i)}} key={i}>{departs[e].departName}</MenuItem> 
+          {departs !== null && departs.length > 0 && Object.keys(departs).map((e,i) => (
+            <div>{console.log(departs)}
+            <MenuItem onClick={() => {departFunction(i)}} key={i}>{departs[e].departName}</MenuItem> </div>
           ))}
         </Menu>
         <div style={{display: 'flex', flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-        <Avatar sx={{ width: 45, height: 45 }} style={{margin: "11px 10px 0 11px"}}>{departList.findIndex(findId)+1}</Avatar>
+        <Avatar sx={{ width: 45, height: 45 }} style={{margin: "11px 10px 0 11px"}}>1</Avatar>
           {departName}
         </div>
       </DepartContainer>
@@ -156,7 +177,7 @@ function DepartList(){
           width="800px"
           height="400px"
         >
-          <DepartCreate  handleModal4={handleModal4} />
+            <DepartCreate handleModal4={handleModal4} setNewDepartCreate={setNewDepartCreate} newDepartCreate={newDepartCreate} />
         </Modal>
       )}
        {isOpenModal5 && (

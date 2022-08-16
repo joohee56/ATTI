@@ -17,8 +17,8 @@ import { CommentOutlined } from '@material-ui/icons';
 function CommentList({comments, postId}){
     const { id } = useSelector(state => state.userInfo)
     const [commentList, setCommentList] = useState(comments)
-    const currentCider = useSelector(state => state.reRendering.cider)
-    const updateCider = !currentCider
+    const currentSetPost = useSelector(state => state.reRendering.setPost)
+    const updateSetPost = !currentSetPost
     const dispatch = useDispatch()
     // 단일 comment 지우기
     const commentDelete = (commentId) => {
@@ -27,8 +27,8 @@ function CommentList({comments, postId}){
         .then((res) => {
             console.log("댓글 지우기:", res);
             console.log("-----------------")
-            dispatch(reRenderingActions.saveReRendering(
-                {cider: updateCider }))
+            dispatch(reRenderingActions.saveSetPost(
+                {setPost: updateSetPost }))
 
         });
     }
@@ -39,7 +39,7 @@ function CommentList({comments, postId}){
             console.log("댓글들: ", res.data)
             commentList = res.data
         })
-    }, [currentCider])
+    }, [currentSetPost])
 
     // // 단일 comment 좋아요
     // const [commentLikeCount, setCommentLikeCount] = useState([])

@@ -8,7 +8,8 @@ const departSlice = createSlice({
         departId: "",
         userId: null,
         departName: "싸피",
-        departCode: null
+        departCode: null,
+        departList: []
     },
     reducers: {
         saveDepart(state, action) {

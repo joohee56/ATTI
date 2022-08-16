@@ -26,8 +26,8 @@ import ReactHtmlParser from 'react-html-parser'
 function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
     const [single, setSingle] = useState([])
     const [comments, setComments] = useState([])
-    const currentCider = useSelector(state => state.reRendering.cider)
-    const updateCider = !currentCider
+    const currentSetPost = useSelector(state => state.reRendering.setPost)
+    const updateSetPost = !currentSetPost
     const { id } = useSelector(state => state.userInfo)
 
     useEffect(() => {
@@ -44,7 +44,7 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
             console.log("댓글들: ", res)
             setComments(res.data)
         })
-       },[currentCider]);
+       },[currentSetPost]);
     
     function modalEvent(){
         onClickToggleModal2()
@@ -97,8 +97,8 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
 
             .then((res) => {
                 console.log("response:", res);
-                dispatch(reRenderingActions.saveReRendering(
-                    {cider: updateCider }
+                dispatch(reRenderingActions.saveSetPost(
+                    {setPost: updateSetPost }
                 ))
     
             });
@@ -130,8 +130,8 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
         )
         .then((res) => {
             console.log("response:", res);
-            dispatch(reRenderingActions.saveReRendering(
-                {cider: updateCider }
+            dispatch(reRenderingActions.saveSetPost(
+                {setPost: updateSetPost }
             ))
         });
     }
