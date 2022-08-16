@@ -370,3 +370,28 @@ export const SmallMeetingAttendAndChattingButton = styled(
 )`
   animation: ${slideButton} 1.3s 0s 1;
 `;
+
+export const AttendsListConnection = styled.div`
+  margin-top: 5px;
+  margin-bottom: 5px;
+`;
+
+export const AttendsListNotConnection = styled(AttendsListConnection)`
+  border-top: 2px solid #d3d3d3;
+`;
+
+export const AttendsListConnectionDiv = styled.div`
+  margin-left: 15px;
+  font-size: small;
+`;
+
+export const QestionAnswerCommentInput = styled.input`
+  width: 90%;
+  height: 25px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid;
+  background-color: none;
+  background: none;
+`;

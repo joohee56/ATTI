@@ -1,10 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+import apiAcc, {api} from "../../utils/api"
+import { reRenderingActions } from '../../store/community/ReRendering';
 import { departActions } from '../../store/community/Depart';
+import { categoryActions } from '../../store/community/Category';
 import DepartCreate from './DepartCreate';
 import DepartJoin from './DepartJoin';
 import Modal from '../Modal';
@@ -20,53 +23,85 @@ import Fade from '@mui/material/Fade';
 
 function DepartList(){
   
+  const [isOpenModal4, setOpenModal4] = useState(false);
+  const departList  = useSelector(state => state.depart.departList)
+  const { id } = useSelector(state => state.userInfo)
   const dispatch = useDispatch()
+  const newDepartId = useSelector(state => state.depart.departId)
+  const newDepartName = useSelector(state => state.depart.departName)
+  const [newDepartCreate, setNewDepartCreate] = useState(false);
+  const [departs, setDeparts] = useState([])
 
-  const dummyDepart = [
-    {
-      departId: 1,
-      userId: "",
-      departName: "싸피",
-      departCode: ""
-    },
-    {
-      departId: 2,
-      userId: "",
-      departName: "대전1반",
-      departCode: ""
-    },
-    {
-      departId: 3,
-      userId: "",
-      departName: "대전3반",
-      departCode: ""
-    },
+  useEffect(() => {
+    setDeparts(departList);
+  },[])
+
+  function updateDepartList() {
+    console.log("새로운 채널 생성", newDepartId);
+
+    const newList = []
+    newList.push({
+      departId: newDepartId,
+      departName: newDepartName,
+    })
+    let combineList = []
+    if (departList !== null ) {
+      
+      combineList = [...departList, ...newList];
+    } else {
+      combineList = [...newList];
+    }
+    dispatch(departActions.saveDepartList(
+      {
+        departList: combineList
+      }
+    ))
+    console.log(combineList);
+    setDeparts(combineList)
+  }
   
-  ]
+  useEffect(() => {
+       
+      updateDepartList();
+    
+  }, [newDepartCreate])
+
     const handleClose = () => {
       setAnchorEl(null);
     };
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     }
+    const currentCider = useSelector(state => state.reRendering.cider)
+    const updateCider = !currentCider
 
     function departFunction(i){
       handleClose()
       dispatch(departActions.saveDepart(
-        {departId: dummyDepart[i].departId,
-        userId: dummyDepart[i].userId,
-        departName: dummyDepart[i].departName,
-        departCode: dummyDepart[i].departCode,
+        {departId: departList[i].departId,
+        userId: id,
+        departName: departList[i].departName,
        }
-    ))
+       
+       ))
+       api.get(`/depart/getCategoryList/${departList[i].departId}`
+       ).then((res) => {
+        console.log("어떻게 나오나?", res.data);
+        dispatch(categoryActions.saveCategoryList( // 카테고리 선택
+          {
+            categoryList: res.data
+          }
+        ))
+        dispatch(reRenderingActions.saveReRendering( // 강제로 업데이트
+          {cider: updateCider }
+      ))
+       })
     }
-
     const departName = useSelector(state => state.depart.departName)
 
-    const [isOpenModal4, setOpenModal4] = useState(false);
     const onClickToggleModal4 = useCallback(() => {
       setOpenModal4(!isOpenModal4);
       }, [isOpenModal4]);
@@ -95,7 +130,9 @@ function DepartList(){
       handleClose()
       onClickToggleModal5()
     }
-
+    
+    const departId = useSelector(state => state.depart.departId)
+    const findId = (e) => e.departId === departId
     return (
       <>
       <DepartContainer>
@@ -124,12 +161,13 @@ function DepartList(){
           <MenuItem onClick={() => {departCreateFunction()}}> <AddBoxIcon/>&nbsp; 채널생성</MenuItem>
           <MenuItem onClick={() => {departJoinFunction()}}><GroupAddIcon/>&nbsp; 채널가입</MenuItem>
          
-          {dummyDepart.map((e,i) => (
-            <MenuItem onClick={() => {departFunction(i)}} key={i}>{e.departName}</MenuItem> 
+          {departs !== null && departs.length > 0 && Object.keys(departs).map((e,i) => (
+            <div>{console.log(departs)}
+            <MenuItem onClick={() => {departFunction(i)}} key={i}>{departs[e].departName}</MenuItem> </div>
           ))}
         </Menu>
         <div style={{display: 'flex', flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-        <Avatar sx={{ width: 45, height: 45 }} style={{margin: "11px 10px 0 11px"}}>번호</Avatar>
+        <Avatar sx={{ width: 45, height: 45 }} style={{margin: "11px 10px 0 11px"}}>1</Avatar>
           {departName}
         </div>
       </DepartContainer>
@@ -139,14 +177,14 @@ function DepartList(){
           width="800px"
           height="400px"
         >
-          <DepartCreate handleModal4={handleModal4} />
+            <DepartCreate handleModal4={handleModal4} setNewDepartCreate={setNewDepartCreate} newDepartCreate={newDepartCreate} />
         </Modal>
       )}
        {isOpenModal5 && (
         <Modal
           onClickToggleModal={onClickToggleModal5}
           width="800px"
-          height="700px"
+          height="400px"
         >
           <DepartJoin handleModal5={handleModal5} />
         </Modal>

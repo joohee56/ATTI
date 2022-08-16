@@ -13,12 +13,14 @@ interface inputInfo {
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
   textBool?: boolean;
   helperText?: string;
+  sizeBool?:boolean;
 }
 
 export default function InputWithPhone({
   placeholder,
   phonNumber,
   isCertifiedSuccess,
+  sizeBool,
   ...rest
 }: inputInfo) {
   const [isPhoneNumber, setIsPhoneNumber] = React.useState<boolean>(false);
@@ -102,7 +104,7 @@ export default function InputWithPhone({
 
   return (
     <div>
-      <FormControl sx={{width: "100%", my:1}}>
+      <FormControl sx={{width: "100%"}}>
         <OutlinedInput
           type="text"
           endAdornment={
@@ -110,7 +112,7 @@ export default function InputWithPhone({
               <ButtonPurple onClick={accreditPhone}>인증</ButtonPurple>
             </InputAdornment>
           }
-          size="small"
+          size={sizeBool?"medium":"small"}
           placeholder={placeholder}
           value={phonNumber}
           {...rest}
@@ -120,9 +122,9 @@ export default function InputWithPhone({
           <FormHelperText error>번호를 다시 확인해 주세요</FormHelperText>
         )}
       </FormControl>
-      {isPhoneNumber && (
+      {isPhoneNumber? (
         <div>
-          <FormControl sx={{ width: "100%", mb: 1 }}>
+          <FormControl sx={{ width: "100%", mt: 1 }}>
             <OutlinedInput
               type="text"
               endAdornment={
@@ -142,6 +144,8 @@ export default function InputWithPhone({
             {isSuccess && <FormHelperText>{isSuccessMessage}</FormHelperText>}
           </FormControl>
         </div>
+      ):(
+        <div style={{height:"50px"}}/>
       )}
     </div>
   );

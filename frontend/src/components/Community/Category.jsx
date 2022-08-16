@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useState, useCallback } from 'react';
+import React, {PropsWithChildren, useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NavLink, Route, Link } from "react-router-dom";
@@ -21,69 +21,33 @@ import { SosOutlined } from '@mui/icons-material';
 import { reRenderingActions } from '../../store/community/ReRendering';
 
 
-
-
-const dummyCategory = [
-    {
-        categoryId: 1,
-        categoryAnoInfo: 1,
-        categoryComAnoInfo: false,
-        categoryComInfo: 1,
-        categoryName: '공지사항',
-        cType: '공지사항',
-        departId: null,
-        userId: null
-    },
-    {
-        categoryId: 2,
-        categoryAnoInfo: 0,
-        categoryComAnoInfo: false,
-        categoryComInfo: 1,
-        categoryName: '질문',
-        cType: '자유게시판',
-        departId: null,
-        userId: null
-    },
-    {
-        categoryId: 3,
-        categoryAnoInfo: 0,
-        categoryComAnoInfo: false,
-        categoryComInfo: 0,
-        categoryName: '자료실',
-        cType: '자료실',
-        departId: null,
-        userId: null
-    },
-    {
-        categoryId: 4,
-        categoryAnoInfo: 0,
-        categoryComAnoInfo: false,
-        categoryComInfo: 0,
-        categoryName: '자유게시판',
-        cType: '자유게시판',
-        departId: null,
-        userId: null
-    },
-    {
-        categoryId: 5,
-        categoryAnoInfo: false,
-        categoryComAnoInfo: false,
-        categoryComInfo: false,
-        categoryName: '수업실',
-        cType: '시간표',
-        departId: null,
-        userId: null
-    },
-]
-
-function CategoryList(dummyCategory){
+function CategoryList(changeState){
     
+    const  categoryList  = useSelector(state => state.category.categoryList );
+    console.log("카테고리리스트: ", categoryList)
+    const categoryLists = useSelector(state => state.category.categoryList)
+    const { id } = useSelector(state => state.userInfo);
     const dispatch = useDispatch()
-    const departName = useSelector(state => state.depart.departName)
+    const departId = useSelector(state => state.depart.departId)
+    const currentCider = useSelector(state => state.reRendering.cider)
 
+    const [category, setCategory] = useState([])
+    
     const [changeCss, setChangeCss] = useState(1);
+
+    const [changeResult, setChangeResult] = useState(false);
    
-    const rendering = () => {
+
+    useEffect(() => {
+        setCategory(categoryList);
+    },[])
+    useEffect(() => {
+        setCategory(categoryLists)
+        setChangeResult(true);
+    }, [currentCider])
+
+
+    const Rendering = (changeState, changeResult,setChangeResult) => {
         const noClickStyle = {
             display: "flex",
             flexDirection: "row",
@@ -114,19 +78,29 @@ function CategoryList(dummyCategory){
             height: "60px",
             position: 'absolute',
             backgroundColor: palette.purlue_2,
+           
         }
-        
-        function CategoryFunction(i){
+        console.log("changeState는?", changeState);
+        useEffect(() => {
+            if (changeResult) {
+                console.log("찬기")
+                console.log(category);
+                CategoryFunction(0)
+                setChangeResult(false);
+            }
+            
+        },[changeState,changeResult])
+        function CategoryFunction(i) {
+            
             setChangeCss(i+1)
             dispatch(categoryActions.saveCategory(
-                {categoryId: dummyCategory[i].categoryId,
-                categoryAnoInfo: dummyCategory[i].categoryAnoInfo,
-                categoryComAnoInfo: dummyCategory[i].categoryComAnoInfo,
-                categoryComInfo: dummyCategory[i].categoryComInfo,
-                categoryName: dummyCategory[i].categoryName,
-                cType: dummyCategory[i].cType,
-                departId: dummyCategory[i].departId,
-                userId: dummyCategory[i].userId}
+                {categoryId: category[i].categoryId,
+                categoryAnoInfo: category[i].categoryAnoInfo,
+                categoryComAnoInfo: category[i].categoryComAnoInfo,
+                categoryComInfo: category[i].categoryComInfo,
+                categoryName: category[i].categoryName,
+                cType: category[i].cType,
+                userId: id}
             ))
             dispatch(reRenderingActions.saveSetMyPage(
                 {
@@ -140,71 +114,22 @@ function CategoryList(dummyCategory){
             ))
         }
         const result = [];
-        for (let i = 0; i < dummyCategory.length; i++) {
+        const buttonList = [<CampaignIcon/>, <ContactSupportOutlinedIcon/>,<ArticleOutlinedIcon/>, <VideocamOutlinedIcon/>, <span/>, <span/>, <span/>, <span/>, <span/>, <span/> ]
+        for (let i = 0; i < category.length; i++) {
           result.push(
                 <>  
-                    {dummyCategory[i].categoryName === "공지사항" && (
-                        <StyledLink to={`/community/` + departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
-                             <div key={i} style={changeCss === 1 ? clickStyle : noClickStyle}>
-                                <div style={changeCss === 1 ? null : purpleBar }></div>
-                                <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
-                                    <CampaignIcon/>
-                                    &nbsp; 
-                                    {dummyCategory[i].categoryName}
-                                    {console.log(changeCss)}
-    
-                                </div>
+                    <StyledLink to={`/community/` + departId + `/` + category[i].categoryId} onClick={() => { CategoryFunction(i)}}>
+                        <div key={i} style={changeCss === i+1 ? clickStyle : noClickStyle}>
+                            <CloseIcon style={{zIndex: "1", margin: "0 10px 10px 0"}}/>
+                            <div style={changeCss === i+1 ? null : purpleBar }></div>
+                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
+                                {buttonList[i]}
+                                &nbsp; 
+                                {category[i].categoryName}
+                                 
                             </div>
-                        </StyledLink>
-                    )}
-                    {dummyCategory[i].categoryName === "질문" && (
-                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
-                            <div key={i} style={changeCss === 2 ? clickStyle : noClickStyle}>
-                                <div style={changeCss === 2 ? null : purpleBar }></div>
-                                <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
-                                    <ContactSupportOutlinedIcon/>
-                                    &nbsp; 
-                                    {dummyCategory[i].categoryName}
-                                </div>
-                            </div>
-                        </StyledLink>
-                    )}
-                    {dummyCategory[i].categoryName === "자료실" && (
-                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i) }}>
-                            <div key={i} style={changeCss === 3 ? clickStyle : noClickStyle}>
-                                <div style={changeCss === 3 ? null : purpleBar }></div>
-                                <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
-                                    <FolderOutlinedIcon/>
-                                    &nbsp; 
-                                    {dummyCategory[i].categoryName}
-                                </div>
-                            </div>
-                        </StyledLink>
-                    )}
-                    {dummyCategory[i].categoryName === "자유게시판" && (
-                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i) }}>
-                            <div key={i} style={changeCss === 4 ? clickStyle : noClickStyle}>
-                                <div style={changeCss === 4 ? null : purpleBar }></div>
-                                <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
-                                    <ArticleOutlinedIcon/>
-                                    &nbsp;
-                                    {dummyCategory[i].categoryName}
-                                </div>
-                            </div>
-                        </StyledLink>
-                    )}
-                    {dummyCategory[i].categoryName === "수업실" && (
-                        <StyledLink to={`/community/`+ departName + `/` + dummyCategory[i].categoryName} onClick={() => { CategoryFunction(i)}}>
-                            <div key={i} style={changeCss === 5 ? clickStyle : noClickStyle}>
-                                <div style={changeCss === 5 ? null : purpleBar }></div>
-                                <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
-                                    <VideocamOutlinedIcon/>
-                                     &nbsp;
-                                    {dummyCategory[i].categoryName}
-                                </div>
-                            </div>
-                        </StyledLink>
-                    )}
+                        </div>
+                    </StyledLink>
             </>
             
           );
@@ -212,12 +137,13 @@ function CategoryList(dummyCategory){
         return result;
       };
     
-    return rendering();
+    return Rendering(changeState,changeResult,setChangeResult);
     }
 
-function Category(){
-    const departName = useSelector(state => state.depart.departName)
-    const [changeCss, setChangeCss] = useState(0);
+function Category({changeState }){
+    console.log("카테고리의 찬기",changeState)
+    const departId = useSelector(state => state.depart.departId)
+    const [changeCss, setChangeCss] = useState(1);
     const noClickStyle = {
         display: "flex",
         flexDirection: "row",
@@ -264,9 +190,13 @@ function Category(){
       );
     }
     const adminPage = useSelector(state => state.reRendering.setAdminPage)
+    const myPage = useSelector(state => state.reRendering.setMyPage)
     const getAdminPage = (i) => {
         return !i
       }
+    const getMyPage = (j) => {
+        return false
+    }
     const dispatch = useDispatch()
     function adminPageFunction(){
         setChangeCss(9999)
@@ -275,41 +205,38 @@ function Category(){
                 setAdminPage: getAdminPage(adminPage)
             }
         ))
+        dispatch(reRenderingActions.saveSetMyPage(
+            {
+                setMyPage : getMyPage(myPage)
+            }
+        ))
+
     }
+    const {admin} = useSelector(state => state.userInfo)
     return(
         <>
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", width: "210px", height: "700px"}}>
-                {CategoryList(dummyCategory)}
-                <StyledLink to={`/community/`+ departName + `/관리자페이지`} onClick={() => { setChangeCss(99999)}}>
-                        <div style={noClickStyle}>
-                            <div style={ Bar }></div>
-                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
-                                <DateRangeOutlinedIcon/>
-                                &nbsp;
-                                예시용
-                                &nbsp;  &nbsp;  &nbsp; 
-                                <CloseIcon/>
+                {CategoryList(changeState)}
+                
+                {admin && (
+                    <div style={{position: "absolute", bottom: "50px"}}>
+                        <StyledLink to={`/community/`+ departId + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
+                            <div style={noClickStyle}>
+                                <div style={ Bar }></div>
+                                <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
+                                    <DateRangeOutlinedIcon/>
+                                    &nbsp;
+                                    관리자페이지
+                                </div>
                             </div>
+                        </StyledLink>
+                        <div style={{backgroundColor: "white", width: "180px", height: "70px", margin: "15px 0 0 0", opacity: "0.6", display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center"}} onClick={() => {handleModal6()}}>
+                            <div style={Bar}><PlayArrowIcon/></div>
+                            <AddCategoryDiv>카테고리 추가</AddCategoryDiv>
                         </div>
-                    </StyledLink>
-                <div style={{position: "absolute", bottom: "50px"}}>
-                    <StyledLink to={`/community/`+ departName + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
-                        <div style={noClickStyle}>
-                            <div style={ Bar }></div>
-                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
-                                <DateRangeOutlinedIcon/>
-                                &nbsp;
-                                관리자페이지
-                            </div>
-                        </div>
-                    </StyledLink>
-                    <div style={{backgroundColor: "white", width: "180px", height: "70px", margin: "15px 0 0 0", opacity: "0.6", display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center"}} onClick={() => {handleModal6()}}>
-                        <div style={Bar}><PlayArrowIcon/></div>
-                        <AddCategoryDiv>카테고리 추가</AddCategoryDiv>
                     </div>
-
-                </div>
-            </div>
+                    )}
+                    </div>
             {isOpenModal6 && (
                 <Modal
                 onClickToggleModal={onClickToggleModal6}

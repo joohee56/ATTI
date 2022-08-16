@@ -15,7 +15,7 @@ import BorderAllIcon from "@mui/icons-material/BorderAll";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import Modal from "../Modal";
-import { BACKEND_URL } from "../../constant";
+import { api } from "../../utils/api";
 import {
   LayoutButton,
   PeopleBox,
@@ -51,12 +51,13 @@ import {
   SmallPeopleBoxWrapper,
   SmallMeetingAttendAndChattingWrapper,
   SmallMeetingAttendAndChattingButton,
+  QestionAnswerCommentInput,
 } from "./OpenViduTestStyled";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
 import FaceRetouchingOffIcon from "@mui/icons-material/FaceRetouchingOff";
 import StudentAnonymouse from "./StudentAnonymous";
-
+import { useSelector } from "react-redux";
 
 // const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
 // const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -72,18 +73,31 @@ export const CHATTING = "chatting";
 export const QnA = "QnA";
 
 const OpenViduTest = () => {
+  const userInfo = useSelector((store) => store.userInfo);
+  const studentList = useSelector((store) => store.studentList);
+  console.log(userInfo);
+  console.log(studentList);
+  let myRole = undefined;
+  if (userInfo.admin === false) {
+    myRole = STUDENT;
+  } else {
+    myRole = PROFESSOR;
+  }
+  const { categoryList } = useSelector((state) => state.userInfo);
+  console.log(categoryList);
   const [searchParams, setSearchParams] = useSearchParams();
   console.log(searchParams.get("courseId"));
   const navigate = useNavigate();
   const [state, setState] = useState({
     mySessionId: searchParams.get("courseId"),
-    myUserName: "Participant" + Math.floor(Math.random() * 100),
-    myRole: STUDENT,
+    myUserName: userInfo.userName + "(" + userInfo.id + ")",
+    myRole: myRole,
     session: undefined,
     mainStreamManager: undefined,
     publisher: undefined,
     subscribers: [],
   });
+  const departId = useSelector((store) => store.depart.departId);
   const [reqeustPresent, setReqeustPresent] = useState(false);
   const [receivePresent, setReceivePresent] = useState(false);
   const [saveSubscriber, setSaveSubscriber] = useState(undefined);
@@ -105,9 +119,37 @@ const OpenViduTest = () => {
   // QnA인지 채팅인지 선택
   const [chattingSelect, setChattingSelect] = useState(CHATTING);
   const [QnAState, setQnAState] = useState(undefined);
-  const reactionRef = useRef(null);
+  const answerRef = useRef(null);
   const [receiveReaction, setReceiveReaction] = useState(null);
   const [allOff, setAllOff] = useState(false);
+  const [answerPostNum, setAnswerPostNum] = useState("");
+  const [questionAnswer, setQuestionAnswer] = useState(false);
+
+  function handlerAnswer() {
+    setQuestionAnswer(true);
+  }
+
+  function QnAComment() {
+    api
+      .post("/post/comment/write", {
+        commentAnoInfo: 0,
+        commentContent: answerRef.current.value,
+        commentDeleteInfo: 0,
+        commentGroup: 1,
+        commentLevel: 0,
+        seq: 1,
+        userId: userInfo.id,
+        postId: answerPostNum,
+      })
+      .then((res) => {
+        setQuestionAnswer(false);
+        setQnAState(undefined);
+        answerRef.current.value = "";
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
 
   useEffect(() => {
     if (!openAttentList && !openChattingList) {
@@ -264,8 +306,13 @@ const OpenViduTest = () => {
         setSaveSubscriber(event.from);
       });
       state.session.on("signal:QnA", (event) => {
+        let temp = event.data.indexOf(")");
+        let question = event.data.slice(temp + 1);
+        console.log("질문 빳다죠", question);
+        console.log("글번호 빳다죠", event.data.slice(0, temp));
+        setAnswerPostNum(event.data.slice(0, temp));
         setQnAState({
-          message: event.data,
+          message: question,
           from: JSON.parse(event.from.data).clientData,
         });
       });
@@ -366,10 +413,12 @@ const OpenViduTest = () => {
   useEffect(() => {
     if (state.publisher !== undefined) {
       let people = state.publisher.stream.connection;
-      let peoples = state.subscribers.map((e) => {
-        console.log(e);
-        return e.stream.connection;
+      let peoples = [];
+
+      state.subscribers.forEach((e) => {
+        peoples.push(e.stream.connection);
       });
+
       console.log("배열 합치기", [people, ...peoples]);
       if (peoples.length === 0) {
         setPeopleList([people]);
@@ -402,8 +451,8 @@ const OpenViduTest = () => {
     const sessionId_1 = await createSession(state.mySessionId);
     return createToken(sessionId_1);
   }
-  async function joinSession(e) {
-    e.preventDefault();
+  async function joinSession() {
+    // e.preventDefault();
     OV = new OpenVidu();
     setChatList({
       type: "public",
@@ -572,21 +621,6 @@ const OpenViduTest = () => {
   }
   function leaveSession() {
     const mySession = state.session;
-
-    // if (mySession) {
-    //   mySession
-    //     .signal({
-    //       data: "hello world!",
-    //       to: [],
-    //       type: "disconnectUser",
-    //     })
-    //     .then(() => {
-    //       console.log("Message send success");
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // }
     mySession.disconnect();
     OV = null;
 
@@ -639,7 +673,7 @@ const OpenViduTest = () => {
       console.error(e);
     }
   }
-  function sendMessage() {
+  async function sendMessage() {
     const mySession = state.session;
     if (
       messageRef.current.value.length > 0 &&
@@ -698,38 +732,29 @@ const OpenViduTest = () => {
 
           const timeString = hours + "시" + minutes + "분" + seconds + "초";
           const message = messageRef.current.value;
-          axios
-            .post(
-              BACKEND_URL + "/post/write",
-              {
-                postAnoInfo: 0,
-                postComBanInfo: 1,
-                postContent:
-                  dateString + " " + timeString + " 에 작성된 게시물입니다.",
-                postTitle: message,
-                category_id: "1",
-                user_id: "password123",
-              },
-              {
-                headers: {
-                  "Content-type": "application/json",
-                },
-              }
-            )
-            .then((res) => {
-              console.log(res);
-              mySession
-                .signal({
-                  data: message,
-                  to: [],
-                  type: "QnA",
-                })
-                .then(() => {
-                  console.log("QnA 질문 끝!");
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
+          console.log(categoryList[1].categoryId);
+          const res = await api.post("/post/write", {
+            postTitle: message,
+            postContent:
+              dateString + " " + timeString + " 에 작성된 게시물입니다.",
+            postAnoInfo: 0,
+            postComBanInfo: 1,
+            departId: departId,
+            categoryId: categoryList[1].categoryId,
+            userId: userInfo.id,
+          });
+          console.log(res);
+          mySession
+            .signal({
+              data: res.data + ")" + message,
+              to: [],
+              type: "QnA",
+            })
+            .then(() => {
+              console.log("QnA 질문 끝!");
+            })
+            .catch((error) => {
+              console.log(error);
             });
         }
       }
@@ -866,6 +891,83 @@ const OpenViduTest = () => {
       sendMessage();
     }
   };
+  useEffect(() => {
+    OV = new OpenVidu();
+    setChatList({
+      type: "public",
+      from: "안내",
+      message: "수업실에 입장하셨습니다.",
+    });
+    const mySession = OV.initSession();
+    setState((prevState) => ({
+      ...prevState,
+      session: mySession,
+    }));
+    // mySession.on("connectionCreated", (event) => {
+    //   let peoples = peopleList;
+    //   peoples.push(event.connection);
+    //   setPeopleList(peoples);
+    // });
+    mySession.on("streamCreated", (event) => {
+      let subscriber = mySession.subscribe(event.stream, "subscriber");
+      let subscribers = state.subscribers;
+
+      subscribers.push(subscriber);
+      if (subscriber.stream.typeOfVideo === "SCREEN") {
+        setState((prevState) => ({
+          ...prevState,
+          subscribers: subscribers,
+          mainStreamManager: subscriber,
+        }));
+      } else {
+        setState((prevState) => ({
+          ...prevState,
+          subscribers: subscribers,
+        }));
+      }
+    });
+
+    mySession.on("streamDestroyed", (event) => {
+      deleteSubScriber(event.stream.streamManager);
+    });
+    getToken().then((token) => {
+      mySession
+        .connect(token, { clientData: state.myUserName })
+        .then(async () => {
+          let devices = await OV.getDevices();
+          let videoDevices = devices.filter(
+            (device) => device.kind === "videoinput"
+          );
+          let publisher = OV.initPublisher(undefined, {
+            audioSource: undefined, // The source of audio. If undefined default microphone
+            videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
+            publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+            publishVideo: true, // Whether you want to start publishing with your video enabled or not
+            resolution: "640x480", // The resolution of your video
+            frameRate: 30, // The frame rate of your video
+            insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+            mirror: false, // Whether to mirror your local video or not
+          });
+
+          // --- 6) Publish your stream ---
+
+          mySession.publish(publisher);
+          setState((prevState) => ({
+            ...prevState,
+            currentVideoDevice: videoDevices[0],
+            // mainStreamManager: publisher,
+            publisher: publisher,
+          }));
+        })
+        .catch((error) => {
+          console.log("세션에 연결할 수 없습니다.:", error.code, error.message);
+        });
+    });
+
+    mySession.on("exception", (exception) => {
+      console.warn(exception);
+    });
+  }, []);
   return (
     <MeetingRoom id="test">
       {state.session === undefined ? (
@@ -1163,7 +1265,7 @@ const OpenViduTest = () => {
                       }}
                       isClick={openAttentList}
                     >
-                      참가자({peopleList.length})
+                      회원목록({peopleList.length})
                     </SmallMeetingAttendAndChattingButton>
 
                     <SmallMeetingAttendAndChattingButton
@@ -1189,7 +1291,7 @@ const OpenViduTest = () => {
                       }}
                       isClick={openAttentList}
                     >
-                      참가자({peopleList.length})
+                      회원목록({peopleList.length})
                     </MeetingAttendAndChattingButton>
 
                     <MeetingAttendAndChattingButton
@@ -1208,6 +1310,7 @@ const OpenViduTest = () => {
                       peopleList={peopleList}
                       setChattingInfo={setChattingInfo}
                       openChattingList={openChattingList}
+                      notConnectionList={studentList}
                     />
                   ) : null}
                   {state.myRole === PROFESSOR ? (
@@ -1235,13 +1338,33 @@ const OpenViduTest = () => {
                           <QnAWrapper>
                             <QnABox>
                               <QnATitle>{`Q&A - ${QnAState.from}님`}</QnATitle>
-                              <QnAMessage>{QnAState.message}</QnAMessage>
+                              {questionAnswer ? (
+                                <QnAMessage>
+                                  <div style={{ textAlign: "center" }}>
+                                    <QestionAnswerCommentInput
+                                      ref={answerRef}
+                                    ></QestionAnswerCommentInput>
+                                  </div>
+                                </QnAMessage>
+                              ) : (
+                                <QnAMessage>{QnAState.message}</QnAMessage>
+                              )}
+
                               {state.myRole === PROFESSOR ? (
                                 <QnAButtonWrapper>
-                                  <QnAButton>답변</QnAButton>
+                                  {questionAnswer ? (
+                                    <QnAButton onClick={QnAComment}>
+                                      답변(댓글이 달림)
+                                    </QnAButton>
+                                  ) : (
+                                    <QnAButton onClick={handlerAnswer}>
+                                      답변
+                                    </QnAButton>
+                                  )}
                                   <QnAButton
                                     onClick={() => {
                                       setQnAState(undefined);
+                                      setQuestionAnswer(false);
                                     }}
                                   >
                                     닫기
@@ -1252,6 +1375,7 @@ const OpenViduTest = () => {
                                   <QnAButton
                                     onClick={() => {
                                       setQnAState(undefined);
+                                      setQuestionAnswer(false);
                                     }}
                                   >
                                     닫기

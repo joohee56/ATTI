@@ -30,6 +30,7 @@ interface inputInfo {
   rows?: number;
   textBool?: boolean;
   helperText?: string;
+  sizeBool?:boolean;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
 }
 
@@ -70,6 +71,7 @@ const InputWithIcon = ({
   textBool,
   helperText,
   rows,
+  sizeBool,
   ...rest
 }: inputInfo) => (
   <Wrapper>
@@ -82,7 +84,7 @@ const InputWithIcon = ({
             </InputAdornment>
           ),
         }}
-        size="small"
+        size={sizeBool?"medium":"small"}
         placeholder={placeholder}
         {...rest}
         rows={rows}
@@ -92,11 +94,10 @@ const InputWithIcon = ({
     {textBool &&
       (helperText ? (
         <FormHelperText disabled variant="filled">
-          {" "}
           {helperText}
         </FormHelperText>
       ) : (
-        <p style={{ margin: `21px` }}> </p>
+        <p style={{ margin: `21px` }}/>
       ))}
   </Wrapper>
 );

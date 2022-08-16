@@ -1,13 +1,13 @@
-import { Avatar, TextField } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { Avatar, FormHelperText } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { RootState } from "../../store";
+import { loginActions } from "../../store/LoginStore";
 import { palette } from "../../styles/palette";
-import apiAcc, { api } from "../../utils/api";
+import { api } from "../../utils/api";
 import InputPassword from "../account/InputPassword";
-import InputWithChannelOut from "../account/InputWithChannelOut";
 import InputWithPhone from "../account/InputWithPhone";
 import { ButtonBlue, ButtonPurple } from "../ButtonStyled";
 import InputWithLabel from "../InputWithLabel";
@@ -23,10 +23,13 @@ interface MyInfoData {
 
 function MyPage() {
   const navigate = useNavigate();
-  
+  const dispatch = useDispatch();
+
   // 데이터 받아오기
   const { userName } = useSelector((state: RootState) => state.userInfo);
   const { id } = useSelector((state: RootState) => state.userInfo);
+  const { departName } = useSelector((state: RootState) => state.depart);
+  const { randomColor } = useSelector((state: RootState) => state.userInfo);
 
   const [mydataInfo, setMydataInfo] = useState<MyInfoData>({
     userName: "",
@@ -36,11 +39,11 @@ function MyPage() {
   });
 
   useEffect(() => {
-    //console.log(id);
-    apiAcc
+    console.log(id);
+    api
       .get(`/user/${id}`)
       .then(function (response) {
-        //console.log("성공", response);
+        console.log("성공", response);
         setMydataInfo({
           ...mydataInfo,
           userName: response.data.userName,
@@ -59,11 +62,9 @@ function MyPage() {
   }, []);
 
   // 모달 보이기 여부
-  // 회원 탈퇴 모달
-  const [isOpenModal, setOpenModal] = useState<boolean>(false);
   // 채널 나가기 모달
-  const [isChannelOUtModal, setChannelOUtModal] = useState<boolean>(false);
- 
+  //const [isChannelOUtModal, setChannelOUtModal] = useState<boolean>(false);
+
   // 수정하기 눌렀나
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
@@ -111,11 +112,11 @@ function MyPage() {
   //const [phoneNumberMessage, setPhoneNumberMessage] = useState<string>("");
 
   // 유효성 검사
-  const [isName, setIsName] = useState<boolean>(false);
+  const [isName, setIsName] = useState<boolean>(true);
   const [isPassword, setIsPassword] = useState<boolean>(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(false);
-  const [isEmail, setIsEmail] = useState<boolean>(false);
-  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(false);
+  const [isEmail, setIsEmail] = useState<boolean>(true);
+  const [isPhoneNumber, setIsPhoneNumber] = useState<boolean>(true);
 
   // 수정 정규식
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,21 +175,29 @@ function MyPage() {
   };
 
   // 탈퇴
-  const [openOut, setOpenOut] = useState(false);
+  // 회원 탈퇴 모달
+  const [isOpenModal, setOpenModal] = useState<boolean>(false);
+  const [isOutOk, setIsOutOk] = useState<boolean>(false);
 
   const userOut = async (e: any) => {
     e.preventDefault();
     await api
       .put(`/user/delete/${id}`)
       .then(function (response) {
-        console.log("response:", response);
-        navigate("/");
+        //console.log("response:", response);
+        setOpenModal(false);
+        setIsOutOk(true);
+        setTimeout(function () {
+          localStorage.removeItem("AccessToken");
+          localStorage.removeItem("userId");
+          dispatch(loginActions.logout());
+          navigate("/");
+        }, 1500);
       })
       .catch(function (error) {
         console.log("Error", error);
       });
   };
-
 
   return (
     <Main>
@@ -198,7 +207,7 @@ function MyPage() {
         message="회원정보가 수정 되었습니다."
         type="success"
       />
-        <SnacbarTell
+      <SnacbarTell
         open={openNoEdit}
         setOpen={setNoEditOpen}
         message="회원정보 수정에 실패했습니다."
@@ -211,7 +220,7 @@ function MyPage() {
               sx={{
                 width: 150,
                 height: 150,
-                bgcolor: palette.yellow_3,
+                bgcolor: randomColor,
                 marginBottom: 6,
                 fontSize: 40,
               }}
@@ -243,7 +252,7 @@ function MyPage() {
                 disabled
                 name={""}
                 placeholder={""}
-                value={"내 채널가져오기 현태형 Merge후"}
+                value={departName}
               />
             </Grid>
             <UserEdit onClick={() => setIsEdit(true)}>회원정보수정</UserEdit>
@@ -258,7 +267,7 @@ function MyPage() {
             sx={{
               width: 150,
               height: 150,
-              bgcolor: palette.yellow_3,
+              bgcolor: randomColor,
               marginBottom: 6,
               fontSize: 40,
             }}
@@ -268,105 +277,72 @@ function MyPage() {
           <StyledPage>
             <div>
               <SetGrid>
-                <SpanGrid>
-                  <SpanStyle>Name</SpanStyle>
-                  <SpanStyle>ID</SpanStyle>
-                  <SpanStyle>Password</SpanStyle>
-                  <SpanStyle>Password 확인</SpanStyle>
-                </SpanGrid>
-
-                <InputGrid>
-                  <div>
-                    <InputWithLabel
-                      name={"name"}
-                      placeholder={userName}
-                      value={name}
-                      onChange={onChangeName}
-                      textBool={true}
-                      helperText={name.length > 0 && !isName ? nameMessage : ""}
-                    />
-                  </div>
-                  <InputWithLabel
-                    disabled
-                    name={"id"}
-                    placeholder={"ID"}
-                    textBool={true}
-                    value={id}
-                  />
-                  <div>
-                    <InputPassword
-                      name="password"
-                      placeholder="비밀번호"
-                      value={password}
-                      onChange={onChangePassword}
-                      textBool={true}
-                      helperText={
-                        password.length > 0 && !isPassword
-                          ? passwordMessage
-                          : "."
-                      }
-                    />
-                  </div>
-                  <div>
-                    <InputWithLabel
-                      name="password2"
-                      placeholder="비밀번호 확인"
-                      type="password"
-                      value={passwordConfirm}
-                      onChange={onChangePasswordConfirm}
-                      textBool={true}
-                      helperText={
-                        passwordConfirm.length > 0 && !isPasswordConfirm
-                          ? passwordConfirmMessage
-                          : "."
-                      }
-                    />
-                  </div>
-                </InputGrid>
+                <SpanStyle>Name</SpanStyle>
+                <InputWithLabel
+                  name={"name"}
+                  placeholder={userName}
+                  value={name}
+                  onChange={onChangeName}
+                />
+                <SpanStyle>ID</SpanStyle>
+                <InputWithLabel
+                  disabled
+                  name={"id"}
+                  placeholder={"ID"}
+                  value={id}
+                />
+                <SpanStyle>Password</SpanStyle>
+                <InputPassword
+                  name="password"
+                  placeholder="비밀번호 입력하세요"
+                  value={password}
+                  onChange={onChangePassword}
+                />
+                <SpanStyle>Password 확인</SpanStyle>
+                <InputWithLabel
+                  name="password2"
+                  placeholder="비밀번호 확인"
+                  type="password"
+                  value={passwordConfirm}
+                  onChange={onChangePasswordConfirm}
+                />
               </SetGrid>
             </div>
             <Vline />
             <div>
               <SetGrid>
-                <SpanGrid>
-                  <SpanStyle>Birth</SpanStyle>
-                  <SpanStyle>Email</SpanStyle>
-                  <SpanStyle>Channel</SpanStyle>
-                  <SpanStyle>Phone</SpanStyle>
-                </SpanGrid>
-                <InputGrid>
-                  <div>
-                    <InputWithLabel
-                      name={""}
-                      placeholder={mydataInfo.birth.replace(
-                        /(\d{4})(\d{2})(\d{2})/,
-                        "$1-$2-$3"
-                      )}
-                      value={birthState}
-                      onChange={onChangeBirth}
-                    />
-                  </div>
-                  <div>
-                    <InputWithLabel
-                      name="email"
-                      placeholder="이메일"
-                      type="email"
-                      value={email}
-                      onChange={onChangeEmail}
-                      textBool={true}
-                      helperText={
-                        email.length > 0 && !isEmail ? emailMessage : ""
-                      }
-                    />
-                  </div>
-                  <InputWithChannelOut
-                    disabled
-                    name={""}
-                    placeholder={""}
-                    value={"채널이름"}
-                    onClick={() => setChannelOUtModal(true)}
-                  />
-                </InputGrid>
+                <SpanStyle>Birth</SpanStyle>
+                <InputWithLabel
+                  name={""}
+                  placeholder={mydataInfo.birth.replace(
+                    /(\d{4})(\d{2})(\d{2})/,
+                    "$1-$2-$3"
+                  )}
+                  value={birthState.replace(
+                    /(\d{4})(\d{2})(\d{2})/,
+                    "$1-$2-$3"
+                  )}
+                  onChange={onChangeBirth}
+                />
+
+                <SpanStyle>Email</SpanStyle>
+                <InputWithLabel
+                  name="email"
+                  placeholder="이메일"
+                  type="email"
+                  value={email}
+                  onChange={onChangeEmail}
+                />
+                <SpanStyle>Channel</SpanStyle>
+                <InputWithLabel
+                  disabled
+                  name={""}
+                  placeholder={""}
+                  value={departName}
+                  // onClick={() => setChannelOUtModal(true)}
+                />
+
+                <SpanStyle>Phone</SpanStyle>
               </SetGrid>
             </div>
           </StyledPage>
@@ -379,30 +355,112 @@ function MyPage() {
               isCertifiedSuccess={setIsPhoneNumber}
             />
           </InputWithPhone_Phone>
-          <UserEdit onClick={InfoSubmit}>저장하기</UserEdit>
+          <NameHelperText>
+            {name.length > 0 && !isName && (
+              <FormHelperText disabled variant="filled">
+                {nameMessage}{" "}
+              </FormHelperText>
+            )}
+          </NameHelperText>
+          <PwHelperText>
+            {password.length > 0 && !isPassword && (
+              <FormHelperText disabled variant="filled">
+                {passwordMessage}
+              </FormHelperText>
+            )}
+          </PwHelperText>
+          <PwCheckHelperText>
+            {passwordConfirm.length > 0 && !isPasswordConfirm && (
+              <FormHelperText disabled variant="filled">
+                {passwordConfirmMessage}
+              </FormHelperText>
+            )}
+          </PwCheckHelperText>
+          <EmailHelperText>
+            {email.length > 0 && !isEmail && (
+              <FormHelperText disabled variant="filled">
+                {emailMessage}
+              </FormHelperText>
+            )}
+          </EmailHelperText>
+          <MyEditButtonDiv>
+            <UserEdit
+              onClick={InfoSubmit}
+              disabled={
+                !(
+                  isName &&
+                  isPassword &&
+                  isPasswordConfirm &&
+                  isEmail &&
+                  isPhoneNumber
+                )
+              }
+            >
+              저장하기
+            </UserEdit>
+            <UserEditGray
+              style={{ marginTop: "80px" }}
+              onClick={() => setIsEdit(!isEdit)}
+            >
+              {" "}
+              취소하기
+            </UserEditGray>
+          </MyEditButtonDiv>
         </Content>
       )}
       {isOpenModal && (
-        <Modal onClickToggleModal={() => setOpenModal(false)}>
-          <p>정말로 탈퇴하시겠습니까?</p>
-          <p>
-            탈퇴시 관련 데이터들이 삭제 됩니다.
+        <Modal width="410px" onClickToggleModal={() => setOpenModal(false)}>
+          <ModalDiv>
+            <ModalUp>
+              <TextSpan>탈퇴 안내</TextSpan>
+            </ModalUp>
+            정말로 탈퇴하시겠습니까?
             <br />
-            재가입시 데이터를 복구 할 수 없습니다.
-          </p>
-          <div>
-            <button>아니오</button>
-            <button onClick={userOut}>탈퇴</button>
-          </div>
+            탈퇴시 관련 데이터들을 모두 삭제합니다.
+            <br /> 재가입시 데이터를 복구 할 수 없습니다.
+            <MyEditButtonDiv style={{ marginLeft: "42px", marginTop: "73px" }}>
+              <ButtonRed style={{ padding: "8px 27px" }} onClick={userOut}>
+                탈퇴
+              </ButtonRed>
+              <UserEditGray onClick={() => setOpenModal(!isOpenModal)}>
+                아니오
+              </UserEditGray>
+            </MyEditButtonDiv>
+          </ModalDiv>
+        </Modal>
+      )}
+      {isOutOk && (
+        <Modal
+          width="400px"
+          height="250px"
+          onClickToggleModal={() => setOpenModal(false)}
+        >
+          <ModalDiv>
+            <ModalUp>
+              <TextSpan>탈퇴 안내</TextSpan>
+            </ModalUp>
+            ATTI에서 탈퇴 되었습니다.
+            <br />
+            <ButtonRed style={{ marginTop: "40px", padding: "8px 27px" }} onClick={()=> navigate("/")}>
+              확인
+            </ButtonRed>
+          </ModalDiv>
         </Modal>
       )}
       {/* {isChannelOUtModal && (
-        <Modal width="500px" onClickToggleModal={() => setOpenModal(false)}>
-          <span>채널 나가기 안내</span>
-          <p>정말로 채널을 나가시겠습니까?</p>
-          <div>
-            <MemberWithdrawal>채널 나가기</MemberWithdrawal>
-          </div>
+        <Modal
+          width="500px" height="250px"
+          onClickToggleModal={() => setChannelOUtModal(false)}
+        >
+          <ModalDiv>
+            <ModalUp>
+              <TextSpan>채널 나가기 안내</TextSpan>
+            </ModalUp>
+            <p>정말로 채널을 나가시겠습니까?</p>
+              <div>
+                <ButtonRed style={{marginTop:"10px"}}>채널 나가기</ButtonRed>
+              </div>
+          </ModalDiv>
         </Modal>
       )} */}
     </Main>
@@ -428,7 +486,7 @@ const Content = styled.div`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 115px 300px;
+  grid-template-columns: 130px 300px;
   grid-template-rows: minmax(1fr, auto);
   row-gap: 40px;
   column-gap: 30px;
@@ -437,24 +495,10 @@ const Grid = styled.div`
 
 const SetGrid = styled.div`
   display: grid;
-  grid-template-columns: 115px 300px;
+  grid-template-columns: 130px 300px;
   grid-template-rows: repeat(4, 1fr);
   column-gap: 30px;
-  
-  //align-items: stretch;
-`;
-
-const SpanGrid = styled.div`
-  display: grid;
-  grid-template-columns: 115px;
-  grid-template-rows: repeat(4, 1fr);
-  align-items: stretch;
-`;
-
-const InputGrid = styled.div`
-  display: grid;
-  grid-template-columns: 300px;
-  grid-template-rows: repeat(4, 1fr);
+  row-gap: 40px;
   align-items: stretch;
 `;
 
@@ -467,7 +511,7 @@ const SpanStyle = styled.span`
   background: ${palette.blue_1};
   color: black;
   border: 0px solid;
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-align: center;
 `;
 
@@ -475,7 +519,35 @@ const InputWithPhone_Phone = styled.div`
   width: 300px;
   position: absolute;
   right: 0%;
-  margin-top: 348.5px;
+  margin-top: 440px;
+`;
+
+const NameHelperText = styled.span`
+  width: 320px;
+  position: absolute;
+  left: 14.2%;
+  margin-top: 237px;
+`;
+
+const PwHelperText = styled.span`
+  width: 300px;
+  position: absolute;
+  left: 14.2%;
+  margin-top: 402px;
+`;
+
+const PwCheckHelperText = styled.span`
+  width: 300px;
+  position: absolute;
+  left: 14.2%;
+  margin-top: 486px;
+`;
+
+const EmailHelperText = styled.span`
+  width: 300px;
+  position: absolute;
+  right: 0.5%;
+  margin-top: 322.5px;
 `;
 
 const MemberWithdrawal = styled.button`
@@ -489,7 +561,7 @@ const MemberWithdrawal = styled.button`
 
   position: absolute;
   right: 2%;
-  margin-top: 535px;
+  margin-top: 730px;
 
   cursor: pointer;
   &:active,
@@ -502,19 +574,80 @@ const MemberWithdrawal = styled.button`
 const UserEdit = styled(ButtonBlue)`
   font-size: 0.8rem;
   padding: 0.8rem 1.2rem;
-  margin-top: 60px;
+  margin-top: 80px;
+`;
+
+const UserEditGray = styled.button`
+  background: ${palette.gray_2};
+  color: ${palette.gray_5};
+  font-size: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 1rem;
+  border: 0px solid;
+  font-weight: bold;
+  cursor: pointer;
+  &:active,
+  &:hover {
+    filter: brightness(90%);
+    background: ${palette.gray_2};
+  }
+`;
+const ButtonRed = styled.button`
+  background: ${palette.pink_1};
+  color: ${palette.red};
+  font-size: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 1rem;
+  border: 0px solid;
+  font-weight: bold;
+  cursor: pointer;
+  &:active,
+  &:hover {
+    filter: brightness(90%);
+    background: ${palette.pink_1};
+  }
 `;
 
 const StyledPage = styled.div`
   display: flex;
   column-gap: 50px;
-  height: 250px;
+  height: 305px;
+`;
+
+const MyEditButtonDiv = styled.div`
+  display: flex;
+  column-gap: 50px;
+  width: 230px;
+`;
+
+const ModalUp = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 30px;
+`;
+
+const ModalDiv = styled.div`
+  color: gray; //텍스트 색상
+  font-size: middle; //텍스트 크기
+  font-weight: bold; //텍스트 굵기
+  text-align: center; //텍스트 정렬 방향
+  line-height: 50px; //줄간격
+  width: 80%;
+`;
+
+const TextSpan = styled.span`
+  font-size: 1.2em;
+  font-weight: bold; //텍스트 굵기
+  background: ${palette.red};
+  -webkit-background-clip: text;
+  color: transparent;
 `;
 
 const Vline = styled.div`
-  border-left: 1px dashed ${palette.gray_2};
+  border-left: 1px dashed ${palette.gray_3};
   height: 100%;
 `;
-
 
 export default MyPage;

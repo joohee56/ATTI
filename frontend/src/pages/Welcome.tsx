@@ -1,19 +1,22 @@
 import styled from 'styled-components';
 import { useState, useCallback } from 'react';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store';
 import apiAcc, {api} from '../utils/api';
 import CommunityBg from '../assets/images/communityBG.png'
 import DepartCreate from '../components/Community/DepartCreate';
 import Modal from '../components/Modal';
 import { ButtonBlue } from '../components/ButtonStyled';
 import { palette } from '../styles/palette';
-
-// 테스트용
-import CategoryCreate from '../components/Community/CategoryCreate';
+import { useNavigate } from 'react-router-dom';
+import { departActions } from '../store/community/Depart';
 
 function Welcome(){
 
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [isOpenModal4, setOpenModal4] = useState(false);
+  const [newDepartCreate, setNewDepartCreate] = useState(false);
     const onClickToggleModal4 = useCallback(() => {
       setOpenModal4(!isOpenModal4);
       }, [isOpenModal4]);
@@ -29,13 +32,18 @@ function Welcome(){
       setNewDepart(value)
   };
 
-    //  // 채널 입장: route 이용해서 페이지 이동시켜할듯!
-    // const departNew = () => {
-    //     api.get(`/depart/${newDepart}`,
-    //     ).then((res) => {
-    //         console.log("채널 들어가기: ", res.data)
-    //     })
-    //   }
+     // 채널 입장: route 이용해서 페이지 이동시켜할듯!
+    const {id} = useSelector((state: RootState) => state.userInfo)
+    const departNew = () => {
+        api.get(`/depart/${newDepart}/${id}`,
+        ).then((res) => {
+            console.log("채널 들어가기: ", res.data)
+            dispatch(departActions.saveDepart({
+              departId: res.data.departId
+            }))
+            navigate(`/community/${res.data.departId}/${res.data.categoryList[0].categoryId}`)
+        })
+      }
     
   return(
     <>
@@ -58,7 +66,7 @@ function Welcome(){
             <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
               <CustomInputWithIcon onChange={getValue} />
               
-              <CustomButtonBlue > 채널 입장</CustomButtonBlue>
+              <CustomButtonBlue onClick={() => {departNew()}}> 채널 입장</CustomButtonBlue>
 
             </div>
 
@@ -77,7 +85,7 @@ function Welcome(){
           width="800px"
           height="400px"
         >
-          <DepartCreate handleModal4={handleModal4} />
+          <DepartCreate  handleModal4={handleModal4} setNewDepartCreate={setNewDepartCreate} newDepartCreate={newDepartCreate} />
         </Modal>
       )}
 

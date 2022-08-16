@@ -1,4 +1,5 @@
-import {useSelector} from 'react-redux'
+import { useEffect, useState } from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import Avatar from '@mui/material/Avatar';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
@@ -7,22 +8,38 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import styled from 'styled-components';
 import BestChip from './BestChip';
 
+import { reRenderingActions } from '../../store/community/ReRendering';
 import { palette } from '../../styles/palette';
 import apiAcc, {api} from '../../utils/api';
 import { CommentOutlined } from '@material-ui/icons';
 
 
-function CommentList({comments}){
-    const { auth } = useSelector(state => state.userInfo)
-
+function CommentList({comments, postId}){
+    const { id } = useSelector(state => state.userInfo)
+    const [commentList, setCommentList] = useState(comments)
+    const currentSetPost = useSelector(state => state.reRendering.setPost)
+    const updateSetPost = !currentSetPost
+    const dispatch = useDispatch()
     // 단일 comment 지우기
     const commentDelete = (commentId) => {
         api.delete(`/post/comment/delete/${commentId}`
         )
         .then((res) => {
             console.log("댓글 지우기:", res);
+            console.log("-----------------")
+            dispatch(reRenderingActions.saveSetPost(
+                {setPost: updateSetPost }))
+
         });
     }
+    useEffect(() => {
+        
+        api.get(`post/comment/read/${postId}/${id}`)
+        .then((res) => {
+            console.log("댓글들: ", res.data)
+            commentList = res.data
+        })
+    }, [currentSetPost])
 
     // // 단일 comment 좋아요
     // const [commentLikeCount, setCommentLikeCount] = useState([])
@@ -66,6 +83,7 @@ function CommentList({comments}){
       
         return `${Math.floor(betweenTimeDay / 365)}년 전`;
       }
+    console.log("뭐가 들어있지?:", commentList)
     if(comments.length === 0){
         return(
             <div></div>
@@ -76,7 +94,6 @@ function CommentList({comments}){
             <CommentDiv>
                 {comments.map((e,i) => (
                     <>
-                    {console.log(e)}
                     <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "space-between"}}>
                         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                             <div style={{display: "flex", flexDirection: "row", height: "40px"}}>
@@ -92,7 +109,7 @@ function CommentList({comments}){
                                     <span style={{margin: "10px 0 0 0"}}>답글</span>
                                     <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
                                     <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
-                                    <CustomDeleteIcon onClick={commentDelete(12)}/>
+                                    <CustomDeleteIcon onClick={()=>{commentDelete(e.commentId)}}/>
                                 </div>
                             </div>
                         </div>

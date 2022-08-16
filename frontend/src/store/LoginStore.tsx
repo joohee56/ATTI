@@ -5,18 +5,19 @@ export interface UserLoginState {
   userName: string;
   admin: boolean;
   accessToken: string;
-  categoryList: {
-    categoryId: number;
-    categoryName: string;
-    ctype: string;
-  }[];
-  departList:{
-    postContent:string;
-    postRegDate:string;
-    postTitle:string;
-    userId:string;
-  }[];
+  // categoryList: {
+  //   categoryId: number;
+  //   categoryName: string;
+  //   ctype: string;
+  // }[];
+  // departList:{
+  //   postContent:string;
+  //   postRegDate:string;
+  //   postTitle:string;
+  //   userId:string;
+  // }[];
   auth: boolean;
+  randomColor: string;
 }
 
 const initialState: UserLoginState = {
@@ -24,9 +25,10 @@ const initialState: UserLoginState = {
   userName: "",
   admin: false,
   accessToken: "",
-  categoryList: [],
-  departList:[],
+  // categoryList: [],
+  // departList:[],
   auth: false,
+  randomColor:"",
 };
 
 const userSlice = createSlice({
@@ -40,30 +42,28 @@ const userSlice = createSlice({
         userName: string;
         admin: boolean;
         accessToken: string;
-        categoryList: {
-          categoryId: number;
-          categoryName: string;
-          ctype: string;
-        }[];
-        departList:{
-          postContent:string;
-          postRegDate:string;
-          postTitle:string;
-          userId:string;
-        }[];
+        // categoryList: {
+        //   categoryId: number;
+        //   categoryName: string;
+        //   ctype: string;
+        // }[];
+        // departList:{
+        //   postContent:string;
+        //   postRegDate:string;
+        //   postTitle:string;
+        //   userId:string;
+        // }[];
       }>
     ) => {
       state.id = action.payload.id;
       state.userName= action.payload.userName;
       state.admin=action.payload.admin;
       state.accessToken = action.payload.accessToken;
-      state.categoryList = action.payload.categoryList;
-      state.departList= action.payload.departList;
+      // state.categoryList = action.payload.categoryList;
+      // state.departList= action.payload.departList;
       state.auth = true;
-      
-      localStorage.setItem("AccessToken", state.accessToken);
-      localStorage.setItem("userId", state.id);
-      console.log(action.payload);
+      state.randomColor= "#" + Math.floor(Math.random() * 16777215).toString(16);
+      //console.log(action.payload);
     },
     logout: (state) => {
       state.id = "";

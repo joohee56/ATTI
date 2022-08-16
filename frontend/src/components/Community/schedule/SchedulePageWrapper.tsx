@@ -5,6 +5,9 @@ import Modal from "../../Modal";
 import InputSchedule from "./InputSchedule";
 import {
   AddClassButton,
+  AdminScheduleAddButton,
+  AdminScheduleAddText,
+  AdminSheduleDeleteButton,
   ConnectButton,
   DeleteButton,
   ExistenceClass,
@@ -18,6 +21,10 @@ import { useNavigate } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import { palette } from "../../../styles/palette";
 import { api } from "../../../utils/api";
+import { useDispatch } from "react-redux";
+import { setStudentList } from "../../../store/classMeeting/studentList";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 export interface weekClassSchedule {
   courseId: string | null;
@@ -27,6 +34,7 @@ export interface weekClassSchedule {
   courseEndTime: string;
   courseDate: string;
   weekName: string | null | undefined;
+  activate: boolean;
 }
 
 const SchedulePage = styled.div`
@@ -67,6 +75,10 @@ const SchedulePageWrapper = () => {
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [selectDeleteSchedule, setSeleteDeleteSchedule] = useState<any>();
   const [weekStart, setWeekStart] = useState<string | undefined>(undefined);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [goTo, setGoto] = useState("");
+  const departId = useSelector((store: RootState) => store.depart.departId);
   const [insertSchedule, setInsertSchedule] = useState<weekClassSchedule>({
     courseId: "",
     courseName: "",
@@ -75,27 +87,52 @@ const SchedulePageWrapper = () => {
     courseEndTime: "",
     courseDate: "",
     weekName: undefined,
+    activate: false,
   });
   const [week, setWeek] = useState<weekClassSchedule[]>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const userInfo = useSelector((store: RootState) => store.userInfo);
 
   const [weekClassState, setWeekClassState] = useState<any>([
     {
       courseId: "",
       courseName: "",
       courseTeacherName: "",
-      userId: "",
       courseStartTime: "",
       courseEndTime: "",
       courseDate: "",
       weekName: undefined,
+      activate: false,
     },
   ]);
   const navigate = useNavigate();
 
-  function connectMeeting(e: any) {
-    navigate("/classmeeting?courseId=" + e.target.value);
+  async function connectMeeting(e: any) {
+    await api.put("/course/enterCourse", {
+      courseId: e.target.value,
+      userId: userInfo.id,
+      clickDate: moment().format("YYYY-MM-DD HH:mm"),
+    });
+    await api
+      .get("/course/attendence/" + departId)
+      .then((res) => {
+        console.log(res.data);
+        dispatch(setStudentList({ userList: [...res.data.attendenceList] }));
+        setGoto(e.target.value);
+        setLoading(true);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    // navigate("/classmeeting?courseId=" + e.target.value);
   }
+
+  useEffect(() => {
+    if (loading && goTo !== "") {
+      navigate("/classmeeting?courseId=" + goTo);
+    }
+  }, [loading]);
+
   const time = [
     "09:00",
     "10:00",
@@ -112,7 +149,7 @@ const SchedulePageWrapper = () => {
     // startTime,endTime 년-월-일 시간:분 으로 할것 (띄어쓰기 잊기 말기)
     api
       .post("/course/create", {
-        departId: 3,
+        departId: departId,
         courseName: element.courseName,
         courseTeacherName: element.courseTeacherName,
         courseStartTime: element.courseStartTime,
@@ -129,12 +166,29 @@ const SchedulePageWrapper = () => {
           element.courseEndTime,
           "YYYY-MM-DD HH:mm"
         ).format("HH:mm");
-        const e = {
-          ...element,
-          courseId: res.data.courseId,
-          courseStartTime: tempStart,
-          courseEndTime: tempEnd,
-        };
+        const now = moment().format("YYYY-MM-DD HH:mm");
+
+        console.log(now);
+
+        const tempActivate = moment(now).isAfter(element.courseEndTime);
+        var e;
+        if (tempActivate) {
+          e = {
+            ...element,
+            courseId: res.data.courseId,
+            courseStartTime: tempStart,
+            courseEndTime: tempEnd,
+            activate: false,
+          };
+        } else {
+          e = {
+            ...element,
+            courseId: res.data.courseId,
+            courseStartTime: tempStart,
+            courseEndTime: tempEnd,
+            activate: true,
+          };
+        }
         setInsertSchedule(e);
         let tempWeek = week;
         tempWeek?.push(e);
@@ -161,6 +215,7 @@ const SchedulePageWrapper = () => {
   };
 
   const deleteSchedule = (element: weekClassSchedule) => {
+    console.log(element.courseId);
     api
       .delete("/course/delete/" + element.courseId)
       .then((res) => {
@@ -216,8 +271,8 @@ const SchedulePageWrapper = () => {
     if (weekStart !== undefined) {
       api
         .post("/course", {
-          departId: 3,
-          weekStartDate: "2022-08-14",
+          departId: departId,
+          weekStartDate: weekStart,
         })
         .then((res) => {
           if (res.data.courseResList !== null) {
@@ -229,11 +284,32 @@ const SchedulePageWrapper = () => {
                 e.courseStartTime,
                 "YYYY-MM-DD HH:mm"
               ).format("HH:mm");
+
               const courseEndTime = moment(
                 e.courseEndTime,
                 "YYYY-MM-DD HH:mm"
               ).format("HH:mm");
-              let temp = { ...e, weekName, courseStartTime, courseEndTime };
+              const now = moment().format("YYYY-MM-DD HH:mm");
+              let testFire = moment(now).isAfter(e.courseEndTime);
+
+              let temp = {};
+              if (testFire) {
+                temp = {
+                  ...e,
+                  weekName,
+                  courseStartTime,
+                  courseEndTime,
+                  activate: false,
+                };
+              } else {
+                temp = {
+                  ...e,
+                  weekName,
+                  courseStartTime,
+                  courseEndTime,
+                  activate: true,
+                };
+              }
 
               return temp;
             });
@@ -361,27 +437,27 @@ const SchedulePageWrapper = () => {
           }}
         >
           {
-            <div>
+            <AdminScheduleAddText>
               삭제하시겠습니까?
               <div>
                 <div>
-                  <button
+                  <AdminSheduleDeleteButton
                     onClick={() => {
                       deleteSchedule(selectDeleteSchedule);
                     }}
                   >
                     네
-                  </button>
-                  <button
+                  </AdminSheduleDeleteButton>
+                  <AdminSheduleDeleteButton
                     onClick={() => {
                       setIsOpenDeleteModal(false);
                     }}
                   >
                     아니오
-                  </button>
+                  </AdminSheduleDeleteButton>
                 </div>
               </div>
-            </div>
+            </AdminScheduleAddText>
           }
         </Modal>
       )}
@@ -426,18 +502,22 @@ const SchedulePageWrapper = () => {
                                 {el.courseStartTime} ~ {el.courseEndTime}
                               </div>
                             </TextWrapper>
-                            <DeleteButton
-                              onClick={() => {
-                                setSeleteDeleteSchedule(el);
-                                setIsOpenDeleteModal(true);
-                              }}
-                            >
-                              <ClearIcon />
-                            </DeleteButton>
+                            {!userInfo.admin ? null : (
+                              <DeleteButton
+                                onClick={() => {
+                                  setSeleteDeleteSchedule(el);
+                                  setIsOpenDeleteModal(true);
+                                }}
+                              >
+                                <ClearIcon />
+                              </DeleteButton>
+                            )}
+
                             <ConnectButton
                               onClick={connectMeeting}
                               value={el.courseId}
                               calcColor={calcColor3(index)}
+                              disabled={!el.activate}
                             >
                               접속하기
                             </ConnectButton>
@@ -445,6 +525,7 @@ const SchedulePageWrapper = () => {
                         </>
                       ) : (
                         <AddClassButton
+                          disabled={!userInfo.admin}
                           onClick={onClickAddSchedule}
                           id={i.toString()}
                           value={index}

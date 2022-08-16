@@ -11,37 +11,7 @@ import {
   AdminSelect,
   AdminTableHeadDiv,
 } from "./adminStyle/AdminMemberTableStyle";
-
-const dummyStudent: classStudentList[] = [
-  {
-    courseId: 1,
-    className: "운영체제",
-    class: [
-      { name: "박범수", attend: "출석" },
-      { name: "이현태", attend: "지각" },
-      { name: "이주희", attend: "출석" },
-      { name: "김연수", attend: "출석" },
-      { name: "이현정", attend: "출석" },
-    ],
-  },
-  {
-    courseId: 2,
-    className: "Spring Boot",
-    class: [
-      { name: "이주희", attend: "출석" },
-      { name: "이현정", attend: "출석" },
-    ],
-  },
-  {
-    courseId: 3,
-    className: "React",
-    class: [
-      { name: "이주희", attend: "출석" },
-      { name: "박범수", attend: "출석" },
-      { name: "이현태", attend: "지각" },
-    ],
-  },
-];
+import { api } from "../../../utils/api";
 
 const AdminAttendStudentList = ({
   courseName,
@@ -52,22 +22,46 @@ const AdminAttendStudentList = ({
 }) => {
   const [studentList, setStudentList] = useState<studentAttendState[]>([
     {
-      name: "",
+      userId: "",
+      userName: "",
       attend: "",
     },
   ]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (courseId !== 0) {
-      let temp = dummyStudent.filter((e) => {
-        return e.courseId === courseId;
-      });
-      console.log(temp[0].class);
-      setStudentList(temp[0].class);
-      setLoading(true);
+      api
+        .get("/admin/getAttendanceList/" + courseId)
+        .then((e) => {
+          console.log(e.data.courseResList);
+          // e.data.courseResList
+          let temp = e.data.courseResList.map((element: any) => {
+            return { ...element, attend: element.attendancedContent };
+          });
+          console.log(temp);
+          setStudentList(temp);
+          setLoading(true);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     }
   }, [courseId]);
-
+  const onChange = (e: any) => {
+    console.log(e.target.id, e.target.value);
+    api
+      .put("/course/changeAttendance", {
+        courseId,
+        userId: e.target.id,
+        attendancedContent: e.target.value,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
   return (
     <div>
       {courseName === "" ? (
@@ -95,13 +89,23 @@ const AdminAttendStudentList = ({
               <AdminAttendTableTr>
                 <AdminAttednTableTd widthLength={60}>{i}</AdminAttednTableTd>
                 <AdminAttednTableTd widthLength={150}>
-                  {studentList[e].name}
+                  {studentList[e].userName}
                 </AdminAttednTableTd>
                 <td>
-                  <AdminSelect>
-                    <option value="출석">출석</option>
-                    <option value="지각">지각</option>
-                    <option value="결석">결석</option>
+                  <AdminSelect
+                    id={studentList[e].userId}
+                    onChange={onChange}
+                    defaultValue={studentList[e].attend}
+                  >
+                    <option key="출석" value="출석">
+                      출석
+                    </option>
+                    <option key="지각" value="지각">
+                      지각
+                    </option>
+                    <option key="결석" value="결석">
+                      결석
+                    </option>
                   </AdminSelect>
                 </td>
               </AdminAttendTableTr>

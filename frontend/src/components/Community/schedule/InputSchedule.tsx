@@ -86,6 +86,7 @@ const InputSchedule = ({
         courseTeacherName: cousrseProfRef.current.value,
         courseDate: oneWeek[weekList.weekIndex],
         weekName: weekList.weekString,
+        activate: false,
       };
       let flag = false;
       for (let i = 0; i < week.length; i++) {
