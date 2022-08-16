@@ -502,14 +502,17 @@ const SchedulePageWrapper = () => {
                                 {el.courseStartTime} ~ {el.courseEndTime}
                               </div>
                             </TextWrapper>
-                            <DeleteButton
-                              onClick={() => {
-                                setSeleteDeleteSchedule(el);
-                                setIsOpenDeleteModal(true);
-                              }}
-                            >
-                              <ClearIcon />
-                            </DeleteButton>
+                            {!userInfo.admin ? null : (
+                              <DeleteButton
+                                onClick={() => {
+                                  setSeleteDeleteSchedule(el);
+                                  setIsOpenDeleteModal(true);
+                                }}
+                              >
+                                <ClearIcon />
+                              </DeleteButton>
+                            )}
+
                             <ConnectButton
                               onClick={connectMeeting}
                               value={el.courseId}
@@ -522,6 +525,7 @@ const SchedulePageWrapper = () => {
                         </>
                       ) : (
                         <AddClassButton
+                          disabled={!userInfo.admin}
                           onClick={onClickAddSchedule}
                           id={i.toString()}
                           value={index}
