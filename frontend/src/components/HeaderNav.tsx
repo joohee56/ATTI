@@ -23,10 +23,10 @@ function HeaderNav() {
   const { userName } = useSelector((state: RootState) => state.userInfo);
   const { randomColor } = useSelector((state: RootState) => state.userInfo);
   const departList = useSelector(
-    (state: RootState) => state.userInfo.departList
+    (state: RootState) => state.depart.departList
   );
   const categoryList = useSelector(
-    (state: RootState) => state.userInfo.categoryList
+    (state: RootState) => state.category.categoryList
   );
   const myPage = useSelector((state: RootState) => state.reRendering.setMyPage);
   //const adminPage = useSelector((state: RootState) => state.reRendering.setAdminPage)
@@ -69,10 +69,10 @@ function HeaderNav() {
   };
 
   const logoClick = () => {
-    navigate(
-      !auth
-        ? "/"
-        : `/community/${departList[0].departId}/${categoryList[0].categoryId}`
+    navigate( '/'
+    // !auth
+    //   ? "/"
+    //   : `/community/${departList[0].departId}/${categoryList[0].categoryId}`
     );
   };
 
