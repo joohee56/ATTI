@@ -90,6 +90,7 @@ public class AuthController {
 	// 일반 로그인
 	@PostMapping("/login/normal")
 	public ResponseEntity<UserLoginRes> login(@RequestBody UserLoginPostReq loginInfo){
+		
 		String userId = loginInfo.getUserId();
 		String password = loginInfo.getPassword();
 		
@@ -98,17 +99,17 @@ public class AuthController {
 		if(user == null) 
 			return ResponseEntity.status(404).body(UserLoginRes.failOf(404, "가입된 아이디가 없습니다."));
 		
-		// 로그인 요청한 유저로부터 입력된 패스워드와 디비에 저장된 유저의 암호화된 패스워드가 같은 값인지 확인 (유효한 패스워드인지 여부 확인)
+		// 0. 탈퇴한 회원인지 확인
+		if(user.isUserDeleteInfo()==true)
+			return ResponseEntity.status(404).body(UserLoginRes.failOf(404, "탈퇴한 회원입니다."));
+					
+		// 1. 로그인 요청한 유저로부터 입력된 패스워드와 디비에 저장된 유저의 암호화된 패스워드가 같은 값인지 확인 (유효한 패스워드인지 여부 확인)
 		if(passwordEncorder.matches(password, user.getPassword())) {
-			// 0. 탈퇴한 회원인지 확인
-			if(user.isUserDeleteInfo()==true)
-				return ResponseEntity.status(404).body(UserLoginRes.failOf(404, "탈퇴한 회원입니다."));
 			
-			// 1. 가입한 채널 리스트 가져옴
+			// 2. 가입한 채널 리스트 가져옴
 			List<UserDepartRes> userDepartList = userService.getDepartList(userId);
 			
-			// 2. 가입한 채널 리스트의 첫 번째 카테고리 리스트를 가져옴
-			// 3. 유저 아이디가 가입한 채널의 유저 권한 테이블의 아이디와 매칭되는지를 찾음
+			// 3. 가입한 채널 리스트의 첫 번째 카테고리 리스트를 가져옴
 			List<CategoryListRes> userCategoryList;
 			boolean admin = false;
 			Long departId=(long) 0;
@@ -117,6 +118,8 @@ public class AuthController {
 				departId = userDepartList.get(0).getDepartId();	// 가입한 채널 중 첫 번째 채널의 아이디
 				
 				userCategoryList = categoryService.getCategoryList(departId);
+				
+				// 3. 유저 아이디가 가입한 채널의 유저 권한 테이블의 아이디와 매칭되는지를 찾음
 				admin = adminRoleService.getAdminRole(user, departId);
 			} else {
 				userCategoryList = null;

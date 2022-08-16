@@ -22,7 +22,7 @@ public class AdminRoleService {
 	
 	public boolean getAdminRole(User user, Long departId) {
 		Depart depart = departRepository.findById(departId).orElse(null);
-		Optional<AdminRole> admin = adminRoleRepository.findByUserAndDepart(user, depart);
+		AdminRole admin = adminRoleRepository.findByUserAndDepart(user, depart).orNull();
 		
 		if(admin == null) return false; 		// 관리자 아님
 		return true;
