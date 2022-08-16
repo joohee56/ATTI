@@ -26,31 +26,31 @@ import ReactHtmlParser from 'react-html-parser'
 function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
     const [single, setSingle] = useState([])
     const [comments, setComments] = useState([])
-    const currentCider = useSelector(state => state.reRendering.cider)
-    const updateCider = !currentCider
+    const currentSetPost = useSelector(state => state.reRendering.setPost)
+    const updateSetPost = !currentSetPost
+    const { id } = useSelector(state => state.userInfo)
 
     useEffect(() => {
         // 개별 글 불러오는 것
-        api.get(`/post/read/${postId}`
+        api.get(`/post/read/${postId}/${id}`
             ).then((res) => {
             console.log("개별 글 list : ", res.data)
             setSingle(res.data)
             setSinglePost(res.data)
             })
         // 댓글 list 불러오는 것
-        api.get(`post/comment/read/${postId}`)
+        api.get(`post/comment/read/${postId}/${id}`)
         .then((res) => {
             console.log("댓글들: ", res)
             setComments(res.data)
         })
-       },[currentCider]);
+       },[currentSetPost]);
     
     function modalEvent(){
         onClickToggleModal2()
         onClickToggleModal3()
     }
 
-    const { id } = useSelector(state => state.userInfo)
     const [comment, setComment] = useState({
         postId: postId,
         userId: "gusxo123",
@@ -97,8 +97,8 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
 
             .then((res) => {
                 console.log("response:", res);
-                dispatch(reRenderingActions.saveReRendering(
-                    {cider: updateCider }
+                dispatch(reRenderingActions.saveSetPost(
+                    {setPost: updateSetPost }
                 ))
     
             });
@@ -130,8 +130,8 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
         )
         .then((res) => {
             console.log("response:", res);
-            dispatch(reRenderingActions.saveReRendering(
-                {cider: updateCider }
+            dispatch(reRenderingActions.saveSetPost(
+                {setPost: updateSetPost }
             ))
         });
     }

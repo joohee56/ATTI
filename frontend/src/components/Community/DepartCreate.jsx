@@ -1,41 +1,73 @@
 import styled from "styled-components"
 import { useState } from "react"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
 import apiAcc, {api} from "../../utils/api"
 import { palette } from "../../styles/palette"
 import InputWithIcon from "../InputWithLabel"
 import { ButtonBlue } from "../ButtonStyled"
+import { reRenderingActions } from "../../store/community/ReRendering"
+import { departActions} from "../../store/community/Depart"
+import { categoryActions } from "../../store/community/Category"
+import { resolvePath } from "react-router-dom"
 
-
-function DepartCreate({handleModal4}) {
-
+function DepartCreate({handleModal4, setNewDepartCreate, newDepartCreate}) {
+    const navigate = useNavigate()
     const { id } = useSelector(state => state.userInfo)
-    const [newDepart, setNewDepart] = useState({
+    const [newDepart, setNewDepart] = useState({ // 추가할 채널의 정보
         userId: id,
         departName: "",
-
     })
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const currentCider = useSelector(state => state.reRendering.cider) // 리렌더링을 위해 사용
+    const updateCider = !currentCider
+    const dispatch = useDispatch()
 
-    const getValue = e => {
+    const getValue = e => { // 채널 이름 같은 정보를 저장함
         const {value} = e.target;
         newDepart.departName = value
     };
 
     // 채널 생성
     const departPost = () => {
+
         api.post(`/depart/create`,
         {
             userId: newDepart.userId,
             departName: newDepart.departName,
         }).then(function (response) {
-            console.log("response:", response);
+            console.log("채널 생성 결과:", response)
+            console.log("새로운 채널을 생성하는데요?", newDepart.departName)
+            dispatch(departActions.saveDepart(           // 새로운 채널의 이름,id 저장, 생성자도 저장
+                {
+                    userId: newDepart.userId,
+                    departName: newDepart.departName,
+                    departId: response.data[0].departId
+                }
+            ))
+            dispatch(categoryActions.saveCategoryList(   // 새로운 채널에 들어있는 기본 카테고리 저장
+                {
+                    categoryList: response.data
+                }
+            ))
+            dispatch(reRenderingActions.saveReRendering( // 리렌더링을 하도록 트리거 설정
+                {cider: updateCider }
+            ))
+            // dispatch(departActions.initialSaveDepart({
+            //     departId: response.data[0].departId,
+            //     departName: response.data[0].departName
+            // }))
+            setNewDepartCreate((prev)=>{
+                return !prev;
+            });
+            navigate(`/community/${response.data[0].departId}/${response.data[0].categoryId}`)
         })
     }
     
     function departCreateFunction(){
-        departPost()
-        handleModal4()
+        departPost() 
+        handleModal4() // 모달띄우기
     }
 
     return(

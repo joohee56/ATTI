@@ -23,40 +23,6 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
-
-function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
-  
-  const categoryId = useSelector(state => state.category.categoryId)
-  console.log('카테고리, 너의 아이디는? ' , categoryId)
-  const departId = useSelector(state => state.depart.departId)
-  console.log('채널, 너의 아이디는? ' , departId)
-  const { id } = useSelector(state => state.userInfo)
-  
-  async function getPosts(){
-    api.get(`/depart/${departId}/category/${categoryId}/user/${id}`
-    ).then((res) => {
-      console.log("결과: ", res)
-      setPost(res.data)
-      getLength(res.data.length)
-    })
-  }
-  
-  const currentCider = useSelector(state => state.reRendering.cider)
-  const [post,setPost] = useState([])
-  
-  useEffect(() => {
-    console.log('확인중입니다')
-    getPosts();
-  },[currentCider, categoryId]);
-  return (
-    <>
-      <Rendering post={post} handleModal2={handleModal2} length={length} limit={limit} page={page} getPostId={getPostId} />
-    </>
-  );
-  
-};
-
-
 const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
 
   const offset = (page - 1) * limit;
@@ -96,8 +62,8 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
   return `${Math.floor(betweenTimeDay / 365)}년 전`;
 }
 
-
-  if(length === 0){
+  console.log(post);
+  if(post === null || post.length===0){
     return (
       <div></div>
     )
@@ -105,6 +71,7 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
   else{
     return (
       <>
+        
         {post.slice(offset, offset + limit).map((e, i) => (
         <IndividualPost key={i}>
           {console.log(e)}
@@ -148,7 +115,47 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
 
    }
   };
-function NormalPostFrame() {
+
+function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
+  
+  const categoryId = useSelector(state => state.category.categoryId)
+  console.log('카테고리, 너의 아이디는? ' , categoryId)
+  const departId = useSelector(state => state.depart.departId)
+  console.log('채널, 너의 아이디는? ' , departId)
+  const { id } = useSelector(state => state.userInfo)
+  
+  const currentSetPost = useSelector(state => state.reRendering.setPost)
+  const postList = useSelector(state => state.notice.postList )
+  const [post, setPost] = useState([])
+  
+  async function getPosts(){
+    api.get(`/depart/${departId}/category/${categoryId}/user/${id}`
+    ).then((res) => {
+      console.log("결과: ", res)
+      setPost(res.data)
+      getLength(res.data.length)
+    })
+  }
+  useEffect(() => {
+    setPost(postList)
+  }, []);
+  
+  console.log("노말 포스트 프레임입니다. ", currentSetPost);
+  useEffect(() => {
+    console.log('확인중입니다')
+    getPosts();
+  },[currentSetPost, categoryId, departId]);
+  
+  return (
+    <>
+      <Rendering post={post} handleModal2={handleModal2} length={length} limit={limit} page={page} getPostId={getPostId} />
+    </>
+  );
+  
+};
+
+
+function NormalPostFrame({changeState}) {
 
   const [isOpenModal1, setOpenModal1] = useState(false);
   const onClickToggleModal1 = useCallback(() => {
@@ -203,10 +210,10 @@ function NormalPostFrame() {
        });
    }
    
-   const currentCider = useSelector(state => state.reRendering.cider)
+   const currentSetPost = useSelector(state => state.reRendering.setPost)
    useEffect(() => {
        postLike()
-   }, [currentCider]);
+   }, [currentSetPost]);
 
 
   const [limit, setLimit] = useState(5);
@@ -217,6 +224,7 @@ function NormalPostFrame() {
   const categoryName = useSelector(state => state.category.categoryName)
   const myPage = useSelector(state => state.reRendering.setMyPage)
   const adminPage = useSelector(state => state.reRendering.setAdminPage)
+  const classPage = useSelector(state => state.reRendering.setClass)
   if(myPage === true){
     return(
       <>

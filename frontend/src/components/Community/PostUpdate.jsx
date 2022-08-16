@@ -36,8 +36,8 @@ export function PostUpdate({singlePost, handleModal3}) {
     };
     
     const dispatch = useDispatch()
-    const currentCider = useSelector(state => state.reRendering.cider)
-    const updateCider = !currentCider
+    const currentSetPost = useSelector(state => state.reRendering.setPost)
+    const updateSetPost = !currentSetPost
     const { id } = useSelector(state => state.userInfo)
     const categoryId = useSelector(state => state.category.categoryId)
     const departId = useSelector(state => state.depart.departId)
@@ -58,8 +58,8 @@ export function PostUpdate({singlePost, handleModal3}) {
             
               .then((res) => {
                 console.log("response:", res);
-                dispatch(reRenderingActions.saveReRendering(
-                  {cider: updateCider }
+                dispatch(reRenderingActions.saveSetPost(
+                  {setPost: updateSetPost }
               ))
     
 

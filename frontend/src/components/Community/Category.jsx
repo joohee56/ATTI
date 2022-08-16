@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useState, useCallback } from 'react';
+import React, {PropsWithChildren, useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NavLink, Route, Link } from "react-router-dom";
@@ -21,17 +21,33 @@ import { SosOutlined } from '@mui/icons-material';
 import { reRenderingActions } from '../../store/community/ReRendering';
 
 
-function CategoryList(){
+function CategoryList(changeState){
     
-    const { categoryList } = useSelector(state => state.userInfo );
-    const { id } = useSelector(state => state.userInfo);
+    const  categoryList  = useSelector(state => state.category.categoryList );
     console.log("카테고리리스트: ", categoryList)
+    const categoryLists = useSelector(state => state.category.categoryList)
+    const { id } = useSelector(state => state.userInfo);
     const dispatch = useDispatch()
-    const departName = useSelector(state => state.depart.departName)
+    const departId = useSelector(state => state.depart.departId)
+    const currentCider = useSelector(state => state.reRendering.cider)
 
-    const [changeCss, setChangeCss] = useState(null);
+    const [category, setCategory] = useState([])
+    
+    const [changeCss, setChangeCss] = useState(1);
+
+    const [changeResult, setChangeResult] = useState(false);
    
-    const rendering = () => {
+
+    useEffect(() => {
+        setCategory(categoryList);
+    },[])
+    useEffect(() => {
+        setCategory(categoryLists)
+        setChangeResult(true);
+    }, [currentCider])
+
+
+    const Rendering = (changeState, changeResult,setChangeResult) => {
         const noClickStyle = {
             display: "flex",
             flexDirection: "row",
@@ -62,17 +78,28 @@ function CategoryList(){
             height: "60px",
             position: 'absolute',
             backgroundColor: palette.purlue_2,
+           
         }
-        
-        function CategoryFunction(i){
+        console.log("changeState는?", changeState);
+        useEffect(() => {
+            if (changeResult) {
+                console.log("찬기")
+                console.log(category);
+                CategoryFunction(0)
+                setChangeResult(false);
+            }
+            
+        },[changeState,changeResult])
+        function CategoryFunction(i) {
+            
             setChangeCss(i+1)
             dispatch(categoryActions.saveCategory(
-                {categoryId: categoryList[i].categoryId,
-                categoryAnoInfo: categoryList[i].categoryAnoInfo,
-                categoryComAnoInfo: categoryList[i].categoryComAnoInfo,
-                categoryComInfo: categoryList[i].categoryComInfo,
-                categoryName: categoryList[i].categoryName,
-                cType: categoryList[i].cType,
+                {categoryId: category[i].categoryId,
+                categoryAnoInfo: category[i].categoryAnoInfo,
+                categoryComAnoInfo: category[i].categoryComAnoInfo,
+                categoryComInfo: category[i].categoryComInfo,
+                categoryName: category[i].categoryName,
+                cType: category[i].cType,
                 userId: id}
             ))
             dispatch(reRenderingActions.saveSetMyPage(
@@ -88,17 +115,18 @@ function CategoryList(){
         }
         const result = [];
         const buttonList = [<CampaignIcon/>, <ContactSupportOutlinedIcon/>,<ArticleOutlinedIcon/>, <VideocamOutlinedIcon/>, <span/>, <span/>, <span/>, <span/>, <span/>, <span/> ]
-        for (let i = 0; i < categoryList.length; i++) {
+        for (let i = 0; i < category.length; i++) {
           result.push(
                 <>  
-                    <StyledLink to={`/community/` + departName + `/` + categoryList[i].categoryName} onClick={() => { CategoryFunction(i)}}>
+                    <StyledLink to={`/community/` + departId + `/` + category[i].categoryId} onClick={() => { CategoryFunction(i)}}>
                         <div key={i} style={changeCss === i+1 ? clickStyle : noClickStyle}>
+                            <CloseIcon style={{zIndex: "1", margin: "0 10px 10px 0"}}/>
                             <div style={changeCss === i+1 ? null : purpleBar }></div>
                             <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                 {buttonList[i]}
                                 &nbsp; 
-                                {categoryList[i].categoryName}
-                                {console.log(changeCss)}
+                                {category[i].categoryName}
+                                 
                             </div>
                         </div>
                     </StyledLink>
@@ -109,12 +137,13 @@ function CategoryList(){
         return result;
       };
     
-    return rendering();
+    return Rendering(changeState,changeResult,setChangeResult);
     }
 
-function Category(){
-    const departName = useSelector(state => state.depart.departName)
-    const [changeCss, setChangeCss] = useState(0);
+function Category({changeState }){
+    console.log("카테고리의 찬기",changeState)
+    const departId = useSelector(state => state.depart.departId)
+    const [changeCss, setChangeCss] = useState(1);
     const noClickStyle = {
         display: "flex",
         flexDirection: "row",
@@ -187,11 +216,11 @@ function Category(){
     return(
         <>
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", width: "210px", height: "700px"}}>
-                {CategoryList()}
+                {CategoryList(changeState)}
                 
                 {admin && (
                     <div style={{position: "absolute", bottom: "50px"}}>
-                        <StyledLink to={`/community/`+ departName + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
+                        <StyledLink to={`/community/`+ departId + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
                             <div style={noClickStyle}>
                                 <div style={ Bar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>

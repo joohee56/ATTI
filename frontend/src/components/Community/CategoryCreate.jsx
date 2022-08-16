@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { palette } from "../../styles/palette"
 import styled from "styled-components"
 import { ButtonBlue } from "../ButtonStyled"
 import { ButtonPurple } from "../ButtonStyled"
 
+import { reRenderingActions } from "../../store/community/ReRendering"
 import InputWithIcon from "../InputWithLabel"
 import apiAcc, { api } from "../../utils/api"
 function CategoryCreate({handleModal6}){
 
     const [newCategory, setNewCategory] = useState([])
-    
+    const dispatch = useDispatch()
     const getValue = e => {
         const {value} = e.target;
         setNewCategory(value)
@@ -45,7 +46,8 @@ function CategoryCreate({handleModal6}){
         setCategoryComAnoInfo(j)
     }
     
-    
+    const currentCider = useSelector(state => state.reRendering.cider)
+    const updateCider = !currentCider
     // 카테고리 생성: 로그인 쪽에서 하는 axios 재랜더링 시켜야
     const categoryCreateFunction = () => {
         api.post(`/depart/category/create`,
@@ -55,10 +57,13 @@ function CategoryCreate({handleModal6}){
             categoryComInfo: categoryComInfo,
             categoryName: newCategory,
             type: cType,
-            departId: 8,
+            departId: departId,
             userId: id
         }).then((res) => {
             console.log("카테고리 생성: ", res.data)
+            dispatch(reRenderingActions.saveReRendering(
+                {cider: updateCider }
+            ))
         })
     }
     
@@ -66,15 +71,11 @@ function CategoryCreate({handleModal6}){
         categoryCreateFunction()
         handleModal6()
     }
-    useEffect(() => {
-        console.log('카테고리명: ', newCategory)
-        console.log('카테고리타입: ', cType)
-        console.log('익명여부: ', categoryAnoInfo)
-        console.log('댓글금지여부: ', categoryComInfo)
-        console.log('댓글익명여부: ', categoryComAnoInfo)
-    },
-    [cType, categoryAnoInfo, categoryComInfo, categoryComAnoInfo]
-    )
+    // useEffect(() => {
+      
+    // },
+    // [currentCider]
+    // )
 
     return(
         <div style={{width: "900px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>  

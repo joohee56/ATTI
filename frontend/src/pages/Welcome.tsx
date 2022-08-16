@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import apiAcc, {api} from '../utils/api';
 import CommunityBg from '../assets/images/communityBG.png'
@@ -8,13 +8,15 @@ import DepartCreate from '../components/Community/DepartCreate';
 import Modal from '../components/Modal';
 import { ButtonBlue } from '../components/ButtonStyled';
 import { palette } from '../styles/palette';
-
-// 테스트용
-import CategoryCreate from '../components/Community/CategoryCreate';
+import { useNavigate } from 'react-router-dom';
+import { departActions } from '../store/community/Depart';
 
 function Welcome(){
 
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [isOpenModal4, setOpenModal4] = useState(false);
+  const [newDepartCreate, setNewDepartCreate] = useState(false);
     const onClickToggleModal4 = useCallback(() => {
       setOpenModal4(!isOpenModal4);
       }, [isOpenModal4]);
@@ -36,6 +38,10 @@ function Welcome(){
         api.get(`/depart/${newDepart}/${id}`,
         ).then((res) => {
             console.log("채널 들어가기: ", res.data)
+            dispatch(departActions.saveDepart({
+              departId: res.data.departId
+            }))
+            navigate(`/community/${res.data.departId}/${res.data.categoryList[0].categoryId}`)
         })
       }
     
@@ -79,7 +85,7 @@ function Welcome(){
           width="800px"
           height="400px"
         >
-          <DepartCreate handleModal4={handleModal4} />
+          <DepartCreate  handleModal4={handleModal4} setNewDepartCreate={setNewDepartCreate} newDepartCreate={newDepartCreate} />
         </Modal>
       )}
 
