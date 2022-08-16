@@ -177,15 +177,20 @@ public class PostServiceImpl implements PostService {
 
 	@Override // 단일 게시글 수정
 	@Transactional
-	public void editPost(PostUpdateReq editPost) {
+	public LocalDateTime editPost(PostUpdateReq editPost) {
 		Post post = postRepository.findById(editPost.getPostId()).orElse(null);
-		if(post == null) return;
+		if(post == null) {
+			return null;
+		}
 		
 		post.setPostTitle(editPost.getPostTitle());
 		post.setPostContent(editPost.getPostContent());
 		post.setPostUpdDate(LocalDateTime.now());
 				
 		postRepository.save(post);
+		LocalDateTime ldt = post.getPostUpdDate();
+		
+		return ldt;
 	}
 	
 	// 좋아요 기능 - 주희 추가
