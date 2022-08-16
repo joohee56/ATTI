@@ -411,128 +411,129 @@ const SchedulePageWrapper = () => {
     }
   }
   return (
-    <SchedulePage>
-      {isOpenModal && (
-        <Modal
-          onClickToggleModal={() => {
-            setIsOpenModal(false);
-          }}
-          height="55vh"
-        >
-          <InputSchedule
-            weekList={selectDay}
-            week={week}
-            oneWeek={weekList}
-            handlerInserSchedule={handlerInserSchedule}
-          />
-        </Modal>
-      )}
-      {isOpenDeleteModal && (
-        <Modal
-          onClickToggleModal={() => {
-            setIsOpenDeleteModal(false);
-          }}
-        >
-          {
-            <AdminScheduleAddText>
-              삭제하시겠습니까?
-              <div>
+      <SchedulePage>
+        {isOpenModal && (
+          <Modal
+            onClickToggleModal={() => {
+              setIsOpenModal(false);
+            }}
+            height="55vh"
+          >
+            <InputSchedule
+              weekList={selectDay}
+              week={week}
+              oneWeek={weekList}
+              handlerInserSchedule={handlerInserSchedule}
+            />
+          </Modal>
+        )}
+        {isOpenDeleteModal && (
+          <Modal
+            onClickToggleModal={() => {
+              setIsOpenDeleteModal(false);
+            }}
+          >
+            {
+              <AdminScheduleAddText>
+                삭제하시겠습니까?
                 <div>
-                  <AdminSheduleDeleteButton
-                    onClick={() => {
-                      deleteSchedule(selectDeleteSchedule);
-                    }}
-                  >
-                    네
-                  </AdminSheduleDeleteButton>
-                  <AdminSheduleDeleteButton
-                    onClick={() => {
-                      setIsOpenDeleteModal(false);
-                    }}
-                  >
-                    아니오
-                  </AdminSheduleDeleteButton>
+                  <div>
+                    <AdminSheduleDeleteButton
+                      onClick={() => {
+                        deleteSchedule(selectDeleteSchedule);
+                      }}
+                    >
+                      네
+                    </AdminSheduleDeleteButton>
+                    <AdminSheduleDeleteButton
+                      onClick={() => {
+                        setIsOpenDeleteModal(false);
+                      }}
+                    >
+                      아니오
+                    </AdminSheduleDeleteButton>
+                  </div>
                 </div>
-              </div>
-            </AdminScheduleAddText>
-          }
-        </Modal>
-      )}
-      <LeftWrapper>
-        <div>
-          <TempDiv />
-          {Object.keys(time).map((e: any, i) => (
-            <LeftBar key={i}>{time[e]}</LeftBar>
-          ))}
-        </div>
-      </LeftWrapper>
-      <RightWrapper>
-        <WeekStringWrapper>
-          {Object.keys(monToFri).map((e: any, i: number) => (
-            <WeekString key={i}>{monToFri[e]}</WeekString>
-          ))}
-        </WeekStringWrapper>
-        <DayScheduleList>
-          {Object.keys(weekClassState).map((e: any, i: number) => (
-            <ScheduleUl key={i} index={i}>
-              {weekClassState[0].courseName !== "" && (
-                <div>
-                  {weekClassState[e].map((el: any, index: number) => (
-                    <ScheduleLi key={index}>
-                      {el.courseName !== "" ? (
-                        <>
-                          <ExistenceClass
-                            extendsHeight={
-                              Number(el.courseEndTime.substring(0, 2)) -
-                              Number(el.courseStartTime.substring(0, 2))
-                            }
-                            calcColor={calcColor(index)}
-                          >
-                            <TextWrapper calcColor={calcColor4(index)}>
-                              <div style={{ fontSize: "1.3em" }}>
-                                {el.courseName}
-                              </div>
-                              <div style={{ fontSize: "0.9em" }}>
-                                {el.courseTeacherName}
-                              </div>
-                              <div style={{ fontSize: "0.8em" }}>
-                                {el.courseStartTime} ~ {el.courseEndTime}
-                              </div>
-                            </TextWrapper>
-                            <DeleteButton
-                              onClick={() => {
-                                setSeleteDeleteSchedule(el);
-                                setIsOpenDeleteModal(true);
-                              }}
+              </AdminScheduleAddText>
+            }
+          </Modal>
+        )}
+        <LeftWrapper>
+          <div>
+            <TempDiv />
+            {Object.keys(time).map((e: any, i) => (
+              <LeftBar key={i}>{time[e]}</LeftBar>
+            ))}
+          </div>
+        </LeftWrapper>
+        <RightWrapper>
+          <WeekStringWrapper>
+            {Object.keys(monToFri).map((e: any, i: number) => (
+              <WeekString key={i}>{monToFri[e]}</WeekString>
+            ))}
+          </WeekStringWrapper>
+          <DayScheduleList>
+            {Object.keys(weekClassState).map((e: any, i: number) => (
+              <ScheduleUl key={i} index={i}>
+                {weekClassState[0].courseName !== "" && (
+                  <div>
+                    {weekClassState[e].map((el: any, index: number) => (
+                      <ScheduleLi key={index}>
+                        {el.courseName !== "" ? (
+                          <>
+                            <ExistenceClass
+                              extendsHeight={
+                                Number(el.courseEndTime.substring(0, 2)) -
+                                Number(el.courseStartTime.substring(0, 2))
+                              }
+                              calcColor={calcColor(index)}
                             >
-                              <ClearIcon />
-                            </DeleteButton>
-                            <ConnectButton
-                              onClick={connectMeeting}
-                              value={el.courseId}
-                              calcColor={calcColor3(index)}
-                              disabled={!el.activate}
-                            >
-                              접속하기
-                            </ConnectButton>
-                          </ExistenceClass>
-                        </>
-                      ) : (
-                        <AddClassButton
-                          onClick={onClickAddSchedule}
-                          id={i.toString()}
-                          value={index}
-                        ></AddClassButton>
-                      )}
-                    </ScheduleLi>
-                  ))}
-                </div>
-              )}
-            </ScheduleUl>
-          ))}
-        </DayScheduleList>
-      </RightWrapper>
-    </SchedulePage>
+                              <TextWrapper calcColor={calcColor4(index)}>
+                                <div style={{ fontSize: "1.3em" }}>
+                                  {el.courseName}
+                                </div>
+                                <div style={{ fontSize: "0.9em" }}>
+                                  {el.courseTeacherName}
+                                </div>
+                                <div style={{ fontSize: "0.8em" }}>
+                                  {el.courseStartTime} ~ {el.courseEndTime}
+                                </div>
+                              </TextWrapper>
+                              <DeleteButton
+                                onClick={() => {
+                                  setSeleteDeleteSchedule(el);
+                                  setIsOpenDeleteModal(true);
+                                }}
+                              >
+                                <ClearIcon />
+                              </DeleteButton>
+                              <ConnectButton
+                                onClick={connectMeeting}
+                                value={el.courseId}
+                                calcColor={calcColor3(index)}
+                                disabled={!el.activate}
+                              >
+                                접속하기
+                              </ConnectButton>
+                            </ExistenceClass>
+                          </>
+                        ) : (
+                          <AddClassButton
+                            onClick={onClickAddSchedule}
+                            id={i.toString()}
+                            value={index}
+                          ></AddClassButton>
+                        )}
+                      </ScheduleLi>
+                    ))}
+                  </div>
+                )}
+              </ScheduleUl>
+            ))}
+          </DayScheduleList>
+        </RightWrapper>
+      </SchedulePage>
+    
   );
 };
 

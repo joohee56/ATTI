@@ -224,6 +224,7 @@ function NormalPostFrame({changeState}) {
   const categoryName = useSelector(state => state.category.categoryName)
   const myPage = useSelector(state => state.reRendering.setMyPage)
   const adminPage = useSelector(state => state.reRendering.setAdminPage)
+  const classPage = useSelector(state => state.reRendering.setClass)
   if(myPage === true){
     return(
       <>

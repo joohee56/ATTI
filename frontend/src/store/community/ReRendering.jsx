@@ -7,6 +7,7 @@ const reRenderingSlice = createSlice({
         setPost: false,
         setAdminPage: false,
         setMyPage: false,
+        setClassPage: false,
     },
     reducers: {
         saveReRendering(state, action) {
@@ -21,6 +22,9 @@ const reRenderingSlice = createSlice({
         },
         saveSetPost(state, action) {
             state.setPost = action.payload.setPost
+        }, 
+        saveSetClass(state, action) {
+            state.setClassPage = action.payload.setClassPage
         }, 
     }
 });

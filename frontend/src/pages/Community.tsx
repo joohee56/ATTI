@@ -13,10 +13,13 @@ import { categoryState } from "../store/community/Category";
 import { departState } from "../store/community/Depart";
 import AdminPageWrapper from "../components/Community/adminpage/AdminPageWrapper";
 import { RootState } from "../store";
+import SchedulePageWrapper from "../components/Community/schedule/SchedulePageWrapper";
 
 function Community() {
   // const departName = useSelector(categoryState => categoryState.depart.departName)
   const categoryList = useSelector((state: RootState) => state.category.categoryList);
+  const categoryName = useSelector((state: RootState) => state.category.categoryName);
+  const categoryType = useSelector((state: RootState) => state.category.cType)
   const [changeState, setChangeState] = useState(false);
   useEffect(() => {
     console.log("커뮤니티의 찬기를 바꿉니다.")
@@ -24,6 +27,17 @@ function Community() {
       return !prev;
     })
   },[categoryList])
+
+  const ScheduleContainer = styled.div`
+  width: 88vw;
+  height: 863px;
+  margin: 25px 20px 25px 0;
+  border-radius: 20px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
   return (
     <CommunityDiv>
       <Main>
@@ -31,7 +45,15 @@ function Community() {
           <DepartList />
           <Category changeState={changeState } />
         </div>
-        <NormalPostFrame changeState={changeState} />
+        {(categoryName === "수업실") ? (
+          <ScheduleContainer>
+            <SchedulePageWrapper/>
+          </ScheduleContainer>
+        ): (
+          <NormalPostFrame changeState={changeState} />
+        )
+        
+      }
       </Main>
     </CommunityDiv>
   );
