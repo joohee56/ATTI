@@ -10,7 +10,7 @@ import InputPassword from "../account/InputPassword";
 import InputWithPhone from "../account/InputWithPhone";
 import { ButtonBlue } from "../ButtonStyled";
 import { palette } from "../../styles/palette";
-import { FormControl, FormHelperText } from "@mui/material";
+import { FormControl, FormHelperText, TextField } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
@@ -114,7 +114,7 @@ function SignupComponent() {
   };
   const now = new Date();
   let years = [];
-  for (let y = now.getFullYear()-14; y >= now.getFullYear()-60; y -= 1) {
+  for (let y = now.getFullYear() - 14; y >= now.getFullYear() - 60; y -= 1) {
     years.push(y.toString());
   }
 
@@ -150,13 +150,20 @@ function SignupComponent() {
     );
   };
 
+  const InputStyle = styled(FormControl)(({ theme }) => ({
+    backgroundColor: palette.gray_1,
+  }));
+
   // 회원가입 성공 알림
   const [open, setOpen] = useState(false);
 
   const signSubmit = async (e: any) => {
     e.preventDefault();
-    let date = (""+birthState.yy + birthState.mm + birthState.dd).replace(/[^0-9]/g, "");
-  
+    let date = ("" + birthState.yy + birthState.mm + birthState.dd).replace(
+      /[^0-9]/g,
+      ""
+    );
+
     await api
       .post("/user/signup/normal", {
         userId: id,
@@ -201,21 +208,18 @@ function SignupComponent() {
               value={name}
               onChange={onChangeName}
             />
-           
             <InputWithLabel
               name="id"
               placeholder="아이디"
               value={id}
               onChange={onChangeId}
             />
-          
             <InputPassword
               name="password"
               placeholder="비밀번호"
               value={password}
               onChange={onChangePassword}
             />
-           
             <InputWithLabel
               name="password2"
               placeholder="비밀번호 확인"
@@ -224,60 +228,60 @@ function SignupComponent() {
               onChange={onChangePasswordConfirm}
             />
           </InputAll>
-            <div>
-              <FormControl sx={{ width: 120, mr: 2 }} size="small">
-                <Select
-                  name="yy"
-                  value={birthState.yy.toString()}
-                  onChange={onChangeBirth}
-                  displayEmpty
-                >
-                  <MenuItem>
-                    <em>생년</em>
+          <div>
+            <InputStyle sx={{ width: 122, mr: 2 }} size="small">
+              <Select
+                name="yy"
+                value={birthState.yy.toString()}
+                onChange={onChangeBirth}
+                displayEmpty
+              >
+                <MenuItem>
+                  <em>생년</em>
+                </MenuItem>
+                {years.map((item) => (
+                  <MenuItem value={item} key={item}>
+                    {item}
                   </MenuItem>
-                  {years.map((item) => (
-                    <MenuItem value={item} key={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl sx={{ width: 120, mr: 2 }} size="small">
-                <Select
-                  name="mm"
-                  value={birthState.mm.toString()}
-                  onChange={onChangeBirth}
-                  displayEmpty
-                >
-                  <MenuItem>
-                    <em>월</em>
+                ))}
+              </Select>
+            </InputStyle>
+            <InputStyle sx={{ width: 122, mr: 2 }} size="small">
+              <Select
+                name="mm"
+                value={birthState.mm.toString()}
+                onChange={onChangeBirth}
+                displayEmpty
+              >
+                <MenuItem>
+                  <em>월</em>
+                </MenuItem>
+                {month.map((item) => (
+                  <MenuItem value={item} key={item}>
+                    {item}
                   </MenuItem>
-                  {month.map((item) => (
-                    <MenuItem value={item} key={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl sx={{ width: 120 }} size="small">
-                <Select
-                  name="dd"
-                  value={birthState.dd.toString()}
-                  onChange={onChangeBirth}
-                  displayEmpty
-                >
-                  <MenuItem value="">
-                    <em>일</em>
+                ))}
+              </Select>
+            </InputStyle>
+            <InputStyle sx={{ width: 122 }} size="small">
+              <Select
+                name="dd"
+                value={birthState.dd.toString()}
+                onChange={onChangeBirth}
+                displayEmpty
+              >
+                <MenuItem value="">
+                  <em>일</em>
+                </MenuItem>
+                {days.map((item) => (
+                  <MenuItem value={item} key={item}>
+                    {item}
                   </MenuItem>
-                  {days.map((item) => (
-                    <MenuItem value={item} key={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <div style={{width:"400px", margin:"15px 0px"}}>
+                ))}
+              </Select>
+            </InputStyle>
+          </div>
+          <div style={{ width: "400px", margin: "15px 0px" }}>
             <InputWithLabel
               name="email"
               placeholder="이메일"
@@ -285,9 +289,9 @@ function SignupComponent() {
               value={email}
               onChange={onChangeEmail}
             />
-       </div>
-       <div style={{width:"400px", height: "90px", marginTop:"5px"}}>
-          <InputWithPhone
+          </div>
+          <div style={{ width: "400px", height: "90px", marginTop: "5px" }}>
+            <InputWithPhone
               name="phoneNumber"
               placeholder="폰 번호"
               phonNumber={phoneNumber}
@@ -357,24 +361,7 @@ function SignupComponent() {
           >
             가입하기
           </ButtonBlue>
-            </>
-
-        {/* <p>------- 회원가입 없이 소셜로 로그인하기 -------</p>
-          <div>
-            <img
-              src={
-                "https://pbs.twimg.com/profile_images/738200195578494976/CuZ9yUAT_400x400.jpg"
-              }
-              alt="카카오로 회원가입"
-              width={"50px"}
-            />
-            <img
-              src={
-                "https://image.rocketpunch.com/company/5466/naver_logo.png?s=50x50&t=inside"
-              }
-              alt="네이버로 회원가입"
-            />
-          </div> */}
+        </>
       </StyledContent>
     </>
   );
