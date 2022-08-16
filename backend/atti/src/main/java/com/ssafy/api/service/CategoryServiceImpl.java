@@ -67,6 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
 		for(Category c : categoryList) {
 			dtoList.add(CategoryListRes.builder()
 					.departId(departId)
+					.departName(depart.getDepartName())
 					.categoryId(c.getCategoryId())
 					.categoryName(c.getCategoryName())
 					.cType(c.getCtype())
