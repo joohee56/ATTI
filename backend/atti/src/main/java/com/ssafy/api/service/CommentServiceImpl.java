@@ -107,7 +107,7 @@ public class CommentServiceImpl implements CommentService {
 		
 		// 없다면, 추가
 		if(userCommentLike == null)
-			userCommentLikeRepository.save(UserCommentLike.builder().comment(comment).user(user).build());
+			userCommentLikeRepository.save(new UserCommentLike().builder().comment(comment).user(user).build());
 		// 있다면, 삭제
 		else userCommentLikeRepository.deleteById(userCommentLike.getUserCommentLikeId());
 		

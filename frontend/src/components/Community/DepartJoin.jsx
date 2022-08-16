@@ -1,15 +1,16 @@
 
 import styled from "styled-components"
 import { useState } from "react"
-import { useSelector } from "react-redux"
-
+import { useSelector, useDispatch } from "react-redux"
 import apiAcc, {api} from "../../utils/api"
 import { palette } from "../../styles/palette"
 import InputWithIcon from "../InputWithLabel"
 import { ButtonBlue } from "../ButtonStyled"
 import { ButtonPurple } from "../ButtonStyled"
+import { departActions } from "../../store/community/Depart"
 
 function DepartJoin({handleModal5}) {
+    const dispatch = useDispatch()
     const {id} = useSelector(state => state.userInfo)
     const [departJoin, setDepartJoin] = useState([])
     const getValue = e => {
@@ -23,6 +24,12 @@ function DepartJoin({handleModal5}) {
         api.get(`/depart/${departJoin}/${id}`,
         ).then((res) => {
             console.log("채널 들어가기: ", res.data)
+            dispatch(departActions.saveDepart(           // 새로운 채널의 이름,id 저장, 생성자도 저장
+                {
+                    // userId: newDepart.userId,
+                    departName: res.data.categoryList[0].departName,
+                    departId: res.data.departId
+                }))
         })
     }
 

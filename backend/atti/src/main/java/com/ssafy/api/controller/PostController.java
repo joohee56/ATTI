@@ -73,27 +73,7 @@ public class PostController {
         System.out.println("postContent : " + editPostInfo.getPostContent());
         System.out.println("=====================");
 
-        Post editPost = new Post();
-
-        editPost.setPostId(editPostInfo.getPostId());
-
-        User user = new User();
-        Depart depart = new Depart();
-        Category category = new Category();
-        
-        user.setUserId(editPostInfo.getUserId());
-        depart.setDepartId(editPostInfo.getDepartId());
-        category.setCategoryId(editPostInfo.getCategoryId());
-        
-        editPost.setUser(user);
-        editPost.setDepart(depart);
-        editPost.setCategory(category);
-        
-        editPost.setPostTitle(editPostInfo.getPostTitle());
-        editPost.setPostContent(editPostInfo.getPostContent());
-        
-        editPost.setCategory(category);
-        postService.editPost(editPost);
+        postService.editPost(editPostInfo);
         return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
     }
 	
@@ -104,7 +84,5 @@ public class PostController {
 		Long count = postService.postLike(postId, userId);
 		return new ResponseEntity<Long>(count, HttpStatus.OK);
 	}
-	
-	
 	
 }

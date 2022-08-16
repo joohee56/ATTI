@@ -52,6 +52,7 @@ const categorySlice = createSlice({
     },
     reducers: {
         saveCategory(state, action) {
+            console.log("리스트 아님",action);
             state.categoryId = action.payload.categoryId;
             state.categoryAnoInfo = action.payload.categoryAnoInfo;
             state.categoryComAnoInfo = action.payload.categoryComAnoInfo;
@@ -62,6 +63,7 @@ const categorySlice = createSlice({
             state.userId = action.payload.userId;
         },
         saveCategoryList(state, action) {
+            console.log("새로운 카테고리 리스트를 저장합니다.",action)
             state.categoryList = action.payload.categoryList;
         }
     }

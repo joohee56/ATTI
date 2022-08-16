@@ -19,28 +19,33 @@ import CloseIcon from '@mui/icons-material/Close';
 import { palette } from "../../styles/palette";
 import { SosOutlined } from '@mui/icons-material';
 import { reRenderingActions } from '../../store/community/ReRendering';
+import { useSlider } from '@mui/base';
 
 
 function CategoryList(changeState){
     
     const  categoryList  = useSelector(state => state.category.categoryList );
-    console.log("카테고리리스트: ", categoryList)
+
     const categoryLists = useSelector(state => state.category.categoryList)
     const { id } = useSelector(state => state.userInfo);
     const dispatch = useDispatch()
+
     const departId = useSelector(state => state.depart.departId)
     const currentCider = useSelector(state => state.reRendering.cider)
 
-    const [category, setCategory] = useState([])
-    
-    const [changeCss, setChangeCss] = useState(1);
 
+    const [category, setCategory] = useState([])
+    const [changeCss, setChangeCss] = useState(1);
     const [changeResult, setChangeResult] = useState(false);
-   
+    const [newCategory, setNewCategory] = useState(false)
+    console.log("카테고리리스트: ", categoryList)
 
     useEffect(() => {
-        setCategory(categoryList);
-    },[])
+        if (categoryList !== null && categoryList.length > 0 && categoryList !== undefined) {
+            
+            setCategory(categoryList);
+        }
+    },[categoryList])
     useEffect(() => {
         setCategory(categoryLists)
         setChangeResult(true);
@@ -80,11 +85,12 @@ function CategoryList(changeState){
             backgroundColor: palette.purlue_2,
            
         }
-        console.log("changeState는?", changeState);
+        // console.log("changeState는?", changeState);
         useEffect(() => {
             if (changeResult) {
                 console.log("찬기")
                 console.log(category);
+                // updateCategory()
                 CategoryFunction(0)
                 setChangeResult(false);
             }

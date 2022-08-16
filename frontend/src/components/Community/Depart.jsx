@@ -33,38 +33,11 @@ function DepartList(){
   const [departs, setDeparts] = useState([])
 
   useEffect(() => {
-    setDeparts(departList);
-  },[])
-
-  function updateDepartList() {
-    console.log("새로운 채널 생성", newDepartId);
-
-    const newList = []
-    newList.push({
-      departId: newDepartId,
-      departName: newDepartName,
-    })
-    let combineList = []
-    if (departList !== null ) {
+    if (departList !== null && departList !== undefined && departList.length > 0) {
       
-      combineList = [...departList, ...newList];
-    } else {
-      combineList = [...newList];
+      setDeparts(departList);
     }
-    dispatch(departActions.saveDepartList(
-      {
-        departList: combineList
-      }
-    ))
-    console.log(combineList);
-    setDeparts(combineList)
-  }
-  
-  useEffect(() => {
-       
-      updateDepartList();
-    
-  }, [newDepartCreate])
+  },[departList])
 
     const handleClose = () => {
       setAnchorEl(null);
@@ -162,7 +135,7 @@ function DepartList(){
           <MenuItem onClick={() => {departJoinFunction()}}><GroupAddIcon/>&nbsp; 채널가입</MenuItem>
          
           {departs !== null && departs.length > 0 && Object.keys(departs).map((e,i) => (
-            <div>{console.log(departs)}
+            <div>
             <MenuItem onClick={() => {departFunction(i)}} key={i}>{departs[e].departName}</MenuItem> </div>
           ))}
         </Menu>

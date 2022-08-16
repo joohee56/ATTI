@@ -119,9 +119,9 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
 function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
   
   const categoryId = useSelector(state => state.category.categoryId)
-  console.log('카테고리, 너의 아이디는? ' , categoryId)
+  // console.log('카테고리, 너의 아이디는? ' , categoryId)
   const departId = useSelector(state => state.depart.departId)
-  console.log('채널, 너의 아이디는? ' , departId)
+  // console.log('채널, 너의 아이디는? ' , departId)
   const { id } = useSelector(state => state.userInfo)
   
   const currentSetPost = useSelector(state => state.reRendering.setPost)
@@ -140,9 +140,9 @@ function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
     setPost(postList)
   }, []);
   
-  console.log("노말 포스트 프레임입니다. ", currentSetPost);
+  // console.log("노말 포스트 프레임입니다. ", currentSetPost);
   useEffect(() => {
-    console.log('확인중입니다')
+    // console.log('확인중입니다')
     getPosts();
   },[currentSetPost, categoryId, departId]);
   
