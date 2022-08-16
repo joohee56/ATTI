@@ -55,10 +55,19 @@ public class DepartController {
 	@GetMapping("/{departCode}/{userId}") // 채널 입장 
 	public ResponseEntity<? extends BaseResponseBody> joinChannel(@PathVariable String departCode, @PathVariable String userId) {
 //		System.out.println("===========================" + departId + "=============================");
+		
+		// 0. 채널 코드와 일치하는 채널 찾기
 		Long departId = departService.getDepartIdByCode(departCode);
 		if(departId == null)
 			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "채널 코드와 일치하는 채널이 없습니다."));
 		
+		// 1. 이미 가입된 회원인지 찾기
+		boolean isOnChannelUser = departService.isOnChannelUser(departId, userId);
+		
+		if(isOnChannelUser)
+			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "이미 가입된 회원입니다."));
+		
+		// 2. 채널 가입하고 가입한 채널의 카테고리 리스트 리턴
 		List<CategoryListRes> categoryList = departService.joinChannel(departCode, userId);
 		
 		if(categoryList == null)
@@ -67,7 +76,8 @@ public class DepartController {
 		Long categoryId = categoryList.get(0).getCategoryId();
 		Category category = categoryService.getByCategoryId(categoryId);
 		
-		List<Post> postList = postService.findByCategory(category);
+		// 3. 첫 번째 카테고리의 글 목록 리턴
+		List<PostViewAllRes> postList = postService.viewAllPosts(departId, categoryId, userId);
 		
 		return ResponseEntity.status(200).body(DepartJoinListRes.of(200, "success",categoryList, departId, postList));
 	}

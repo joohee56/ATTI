@@ -119,6 +119,7 @@ public class PostServiceImpl implements PostService {
 			// 내가 이 게시글에 좋아요를 눌렀는지 체크
 			UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(p, user).orElse(null);
 			boolean myLike = false;
+			
 			if(userPostLike != null)
 				myLike = true;
 			
