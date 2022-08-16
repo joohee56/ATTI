@@ -1,15 +1,15 @@
-import { Avatar, FormHelperText, TextField } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { Avatar, FormHelperText } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { RootState } from "../../store";
+import { loginActions } from "../../store/LoginStore";
 import { palette } from "../../styles/palette";
 import { api } from "../../utils/api";
 import InputPassword from "../account/InputPassword";
-import InputWithChannelOut from "../account/InputWithChannelOut";
 import InputWithPhone from "../account/InputWithPhone";
-import { ButtonBlue } from "../ButtonStyled";
+import { ButtonBlue, ButtonPurple } from "../ButtonStyled";
 import InputWithLabel from "../InputWithLabel";
 import Modal from "../Modal";
 import SnacbarTell from "../SnacbarTell";
@@ -23,11 +23,13 @@ interface MyInfoData {
 
 function MyPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // 데이터 받아오기
   const { userName } = useSelector((state: RootState) => state.userInfo);
   const { id } = useSelector((state: RootState) => state.userInfo);
   const { departName } = useSelector((state: RootState) => state.depart);
+  const { randomColor } = useSelector((state: RootState) => state.userInfo);
 
   const [mydataInfo, setMydataInfo] = useState<MyInfoData>({
     userName: "",
@@ -60,10 +62,8 @@ function MyPage() {
   }, []);
 
   // 모달 보이기 여부
-  // 회원 탈퇴 모달
-  const [isOpenModal, setOpenModal] = useState<boolean>(false);
   // 채널 나가기 모달
-  const [isChannelOUtModal, setChannelOUtModal] = useState<boolean>(false);
+  //const [isChannelOUtModal, setChannelOUtModal] = useState<boolean>(false);
 
   // 수정하기 눌렀나
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -175,15 +175,24 @@ function MyPage() {
   };
 
   // 탈퇴
-  const [openOut, setOpenOut] = useState(false);
+  // 회원 탈퇴 모달
+  const [isOpenModal, setOpenModal] = useState<boolean>(false);
+  const [isOutOk, setIsOutOk] = useState<boolean>(false);
 
   const userOut = async (e: any) => {
     e.preventDefault();
     await api
       .put(`/user/delete/${id}`)
       .then(function (response) {
-        console.log("response:", response);
-        navigate("/");
+        //console.log("response:", response);
+        setOpenModal(false);
+        setIsOutOk(true);
+        setTimeout(function () {
+          localStorage.removeItem("AccessToken");
+          localStorage.removeItem("userId");
+          dispatch(loginActions.logout());
+          navigate("/");
+        }, 1500);
       })
       .catch(function (error) {
         console.log("Error", error);
@@ -211,7 +220,7 @@ function MyPage() {
               sx={{
                 width: 150,
                 height: 150,
-                bgcolor: palette.yellow_3,
+                bgcolor: randomColor,
                 marginBottom: 6,
                 fontSize: 40,
               }}
@@ -258,7 +267,7 @@ function MyPage() {
             sx={{
               width: 150,
               height: 150,
-              bgcolor: palette.yellow_3,
+              bgcolor: randomColor,
               marginBottom: 6,
               fontSize: 40,
             }}
@@ -285,7 +294,7 @@ function MyPage() {
                 <SpanStyle>Password</SpanStyle>
                 <InputPassword
                   name="password"
-                  placeholder="비밀번호"
+                  placeholder="비밀번호 입력하세요"
                   value={password}
                   onChange={onChangePassword}
                 />
@@ -325,12 +334,12 @@ function MyPage() {
                   onChange={onChangeEmail}
                 />
                 <SpanStyle>Channel</SpanStyle>
-                <InputWithChannelOut
+                <InputWithLabel
                   disabled
                   name={""}
                   placeholder={""}
                   value={departName}
-                  onClick={() => setChannelOUtModal(true)}
+                  // onClick={() => setChannelOUtModal(true)}
                 />
 
                 <SpanStyle>Phone</SpanStyle>
@@ -374,62 +383,86 @@ function MyPage() {
               </FormHelperText>
             )}
           </EmailHelperText>
-          <UserEdit onClick={InfoSubmit}
-          disabled={
+          <MyEditButtonDiv>
+            <UserEdit
+              onClick={InfoSubmit}
+              disabled={
                 !(
-                  (
-                    isName &&
-                    isPassword &&
-                    isPasswordConfirm &&
-                    isEmail &&
-                    isPhoneNumber
-                  )
+                  isName &&
+                  isPassword &&
+                  isPasswordConfirm &&
+                  isEmail &&
+                  isPhoneNumber
                 )
               }
             >
               저장하기
             </UserEdit>
-            {!(
-              (
-                isName &&
-                isPassword &&
-                isPasswordConfirm &&
-                isEmail &&
-                isPhoneNumber
-              )
-            ) && (
-              <p style={{ color: `${palette.red}` }}>
-                정보를 수정하려면 올바르게 입력해주세요.
-              </p>
-            )}
+            <UserEditGray
+              style={{ marginTop: "80px" }}
+              onClick={() => setIsEdit(!isEdit)}
+            >
+              {" "}
+              취소하기
+            </UserEditGray>
+          </MyEditButtonDiv>
         </Content>
       )}
       {isOpenModal && (
-        <Modal onClickToggleModal={() => setOpenModal(false)}>
-          <p>정말로 탈퇴하시겠습니까?</p>
-          <p>
-            탈퇴시 관련 데이터들이 삭제 됩니다.
+        <Modal width="410px" onClickToggleModal={() => setOpenModal(false)}>
+          <ModalDiv>
+            <ModalUp>
+              <TextSpan>탈퇴 안내</TextSpan>
+            </ModalUp>
+            정말로 탈퇴하시겠습니까?
             <br />
-            재가입시 데이터를 복구 할 수 없습니다.
-          </p>
-          <div>
-            <button>아니오</button>
-            <button onClick={userOut}>탈퇴</button>
-          </div>
+            탈퇴시 관련 데이터들을 모두 삭제합니다.
+            <br /> 재가입시 데이터를 복구 할 수 없습니다.
+            <MyEditButtonDiv style={{ marginLeft: "42px", marginTop: "73px" }}>
+              <ButtonRed style={{ padding: "8px 27px" }} onClick={userOut}>
+                탈퇴
+              </ButtonRed>
+              <UserEditGray onClick={() => setOpenModal(!isOpenModal)}>
+                아니오
+              </UserEditGray>
+            </MyEditButtonDiv>
+          </ModalDiv>
         </Modal>
       )}
-      {isChannelOUtModal && (
+      {isOutOk && (
         <Modal
-          width="500px"
+          width="400px"
+          height="250px"
+          onClickToggleModal={() => setOpenModal(false)}
+        >
+          <ModalDiv>
+            <ModalUp>
+              <TextSpan>탈퇴 안내</TextSpan>
+            </ModalUp>
+            ATTI에서 탈퇴 되었습니다.
+            <br />
+            <ButtonRed style={{ marginTop: "40px", padding: "8px 27px" }} onClick={()=> navigate("/")}>
+              확인
+            </ButtonRed>
+          </ModalDiv>
+        </Modal>
+      )}
+      {/* {isChannelOUtModal && (
+        <Modal
+          width="500px" height="250px"
           onClickToggleModal={() => setChannelOUtModal(false)}
         >
-          <span>채널 나가기 안내</span>
-          <p>정말로 채널을 나가시겠습니까?</p>
-          <div>
-            <button>채널 나가기</button>
-          </div>
+          <ModalDiv>
+            <ModalUp>
+              <TextSpan>채널 나가기 안내</TextSpan>
+            </ModalUp>
+            <p>정말로 채널을 나가시겠습니까?</p>
+              <div>
+                <ButtonRed style={{marginTop:"10px"}}>채널 나가기</ButtonRed>
+              </div>
+          </ModalDiv>
         </Modal>
-      )}
+      )} */}
     </Main>
   );
 }
@@ -453,7 +486,7 @@ const Content = styled.div`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 115px 300px;
+  grid-template-columns: 130px 300px;
   grid-template-rows: minmax(1fr, auto);
   row-gap: 40px;
   column-gap: 30px;
@@ -462,7 +495,7 @@ const Grid = styled.div`
 
 const SetGrid = styled.div`
   display: grid;
-  grid-template-columns: 115px 300px;
+  grid-template-columns: 130px 300px;
   grid-template-rows: repeat(4, 1fr);
   column-gap: 30px;
   row-gap: 40px;
@@ -478,7 +511,7 @@ const SpanStyle = styled.span`
   background: ${palette.blue_1};
   color: black;
   border: 0px solid;
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-align: center;
 `;
 
@@ -544,10 +577,72 @@ const UserEdit = styled(ButtonBlue)`
   margin-top: 80px;
 `;
 
+const UserEditGray = styled.button`
+  background: ${palette.gray_2};
+  color: ${palette.gray_5};
+  font-size: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 1rem;
+  border: 0px solid;
+  font-weight: bold;
+  cursor: pointer;
+  &:active,
+  &:hover {
+    filter: brightness(90%);
+    background: ${palette.gray_2};
+  }
+`;
+const ButtonRed = styled.button`
+  background: ${palette.pink_1};
+  color: ${palette.red};
+  font-size: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 1rem;
+  border: 0px solid;
+  font-weight: bold;
+  cursor: pointer;
+  &:active,
+  &:hover {
+    filter: brightness(90%);
+    background: ${palette.pink_1};
+  }
+`;
+
 const StyledPage = styled.div`
   display: flex;
   column-gap: 50px;
-  height: 330px;
+  height: 305px;
+`;
+
+const MyEditButtonDiv = styled.div`
+  display: flex;
+  column-gap: 50px;
+  width: 230px;
+`;
+
+const ModalUp = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 30px;
+`;
+
+const ModalDiv = styled.div`
+  color: gray; //텍스트 색상
+  font-size: middle; //텍스트 크기
+  font-weight: bold; //텍스트 굵기
+  text-align: center; //텍스트 정렬 방향
+  line-height: 50px; //줄간격
+  width: 80%;
+`;
+
+const TextSpan = styled.span`
+  font-size: 1.2em;
+  font-weight: bold; //텍스트 굵기
+  background: ${palette.red};
+  -webkit-background-clip: text;
+  color: transparent;
 `;
 
 const Vline = styled.div`

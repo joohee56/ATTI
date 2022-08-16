@@ -11,12 +11,17 @@ export interface UserLoginState {
     ctype: string;
   }[];
   departList:{
+    departId:string;
+    departName:string;
+  }[];
+  postList:{
     postContent:string;
     postRegDate:string;
     postTitle:string;
     userId:string;
   }[];
   auth: boolean;
+  randomColor: string;
 }
 
 const initialState: UserLoginState = {
@@ -26,7 +31,9 @@ const initialState: UserLoginState = {
   accessToken: "",
   categoryList: [],
   departList:[],
+  postList:[],
   auth: false,
+  randomColor:"",
 };
 
 const userSlice = createSlice({
@@ -46,6 +53,10 @@ const userSlice = createSlice({
           ctype: string;
         }[];
         departList:{
+          departId:string;
+          departName:string;
+        }[];
+        postList:{
           postContent:string;
           postRegDate:string;
           postTitle:string;
@@ -59,8 +70,10 @@ const userSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.categoryList = action.payload.categoryList;
       state.departList= action.payload.departList;
+      state.postList= action.payload.postList;
       state.auth = true;
-      console.log(action.payload);
+      state.randomColor= "#" + Math.floor(Math.random() * 16777215).toString(16);
+      //console.log(action.payload);
     },
     logout: (state) => {
       state.id = "";
