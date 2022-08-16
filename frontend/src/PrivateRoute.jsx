@@ -5,7 +5,7 @@ import React from 'react';
 
  function PrivateRoute({ authenticated, component: Component }) {
    return (
-     authenticated ? Component : <Navigate to='/' {...alert("로그인 후 이용해 주세요.")}/>
+     authenticated ? Component : <Navigate to='/login' {...alert("로그인 후 이용해 주세요.")}/>
    )
  }
 
