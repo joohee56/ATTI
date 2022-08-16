@@ -81,14 +81,14 @@ public class DepartController {
 	
 	// 카테고리 생성
 	@PostMapping("/category/create")
-	public ResponseEntity<String> createCategory(@RequestBody CategoryCreateReq categoryCreateReq) {
+	public ResponseEntity<Long> createCategory(@RequestBody CategoryCreateReq categoryCreateReq) {
 		System.out.println("=========================");
 		System.out.println("cType :"+ categoryCreateReq.getType());
 		System.out.println(categoryCreateReq.getCategoryName());
 		System.out.println("=========================");
 		
-		categoryService.createCategory(categoryCreateReq);
-		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+//		categoryService.createCategory(categoryCreateReq);
+		return new ResponseEntity<Long>(categoryService.createCategory(categoryCreateReq), HttpStatus.OK);
 	}
 	
 	// 채널 클릭 시 카테고리 리스트 리턴
