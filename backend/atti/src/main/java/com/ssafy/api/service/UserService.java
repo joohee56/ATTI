@@ -13,8 +13,6 @@ import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,8 +47,7 @@ public class UserService {
 	AuthPhoneUtil authPhoneUtil;
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
-	@Autowired
-	private StringRedisTemplate stringRedisTemplate;
+
 	
 	// 일반 회원가입
 	public void signUp(User user) {
@@ -137,21 +134,6 @@ public class UserService {
 		userRepository.save(user);
 	}
 	
-	// Redis
-	public String getRedisStringValue(String key) {
-		ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
-		// * stringRedisTemplate 을 통해 다양한 타입의 자료구조도 사용이 가능. 자료구조의 직렬화 및 역직렬화 가능
-		System.out.println("Redis key: " + key);
-		System.out.println("Redis Value: " + stringValueOperations.get(key));
-		return stringValueOperations.get(key);
-	}
-	
-	public void setRedisStringValue(String key, String value) {
-		ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
-		stringValueOperations.set(key, value);
-		System.out.println("Saved : RedisKey : " + key);
-		System.out.println("Saved : RedisValue : " + stringValueOperations.get(key));
-	}
 	
 	// 로그인한 유저의 가입한 채널 리스트를 넘김
 	public List<UserDepartRes> getDepartList(String userId){
