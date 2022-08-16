@@ -12,6 +12,7 @@ const departSlice = createSlice({
     },
     reducers: {
         saveDepart(state, action) {
+            console.log(action);
             state.departId = action.payload.departId;
             state.userId = action.payload.userId;
             state.departName = action.payload.departName;
@@ -21,7 +22,10 @@ const departSlice = createSlice({
         initialSaveDepart(state, action){
             state.departId = action.payload.departId;
             state.departName = action.payload.departName;
-        }
+        },
+        saveDepartList(state, action) {
+            state.departList = action.payload.departList;
+        },
     }
 });
 

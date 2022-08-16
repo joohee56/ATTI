@@ -28,17 +28,18 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
     const [comments, setComments] = useState([])
     const currentCider = useSelector(state => state.reRendering.cider)
     const updateCider = !currentCider
+    const { id } = useSelector(state => state.userInfo)
 
     useEffect(() => {
         // 개별 글 불러오는 것
-        api.get(`/post/read/${postId}`
+        api.get(`/post/read/${postId}/${id}`
             ).then((res) => {
             console.log("개별 글 list : ", res.data)
             setSingle(res.data)
             setSinglePost(res.data)
             })
         // 댓글 list 불러오는 것
-        api.get(`post/comment/read/${postId}`)
+        api.get(`post/comment/read/${postId}/${id}`)
         .then((res) => {
             console.log("댓글들: ", res)
             setComments(res.data)
@@ -50,7 +51,6 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
         onClickToggleModal3()
     }
 
-    const { id } = useSelector(state => state.userInfo)
     const [comment, setComment] = useState({
         postId: postId,
         userId: "gusxo123",

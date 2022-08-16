@@ -5,17 +5,17 @@ export interface UserLoginState {
   userName: string;
   admin: boolean;
   accessToken: string;
-  categoryList: {
-    categoryId: number;
-    categoryName: string;
-    ctype: string;
-  }[];
-  departList:{
-    postContent:string;
-    postRegDate:string;
-    postTitle:string;
-    userId:string;
-  }[];
+  // categoryList: {
+  //   categoryId: number;
+  //   categoryName: string;
+  //   ctype: string;
+  // }[];
+  // departList:{
+  //   postContent:string;
+  //   postRegDate:string;
+  //   postTitle:string;
+  //   userId:string;
+  // }[];
   auth: boolean;
 }
 
@@ -24,8 +24,8 @@ const initialState: UserLoginState = {
   userName: "",
   admin: false,
   accessToken: "",
-  categoryList: [],
-  departList:[],
+  // categoryList: [],
+  // departList:[],
   auth: false,
 };
 
@@ -40,25 +40,25 @@ const userSlice = createSlice({
         userName: string;
         admin: boolean;
         accessToken: string;
-        categoryList: {
-          categoryId: number;
-          categoryName: string;
-          ctype: string;
-        }[];
-        departList:{
-          postContent:string;
-          postRegDate:string;
-          postTitle:string;
-          userId:string;
-        }[];
+        // categoryList: {
+        //   categoryId: number;
+        //   categoryName: string;
+        //   ctype: string;
+        // }[];
+        // departList:{
+        //   postContent:string;
+        //   postRegDate:string;
+        //   postTitle:string;
+        //   userId:string;
+        // }[];
       }>
     ) => {
       state.id = action.payload.id;
       state.userName= action.payload.userName;
       state.admin=action.payload.admin;
       state.accessToken = action.payload.accessToken;
-      state.categoryList = action.payload.categoryList;
-      state.departList= action.payload.departList;
+      // state.categoryList = action.payload.categoryList;
+      // state.departList= action.payload.departList;
       state.auth = true;
       console.log(action.payload);
     },

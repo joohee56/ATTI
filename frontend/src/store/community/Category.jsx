@@ -47,7 +47,8 @@ const categorySlice = createSlice({
         categoryName: "공지사항",
         cType: null,
         departId: null,
-        userId: null
+        userId: null,
+        categoryList: []
     },
     reducers: {
         saveCategory(state, action) {
@@ -60,6 +61,9 @@ const categorySlice = createSlice({
             state.departId = action.payload.departId;
             state.userId = action.payload.userId;
         },
+        saveCategoryList(state, action) {
+            state.categoryList = action.payload.categoryList;
+        }
     }
 
 });

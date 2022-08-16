@@ -15,7 +15,7 @@ import { CommentOutlined } from '@material-ui/icons';
 
 
 function CommentList({comments, postId}){
-    const { auth } = useSelector(state => state.userInfo)
+    const { id } = useSelector(state => state.userInfo)
     const [commentList, setCommentList] = useState(comments)
     const currentCider = useSelector(state => state.reRendering.cider)
     const updateCider = !currentCider
@@ -34,7 +34,7 @@ function CommentList({comments, postId}){
     }
     useEffect(() => {
         
-        api.get(`post/comment/read/${postId}`)
+        api.get(`post/comment/read/${postId}/${id}`)
         .then((res) => {
             console.log("댓글들: ", res.data)
             commentList = res.data

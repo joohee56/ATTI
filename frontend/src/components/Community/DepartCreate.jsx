@@ -7,43 +7,59 @@ import { palette } from "../../styles/palette"
 import InputWithIcon from "../InputWithLabel"
 import { ButtonBlue } from "../ButtonStyled"
 import { reRenderingActions } from "../../store/community/ReRendering"
+import { departActions} from "../../store/community/Depart"
+import { categoryActions } from "../../store/community/Category"
+import { resolvePath } from "react-router-dom"
 
 function DepartCreate({handleModal4, newDepartFrame}) {
 
     const { id } = useSelector(state => state.userInfo)
-    const { departList } = useSelector(state => state.userInfo)
-    const [newDepart, setNewDepart] = useState({
+    const { departList } = useSelector(state => state.userInfo) //로그인 했을 때 사용자의 채널들을 가져옴 -> 추가하기 전
+    const [newDepart, setNewDepart] = useState({ // 추가할 채널의 정보
         userId: id,
         departName: "",
-
     })
-    const currentCider = useSelector(state => state.reRendering.cider)
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const currentCider = useSelector(state => state.reRendering.cider) // 리렌더링을 위해 사용
     const updateCider = !currentCider
     const dispatch = useDispatch()
 
-    const getValue = e => {
+    const getValue = e => { // 채널 이름 같은 정보를 저장함
         const {value} = e.target;
         newDepart.departName = value
     };
 
     // 채널 생성
     const departPost = () => {
+
         api.post(`/depart/create`,
         {
             userId: newDepart.userId,
             departName: newDepart.departName,
         }).then(function (response) {
             console.log("채널 생성 결과:", response)
-            newDepartFrame.push(newDepart)
-            dispatch(reRenderingActions.saveReRendering(
+            // newDepartFrame.push(newDepart)
+            console.log("새로운 채널을 생성하는데요?", newDepart.departName)
+            dispatch(departActions.saveDepart(           // 새로운 채널의 이름 저장, 생성자도 저장
+                {
+                    userId: newDepart.userId,
+                    departName: newDepart.departName
+                }
+            ))
+            dispatch(categoryActions.saveCategoryList(   // 새로운 채널에 들어있는 기본 카테고리 저장
+                {
+                    categoryList: response.data
+                }
+            ))
+            dispatch(reRenderingActions.saveReRendering( // 리렌더링을 하도록 트리거 설정
                 {cider: updateCider }
             ))
         })
     }
     
     function departCreateFunction(){
-        departPost()
-        handleModal4()
+        departPost() 
+        handleModal4() // 모달띄우기
     }
 
     return(

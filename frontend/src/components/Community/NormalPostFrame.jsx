@@ -27,7 +27,6 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
   
   const categoryId = useSelector(state => state.category.categoryId)
-  
   console.log('카테고리, 너의 아이디는? ' , categoryId)
   const departId = useSelector(state => state.depart.departId)
   console.log('채널, 너의 아이디는? ' , departId)
