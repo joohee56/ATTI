@@ -30,8 +30,8 @@ public class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Override
-	public void createCategory(CategoryCreateReq categoryCreateReq) {
+	@Override // 카테고리 생성
+	public Long createCategory(CategoryCreateReq categoryCreateReq) {
 		Depart depart = departRepository.findById(categoryCreateReq.getDepartId()).orElse(null);
 		User user = userRepository.findById(categoryCreateReq.getUserId()).orElse(null);
 		
@@ -49,7 +49,9 @@ public class CategoryServiceImpl implements CategoryService {
 				.user(user)
 				.build();
 		
-		categoryRepository.save(category);
+//		categoryRepository.save(category).getCategoryId();
+		
+		return categoryRepository.save(category).getCategoryId();
 	}
 	
 	// 채널 ID 에 해당하는 카테고리 리스트를 가져옴
@@ -65,6 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
 		for(Category c : categoryList) {
 			dtoList.add(CategoryListRes.builder()
 					.departId(departId)
+					.departName(depart.getDepartName())
 					.categoryId(c.getCategoryId())
 					.categoryName(c.getCategoryName())
 					.cType(c.getCtype())

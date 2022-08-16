@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.api.request.PostUpdateReq;
 import com.ssafy.api.request.PostWriteReq;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.PostViewOneRes;
@@ -176,10 +177,15 @@ public class PostServiceImpl implements PostService {
 
 	@Override // 단일 게시글 수정
 	@Transactional
-	public void editPost(Post editPost) {
-		editPost.setPostUpdDate(LocalDateTime.now());
-//		postRepository.updateOne(editPost);
-		postRepository.save(editPost);
+	public void editPost(PostUpdateReq editPost) {
+		Post post = postRepository.findById(editPost.getPostId()).orElse(null);
+		if(post == null) return;
+		
+		post.setPostTitle(editPost.getPostTitle());
+		post.setPostContent(editPost.getPostContent());
+		post.setPostUpdDate(LocalDateTime.now());
+				
+		postRepository.save(post);
 	}
 	
 	// 좋아요 기능 - 주희 추가
