@@ -16,4 +16,5 @@ public class CategoryListRes {
 	private boolean categoryAnoInfo;
 	private boolean categoryComInfo;
 	private boolean categoryComAnoInfo;
+	private String userId;
 }
