@@ -35,11 +35,11 @@ public class PostController {
 //	}
 	
 	@PostMapping("/write") // 게시글 쓰기
-	public ResponseEntity<String> createWriting(@RequestBody PostWriteReq postWriteReq) {
+	public ResponseEntity<Long> createWriting(@RequestBody PostWriteReq postWriteReq) {
 //		System.out.println(post);
-		postService.createWriting(postWriteReq);
+//		postService.createWriting(postWriteReq);
 //		System.out.println(post);
-		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		return new ResponseEntity<Long>(postService.createWriting(postWriteReq), HttpStatus.OK);
 	}
 	
 	@GetMapping("/read/{postId}/{userId}") // 게시글 상세 조회
