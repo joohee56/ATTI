@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import Logo from "../../assets/images/logoComputer.png";
+import { departActions } from "../../store/community/Depart";
+import { categoryActions } from "../../store/community/Category";
+import { noticeActions } from "../../store/community/Notice";
 import SnacbarTell from "../SnacbarTell";
 import InputWithLabel from "../InputWithLabel";
 import InputPassword from "../account/InputPassword";
@@ -73,17 +76,36 @@ function LoginComponent() {
               userName: response.data.userName,
               accessToken: response.data.accessToken,
               admin: response.data.admin,
-              categoryList: response.data.categoryList,
-              departList: response.data.departList,
-              postList: response.data.postList,
+              // categoryList: response.data.categoryList,
+              // departList: response.data.departList,
+              // postList: response.data.postList,
             })
           );
         }
-        if (response.data.departList == null) navigate("/welcome");
-        else
-          navigate(
-            `/community/${response.data.departList[0].departId}/${response.data.categoryList[0].categoryId}`
-          );
+        dispatch( // 로그인 후 첫번째 채널 공시사항 게시글 저장하기
+            noticeActions.savePostList({
+              postList: response.data.postList
+            })
+          )
+          dispatch( // 첫번째 채널의 카테고리 리스트들을 저장하는 디스패치
+            categoryActions.saveCategoryList({
+              categoryList: response.data.categoryList
+            })
+          )
+          dispatch(departActions.saveDepartList(
+            {
+              departList: response.data.departList
+            }
+          ))
+          if(response.data.departList==null) navigate("/welcome");     
+          else{
+            dispatch(departActions.initialSaveDepart({
+              departId: response.data.departList[0].departId,
+              departName: response.data.departList[0].departName
+          }))
+           navigate(`/community/${response.data.departList[0].departId}/${response.data.categoryList[0].categoryId}`);
+        }
+
       })
       .catch(function (error) {
         console.log("Error", error);
