@@ -7,6 +7,7 @@ import Favorite from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
 import styled from 'styled-components';
 import BestChip from './BestChip';
+import moment from "moment";
 
 import { CountActions } from '../../store/community/Count';
 import { reRenderingActions } from '../../store/community/ReRendering';
@@ -77,28 +78,28 @@ function CommentList({comments, postId}){
         width: "100%",
         margin: "-10px 0 0 0"
     }
-    function timeForToday(value) {
-        const today = new Date();
-        const timeValue = new Date(value);
+    // function timeForToday(value) {
+    //     const today = new Date();
+    //     const timeValue = new Date(value);
       
-        const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
-        if (betweenTime < 1) return '방금 전';
-        if (betweenTime < 60) {
-            return `${betweenTime}분 전`;
-        }
+    //     const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
+    //     if (betweenTime < 1) return '방금 전';
+    //     if (betweenTime < 60) {
+    //         return `${betweenTime}분 전`;
+    //     }
       
-        const betweenTimeHour = Math.floor(betweenTime / 60);
-        if (betweenTimeHour < 24) {
-            return `${betweenTimeHour}시간 전`;
-        }
+    //     const betweenTimeHour = Math.floor(betweenTime / 60);
+    //     if (betweenTimeHour < 24) {
+    //         return `${betweenTimeHour}시간 전`;
+    //     }
       
-        const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
-        if (betweenTimeDay < 365) {
-            return `${betweenTimeDay}일 전`;
-        }
+    //     const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+    //     if (betweenTimeDay < 365) {
+    //         return `${betweenTimeDay}일 전`;
+    //     }
       
-        return `${Math.floor(betweenTimeDay / 365)}년 전`;
-      }
+    //     return `${Math.floor(betweenTimeDay / 365)}년 전`;
+    //   }
     console.log("뭐가 들어있지?:", commentList)
     if(comments.length === 0){
         return(
@@ -120,7 +121,7 @@ function CommentList({comments, postId}){
                             </div>
                             <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
                                 <div>
-                                    {timeForToday(e.commentRegDate)}
+                                   {moment(e.commentRegDate).format('YYYY-MM-DD HH:mm')}
                                 </div>
                                 <div style={{display: "flex", flexDirection: "row"}}>
                                     {/* <span style={{margin: "10px 0 0 0"}}>답글</span> */}

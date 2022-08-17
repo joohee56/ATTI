@@ -99,7 +99,7 @@ function CategoryList(changeState){
         },[changeState,changeResult])
 
         function CategoryFunction(i) {
-            
+            console.log("카테고리이이이이이: ", category)
             setChangeCss(i+1)
             dispatch(categoryActions.saveCategory(
                 {categoryId: category[i].categoryId,
@@ -107,8 +107,8 @@ function CategoryList(changeState){
                 categoryComAnoInfo: category[i].categoryComAnoInfo,
                 categoryComInfo: category[i].categoryComInfo,
                 categoryName: category[i].categoryName,
-                cType: category[i].cType,
-                userId: id}
+                cType: category[i].ctype,
+                userId: category[i].userId}
             ))
             dispatch(reRenderingActions.saveSetMyPage(
                 {
@@ -247,13 +247,16 @@ function Category({changeState }){
         ))
 
     }
-    const {admin} = useSelector(state => state.userInfo)
+ 
+    const {id} = useSelector(state => state.userInfo)
+    const departUserId = useSelector(state => state.category.userId)
     return(
         <>
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", width: "210px", height: "700px"}}>
                 {CategoryList(changeState)}
-                
-                {admin && (
+                {console.log("departUserId", departUserId)}
+                {console.log("id", id)}
+                { departUserId === id && (
                     <div style={{position: "absolute", top: "750px"}}>
                         <StyledLink to={`/community/`+ departId + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
                             <div style={noClickStyle}>

@@ -22,6 +22,11 @@ import AdminPageWrapper from "./adminpage/AdminPageWrapper";
 
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from "@mui/icons-material/Favorite";
+import CampaignIcon from '@mui/icons-material/Campaign';
+import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { reRenderingActions } from "../../store/community/ReRendering";
 import { CountActions } from "../../store/community/Count";
@@ -30,13 +35,13 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
   const dispatch = useDispatch()
   const offset = (page - 1) * limit;
   const postStyle = {
-    borderRadius: "30px",
+    borderRadius: "10px",
     backgroundColor: palette.white,
     width: "90%",
     height: "110px",
     margin: "30px 0 0 50px",
-    // border: "0.5px solid",
-    boxShadow: "3px 3px 3px 3px grey"
+    // border: "1px solid",
+    boxShadow: `1px 1px 2px 2px gray` 
   };
  function TwoFunctions(e){
   handleModal2()
@@ -58,28 +63,28 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
   ))
  }
 
- function timeForToday(value) {
-  const today = new Date();
-  const timeValue = new Date(value);
+//  function timeForToday(value) {
+//   const today = new Date();
+//   const timeValue = new Date(value);
 
-  const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
-  if (betweenTime < 1) return '방금 전';
-  if (betweenTime < 60) {
-      return `${betweenTime}분 전`;
-  }
+//   const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
+//   if (betweenTime < 1) return '방금 전';
+//   if (betweenTime < 60) {
+//       return `${betweenTime}분 전`;
+//   }
 
-  const betweenTimeHour = Math.floor(betweenTime / 60);
-  if (betweenTimeHour < 24) {
-      return `${betweenTimeHour}시간 전`;
-  }
+//   const betweenTimeHour = Math.floor(betweenTime / 60);
+//   if (betweenTimeHour < 24) {
+//       return `${betweenTimeHour}시간 전`;
+//   }
 
-  const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
-  if (betweenTimeDay < 365) {
-      return `${betweenTimeDay}일 전`;
-  }
+//   const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+//   if (betweenTimeDay < 365) {
+//       return `${betweenTimeDay}일 전`;
+//   }
 
-  return `${Math.floor(betweenTimeDay / 365)}년 전`;
-}
+//   return `${Math.floor(betweenTimeDay / 365)}년 전`;
+// }
 
   console.log(post);
   if(post === null || post.length===0){
@@ -93,9 +98,9 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
         
         {post.slice(offset, offset + limit).map((e, i) => (
         <IndividualPost key={i}>
-          {console.log("e의 결과는? ", e)}
+          {/* {console.log("e의 결과는? ", e)}
           {console.log('-----')}
-          {console.log(e.postId)}
+          {console.log(e.postId)} */}
           {/* {console.log('postId :',  postId)} */}
           <div style={postStyle} onClick={() => {TwoFunctions(e)}}>
               <div
@@ -109,7 +114,7 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
                 <UserIdDiv>
                   작성자: {e.userId}
                 </UserIdDiv>
-                {moment(e.postRegDate).format("YYYY-MM-DD")}
+                {moment(e.postRegDate).format("YYYY-MM-DD HH:mm")}
               </div>
               <hr style={{width: "95%"}} />
   
@@ -181,6 +186,7 @@ function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
 
 
 function NormalPostFrame({changeState}) {
+
   const { id } = useSelector(state => state.userInfo)
   const dispatch = useDispatch()
   const [isOpenModal1, setOpenModal1] = useState(false);
@@ -243,6 +249,9 @@ function NormalPostFrame({changeState}) {
   // 글 전체 삭제 부분
   const updateSetPost = !currentSetPost
   const categoryId = useSelector(state => state.category.categoryId)
+  const categoryUserId = useSelector(state => state.category.userId)
+  const categoryCType = useSelector(state => state.category.cType)
+  console.log("타입타입", categoryCType)
   const allDelete = () => {
     api.delete(`/post/delete/category/${categoryId}`)
     .then((res) => {  
@@ -262,6 +271,28 @@ function NormalPostFrame({changeState}) {
   const myPage = useSelector(state => state.reRendering.setMyPage)
   const adminPage = useSelector(state => state.reRendering.setAdminPage)
   const classPage = useSelector(state => state.reRendering.setClass)
+  const categoryName = useSelector(state => state.category.categoryName)
+  const buttonList = [<CampaignIcon/>, <ContactSupportOutlinedIcon/>,<FolderOutlinedIcon/>,<ArticleOutlinedIcon/>, <VideocamOutlinedIcon/>, <span/>, <span/>, <span/>, <span/>, <span/>, <span/> ]
+  function selectTitle(){
+    if(categoryName === "공지사항"){
+      return <Title><CampaignIcon/>&nbsp; {categoryName}</Title>
+    }
+    else if(categoryName === "질문") {
+      return <Title><ContactSupportOutlinedIcon/>&nbsp; {categoryName}</Title>
+    }
+    else if(categoryName === "자료실"){
+      return <Title><FolderOutlinedIcon/>&nbsp; {categoryName}</Title>
+    }
+    else if(categoryName === "자유게시판"){
+      return <Title><ArticleOutlinedIcon/>&nbsp; {categoryName}</Title>
+    }
+    else if(categoryName === "수업실"){
+      return <Title><VideocamOutlinedIcon/>&nbsp; {categoryName}</Title>
+    }
+    else{
+      return <Title>{categoryName}</Title>
+    }
+  }
   if(myPage === true){
     return(
       <>
@@ -286,15 +317,15 @@ function NormalPostFrame({changeState}) {
         <PostContainer>
           <div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Title></Title>
+              {selectTitle()}
               <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
                 {/* <SearchBar /> */}
-                <AllDeleteButton onClick={allDelete}>
-                  전체 삭제
-                </AllDeleteButton>
-                <WriteButton onClick={onClickToggleModal1}>
-                  글쓰기
-                </WriteButton>
+   
+                {(categoryUserId !== id && categoryCType === "NOTICE") ?
+                (<></>) :
+                
+                (<div><AllDeleteButton onClick={allDelete}>전체 삭제</AllDeleteButton>
+                <WriteButton onClick={onClickToggleModal1}>글쓰기</WriteButton></div>)}
               </div>
             </div>
             <div>

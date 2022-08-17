@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { BACKEND_URL } from "../../constant";
 
+import moment from "moment";
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
@@ -63,7 +64,7 @@ function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3,
 
     const [comment, setComment] = useState({
         postId: postId,
-        userId: "",
+        userId: id,
         commentDeleteInfo: "",
         commentAnoInfo: "",
         commentContent: "",
@@ -164,28 +165,28 @@ function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3,
         width: "95%",
         
     }
-    function timeForToday(value) {
-        const today = new Date();
-        const timeValue = new Date(value);
+    // function timeForToday(value) {
+    //     const today = new Date();
+    //     const timeValue = new Date(value);
       
-        const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
-        if (betweenTime < 1) return '방금 전';
-        if (betweenTime < 60) {
-            return `${betweenTime}분 전`;
-        }
+    //     const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
+    //     if (betweenTime < 1) return '방금 전';
+    //     if (betweenTime < 60) {
+    //         return `${betweenTime}분 전`;
+    //     }
       
-        const betweenTimeHour = Math.floor(betweenTime / 60);
-        if (betweenTimeHour < 24) {
-            return `${betweenTimeHour}시간 전`;
-        }
+    //     const betweenTimeHour = Math.floor(betweenTime / 60);
+    //     if (betweenTimeHour < 24) {
+    //         return `${betweenTimeHour}시간 전`;
+    //     }
       
-        const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
-        if (betweenTimeDay < 365) {
-            return `${betweenTimeDay}일 전`;
-        }
+    //     const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+    //     if (betweenTimeDay < 365) {
+    //         return `${betweenTimeDay}일 전`;
+    //     }
       
-        return `${Math.floor(betweenTimeDay / 365)}년 전`;
-      }
+    //     return `${Math.floor(betweenTimeDay / 365)}년 전`;
+    //   }
     return(
         <div style={detailStyle}>
             <div>
@@ -214,11 +215,11 @@ function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3,
                         </div>
                         <div>
                             <span>
-                               작성: {timeForToday(single.postRegDate)} /  
+                               작성: {moment(single.postRegDate).format('YYYY-MM-DD HH:mm')}
                             </span>
-                            <span>
-                                수정: {postUpdDate}
-                            </span>
+                            {/* <span>
+                                수정: {postUpdDate === "" ? "" :  (moment(postUpdDate).format('YYYY-MM-DD HH:mm'))}
+                            </span> */}
                         </div>
                     </div>
                 </div>
