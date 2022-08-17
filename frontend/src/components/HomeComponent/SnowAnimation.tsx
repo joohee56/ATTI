@@ -5,7 +5,7 @@ export default function SnowAnimation() {
     <Snow>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1024 1536"
+        viewBox="0 0 1024 1000"
         preserveAspectRatio="xMidYMax slice"
       >
         <g fill="#FFF" fill-opacity=".15" transform="translate(55 42)">
@@ -89,7 +89,7 @@ const fall = keyframes`
 
 const Snow = styled.div`
   position: absolute;
-  min-width: 100vw;
+  min-width: 100%;
   width: 100%;
   top: 0;
   left: 0;
