@@ -131,10 +131,11 @@ const OpenViduTest = () => {
   }
 
   function QnAComment() {
+    const answer = answerRef.current.value;
     api
       .post("/post/comment/write", {
         commentAnoInfo: 0,
-        commentContent: answerRef.current.value,
+        commentContent: answer,
         commentDeleteInfo: 0,
         commentGroup: 1,
         commentLevel: 0,
@@ -144,6 +145,26 @@ const OpenViduTest = () => {
       })
       .then((res) => {
         setQuestionAnswer(false);
+        state.session
+          .signal({
+            data: QnAState.from + ")" + answer,
+            to: [],
+            type: "QnAResult",
+          })
+          .then(() => {
+            console.log(
+              "답변이 정상적으로 저장되었으며 결과를 메시지로 던집니다."
+            );
+            setChatList({
+              message:
+                "답변이 정상적으로 전달 되었으며 질문 게시글의 댓글로 달렸습니다.",
+              from: "운영",
+              type: "QnAResult",
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         setQnAState(undefined);
         answerRef.current.value = "";
       })
@@ -288,7 +309,19 @@ const OpenViduTest = () => {
   useEffect(() => {
     if (state.session !== undefined) {
       console.log(peopleList);
-
+      state.session.on("signal:QnAResult", (event) => {
+        console.log(event);
+        let temp = event.data.lastIndexOf(")");
+        let question = event.data.slice(temp + 1);
+        let targetName = event.data.slice(0, temp);
+        if (targetName === state.myUserName) {
+          setChatList({
+            type: "QnAResult",
+            from: JSON.parse(event.from.data).clientData,
+            message: "질문의 답변: " + question,
+          });
+        }
+      });
       state.session.on("signal:audioAndVideo", (event) => {
         console.log(event);
         let subscribers = state.subscribers;
