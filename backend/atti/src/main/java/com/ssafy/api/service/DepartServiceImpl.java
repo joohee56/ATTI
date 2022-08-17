@@ -42,6 +42,9 @@ public class DepartServiceImpl implements DepartService {
 	@Autowired
 	private CategoryService categoryService;
 	
+	@Autowired
+	private PostService postService;
+	
 	@Override // 채널 생성
 	public Long createChannel(DepartCreateReq departCreateReq) { //, String userId
 
@@ -49,7 +52,7 @@ public class DepartServiceImpl implements DepartService {
 		int rightLimit = 122; // letter 'z'
 		int targetStringLength = 10;
 		Random random = new Random();
-
+		
 		String generatedString = random.ints(leftLimit,rightLimit + 1)
 		  .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
 		  .limit(targetStringLength)
@@ -65,7 +68,6 @@ public class DepartServiceImpl implements DepartService {
 				.build();
 		
 		Long departId = departRepository.save(createDepart).getDepartId();
-		
 		// 관리자 설정
 		AdminRole role = AdminRole.builder().depart(createDepart).user(user).build();
 		adminRoleRepository.save(role);
@@ -121,7 +123,6 @@ public class DepartServiceImpl implements DepartService {
 		// 무덤
 //		depart.setDepartCode(generatedString);
 //		depart.setUser(userRepository.findById(userId));
-		
 		return departId;
 	}
 
