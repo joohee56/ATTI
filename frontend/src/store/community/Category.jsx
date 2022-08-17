@@ -30,6 +30,9 @@ const categorySlice = createSlice({
             console.log("새로운 카테고리 리스트를 저장합니다.",action)
             state.categoryList = action.payload.categoryList;
         },
+        saveCType(state, action){
+            state.cType =  action.payload.cType
+        }
     }
 
 });
