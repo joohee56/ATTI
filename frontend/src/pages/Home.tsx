@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import LowPart from "../components/HomeComponent/LowerPart";
 import TopPart from "../components/HomeComponent/TopPart";
@@ -10,6 +10,9 @@ import { departActions } from "../store/community/Depart";
 import { categoryActions } from "../store/community/Category";
 import { noticeActions } from "../store/community/Notice";
 import MouseOutlinedIcon from "@mui/icons-material/MouseOutlined";
+import useMoveScrool from "../components/HomeComponent/UseMoveScrool";
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import Footer from "../components/HomeComponent/Footer";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -77,13 +80,22 @@ function HomePage() {
     }
   }, []);
 
+
+  const {element, onMoveToElement} = useMoveScrool();
+
   return (
-      <Main>
+      <Main> 
         <TopPart />
-        <BoxStyle>
-          <MouseOutlinedIcon color="action" sx={{ fontSize: 45}} style={{transform: `rotate(180deg)`}}/>
+        <BoxStyle onClick={onMoveToElement}>
+          {/* <MouseOutlinedIcon color="action" sx={{ fontSize: 45}} style={{transform: `rotate(180deg)`, cursor:"pointer"}}/> */}
+          <span>
+scroll!</span>
+          <KeyboardDoubleArrowDownIcon color="action" sx={{ fontSize: 45}} style={{cursor:"pointer"}}/>
         </BoxStyle>
-        <LowPart />
+        <LowEmelent  ref={element}>
+        <LowPart/>
+        </LowEmelent>
+        <Footer/>
       </Main>
   );
 }
@@ -119,11 +131,14 @@ const BoxStyle = styled.div`
   height: 50px;
   border-radius: 100%;
   transform: scaleY(-1);
-  /* background: #00026e; */
   animation: ${floating} 2s ease infinite;
   position: absolute;
-  top: 780px;
+  top: 800px;
   z-index: 5;
+`;
+
+const LowEmelent = styled.div`
+ width: 100%;
 `;
 
 export default HomePage;
