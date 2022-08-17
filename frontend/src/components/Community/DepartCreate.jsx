@@ -71,10 +71,10 @@ function DepartCreate({handleModal4, setNewDepartCreate, newDepartCreate}) {
                 } else {
                 combineList = [...newList];
                 }
-                    dispatch(departActions.saveDepartList(
-                    {
-                departList: combineList
-            }
+                dispatch(departActions.saveDepartList(
+                {
+                    departList: combineList
+                }
                 ))
             console.log("새로 만들었어요 봐주세요" , combineList);
             

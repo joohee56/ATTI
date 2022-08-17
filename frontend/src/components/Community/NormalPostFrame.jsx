@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useState, useCallback , Component, useEffect } from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
 
@@ -14,6 +14,7 @@ import DepartJoin from "./DepartJoin";
 import Modal from "../Modal";
 import SearchBar from "./SearchBar";
 import { ButtonBlue } from "../ButtonStyled";
+import { ButtonPurple } from "../ButtonStyled";
 import { palette } from "../../styles/palette";
 import Pagination from "./pagenation";
 import MyPageComponent from "../MyPage/MyPageComponent";
@@ -21,6 +22,8 @@ import AdminPageWrapper from "./adminpage/AdminPageWrapper";
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { reRenderingActions } from "../../store/community/ReRendering";
+import { updatePostfix } from "typescript";
 
 
 const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
@@ -125,6 +128,7 @@ function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
   const { id } = useSelector(state => state.userInfo)
   
   const currentSetPost = useSelector(state => state.reRendering.setPost)
+  const updateSetPost = !currentSetPost
   const postList = useSelector(state => state.notice.postList )
   const [post, setPost] = useState([])
   
@@ -156,7 +160,7 @@ function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
 
 
 function NormalPostFrame({changeState}) {
-
+  const dispatch = useDispatch()
   const [isOpenModal1, setOpenModal1] = useState(false);
   const onClickToggleModal1 = useCallback(() => {
     setOpenModal1(!isOpenModal1);
@@ -209,13 +213,26 @@ function NormalPostFrame({changeState}) {
            setPostLikeCount(res.data)
        });
    }
-   
+
    const currentSetPost = useSelector(state => state.reRendering.setPost)
    useEffect(() => {
        postLike()
    }, [currentSetPost]);
 
-
+  // 글 전체 삭제 부분
+ 
+  const updateSetPost = !currentSetPost
+  const categoryId = useSelector(state => state.category.categoryId)
+  const allDelete = () => {
+    api.delete(`/post/delete/category/${categoryId}`)
+    .then((res) => {  
+      dispatch(reRenderingActions.saveSetPost(
+        { 
+          setPost: updateSetPost
+        }
+      ))
+    })
+  }
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(1);
   
@@ -251,7 +268,10 @@ function NormalPostFrame({changeState}) {
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <Title> {categoryName} </Title>
               <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
-                <SearchBar />
+                {/* <SearchBar /> */}
+                <AllDeleteButton onClick={allDelete}>
+                  전체 삭제
+                </AllDeleteButton>
                 <WriteButton onClick={onClickToggleModal1}>
                   글쓰기
                 </WriteButton>
@@ -345,6 +365,13 @@ width: 110px;
 height: 50px;
 padding: 0;
 border-radius: 10px;
+`
+const AllDeleteButton = styled(ButtonPurple)`
+width: 110px;
+height: 50px;
+padding: 0;
+border-radius: 10px;
+margin-right: 30px;
 `
 
 export default NormalPostFrame;

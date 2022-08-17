@@ -48,7 +48,7 @@ const categorySlice = createSlice({
         cType: null,
         departId: null,
         userId: null,
-        categoryList: []
+        categoryList: [],
     },
     reducers: {
         saveCategory(state, action) {
@@ -65,7 +65,7 @@ const categorySlice = createSlice({
         saveCategoryList(state, action) {
             console.log("새로운 카테고리 리스트를 저장합니다.",action)
             state.categoryList = action.payload.categoryList;
-        }
+        },
     }
 
 });

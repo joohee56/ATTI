@@ -140,7 +140,7 @@ function DepartList(){
           ))}
         </Menu>
         <div style={{display: 'flex', flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-        <Avatar sx={{ width: 45, height: 45 }} style={{margin: "11px 10px 0 11px"}}>1</Avatar>
+        <Avatar sx={{ width: 42, height: 42 }} style={{margin: "11px 10px 0 11px"}}>1</Avatar>
           {departName}
         </div>
       </DepartContainer>

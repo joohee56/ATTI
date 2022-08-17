@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { NavLink, Route, Link } from "react-router-dom";
 import styled from 'styled-components';
 
+import apiAcc, {api} from '../../utils/api';
 import { categoryActions } from '../../store/community/Category';
 import CategoryCreate from './CategoryCreate';
 import Modal from '../Modal';
@@ -32,7 +33,7 @@ function CategoryList(changeState){
 
     const departId = useSelector(state => state.depart.departId)
     const currentCider = useSelector(state => state.reRendering.cider)
-
+    const updateCider = !currentCider
 
     const [category, setCategory] = useState([])
     const [changeCss, setChangeCss] = useState(1);
@@ -119,22 +120,37 @@ function CategoryList(changeState){
                 }
             ))
         }
+
+        const deleteCategory = (categoryId) => {
+
+            api.delete(`/admin/category/delete/${categoryId}`,
+            )
+            .then((res) => {
+                console.log("response:", res);
+                dispatch(reRenderingActions.saveReRendering(
+                    {cider: updateCider }
+                ))
+            });
+        }
         const result = [];
-        const buttonList = [<CampaignIcon/>, <ContactSupportOutlinedIcon/>,<ArticleOutlinedIcon/>, <VideocamOutlinedIcon/>, <span/>, <span/>, <span/>, <span/>, <span/>, <span/> ]
+        const buttonList = [<CampaignIcon/>, <ContactSupportOutlinedIcon/>,<FolderOutlinedIcon/>,<ArticleOutlinedIcon/>, <VideocamOutlinedIcon/>, <span/>, <span/>, <span/>, <span/>, <span/>, <span/> ]
         for (let i = 0; i < category.length; i++) {
           result.push(
                 <>  
                     <StyledLink to={`/community/` + departId + `/` + category[i].categoryId} onClick={() => { CategoryFunction(i)}}>
                         <div key={i} style={changeCss === i+1 ? clickStyle : noClickStyle}>
-                            <CloseIcon style={{zIndex: "1", margin: "0 10px 10px 0"}}/>
                             <div style={changeCss === i+1 ? null : purpleBar }></div>
                             <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                 {buttonList[i]}
                                 &nbsp; 
-                                {category[i].categoryName}
-                                 
+                                <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between", width: "120px"}}>
+                                    {category[i].categoryName}
+                                </div>
                             </div>
                         </div>
+                        {i > 4 && (
+                            <CloseIcon onClick={() => {deleteCategory(category[i].categoryId)}} style={{zIndex: "1", position: "relative", left: "135px", bottom: "45px"}}/> 
+                        )}
                     </StyledLink>
             </>
             
@@ -158,7 +174,7 @@ function Category({changeState }){
         width: "180px",
         height: "70px",
         margin: "15px 0px 0px 0px",
-        boxShadow: "2px 2px 2px 2px grey"
+        // boxShadow: "2px 2px 2px 2px grey"
         
     }
     const clickStyle = {
@@ -225,7 +241,7 @@ function Category({changeState }){
                 {CategoryList(changeState)}
                 
                 {admin && (
-                    <div style={{position: "absolute", bottom: "50px"}}>
+                    <div style={{position: "absolute", top: "750px"}}>
                         <StyledLink to={`/community/`+ departId + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
                             <div style={noClickStyle}>
                                 <div style={ Bar }></div>

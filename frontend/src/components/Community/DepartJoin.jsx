@@ -2,17 +2,24 @@
 import styled from "styled-components"
 import { useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import apiAcc, {api} from "../../utils/api"
 import { palette } from "../../styles/palette"
 import InputWithIcon from "../InputWithLabel"
 import { ButtonBlue } from "../ButtonStyled"
 import { ButtonPurple } from "../ButtonStyled"
 import { departActions } from "../../store/community/Depart"
+import { categoryActions } from "../../store/community/Category"
+import { reRenderingActions } from "../../store/community/ReRendering"
 
 function DepartJoin({handleModal5}) {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const {id} = useSelector(state => state.userInfo)
     const [departJoin, setDepartJoin] = useState([])
+    const departList  = useSelector(state => state.depart.departList)
+    const currentCider = useSelector(state => state.reRendering.cider) // 리렌더링을 위해 사용
+    const updateCider = !currentCider
     const getValue = e => {
         const {value} = e.target;
         setDepartJoin(value)
@@ -26,12 +33,38 @@ function DepartJoin({handleModal5}) {
             console.log("채널 들어가기: ", res.data)
             dispatch(departActions.saveDepart(           // 새로운 채널의 이름,id 저장, 생성자도 저장
                 {
-                    // userId: newDepart.userId,
+                    userId: res.data.categoryList.userId,
                     departName: res.data.categoryList[0].departName,
                     departId: res.data.departId
                 }))
+            dispatch(categoryActions.saveCategoryList(   // 새로운 채널에 들어있는 기본 카테고리 저장
+            {
+                categoryList: res.data.categoryList
+            }
+            ))
+            dispatch(reRenderingActions.saveReRendering( // 리렌더링을 하도록 트리거 설정
+            {cider: updateCider }
+            ))
+            const newList = []
+            newList.push({
+                userId: res.data.categoryList.userId,
+                departName: res.data.categoryList[0].departName,
+                departId: res.data.departId
+            })
+            let combineList = []
+            if (departList !== null ) {
+    
+              combineList = [...departList, ...newList];
+            } else {
+            combineList = [...newList];
+            }
+            dispatch(departActions.saveDepartList(
+                {
+                    departList: combineList
+                }
+                ))
+            navigate(`/community/${res.data.categoryList.departId}/${res.data.categoryList.categoryId}`)
         })
-    }
 
     function departJoinFunction() {
         handleModal5()
@@ -53,6 +86,7 @@ function DepartJoin({handleModal5}) {
             <CustomButtonBlue onClick={handleModal5}>닫기</CustomButtonBlue>
         </>
     )
+}
 }
 
 
