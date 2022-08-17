@@ -6,12 +6,6 @@ import Logo from "../../assets/images/logoCircle.png";
 import { ButtonBlue, ButtonPurple } from "../ButtonStyled";
 //import mainBG from "../../assets/images/mainBG.png";
 import mainBG from "../../assets/images/HomeBG.png";
-import AttiText1 from "../../assets/images/Text/AttiText1.png";
-import AttiText2 from "../../assets/images/Text/AttiText2.png";
-import AttiText3 from "../../assets/images/Text/AttiText3.png";
-import AttiText4 from "../../assets/images/Text/AttiText4.png";
-import HomeImage1 from "../../assets/images/HomeImage1.jpg";
-import HomeImage2 from "../../assets/images/HomeImage2.jpg";
 import SnowAnimation from "./SnowAnimation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -21,7 +15,7 @@ import { RootState } from "../../store";
 function TopPort() {
   const [isTextTyping, setIsTextTyping] = useState<boolean>(false);
 
-  const content = "커뮤니티와 화상채팅의 공간\nEducation Platform\n\"ATTI\"";
+  const content = "커뮤니티와 화상수업의 공간\nEducation Platform\n\"ATTI\"";
   const text = document.querySelector(".text") as HTMLParagraphElement;
   let i = 0;
 
@@ -48,16 +42,18 @@ function TopPort() {
   
   // 데이터 받아오기
   const { auth } = useSelector((state: RootState) => state.userInfo);
-  const { departList } = useSelector((state: RootState) => state.depart);
-  // const { departName } = useSelector((state: RootState) => state.depart);
+  const  departList:any[] = useSelector((state: RootState) => state.depart.departList);
+  const  categoryList:any[] = useSelector((state: RootState) => state.category.categoryList);
+
+
   // const { randomColor } = useSelector((state: RootState) => state.userInfo);
 
   const signSubmit = async (e: any) => {
     e.preventDefault();
     // 로그인 안했으면
-    if(!auth) navigate("/signup");
+    if(!auth) navigate("/login");
     else if(departList==null) navigate("/welcome"); // 채널가입된게 없다면
-    // else navigate("/welcome"); // 채널가입된게 있다면✨✨✨✨
+    else navigate(`/community/${departList[0].departId}/${categoryList[0].categoryId}`); // 채널가입된게 있다면✨✨✨✨ //   : `/community/${departList[0].departId}/${categoryList[0].categoryId}`
   };
 
 

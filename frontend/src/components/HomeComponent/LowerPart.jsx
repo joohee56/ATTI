@@ -12,17 +12,18 @@ function LowPort() {
     AOS.init();
   });
 
+// 질문을 남겨보세요 질문이 게시판에 남아있어요! 첫번째 두번째 내용이 겹침
+// 출석체크를 손쉽게 할 수 있어요. 화상미팅과 
   return (
     <Main>
       {/* 1번 */}
       <WhiteContent>
         <TextDiv>
-          <BigText>우리들만의 전용공간을 만들어보세요</BigText>
+          <BigText>우리들만의 수업 채널을 만들어보세요</BigText>
           <SideText>
-            ATTI는 주제기반으로 여러 채널로 나뉩니다.
+            채널에는 주제에 맞는 카테고리를 선택하고
             <br />
-            단체방에서도 혼잡함 없이 협동하고, 공유하고, 편하게 이야기를 나눌 수
-            있어요.
+            반 친구들과 게시글을 통해 소통하고 공감할 수 있습니다
           </SideText>
         </TextDiv>
         <ImageDiv data-aos="zoom-in">
@@ -31,42 +32,41 @@ function LowPort() {
       </WhiteContent>
       {/* 2번 */}
       <BlueContent>
-        <ImageDiv data-aos="zoom-in">게시판{"(캡처)"}과 게시판 글보기{"(캡처)"}</ImageDiv>
+        <ImageDiv data-aos="zoom-in">시간표{"(캡처)"}와 출석체크 모달{"(캡처)"}</ImageDiv>
         <TextDiv>
-          <BigText>친구들과 주제에 맞게 대화해요</BigText>
+          <BigText>시간표를 통해 온라인 수업에 접속해보세요</BigText>
           <SideText>
-            카테고리들이 있어요
+          시간표에서 화상 회의를 만들고 접속할 수 있어요
             <br />
-            친구들끼리 주제에 맞게 게시글을 올리고 소통할 수 있어요
+           클릭 한번으로 출석체크를 손쉽게 확인 할 수 있습니다
           </SideText>
         </TextDiv>
       </BlueContent>
       {/* 3번 */}
       <WhiteContent>
       <TextDiv>
-          <BigText>시간표를 통해 화상 회의에 접속해보세요</BigText>
+          <BigText>익명모드로 대화해요</BigText>
           <SideText>
-            관리자는 시간표에서 화상 회의를 열 수 있습니다.
+           화상회의에서 발표하기 망설여진다면
             <br />
-            학생은 시간표를 통해 화상 회의 시간을 한 눈에 확인하고 접속할 수
-            있어요.
+           익명모드를 요청하여 당당하게 발표 할 수 있습니다
           </SideText>
         </TextDiv>
         <ImageDiv data-aos="zoom-in">
-          시간표{"(캡처)"}와 채널 나눠진 이미지{"(피그마나 PPT)"}
+          익명모드 요청{"(캡처)"}익명모드피그마{"(피그마나 PPT)"}
         </ImageDiv>
       </WhiteContent>
       {/* 4번 */}
       <BlueContent>
         <ImageDiv data-aos="zoom-in">
-          익명모드{"(캡처 or 피그마)"}
+          질문게시글, 화상채팅 글{"(캡처 or 피그마)"}
         </ImageDiv>
         <TextDiv>
-          <BigText>익명모드로 대화해요</BigText>
+          <BigText>온라인 수업에서 질문을 남겨보세요!</BigText>
           <SideText>
-           화상회의에서 익명모드를 요청할 수 있습니다.
+           나와 친구들이 호스트에게 질문했던 질문들은
             <br />
-         화상회의에서 내가 누군지 모르게 발표해요
+         질문게시판에서 화상회의에 나눴던 질문을 다시 볼 수 있습니다
           </SideText>
         </TextDiv>
       </BlueContent>
@@ -76,10 +76,11 @@ function LowPort() {
           <TextDiv>
             <BigText>친밀감을 위한 신뢰도 높은 기술</BigText>
             <SideText>
-              저지연 음성과 영상 채팅을 이용하면 꼭 한 공간에 있는 것 같답니다.
+            화상 회의와 소통할 수 있는 공간이 분리되어 불편하지 않으셨나요?
               <br />
-              영상으로 인사하거나, 친구들의 게임 스트리밍을 보거나, 화면 공유로
-              함께 그림을 그릴 수도 있죠.
+              여기에도 뭐라고 주저리주저리 써야될지 저도 고민되네요
+              <br/>
+              여기에 우리가 이래서 ATTI를 써야된다라는 느낌을 주고 싶은데 뭐라하지              
               <br/> 소규모부터 대규모 학교까지 학생을 관리하고 함께 회의하고 공부해요
             </SideText>
           </TextDiv>
