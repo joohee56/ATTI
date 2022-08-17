@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SchedulePageWrapper from "../schedule/SchedulePageWrapper";
 
+
 function AdminSchedule() {
+
   return (
     <div>
       <SchedulePageWrapper />

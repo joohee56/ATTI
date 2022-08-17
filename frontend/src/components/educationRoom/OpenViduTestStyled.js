@@ -1,5 +1,6 @@
 import styled, { keyframes } from "styled-components";
-import { QnA } from "./OpenViduTest";
+import { CHATTING, QnA } from "./OpenViduTest";
+import { palette } from "../../styles/palette";
 
 const BigslideBox = keyframes`
   0%{
@@ -13,13 +14,13 @@ const BigslideBox = keyframes`
 export const PeopleBox = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: auto;
   margin-bottom: 0px;
   width: 450px;
   height: 90vh;
-  margin-top: auto;
   background-color: #474a57;
   margin-left: auto;
-  border-radius: 25px;
+  border-radius: 5px;
   align-items: center;
   animation: ${BigslideBox} 1s 0s 1;
 `;
@@ -101,7 +102,7 @@ export const ChatBox = styled.div`
   width: 100%;
   height: ${(props) => (props.QnAState !== undefined ? "40%" : "85%")};
   background-color: white;
-  margin-top: 15px;
+  margin-top: 5px;
   margin-bottom: 15px;
   border-radius: 10px;
   overflow-y: scroll;
@@ -152,13 +153,19 @@ export const MeetingButtonControl = styled.span`
   justify-content: center;
 `;
 export const ChattingInputBox = styled.div`
+  padding-left: 5px;
+  padding-top: 10px;
   display: flex;
   flex-direction: column;
-  border-radius: 15px;
+  border-radius: 5px;
   width: 100%;
   height: 30%;
-  background-color: ${(props) =>
-    props.chattingSelect === QnA ? "#FFFCE0" : "white"};
+  background: ${(props) =>
+    props.chattingSelect === QnA
+      ? "#FFFCE0"
+      : props.chattingSelect === CHATTING
+      ? "white"
+      : `#F6CEEC`};
   align-items: center;
 `;
 export const ChattingName = styled.div`
@@ -171,20 +178,25 @@ export const ChattingInput = styled.textarea`
   border-radius: 10px;
   border: none;
   background-color: ${(props) =>
-    props.chattingSelect === QnA ? "#FFFCE0" : "white"};
+    props.chattingSelect === QnA
+      ? "#FFFCE0"
+      : props.chattingSelect === CHATTING
+      ? "white"
+      : `#F6CEEC`};
 `;
 
 export const ChattinBoxgWrapper = styled.div`
+  padding-top: 10px;
   width: 100%;
-  height: 80%;
+  height: 70%;
   background-color: white;
   margin-top: 5px;
   margin-bottom: 15px;
-  border-radius: 10px;
+  border-radius: 5px;
 `;
 
 export const ChattingSendButton = styled.button`
-  border-radius: 8px;
+  border-radius: 5px;
   margin-left: auto;
   background-color: #dbeafe;
   border: none;
@@ -220,7 +232,7 @@ export const ChattingBox = styled.div`
 export const MeetingButtonWrapper = styled.div`
   position: fixed;
   bottom: 1%;
-  left: 30%;
+  left: 20%;
 `;
 export const MeetingButtons = styled.div`
   display: flex;
@@ -372,8 +384,9 @@ export const SmallMeetingAttendAndChattingButton = styled(
 `;
 
 export const AttendsListConnection = styled.div`
-  margin-top: 5px;
+  padding-top: 10px;
   margin-bottom: 5px;
+  margin-left: 5px;
 `;
 
 export const AttendsListNotConnection = styled(AttendsListConnection)`
@@ -381,7 +394,7 @@ export const AttendsListNotConnection = styled(AttendsListConnection)`
 `;
 
 export const AttendsListConnectionDiv = styled.div`
-  margin-left: 15px;
+  margin-left: 10px;
   font-size: small;
 `;
 
@@ -395,4 +408,3 @@ export const QestionAnswerCommentInput = styled.input`
   background-color: none;
   background: none;
 `;
-

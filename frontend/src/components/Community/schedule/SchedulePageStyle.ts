@@ -13,14 +13,14 @@ export const TempDiv = styled.div`
   margin-top: 18%;
 `;
 
-export const AddClassButton = styled.button`
+export const AddClassButton = styled.button<{ adminPage: boolean }>`
   width: 10vw;
   background: none;
   height: 65px;
   border: none;
   :hover {
-    background-color: #ffa;
-    cursor: crosshair;
+    background-color: ${(props) => (props.adminPage ? "#ffa" : null)};
+    cursor: ${(props) => (props.adminPage ? "crosshair" : null)};
   }
 `;
 
@@ -128,6 +128,8 @@ export const AdminScheduleAddButton = styled(ButtonBlue)`
   height: 50px;
   border-radius: 20px;
   margin-top: 50px;
+  font-size: large;
+  font-weight: bold;
 `;
 
 export const AdminScheduleAddText = styled.div`
@@ -148,4 +150,18 @@ export const AdminSheduleDeleteButton = styled(AdminScheduleAddButton)`
   margin-right: 15px;
   margin-left: 15px;
   margin-top: 250px;
+`;
+
+export const ClassCheckDiv = styled.div`
+  font-size: xx-large;
+  font-weight: bolder;
+  margin-bottom: 5vh;
+  margin-top: 3vh;
+`;
+
+export const ClassCheckWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 `;

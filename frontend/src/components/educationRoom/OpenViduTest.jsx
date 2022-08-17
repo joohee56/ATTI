@@ -71,6 +71,7 @@ const PROFESSOR = "professor";
 
 export const CHATTING = "chatting";
 export const QnA = "QnA";
+export const PRIVATE = "private";
 
 const OpenViduTest = () => {
   const userInfo = useSelector((store) => store.userInfo);
@@ -125,6 +126,7 @@ const OpenViduTest = () => {
   const [answerPostNum, setAnswerPostNum] = useState("");
   const [questionAnswer, setQuestionAnswer] = useState(false);
   const [notConnectionList, setConnectionList] = useState([]);
+  const [leaveSessionCheck, setLeaveSessionCheck] = useState(true);
 
   function handlerAnswer() {
     setQuestionAnswer(true);
@@ -686,10 +688,17 @@ const OpenViduTest = () => {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      leave: true,
     });
-
-    navigate("/community/" + departId + "/" + categoryList[0].categoryId);
+    setLeaveSessionCheck(false);
   }
+
+  useEffect(() => {
+    if (!leaveSessionCheck && state.leave !== undefined && state.leave) {
+      navigate("/community/" + departId + "/" + categoryList[0].categoryId);
+    }
+  }, [leaveSessionCheck]);
+
   async function switchCamera() {
     try {
       const devices = await OV.getDevices();
@@ -759,6 +768,7 @@ const OpenViduTest = () => {
           .catch((error) => {
             console.log(error);
           });
+        setChattingSelect(CHATTING);
       } else {
         if (chattingSelect === CHATTING) {
           mySession
@@ -1023,6 +1033,11 @@ const OpenViduTest = () => {
       console.warn(exception);
     });
   }, []);
+
+  function nameButtonChangeChatting(value) {
+    setChattingSelect(value);
+  }
+
   return (
     <MeetingRoom id="test">
       {state.session === undefined ? (
@@ -1101,7 +1116,7 @@ const OpenViduTest = () => {
                 }}
               >
                 <StudentAnonymouse
-                  detail="호스트에게 익명 발표를 요청하시겠습니까?"
+                  detail="교수님에게 익명 발표를 요청하시겠습니까?"
                   detail2="(익명 발표는 카메라와 오디오가 전부 꺼지게 되며 채팅을 치면 TTS가
         읽어주는 기능입니다.)"
                   anonymousOK={anonymousOK}
@@ -1366,6 +1381,7 @@ const OpenViduTest = () => {
                       setChattingInfo={setChattingInfo}
                       openChattingList={openChattingList}
                       notConnectionList={notConnectionList}
+                      nameButtonChangeChatting={nameButtonChangeChatting}
                     />
                   ) : null}
                   {state.myRole === PROFESSOR ? (
@@ -1477,6 +1493,7 @@ const OpenViduTest = () => {
                             <ChattingSendButton
                               onClick={() => {
                                 setSendToUser("");
+                                setChattingSelect(CHATTING);
                               }}
                             >
                               취소
