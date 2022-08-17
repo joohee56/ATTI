@@ -143,6 +143,17 @@ public class PostServiceImpl implements PostService {
 	@Override // 게시글 상세 조회
 	public PostViewOneRes viewFindOne(Long postId, String userId) {
 		Post post = postRepository.findById(postId).orElse(null);
+//		List<Post> postList = postRepository.findByPost(post);
+		List<PostViewOneRes> postViewReplyRes;
+//		if(postList.isEmpty()) return null;
+//		else postViewReplyRes = new ArrayList<PostViewOneRes>();
+		
+//		for(Post c : postList) {
+			if(post.isPostAnoInfo() == true) {
+				post.setUser(null);
+			}
+//		}
+		
 		User user = userRepository.findById(userId).orElse(null);
 		UserPostLike like = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
 		boolean myPostLike = false;
