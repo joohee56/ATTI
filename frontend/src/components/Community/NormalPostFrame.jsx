@@ -108,13 +108,21 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-end",
-                  padding: "10px 20px 0 "
+                  padding: "10px 20px "
                 }}
               >
-                <UserIdDiv>
-                  작성자: {e.userId}
-                </UserIdDiv>
-                {moment(e.postRegDate).format("YYYY-MM-DD HH:mm")}
+                <div style={{ fontSize: "18px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+                  {e.postTitle}   
+                </div> 
+                <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-end"}}>
+                  <UserIdDiv>
+                    작성자: {e.userId}
+                  </UserIdDiv>
+                  <div>
+                  {moment(e.postRegDate).format("YYYY-MM-DD HH:mm")}
+
+                  </div>
+                </div>
               </div>
               <hr style={{width: "95%"}} />
   
