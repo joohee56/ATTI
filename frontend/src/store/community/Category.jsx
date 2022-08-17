@@ -1,42 +1,6 @@
 import { createSlice, configureStore, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
 
 
-// export const action = {
-//     writePosts : createAsyncThunk("WRITE/POSTS", async(e) => {
-//         e.preventDefault();
-//         return axios.post(
-//           "http://localhost:8081/post/write",
-//             {
-//               postId : postEditor().post.postId,
-//               postTitle : postEditor().post.postTitle,
-//               postContent : postEditor().post.postContent,
-//               postRegDate : postEditor().post.postRegDate,
-//               postUpdDate : postEditor().post.postUpdDate,
-//               user_id : postEditor().post.user_id,
-//               category_id : postEditor().post.category_id
-//             },
-//             {
-//               headers: {
-//                 "Content-type": "application/json",
-//               },
-//             }
-//         ).then((res) => {
-//           console.log("response:", res)
-//         });
-      
-//       },
-//         [
-//           postEditor().post.postId,
-//           postEditor().post.postTitle,
-//           postEditor().post.postContent,
-//           postEditor().post.postRegDate,
-//           postEditor().post.postUpdDate,
-//           postEditor().post.user_id,
-//           postEditor().post.category_id
-//         ]
-//         )
-//       };
-
 const categorySlice = createSlice({
     name: 'category',
     initialState: {
@@ -48,10 +12,11 @@ const categorySlice = createSlice({
         cType: null,
         departId: null,
         userId: null,
-        categoryList: []
+        categoryList: [],
     },
     reducers: {
         saveCategory(state, action) {
+            console.log("리스트 아님",action);
             state.categoryId = action.payload.categoryId;
             state.categoryAnoInfo = action.payload.categoryAnoInfo;
             state.categoryComAnoInfo = action.payload.categoryComAnoInfo;
@@ -62,8 +27,9 @@ const categorySlice = createSlice({
             state.userId = action.payload.userId;
         },
         saveCategoryList(state, action) {
+            console.log("새로운 카테고리 리스트를 저장합니다.",action)
             state.categoryList = action.payload.categoryList;
-        }
+        },
     }
 
 });

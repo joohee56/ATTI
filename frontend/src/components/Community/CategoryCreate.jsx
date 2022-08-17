@@ -6,8 +6,11 @@ import { ButtonBlue } from "../ButtonStyled"
 import { ButtonPurple } from "../ButtonStyled"
 
 import { reRenderingActions } from "../../store/community/ReRendering"
+import { categoryActions } from "../../store/community/Category"
 import InputWithIcon from "../InputWithLabel"
 import apiAcc, { api } from "../../utils/api"
+
+
 function CategoryCreate({handleModal6}){
 
     const [newCategory, setNewCategory] = useState([])
@@ -17,6 +20,7 @@ function CategoryCreate({handleModal6}){
         setNewCategory(value)
     };
 
+    const { category } = useSelector((store) => store);
     const [cType, setCType] = useState([]);
     const [categoryAnoInfo, setCategoryAnoInfo] = useState([]);
     const [categoryComInfo, setCategoryComInfo] = useState([]);
@@ -52,18 +56,46 @@ function CategoryCreate({handleModal6}){
     const categoryCreateFunction = () => {
         api.post(`/depart/category/create`,
         {
-            categpryAnoInfo: categoryAnoInfo,
+            categoryAnoInfo: categoryAnoInfo,
             categoryComAnoInfo: categoryComAnoInfo,
             categoryComInfo: categoryComInfo,
             categoryName: newCategory,
             type: cType,
             departId: departId,
             userId: id
-        }).then((res) => {
+            }).then((res) => {
+            const createCategory = {
+                    categoryId : res.data,
+                    categoryAnoInfo: categoryAnoInfo,
+                    categoryComAnoInfo: categoryComAnoInfo,
+                    categoryComInfo: categoryComInfo,
+                    categoryName: newCategory,
+                    type: cType,
+                    departId: departId,
+                    userId: id
+                }
             console.log("카테고리 생성: ", res.data)
-            dispatch(reRenderingActions.saveReRendering(
-                {cider: updateCider }
-            ))
+            // dispatch(reRenderingActions.saveReRendering(
+            //     {cider: updateCider }
+            // ))
+            dispatch(categoryActions.saveCategory({
+                    categoryId : res.data,
+                    categoryAnoInfo: categoryAnoInfo,
+                    categoryComAnoInfo: categoryComAnoInfo,
+                    categoryComInfo: categoryComInfo,
+                    categoryName: newCategory,
+                    type: cType,
+                    departId: departId,
+                    userId: id
+                }))
+
+
+                let tempCategoryList = [...category.categoryList];
+                tempCategoryList.push(createCategory);
+                console.log("여기서 테스트합니다. :" , tempCategoryList);
+                dispatch(categoryActions.saveCategoryList({
+                    categoryList: tempCategoryList,
+                }))
         })
     }
     

@@ -10,11 +10,17 @@ import { ButtonBlue } from '../components/ButtonStyled';
 import { palette } from '../styles/palette';
 import { useNavigate } from 'react-router-dom';
 import { departActions } from '../store/community/Depart';
+import { categoryActions } from '../store/community/Category';
+import { reRenderingActions } from '../store/community/ReRendering';
+
 
 function Welcome(){
-
+  
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const departList  = useSelector((state: RootState) => state.depart.departList)
+  const currentCider = useSelector((state: RootState) => state.reRendering.cider) // 리렌더링을 위해 사용
+  const updateCider = !currentCider
   const [isOpenModal4, setOpenModal4] = useState(false);
   const [newDepartCreate, setNewDepartCreate] = useState(false);
     const onClickToggleModal4 = useCallback(() => {
@@ -38,10 +44,39 @@ function Welcome(){
         api.get(`/depart/${newDepart}/${id}`,
         ).then((res) => {
             console.log("채널 들어가기: ", res.data)
-            dispatch(departActions.saveDepart({
-              departId: res.data.departId
+            dispatch(departActions.saveDepart(           // 새로운 채널의 이름,id 저장, 생성자도 저장
+            {
+                userId: res.data.categoryList.userId,
+                departName: res.data.categoryList[0].departName,
+                departId: res.data.departId
             }))
-            navigate(`/community/${res.data.departId}/${res.data.categoryList[0].categoryId}`)
+        dispatch(categoryActions.saveCategoryList(   // 새로운 채널에 들어있는 기본 카테고리 저장
+        {
+            categoryList: res.data.categoryList
+        }
+        ))
+        dispatch(reRenderingActions.saveReRendering( // 리렌더링을 하도록 트리거 설정
+        {cider: updateCider }
+        ))
+        const newList = []
+        newList.push({
+            userId: res.data.categoryList.userId,
+            departName: res.data.categoryList[0].departName,
+            departId: res.data.departId
+        })
+        let combineList = []
+        if (departList !== null ) {
+
+          combineList = [...departList, ...newList];
+        } else {
+        combineList = [...newList];
+        }
+        dispatch(departActions.saveDepartList(
+            {
+                departList: combineList
+            }
+            ))
+        navigate(`/community/${res.data.categoryList.departId}/${res.data.categoryList.categoryId}`)
         })
       }
     

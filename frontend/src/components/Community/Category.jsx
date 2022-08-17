@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { NavLink, Route, Link } from "react-router-dom";
 import styled from 'styled-components';
 
+import apiAcc, {api} from '../../utils/api';
 import { categoryActions } from '../../store/community/Category';
 import CategoryCreate from './CategoryCreate';
 import Modal from '../Modal';
@@ -19,28 +20,33 @@ import CloseIcon from '@mui/icons-material/Close';
 import { palette } from "../../styles/palette";
 import { SosOutlined } from '@mui/icons-material';
 import { reRenderingActions } from '../../store/community/ReRendering';
+import { useSlider } from '@mui/base';
 
 
 function CategoryList(changeState){
     
     const  categoryList  = useSelector(state => state.category.categoryList );
-    console.log("카테고리리스트: ", categoryList)
+
     const categoryLists = useSelector(state => state.category.categoryList)
     const { id } = useSelector(state => state.userInfo);
     const dispatch = useDispatch()
+
     const departId = useSelector(state => state.depart.departId)
     const currentCider = useSelector(state => state.reRendering.cider)
+    const updateCider = !currentCider
 
     const [category, setCategory] = useState([])
-    
     const [changeCss, setChangeCss] = useState(1);
-
     const [changeResult, setChangeResult] = useState(false);
-   
+    const [newCategory, setNewCategory] = useState(false)
+    console.log("카테고리리스트: ", categoryList)
 
     useEffect(() => {
-        setCategory(categoryList);
-    },[])
+        if (categoryList !== null && categoryList.length > 0 && categoryList !== undefined) {
+            
+            setCategory(categoryList);
+        }
+    },[categoryList])
     useEffect(() => {
         setCategory(categoryLists)
         setChangeResult(true);
@@ -58,7 +64,7 @@ function CategoryList(changeState){
             margin: "15px -20px 0px 0px",
             boxShadow: "3px 3px 3px grey",
             // border: "1px solid",
-            // zIndex: "10",
+            zIndex: "10",
         }
         const clickStyle = {
             display: "flex",
@@ -80,18 +86,20 @@ function CategoryList(changeState){
             backgroundColor: palette.purlue_2,
            
         }
-        console.log("changeState는?", changeState);
+        // console.log("changeState는?", changeState);
         useEffect(() => {
             if (changeResult) {
                 console.log("찬기")
                 console.log(category);
+                // updateCategory()
                 CategoryFunction(0)
                 setChangeResult(false);
             }
             
         },[changeState,changeResult])
+
         function CategoryFunction(i) {
-            
+            console.log("카테고리이이이이이: ", category)
             setChangeCss(i+1)
             dispatch(categoryActions.saveCategory(
                 {categoryId: category[i].categoryId,
@@ -99,8 +107,8 @@ function CategoryList(changeState){
                 categoryComAnoInfo: category[i].categoryComAnoInfo,
                 categoryComInfo: category[i].categoryComInfo,
                 categoryName: category[i].categoryName,
-                cType: category[i].cType,
-                userId: id}
+                cType: category[i].ctype,
+                userId: category[i].userId}
             ))
             dispatch(reRenderingActions.saveSetMyPage(
                 {
@@ -113,22 +121,49 @@ function CategoryList(changeState){
                 }
             ))
         }
+        // 카테고리 삭제
+        const deleteCategory = (categoryId) => {
+
+            api.delete(`/admin/category/delete/${categoryId}`,
+            )
+            .then((res) => {
+                console.log("response:", res);
+                dispatch(reRenderingActions.saveReRendering(
+                    {cider: updateCider }
+                ))
+                let newCategory = category.slice()
+                for(let i = 0; i < newCategory.length; i++) {
+                    if(newCategory[i].categoryId === categoryId)  {
+                      newCategory.splice(i, 1);
+                      i--;
+                    }
+                  }
+                console.log("카테고리는?", newCategory);
+                // console.log("결과는?", tempCategoryList);
+                dispatch(categoryActions.saveCategoryList({
+                    categoryList: newCategory,
+                }))
+            });
+        }
         const result = [];
-        const buttonList = [<CampaignIcon/>, <ContactSupportOutlinedIcon/>,<ArticleOutlinedIcon/>, <VideocamOutlinedIcon/>, <span/>, <span/>, <span/>, <span/>, <span/>, <span/> ]
+        const buttonList = [<CampaignIcon/>, <ContactSupportOutlinedIcon/>,<FolderOutlinedIcon/>,<ArticleOutlinedIcon/>, <VideocamOutlinedIcon/>, <span/>, <span/>, <span/>, <span/>, <span/>, <span/> ]
         for (let i = 0; i < category.length; i++) {
           result.push(
                 <>  
                     <StyledLink to={`/community/` + departId + `/` + category[i].categoryId} onClick={() => { CategoryFunction(i)}}>
-                        <div key={i} style={changeCss === i+1 ? clickStyle : noClickStyle}>
-                            <CloseIcon style={{zIndex: "1", margin: "0 10px 10px 0"}}/>
-                            <div style={changeCss === i+1 ? null : purpleBar }></div>
-                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
+                        <div id ="1" key={i} style={changeCss === i+1 ? clickStyle : noClickStyle}>
+                            <div id="2" style={changeCss === i+1 ? null : purpleBar }></div>
+                            <div id="3" style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                 {buttonList[i]}
                                 &nbsp; 
-                                {category[i].categoryName}
-                                 
+                                <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between", width: "120px"}}>
+                                    {category[i].categoryName}
+                                </div>
                             </div>
                         </div>
+                        {i > 4 && (
+                            <CloseIcon onClick={() => {deleteCategory(category[i].categoryId)}} style={{zIndex: "1", position: "relative", left: "135px", bottom: "45px"}}/> 
+                        )}
                     </StyledLink>
             </>
             
@@ -152,7 +187,7 @@ function Category({changeState }){
         width: "180px",
         height: "70px",
         margin: "15px 0px 0px 0px",
-        boxShadow: "2px 2px 2px 2px grey"
+        // boxShadow: "2px 2px 2px 2px grey"
         
     }
     const clickStyle = {
@@ -212,14 +247,17 @@ function Category({changeState }){
         ))
 
     }
-    const {admin} = useSelector(state => state.userInfo)
+ 
+    const {id} = useSelector(state => state.userInfo)
+    const departUserId = useSelector(state => state.category.userId)
     return(
         <>
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", width: "210px", height: "700px"}}>
                 {CategoryList(changeState)}
-                
-                {admin && (
-                    <div style={{position: "absolute", bottom: "50px"}}>
+                {console.log("departUserId", departUserId)}
+                {console.log("id", id)}
+                { departUserId === id && (
+                    <div style={{position: "absolute", top: "750px"}}>
                         <StyledLink to={`/community/`+ departId + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
                             <div style={noClickStyle}>
                                 <div style={ Bar }></div>
@@ -256,6 +294,8 @@ const StyledLink = styled(NavLink)`
     color: black;
     font-weight: bold;
     font-size: medium;
+    /* width: "!65px";
+    height: "75px"; */
     &:focus, &:visited {
         text-decoration: none;
     }

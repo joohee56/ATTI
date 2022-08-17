@@ -22,9 +22,7 @@ function HeaderNav() {
   const { auth } = useSelector((state: RootState) => state.userInfo);
   const { userName } = useSelector((state: RootState) => state.userInfo);
   const { randomColor } = useSelector((state: RootState) => state.userInfo);
-  const departList = useSelector(
-    (state: RootState) => state.depart.departList
-  );
+  const departList = useSelector((state: RootState) => state.depart.departList);
   const categoryList = useSelector(
     (state: RootState) => state.category.categoryList
   );
@@ -69,10 +67,10 @@ function HeaderNav() {
   };
 
   const logoClick = () => {
-    navigate( '/'
-    // !auth
-    //   ? "/"
-    //   : `/community/${departList[0].departId}/${categoryList[0].categoryId}`
+    navigate("/"
+      // !auth
+      //   ? "/"
+      //   : `/community/${departList[0].departId}/${categoryList[0].categoryId}`
     );
   };
 
@@ -81,15 +79,13 @@ function HeaderNav() {
       <Header>
         <div style={{ display: `flex` }}>
           <LogoImg src={LogoCirce} onClick={logoClick} alt="Logo Circle Img" />
-
-          <LogoText src={AttiText4} alt="LogoText Img" />
+          <LogoLeftText>ATTI</LogoLeftText>
+          {/* <LogoText src={AttiText4} alt="LogoText Img" /> */}
         </div>
         {!auth ? (
           <div>
-            <LoginButton onClick={() => navigate("/login")}>로그인</LoginButton>
-            <LoginButton onClick={() => navigate("/signup")}>
-              회원가입
-            </LoginButton>
+            <LoginButton style={{paddingRight:"22px"}} onClick={() => navigate("/login")}>로그인</LoginButton>
+            <LoginButton onClick={() => navigate("/signup")}>회원가입</LoginButton>
           </div>
         ) : (
           // 쪽지 // 알림 // 프로필이미지
@@ -169,14 +165,15 @@ function HeaderNav() {
 }
 
 const Main = styled.div`
-  width: 100vw;
+  width: 100%;
   border-bottom: 1px solid ${palette.gray_2};
+  background-color: white;
 `;
 
 const Header = styled.header`
   width: 100%;
   height: 30px;
-  max-width: 1700px;
+  max-width: 1800px;
   padding: 12px 0px;
   margin: auto;
   font-weight: bold;
@@ -214,6 +211,12 @@ const LogoText = styled.img`
   src={AttiText3}
   src={AttiText4} */
 `;
+const LogoLeftText = styled.span`
+  width: 100%;
+  font-size: 2rem;
+  padding: 1rem 0rem;
+  margin-left: 17px;
+`;
 
 const LinkStyle = styled(Link)`
   text-align: center;
@@ -230,7 +233,7 @@ const LinkStyle = styled(Link)`
 const LoginButton = styled.span`
   font-weight: bold;
   font-size: 1.2rem;
-  padding: 10px 24px;
+  padding: 10px 0px 10px 24px;
   border-radius: 8px;
   cursor: pointer;
 `;

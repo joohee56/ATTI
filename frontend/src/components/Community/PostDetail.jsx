@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { BACKEND_URL } from "../../constant";
 
+import moment from "moment";
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
@@ -22,12 +23,17 @@ import { commentActions } from '../../store/community/Category'
 import { palette } from '../../styles/palette';
 
 import ReactHtmlParser from 'react-html-parser'
+import { CountActions } from '../../store/community/Count';
 
-function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
-    const [single, setSingle] = useState([])
-    const [comments, setComments] = useState([])
+function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
+    const postUpdDate = useSelector(state => state.postUpdDate.postUpdDate)
     const currentSetPost = useSelector(state => state.reRendering.setPost)
     const updateSetPost = !currentSetPost
+    const postLikeCount = useSelector(state => state.count.postLikeCount)
+    const myLike = useSelector(state => state.count.myLike)
+    const commentCount = useSelector(state => state.count.commentCount)
+    const [single, setSingle] = useState([])
+    const [comments, setComments] = useState([])
     const { id } = useSelector(state => state.userInfo)
 
     useEffect(() => {
@@ -43,6 +49,11 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
         .then((res) => {
             console.log("댓글들: ", res)
             setComments(res.data)
+            dispatch(CountActions.savecommentMyLike(
+                {
+                    commentMyLike: res.data.myCommentLike
+                }
+            ))
         })
        },[currentSetPost]);
     
@@ -53,9 +64,9 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
 
     const [comment, setComment] = useState({
         postId: postId,
-        userId: "gusxo123",
+        userId: id,
         commentDeleteInfo: "",
-        commentAnoInfo: false,
+        commentAnoInfo: "",
         commentContent: "",
         commentGroup: "",
         commentLevel: "",
@@ -121,11 +132,9 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
         comment.seq
         ]
     );
-    
+    // 개별 글 삭제
     const dispatch = useDispatch()
-
     const deletePost = () => {
-
         api.delete(`/post/delete/${postId}`,
         )
         .then((res) => {
@@ -156,40 +165,42 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
         width: "95%",
         
     }
-    function timeForToday(value) {
-        const today = new Date();
-        const timeValue = new Date(value);
+    // function timeForToday(value) {
+    //     const today = new Date();
+    //     const timeValue = new Date(value);
       
-        const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
-        if (betweenTime < 1) return '방금 전';
-        if (betweenTime < 60) {
-            return `${betweenTime}분 전`;
-        }
+    //     const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
+    //     if (betweenTime < 1) return '방금 전';
+    //     if (betweenTime < 60) {
+    //         return `${betweenTime}분 전`;
+    //     }
       
-        const betweenTimeHour = Math.floor(betweenTime / 60);
-        if (betweenTimeHour < 24) {
-            return `${betweenTimeHour}시간 전`;
-        }
+    //     const betweenTimeHour = Math.floor(betweenTime / 60);
+    //     if (betweenTimeHour < 24) {
+    //         return `${betweenTimeHour}시간 전`;
+    //     }
       
-        const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
-        if (betweenTimeDay < 365) {
-            return `${betweenTimeDay}일 전`;
-        }
+    //     const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+    //     if (betweenTimeDay < 365) {
+    //         return `${betweenTimeDay}일 전`;
+    //     }
       
-        return `${Math.floor(betweenTimeDay / 365)}년 전`;
-      }
+    //     return `${Math.floor(betweenTimeDay / 365)}년 전`;
+    //   }
     return(
         <div style={detailStyle}>
             <div>
+                {console.log("벙글: ", single)}
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between"}}>
                     <div style={{width: "750px", margin: "10px 0 0 40px", fontWeight: "bold"}}>
                         {single.postTitle}
                     </div>
                     <div style={{display: "flex", margin: "0 35px 0 0"}}>
                         <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
-                        <span style={{margin: "10px 0 0 0"}}>24</span>
+                        <span style={{margin: "10px 0 0 0"}}>{commentCount}</span>
                         &nbsp; &nbsp; 
-                        <Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
+                        {myLike === true? (<Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<Favorite />} checkedIcon={<FavoriteBorder/>}/>  )
+                        :( <Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> )}
                         <span style={{margin: "10px 0 0 0"}}>{postLikeCount}</span>
                     </div>
                 </div>
@@ -197,18 +208,18 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
             </div>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between", padding: "0 20px"}}>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <Avatar sx={{ width: 50, height: 50 }}>BS</Avatar>
+                    <Avatar sx={{ width: 50, height: 50 }}></Avatar>
                     <div style={{display: "flex", flexDirection: "column", margin: "0 0 0 20px"}}>
                         <div style={{margin: "0 0 10px 0"}}>
                             {single.userId}
                         </div>
                         <div>
                             <span>
-                               작성: {timeForToday(single.postRegDate)} /  
+                               작성: {moment(single.postRegDate).format('YYYY-MM-DD HH:mm')}
                             </span>
-                            <span>
-                                수정: {timeForToday(single.postUpdDate)}
-                            </span>
+                            {/* <span>
+                                수정: {postUpdDate === "" ? "" :  (moment(postUpdDate).format('YYYY-MM-DD HH:mm'))}
+                            </span> */}
                         </div>
                     </div>
                 </div>
