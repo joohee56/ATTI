@@ -293,6 +293,22 @@ function NormalPostFrame({changeState}) {
       return <Title>{categoryName}</Title>
     }
   }
+  function selectButton(){
+    if(categoryUserId !== id && categoryCType !== "NOTICE"){
+      return <WriteButton onClick={onClickToggleModal1}>글쓰기</WriteButton>      
+    }
+    else if(categoryUserId === id && categoryCType !== "NOTICE"){
+      return <div><AllDeleteButton onClick={allDelete}>전체 삭제</AllDeleteButton>
+      <WriteButton onClick={onClickToggleModal1}>글쓰기</WriteButton></div>
+    }
+    else if(categoryUserId !== id && categoryCType === "NOTICE"){
+      return  <></>
+    }
+    else{
+      return <div><AllDeleteButton onClick={allDelete}>전체 삭제</AllDeleteButton>
+      <WriteButton onClick={onClickToggleModal1}>글쓰기</WriteButton></div>
+    }
+  }
   if(myPage === true){
     return(
       <>
@@ -321,11 +337,7 @@ function NormalPostFrame({changeState}) {
               <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
                 {/* <SearchBar /> */}
    
-                {(categoryUserId !== id && categoryCType === "NOTICE") ?
-                (<></>) :
-                
-                (<div><AllDeleteButton onClick={allDelete}>전체 삭제</AllDeleteButton>
-                <WriteButton onClick={onClickToggleModal1}>글쓰기</WriteButton></div>)}
+                {selectButton()}
               </div>
             </div>
             <div>
