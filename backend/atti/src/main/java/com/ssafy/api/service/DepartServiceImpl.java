@@ -87,7 +87,7 @@ public class DepartServiceImpl implements DepartService {
 		
 		Category category2 = Category.builder()
 				.categoryName("질문")
-				.categoryAnoInfo(true)
+				.categoryAnoInfo(false)
 				.ctype("QNA")
 				.user(user)
 				.depart(createDepart)
@@ -103,7 +103,7 @@ public class DepartServiceImpl implements DepartService {
 		
 		Category category4 = Category.builder()
 				.categoryName("자유게시판")
-				.categoryAnoInfo(true)
+				.categoryAnoInfo(false)
 				.ctype("FREE")
 				.user(user)
 				.depart(createDepart)
@@ -111,7 +111,7 @@ public class DepartServiceImpl implements DepartService {
 		
 		Category category5 = Category.builder()
 				.categoryName("수업실")
-				.categoryAnoInfo(true)
+				.categoryAnoInfo(false)
 				.ctype("TIMETABLE")
 				.user(user)
 				.depart(createDepart)
