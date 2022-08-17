@@ -83,7 +83,7 @@ const OpenViduTest = () => {
   } else {
     myRole = PROFESSOR;
   }
-  const { categoryList } = useSelector((state) => state.userInfo);
+  const { categoryList } = useSelector((state) => state.category);
   console.log(categoryList);
   const [searchParams, setSearchParams] = useSearchParams();
   console.log(searchParams.get("courseId"));
@@ -124,6 +124,7 @@ const OpenViduTest = () => {
   const [allOff, setAllOff] = useState(false);
   const [answerPostNum, setAnswerPostNum] = useState("");
   const [questionAnswer, setQuestionAnswer] = useState(false);
+  const [notConnectionList, setConnectionList] = useState([]);
 
   function handlerAnswer() {
     setQuestionAnswer(true);
@@ -428,6 +429,27 @@ const OpenViduTest = () => {
     }
   }, [state.publisher, state.subscribers, state.subscribers.length]);
   useEffect(() => {
+    if (
+      peopleList !== null &&
+      peopleList !== undefined &&
+      peopleList.length > 0
+    ) {
+      let temp = studentList.userList.map((e) => {
+        return e.userName + "(" + e.userId + ")";
+      });
+      console.log("빼기전", temp);
+      peopleList.forEach((e) => {
+        let studentName = JSON.parse(e.data).clientData;
+        console.log(studentName);
+        temp = temp.filter((element) => {
+          return element !== studentName;
+        });
+      });
+      console.log("이거다:", temp);
+      setConnectionList(temp);
+    }
+  }, [studentList, peopleList]);
+  useEffect(() => {
     if (state.session !== undefined && anonymousMode) {
       setTurnOnCamera(false);
       setTurnOnAudio(false);
@@ -633,7 +655,7 @@ const OpenViduTest = () => {
       subscribers: [],
     });
 
-    navigate("/");
+    navigate("/community/" + departId + "/" + categoryList[0].categoryId);
   }
   async function switchCamera() {
     try {
@@ -1310,7 +1332,7 @@ const OpenViduTest = () => {
                       peopleList={peopleList}
                       setChattingInfo={setChattingInfo}
                       openChattingList={openChattingList}
-                      notConnectionList={studentList}
+                      notConnectionList={notConnectionList}
                     />
                   ) : null}
                   {state.myRole === PROFESSOR ? (

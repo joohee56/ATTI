@@ -125,7 +125,7 @@ const AttendeesList = ({
             </AttendWrapper>
           ))}
           <AttendsListNotConnection>전체 명단</AttendsListNotConnection>
-          <div>
+          {/* <div>
             {Object.keys(notConnectionList.userList).map(
               (e: string, i: number) => (
                 <AttendsListConnectionDiv key={i}>
@@ -133,6 +133,13 @@ const AttendeesList = ({
                 </AttendsListConnectionDiv>
               )
             )}
+          </div> */}
+          <div>
+            {Object.keys(notConnectionList).map((e: string, i: number) => (
+              <AttendsListConnectionDiv key={i}>
+                {notConnectionList[e]}
+              </AttendsListConnectionDiv>
+            ))}
           </div>
         </AttendeesListDiv>
       ) : null}
