@@ -6,6 +6,7 @@ import { palette } from "../../styles/palette";
 import { ButtonBlue } from "../ButtonStyled";
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import SouthIcon from '@mui/icons-material/South';
+import TestImg from '../../assets/images/홈화면상단.png'
 
 function LowPort() {
   useEffect(() => {
@@ -22,34 +23,36 @@ function LowPort() {
           <BigText>우리들만의 수업 채널을 만들어보세요</BigText>
           <SideText>
             채널에는 주제에 맞는 카테고리를 선택하고
-            <br />
-            반 친구들과 게시글을 통해 소통하고 공감할 수 있습니다
+            <br />반 친구들과 게시글을 통해 소통하고 공감할 수 있습니다
           </SideText>
         </TextDiv>
         <ImageDiv data-aos="zoom-in">
+          <img src={TestImg}></img>
           커뮤니티{"(캡처)"}와 채널 나눠진 이미지{"(피그마나 PPT)"}
         </ImageDiv>
       </WhiteContent>
       {/* 2번 */}
       <BlueContent>
-        <ImageDiv data-aos="zoom-in">시간표{"(캡처)"}와 출석체크 모달{"(캡처)"}</ImageDiv>
+        <ImageDiv data-aos="zoom-in">
+          시간표{"(캡처)"}와 출석체크 모달{"(캡처)"}
+        </ImageDiv>
         <TextDiv>
           <BigText>시간표를 통해 온라인 수업에 접속해보세요</BigText>
           <SideText>
-          시간표에서 화상 회의를 만들고 접속할 수 있어요
+            시간표에서 화상 회의를 만들고 접속할 수 있어요
             <br />
-           클릭 한번으로 출석체크를 손쉽게 확인 할 수 있습니다
+            클릭 한번으로 출석체크를 손쉽게 확인 할 수 있습니다
           </SideText>
         </TextDiv>
       </BlueContent>
       {/* 3번 */}
       <WhiteContent>
-      <TextDiv>
+        <TextDiv>
           <BigText>익명모드로 대화해요</BigText>
           <SideText>
-           화상회의에서 발표하기 망설여진다면
+            화상회의에서 발표하기 망설여진다면
             <br />
-           익명모드를 요청하여 당당하게 발표 할 수 있습니다
+            익명모드를 요청하여 당당하게 발표 할 수 있습니다
           </SideText>
         </TextDiv>
         <ImageDiv data-aos="zoom-in">
@@ -58,44 +61,40 @@ function LowPort() {
       </WhiteContent>
       {/* 4번 */}
       <BlueContent>
-        <ImageDiv data-aos="zoom-in">
-          질문게시글, 화상채팅 글{"(캡처 or 피그마)"}
-        </ImageDiv>
+        <ImageDiv data-aos="zoom-in">질문게시글, 화상채팅 글{"(캡처 or 피그마)"}</ImageDiv>
         <TextDiv>
           <BigText>온라인 수업에서 질문을 남겨보세요!</BigText>
           <SideText>
-           나와 친구들이 호스트에게 질문했던 질문들은
+            나와 친구들이 호스트에게 질문했던 질문들은
             <br />
-         질문게시판에서 화상회의에 나눴던 질문을 다시 볼 수 있습니다
+            질문게시판에서 화상회의에 나눴던 질문을 다시 볼 수 있습니다
           </SideText>
         </TextDiv>
       </BlueContent>
-            {/* Final */}
+      {/* Final */}
       <FinalContent>
         <FinalDiv>
           <TextDiv>
             <BigText>친밀감을 위한 신뢰도 높은 기술</BigText>
             <SideText>
-            화상 회의와 소통할 수 있는 공간이 분리되어 불편하지 않으셨나요?
+              화상 회의와 소통할 수 있는 공간이 분리되어 불편하지 않으셨나요?
               <br />
               여기에도 뭐라고 주저리주저리 써야될지 저도 고민되네요
-              <br/>
-              여기에 우리가 이래서 ATTI를 써야된다라는 느낌을 주고 싶은데 뭐라하지              
-              <br/> 소규모부터 대규모 학교까지 학생을 관리하고 함께 회의하고 공부해요
+              <br />
+              여기에 우리가 이래서 ATTI를 써야된다라는 느낌을 주고 싶은데 뭐라하지
+              <br /> 소규모부터 대규모 학교까지 학생을 관리하고 함께 회의하고 공부해요
             </SideText>
           </TextDiv>
-          <ImageDiv data-aos="zoom-in">
-            화상채팅 화면 커뮤니티 화면{"(피그마(우리 애기사진) PPT)"}
-          </ImageDiv>
+          <ImageDiv data-aos="zoom-in">화상채팅 화면 커뮤니티 화면{"(피그마(우리 애기사진) PPT)"}</ImageDiv>
         </FinalDiv>
       </FinalContent>
       {/* 시작해볼까 */}
-        <SideText>✨ 이제 시작해 볼까요? ✨</SideText>
-        <BoxStyle>
-          <span>click!</span>
-          <SouthIcon color="action" sx={{ fontSize: 40}}/>
-        </BoxStyle>
-          <SignupButton>회원가입하러 가기</SignupButton>
+      <SideText>✨ 이제 시작해 볼까요? ✨</SideText>
+      <BoxStyle>
+        <span>click!</span>
+        <SouthIcon color="action" sx={{ fontSize: 40 }} />
+      </BoxStyle>
+      <SignupButton>회원가입하러 가기</SignupButton>
     </Main>
   );
 }
