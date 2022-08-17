@@ -66,12 +66,13 @@ function DepartJoin({handleModal5}) {
             navigate(`/community/${res.data.categoryList.departId}/${res.data.categoryList.categoryId}`)
         })
 
+    }
     function departJoinFunction() {
         handleModal5()
         departGo()
     }
-    return(
-        <>
+return(
+    <>
         <Title>채널 가입</Title>
         <DepartDiv>
             <span style={{fontSize: "30px", fontWeight: "bold", margin: "0 0 30px 0"}}>초대코드 입력</span>
@@ -84,9 +85,8 @@ function DepartJoin({handleModal5}) {
             </div>
         </DepartDiv>
             <CustomButtonBlue onClick={handleModal5}>닫기</CustomButtonBlue>
-        </>
-    )
-}
+    </>
+)
 }
 
 

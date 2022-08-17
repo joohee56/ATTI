@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import styled from 'styled-components';
 import BestChip from './BestChip';
 
+import { CountActions } from '../../store/community/Count';
 import { reRenderingActions } from '../../store/community/ReRendering';
 import { palette } from '../../styles/palette';
 import apiAcc, {api} from '../../utils/api';
@@ -19,6 +20,7 @@ function CommentList({comments, postId}){
     const [commentList, setCommentList] = useState(comments)
     const currentSetPost = useSelector(state => state.reRendering.setPost)
     const updateSetPost = !currentSetPost
+    const myCommentLike = useSelector(state => state.count.myCommentLike)
     const dispatch = useDispatch()
     // 단일 comment 지우기
     const commentDelete = (commentId) => {
@@ -38,20 +40,34 @@ function CommentList({comments, postId}){
         .then((res) => {
             console.log("댓글들: ", res.data)
             commentList = res.data
+            dispatch(CountActions.savecommentMyLike(
+                {
+                    commentMyLike: res.data.myCommentLike
+                }
+            ))
         })
     }, [currentSetPost])
 
     // // 단일 comment 좋아요
-    // const [commentLikeCount, setCommentLikeCount] = useState([])
-    // const commentLike = (commentId) => {
-    //     api.get(`/post/comment/likeBtn/${commentId}/${auth.id}`
-    //     ).then((res) => {
-    //         console.log("댓글 좋아요: ", res.data )
-    //         setCommentLikeCount(res.data)
-    //     })
-    // }
-    // useEffect(() => {
-    //     commentLike()
+    const [commentLikeCount, setCommentLikeCount] = useState([])
+    const commentLikeCountLength = useSelector(state => state.count.commentLikeCount)
+    const commentLike = (commentId) => {
+        api.get(`/post/comment/likeBtn/${commentId}/${id}`
+        ).then((res) => {
+            console.log("댓글 좋아요: ", res.data )
+            setCommentLikeCount(res.data)
+            dispatch(CountActions.saveCommentLikeCount(
+                {
+                    commentLikeCount: res.data
+                }
+            ))
+            dispatch(reRenderingActions.saveSetPost(
+                {setPost: updateSetPost }
+            ))
+        })
+    }
+    // useEffect((e.commentId) => {
+    //     commentLike(e.commentId)
     // }, [commentLikeCount]);
 
 
@@ -94,21 +110,25 @@ function CommentList({comments, postId}){
             <CommentDiv>
                 {comments.map((e,i) => (
                     <>
+                    {console.log("eeeeeee,", e)}
                     <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "space-between"}}>
                         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                             <div style={{display: "flex", flexDirection: "row", height: "40px"}}>
-                                <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>JJ</Avatar>
+                                <Avatar sx={{ width: 30, height: 30 }} style={{margin: "11px 10px 0 11px"}}>{id.substring(0,1)}</Avatar>
                                 <p>{e.userId}</p>
-                                <BestChip/>
+                                {/* <BestChip/> */}
                             </div>
                             <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", margin: "10px 10px 0 0"}}>
                                 <div>
                                     {timeForToday(e.commentRegDate)}
                                 </div>
                                 <div style={{display: "flex", flexDirection: "row"}}>
-                                    <span style={{margin: "10px 0 0 0"}}>답글</span>
-                                    <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
-                                    <span style={{margin: "10px 0 0 -10px"}}>좋아yo</span>
+                                    {/* <span style={{margin: "10px 0 0 0"}}>답글</span> */}
+                                    {myCommentLike === true? (<Checkbox  onClick={() => {commentLike(e.commentId)}} style={{width: "24px", height: "45px"}}icon={<Favorite />} checkedIcon={<FavoriteBorder/>}/>  )
+                                    :( <Checkbox  onClick={() => {commentLike(e.commentId)}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> )}
+                                    &nbsp; &nbsp;
+                                    <span style={{margin: "10px 0 0 -10px"}}>좋아요count</span>
+
                                     <CustomDeleteIcon onClick={()=>{commentDelete(e.commentId)}}/>
                                 </div>
                             </div>

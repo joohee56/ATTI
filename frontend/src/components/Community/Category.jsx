@@ -64,7 +64,7 @@ function CategoryList(changeState){
             margin: "15px -20px 0px 0px",
             boxShadow: "3px 3px 3px grey",
             // border: "1px solid",
-            // zIndex: "10",
+            zIndex: "10",
         }
         const clickStyle = {
             display: "flex",
@@ -97,6 +97,7 @@ function CategoryList(changeState){
             }
             
         },[changeState,changeResult])
+
         function CategoryFunction(i) {
             
             setChangeCss(i+1)
@@ -120,7 +121,7 @@ function CategoryList(changeState){
                 }
             ))
         }
-
+        // 카테고리 삭제
         const deleteCategory = (categoryId) => {
 
             api.delete(`/admin/category/delete/${categoryId}`,
@@ -130,6 +131,18 @@ function CategoryList(changeState){
                 dispatch(reRenderingActions.saveReRendering(
                     {cider: updateCider }
                 ))
+                let newCategory = category.slice()
+                for(let i = 0; i < newCategory.length; i++) {
+                    if(newCategory[i].categoryId === categoryId)  {
+                      newCategory.splice(i, 1);
+                      i--;
+                    }
+                  }
+                console.log("카테고리는?", newCategory);
+                // console.log("결과는?", tempCategoryList);
+                dispatch(categoryActions.saveCategoryList({
+                    categoryList: newCategory,
+                }))
             });
         }
         const result = [];
@@ -138,9 +151,9 @@ function CategoryList(changeState){
           result.push(
                 <>  
                     <StyledLink to={`/community/` + departId + `/` + category[i].categoryId} onClick={() => { CategoryFunction(i)}}>
-                        <div key={i} style={changeCss === i+1 ? clickStyle : noClickStyle}>
-                            <div style={changeCss === i+1 ? null : purpleBar }></div>
-                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
+                        <div id ="1" key={i} style={changeCss === i+1 ? clickStyle : noClickStyle}>
+                            <div id="2" style={changeCss === i+1 ? null : purpleBar }></div>
+                            <div id="3" style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                 {buttonList[i]}
                                 &nbsp; 
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "space-between", width: "120px"}}>
@@ -278,6 +291,8 @@ const StyledLink = styled(NavLink)`
     color: black;
     font-weight: bold;
     font-size: medium;
+    /* width: "!65px";
+    height: "75px"; */
     &:focus, &:visited {
         text-decoration: none;
     }

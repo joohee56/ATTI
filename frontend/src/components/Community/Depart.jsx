@@ -74,6 +74,8 @@ function DepartList(){
        })
     }
     const departName = useSelector(state => state.depart.departName)
+    const departId = useSelector(state => state.depart.departId)
+    const findId = (e) => e.departId === departId
 
     const onClickToggleModal4 = useCallback(() => {
       setOpenModal4(!isOpenModal4);
@@ -104,8 +106,7 @@ function DepartList(){
       onClickToggleModal5()
     }
     
-    const departId = useSelector(state => state.depart.departId)
-    const findId = (e) => e.departId === departId
+
     return (
       <>
       <DepartContainer>
@@ -140,7 +141,7 @@ function DepartList(){
           ))}
         </Menu>
         <div style={{display: 'flex', flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-        <Avatar sx={{ width: 42, height: 42 }} style={{margin: "11px 10px 0 11px"}}>1</Avatar>
+        <Avatar sx={{ width: 42, height: 42 }} style={{margin: "11px 10px 0 11px"}}>{departName.substring(0,1)}</Avatar>
           {departName}
         </div>
       </DepartContainer>

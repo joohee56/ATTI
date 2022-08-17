@@ -22,12 +22,17 @@ import { commentActions } from '../../store/community/Category'
 import { palette } from '../../styles/palette';
 
 import ReactHtmlParser from 'react-html-parser'
+import { CountActions } from '../../store/community/Count';
 
-function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
-    const [single, setSingle] = useState([])
-    const [comments, setComments] = useState([])
+function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3, setSinglePost}){
+    const postUpdDate = useSelector(state => state.postUpdDate.postUpdDate)
     const currentSetPost = useSelector(state => state.reRendering.setPost)
     const updateSetPost = !currentSetPost
+    const postLikeCount = useSelector(state => state.count.postLikeCount)
+    const myLike = useSelector(state => state.count.myLike)
+    const commentCount = useSelector(state => state.count.commentCount)
+    const [single, setSingle] = useState([])
+    const [comments, setComments] = useState([])
     const { id } = useSelector(state => state.userInfo)
 
     useEffect(() => {
@@ -43,6 +48,11 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
         .then((res) => {
             console.log("댓글들: ", res)
             setComments(res.data)
+            dispatch(CountActions.savecommentMyLike(
+                {
+                    commentMyLike: res.data.myCommentLike
+                }
+            ))
         })
        },[currentSetPost]);
     
@@ -53,9 +63,9 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
 
     const [comment, setComment] = useState({
         postId: postId,
-        userId: "gusxo123",
+        userId: "",
         commentDeleteInfo: "",
-        commentAnoInfo: false,
+        commentAnoInfo: "",
         commentContent: "",
         commentGroup: "",
         commentLevel: "",
@@ -121,11 +131,9 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
         comment.seq
         ]
     );
-    
+    // 개별 글 삭제
     const dispatch = useDispatch()
-
     const deletePost = () => {
-
         api.delete(`/post/delete/${postId}`,
         )
         .then((res) => {
@@ -181,15 +189,17 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
     return(
         <div style={detailStyle}>
             <div>
+                {console.log("벙글: ", single)}
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between"}}>
                     <div style={{width: "750px", margin: "10px 0 0 40px", fontWeight: "bold"}}>
                         {single.postTitle}
                     </div>
                     <div style={{display: "flex", margin: "0 35px 0 0"}}>
                         <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
-                        <span style={{margin: "10px 0 0 0"}}>24</span>
+                        <span style={{margin: "10px 0 0 0"}}>{commentCount}</span>
                         &nbsp; &nbsp; 
-                        <Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> 
+                        {myLike === true? (<Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<Favorite />} checkedIcon={<FavoriteBorder/>}/>  )
+                        :( <Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> )}
                         <span style={{margin: "10px 0 0 0"}}>{postLikeCount}</span>
                     </div>
                 </div>
@@ -197,7 +207,7 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
             </div>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between", padding: "0 20px"}}>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <Avatar sx={{ width: 50, height: 50 }}>BS</Avatar>
+                    <Avatar sx={{ width: 50, height: 50 }}></Avatar>
                     <div style={{display: "flex", flexDirection: "column", margin: "0 0 0 20px"}}>
                         <div style={{margin: "0 0 10px 0"}}>
                             {single.userId}
@@ -207,7 +217,7 @@ function PostDetail({postId, postLikeCount, postLike, onClickToggleModal2, onCli
                                작성: {timeForToday(single.postRegDate)} /  
                             </span>
                             <span>
-                                수정: {timeForToday(single.postUpdDate)}
+                                수정: {postUpdDate}
                             </span>
                         </div>
                     </div>

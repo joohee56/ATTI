@@ -41,19 +41,21 @@ function Community() {
   return (
     <CommunityDiv>
       <Main>
-        <div>
-          <DepartList />
-          <Category changeState={changeState } />
-        </div>
-        {(categoryName === "수업실") ? (
-          <ScheduleContainer>
-            <SchedulePageWrapper/>
-          </ScheduleContainer>
-        ): (
-          <NormalPostFrame changeState={changeState} />
-        )
         
-      }
+          <div>
+            <DepartList />
+            <Category changeState={changeState } />
+          </div>
+          {(categoryName === "수업실") ? (
+            <ScheduleContainer>
+              <SchedulePageWrapper/>
+            </ScheduleContainer>
+          ): (
+            <NormalPostFrame changeState={changeState} />
+          )
+          
+        }
+    
       </Main>
     </CommunityDiv>
   );

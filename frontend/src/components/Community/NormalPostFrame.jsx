@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
-
+import moment from "moment";
 import { api } from "../../utils/api";
 import { BACKEND_URL } from "../../constant";
 import PostUpdate  from "./PostUpdate";
@@ -20,26 +20,42 @@ import Pagination from "./pagenation";
 import MyPageComponent from "../MyPage/MyPageComponent";
 import AdminPageWrapper from "./adminpage/AdminPageWrapper";
 
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { reRenderingActions } from "../../store/community/ReRendering";
-import { updatePostfix } from "typescript";
-
+import { CountActions } from "../../store/community/Count";
 
 const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
-
+  const dispatch = useDispatch()
   const offset = (page - 1) * limit;
   const postStyle = {
     borderRadius: "30px",
-    backgroundColor: palette.gray_1,
+    backgroundColor: palette.white,
     width: "90%",
     height: "110px",
     margin: "30px 0 0 50px",
-    boxShadow: "2px 2px 2px grey"
+    // border: "0.5px solid",
+    boxShadow: "3px 3px 3px 3px grey"
   };
- function TwoFunctions(id){
+ function TwoFunctions(e){
   handleModal2()
-  getPostId(id)
+  getPostId(e.postId)
+  dispatch(CountActions.savePostLikeCount(
+    {
+      postLikeCount: e.likeCount
+    }
+  ))
+  dispatch(CountActions.saveMyLike(
+    {
+      myLike: e.myLike
+    }
+  ))
+  dispatch(CountActions.saveCommentCount(
+    {
+      commentCount: e.commentCount
+    }
+  ))
  }
 
  function timeForToday(value) {
@@ -77,11 +93,11 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
         
         {post.slice(offset, offset + limit).map((e, i) => (
         <IndividualPost key={i}>
-          {console.log(e)}
+          {console.log("e의 결과는? ", e)}
           {console.log('-----')}
           {console.log(e.postId)}
           {/* {console.log('postId :',  postId)} */}
-          <div style={postStyle} onClick={() => {TwoFunctions(e.postId)}}>
+          <div style={postStyle} onClick={() => {TwoFunctions(e)}}>
               <div
                 style={{
                   display: "flex",
@@ -93,7 +109,7 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
                 <UserIdDiv>
                   작성자: {e.userId}
                 </UserIdDiv>
-                {timeForToday(e.postRegDate)}
+                {moment(e.postRegDate).format("YYYY-MM-DD")}
               </div>
               <hr style={{width: "95%"}} />
   
@@ -102,9 +118,14 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
                   {e.postTitle}   
                 </div>
                 <div>
-                <FavoriteBorderIcon/> 24
+                  {e.myLike === true? (
+                     <Favorite/>
+                  ):(
+                    <FavoriteBorder/>
+                  )}
+                {e.likeCount}
                 &nbsp; &nbsp; &nbsp;
-                <ChatBubbleOutlineIcon/> 20
+                <ChatBubbleOutlineIcon/> {e.commentCount}
                 </div>
               
               </div>
@@ -135,7 +156,7 @@ function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
   async function getPosts(){
     api.get(`/depart/${departId}/category/${categoryId}/user/${id}`
     ).then((res) => {
-      console.log("결과: ", res)
+      console.log("글 랜더링 결과: ", res)
       setPost(res.data)
       getLength(res.data.length)
     })
@@ -160,6 +181,7 @@ function PostList({handleModal2, limit, page, getLength,  length, getPostId}) {
 
 
 function NormalPostFrame({changeState}) {
+  const { id } = useSelector(state => state.userInfo)
   const dispatch = useDispatch()
   const [isOpenModal1, setOpenModal1] = useState(false);
   const onClickToggleModal1 = useCallback(() => {
@@ -203,24 +225,22 @@ function NormalPostFrame({changeState}) {
   }
 
    // 글 좋아요 부분
-   const [postLikeCount, setPostLikeCount] = useState([])
    const postLike = () => {
        console.log(postId)
-       api.get(`/post/likeBtn/${postId}/gusxosmsdy`
+       api.get(`/post/likeBtn/${postId}/${id}`
        )
        .then((res) => {
-           console.log("response:", res);
-           setPostLikeCount(res.data)
+           dispatch(reRenderingActions.saveSetPost(
+            { 
+              setPost: updateSetPost
+            }
+          ))
        });
    }
 
    const currentSetPost = useSelector(state => state.reRendering.setPost)
-   useEffect(() => {
-       postLike()
-   }, [currentSetPost]);
 
   // 글 전체 삭제 부분
- 
   const updateSetPost = !currentSetPost
   const categoryId = useSelector(state => state.category.categoryId)
   const allDelete = () => {
@@ -238,7 +258,7 @@ function NormalPostFrame({changeState}) {
   
   const [singlePost, setSinglePost] = useState([])
 
-  const categoryName = useSelector(state => state.category.categoryName)
+
   const myPage = useSelector(state => state.reRendering.setMyPage)
   const adminPage = useSelector(state => state.reRendering.setAdminPage)
   const classPage = useSelector(state => state.reRendering.setClass)
@@ -266,7 +286,7 @@ function NormalPostFrame({changeState}) {
         <PostContainer>
           <div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Title> {categoryName} </Title>
+              <Title></Title>
               <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
                 {/* <SearchBar /> */}
                 <AllDeleteButton onClick={allDelete}>
@@ -306,7 +326,7 @@ function NormalPostFrame({changeState}) {
             width="1000px"
             height="680px"
           >
-            <PostDetail postId={postId} postLike={postLike} postLikeCount={postLikeCount} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
+            <PostDetail postId={postId} postLike={postLike} onClickToggleModal2={onClickToggleModal2} onClickToggleModal3={onClickToggleModal3} setSinglePost={setSinglePost} />
           </Modal>
         )}
         {isOpenModal3 && (
@@ -333,7 +353,7 @@ color: transparent;
 -webkit-background-clip: text;
 `;
 const PostContainer = styled.div`
-  width: 88vw;
+  width: 80vw;
   height: 863px;
   margin: 25px 20px 25px 0;
   border-radius: 20px;
