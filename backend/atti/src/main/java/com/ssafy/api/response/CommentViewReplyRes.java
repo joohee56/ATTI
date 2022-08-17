@@ -25,7 +25,9 @@ public class CommentViewReplyRes {
 	
 	boolean myCommentLike;
 	
-	public CommentViewReplyRes(Comment comment, boolean myCommentLike) {
+	long commentLikeCount;
+	
+	public CommentViewReplyRes(Comment comment, boolean myCommentLike, long commentLikeCount) {
 		this.commentId = comment.getCommentId();
 		this.commentContent = comment.getCommentContent();
 		this.commentRegDate = comment.getCommentRegDate();
@@ -36,5 +38,6 @@ public class CommentViewReplyRes {
 		if(comment.getUser() != null) {
 			this.userId = comment.getUser().getUserId();
 		}
+		this.commentLikeCount = commentLikeCount;
 	}
 }
