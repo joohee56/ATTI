@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,14 +69,14 @@ public class PostController {
 	}
 	
 	@PutMapping("/update") // 게시글 수정
-    public ResponseEntity<String> editPost(@RequestBody PostUpdateReq editPostInfo){
+    public ResponseEntity<LocalDateTime> editPost(@RequestBody PostUpdateReq editPostInfo){
 
         System.out.println("=====================");
         System.out.println("postContent : " + editPostInfo.getPostContent());
         System.out.println("=====================");
 
-        postService.editPost(editPostInfo);
-        return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+//        postService.editPost(editPostInfo);
+        return new ResponseEntity<LocalDateTime>(postService.editPost(editPostInfo), HttpStatus.OK);
     }
 	
 	// 좋아요 기능 - 주희 추가
