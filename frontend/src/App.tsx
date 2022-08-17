@@ -11,11 +11,15 @@ import ModalTest from "./pages/ModalTest";
 import OAuth2RedirectHandler from "./components/account/OAuth2RedirectHandler";
 import { RootState } from "./store/index.js";
 import { useSelector } from "react-redux";
+import HeaderNav from "./components/HeaderNav";
 
 function App() {
   const { auth } = useSelector((state: RootState) => state.userInfo);
   //const access = localStorage.getItem("AccessToken");
   return (
+    <>
+    <div>
+    <HeaderNav/>
     <Routes>
     <Route path="/" element={ <Homepage />} />
     <Route path="/login" element={ <LoginPage />} />
@@ -26,6 +30,8 @@ function App() {
     <Route path="/modaltest" element={ <ModalTest />} />
     <Route path="/oauth/callback/kakao" element={<OAuth2RedirectHandler/>}/>
     </Routes>
+    </div>
+    </>
   );
 }
 
