@@ -3,6 +3,7 @@ package com.ssafy.api.response;
 import java.time.LocalDateTime;
 
 import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.user.User;
 
 import lombok.Getter;
 
@@ -21,11 +22,12 @@ public class PostViewOneRes {
 	
 	private String userId = "익명";
 	
-	boolean myPostLike;
+	private boolean myPostLike;
 	
-	Long postLikeCount;
+	private Long postLikeCount;
+	private String userName;
 	
-	public PostViewOneRes(Post post, boolean myPostLike, Long postLikeCount) {
+	public PostViewOneRes(Post post, boolean myPostLike, Long postLikeCount, String userName) {
 		this.postId = post.getPostId();
 		this.postTitle = post.getPostTitle();
 		this.postContent = post.getPostContent();
@@ -35,5 +37,6 @@ public class PostViewOneRes {
 		}
 		this.myPostLike = myPostLike;
 		this.postLikeCount = postLikeCount;
+		this.userName = userName;
 	}
 }

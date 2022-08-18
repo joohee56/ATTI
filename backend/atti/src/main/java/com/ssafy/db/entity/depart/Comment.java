@@ -83,7 +83,6 @@ public class Comment {
 	//////////////////////////////////////////////////////////
 	
 	@OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<UserCommentLike> usercommentlikes = new ArrayList<>();
-	
+	@JsonIgnore
+	private List<UserCommentLike> usercommentlikes = new ArrayList<>();
 }
