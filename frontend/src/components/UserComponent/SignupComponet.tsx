@@ -341,8 +341,8 @@ function SignupComponent() {
             isId &&
             isPassword &&
             isPasswordConfirm &&
-            isEmail &&
-            isPhoneNumber
+            isEmail 
+            // &&            isPhoneNumber
           ) ? (
             <p style={{ color: `${palette.red}` }}>
               회원가입하려면 모두 입력해주세요.
@@ -356,8 +356,8 @@ function SignupComponent() {
                 isId &&
                 isPassword &&
                 isPasswordConfirm &&
-                isEmail &&
-                isPhoneNumber
+                isEmail
+                //  &&               isPhoneNumber
               )
             }
           >

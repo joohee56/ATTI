@@ -38,7 +38,8 @@ public class AuthService {
            StringBuilder sb = new StringBuilder();
            sb.append("grant_type=authorization_code");
            sb.append("&client_id=77d4d4d9513fb3ed1863a05635d58fd8");  //앱 KEY VALUE
-           sb.append("&redirect_uri=http://localhost:3000/oauth/callback/kakao"); // 앱 CALLBACK 경로
+        //    sb.append("&redirect_uri=http://localhost:3000/oauth/callback/kakao"); // 앱 CALLBACK 경로
+           sb.append("&redirect_uri=https://i7b107.p.ssafy.io/oauth/callback/kakao"); // 앱 CALLBACK 경로
            sb.append("&code=" + code);
            bw.write(sb.toString());
            bw.flush();

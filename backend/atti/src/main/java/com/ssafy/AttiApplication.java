@@ -18,8 +18,9 @@ public class AttiApplication {
 	    return new WebMvcConfigurer() {
 	        @Override
 	        public void addCorsMappings(CorsRegistry registry) {
-	            registry.addMapping("/**").allowedOrigins("http://localhost:3000").allowedMethods("GET", "POST", "PUT", "DELETE");
-	        }
+	            // registry.addMapping("/**").allowedOrigins("http://localhost:3000").allowedMethods("GET", "POST", "PUT", "DELETE");
+	        	registry.addMapping("/**").allowedOrigins("https://i7b107.p.ssafy.io").allowedMethods("GET", "POST", "PUT", "DELETE");
+			}
 	    };
 	}
 

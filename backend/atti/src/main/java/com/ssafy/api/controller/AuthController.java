@@ -278,72 +278,72 @@ public class AuthController {
     }
 
 	
-	// 휴대폰 인증
-	@PostMapping("/phone")
-	private ResponseEntity<?> authPhone(@RequestBody AuthPhoneReq phoneNumberInfo) {
-		String phoneNumber = phoneNumberInfo.getPhoneNumber();
+// 	// 휴대폰 인증
+// 	@PostMapping("/phone")
+// 	private ResponseEntity<?> authPhone(@RequestBody AuthPhoneReq phoneNumberInfo) {
+// 		String phoneNumber = phoneNumberInfo.getPhoneNumber();
 		
-		if(phoneNumber.isEmpty() || phoneNumber.equals("")) {
-			System.out.println("핸드폰 번호를 입력해 주세요.");
+// 		if(phoneNumber.isEmpty() || phoneNumber.equals("")) {
+// 			System.out.println("핸드폰 번호를 입력해 주세요.");
 			
-			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "핸드폰 번호를 입력해 주세요."));
-		}
+// 			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "핸드폰 번호를 입력해 주세요."));
+// 		}
 		
-		// 핸드폰 번호 중복 체크 
-//		boolean okPhone = userService.phoneCheck(phoneNumber);
-//		if(!okPhone) {
-//			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "이미 가입된 아이디가 있습니다. 아이디를 찾고 싶으시면 아이디 찾기를 진행해 주세요."));
-//		}
+// 		// 핸드폰 번호 중복 체크 
+// //		boolean okPhone = userService.phoneCheck(phoneNumber);
+// //		if(!okPhone) {
+// //			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "이미 가입된 아이디가 있습니다. 아이디를 찾고 싶으시면 아이디 찾기를 진행해 주세요."));
+// //		}
 			
-		String fromNumber = "01059368015";
-		String verifyCode = makeVerifyCode();  // 인증 키 생성
+// 		String fromNumber = "01059368015";
+// 		String verifyCode = makeVerifyCode();  // 인증 키 생성
 		
-		if(fromNumber.equals(""))
-			return ResponseEntity.status(500).body(BaseResponseBody.of(500, "발신번호가 막혔습니다."));
+// 		if(fromNumber.equals(""))
+// 			return ResponseEntity.status(500).body(BaseResponseBody.of(500, "발신번호가 막혔습니다."));
 		
-		// 문자 보냄
-		userService.sendSMS(phoneNumber, fromNumber, verifyCode);
+// 		// 문자 보냄
+// 		userService.sendSMS(phoneNumber, fromNumber, verifyCode);
 		
-//		//code session 에 저장
-//		session.setAttribute("code", verifyCode);
+// //		//code session 에 저장
+// //		session.setAttribute("code", verifyCode);
 		
-		// redis 에 code 저장
-		userService.setRedisStringValue("code", verifyCode);
+// 		// redis 에 code 저장
+// 		userService.setRedisStringValue("code", verifyCode);
 		
 		
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "인증번호가 전송되었습니다. 받으신 인증번호를 입력하고 확인 버튼을 눌러 주세요."));
-	}
+// 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "인증번호가 전송되었습니다. 받으신 인증번호를 입력하고 확인 버튼을 눌러 주세요."));
+// 	}
 	
-	// 사용자가 인증번호 전송
-	@GetMapping("/phone/authCode")
-	private ResponseEntity<?> authPhoneCode(@RequestParam("code") String code) {
-//		String correctCode = (String)session.getAttribute("code");
+// 	// 사용자가 인증번호 전송
+// 	@GetMapping("/phone/authCode")
+// 	private ResponseEntity<?> authPhoneCode(@RequestParam("code") String code) {
+// //		String correctCode = (String)session.getAttribute("code");
 		
-		// redis 에 저장되어 있는 코드 가져옴
-		String correctCode = userService.getRedisStringValue("code");
+// 		// redis 에 저장되어 있는 코드 가져옴
+// 		String correctCode = userService.getRedisStringValue("code");
 
-		// 인증번호가 일치하는지 검증
-		if(code.equals(correctCode)) {
-//			session.removeAttribute("code");
+// 		// 인증번호가 일치하는지 검증
+// 		if(code.equals(correctCode)) {
+// //			session.removeAttribute("code");
 			
-			// redis 에 저장되어 있는 코드 삭제해야 함
+// 			// redis 에 저장되어 있는 코드 삭제해야 함
 			
-			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "인증되었습니다."));
-		} else {
-			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증번호가 다릅니다."));
-		}
-	}
+// 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "인증되었습니다."));
+// 		} else {
+// 			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증번호가 다릅니다."));
+// 		}
+// 	}
 	
-	// 랜덤 숫자 생성
-	public String makeVerifyCode() {
-	    Random rand = new Random();
-	    String numStr = "";
-	    for (int i = 0; i < 6; i++) {
-	        String ran = Integer.toString(rand.nextInt(10));
-	        numStr += ran;
-	    }
-	    return numStr;
-	}
+// 	// 랜덤 숫자 생성
+// 	public String makeVerifyCode() {
+// 	    Random rand = new Random();
+// 	    String numStr = "";
+// 	    for (int i = 0; i < 6; i++) {
+// 	        String ran = Integer.toString(rand.nextInt(10));
+// 	        numStr += ran;
+// 	    }
+// 	    return numStr;
+// 	}
 
 }
 
