@@ -333,8 +333,8 @@ const StyledLink = styled(NavLink)`
     color: black;
     font-weight: bold;
     font-size: medium;
-    /* width: "!65px";
-    height: "75px"; */
+    /* width: "165px";
+    height: "60px"; */
     &:focus, &:visited {
         text-decoration: none;
     }
