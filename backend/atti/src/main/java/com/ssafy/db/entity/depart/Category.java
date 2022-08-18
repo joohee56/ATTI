@@ -60,5 +60,10 @@ public class Category{
 	@JoinColumn(name="depart_id")
 	private Depart depart;				// 채널 ID (FK)
 	
+	///////////////////////////////////////////////////////
+	    
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<Post> posts = new ArrayList<>();
 
 }

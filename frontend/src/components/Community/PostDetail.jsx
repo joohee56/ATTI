@@ -32,6 +32,8 @@ function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3,
     const postLikeCount = useSelector(state => state.count.postLikeCount)
     const myLike = useSelector(state => state.count.myLike)
     const commentCount = useSelector(state => state.count.commentCount)
+    const categoryComInfo = useSelector(state => state.category.categoryComInfo)
+    const categoryComAnoInfo = useSelector(state => state.category.categoryComAnoInfo)
     const [single, setSingle] = useState([])
     const [comments, setComments] = useState([])
     const { id } = useSelector(state => state.userInfo)
@@ -165,28 +167,7 @@ function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3,
         width: "95%",
         
     }
-    // function timeForToday(value) {
-    //     const today = new Date();
-    //     const timeValue = new Date(value);
-      
-    //     const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
-    //     if (betweenTime < 1) return '방금 전';
-    //     if (betweenTime < 60) {
-    //         return `${betweenTime}분 전`;
-    //     }
-      
-    //     const betweenTimeHour = Math.floor(betweenTime / 60);
-    //     if (betweenTimeHour < 24) {
-    //         return `${betweenTimeHour}시간 전`;
-    //     }
-      
-    //     const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
-    //     if (betweenTimeDay < 365) {
-    //         return `${betweenTimeDay}일 전`;
-    //     }
-      
-    //     return `${Math.floor(betweenTimeDay / 365)}년 전`;
-    //   }
+   
     return(
         <div style={detailStyle}>
             <div>
@@ -196,12 +177,12 @@ function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3,
                         {single.postTitle}
                     </div>
                     <div style={{display: "flex", margin: "0 35px 0 0"}}>
-                        <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
-                        <span style={{margin: "10px 0 0 0"}}>{commentCount}</span>
+                        {/* <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
+                        <span style={{margin: "10px 0 0 0"}}>{commentCount}</span> */}
                         &nbsp; &nbsp; 
                         {myLike === true? (<Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<Favorite />} checkedIcon={<FavoriteBorder/>}/>  )
                         :( <Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> )}
-                        <span style={{margin: "10px 0 0 0"}}>{postLikeCount}</span>
+                        <span style={{margin: "10px 0 0 0"}}></span>
                     </div>
                 </div>
                 <hr style={hrStyle} />
@@ -217,9 +198,6 @@ function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3,
                             <span>
                                작성: {moment(single.postRegDate).format('YYYY-MM-DD HH:mm')}
                             </span>
-                            {/* <span>
-                                수정: {postUpdDate === "" ? "" :  (moment(postUpdDate).format('YYYY-MM-DD HH:mm'))}
-                            </span> */}
                         </div>
                     </div>
                 </div>
@@ -239,21 +217,33 @@ function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3,
             <CommentList postId={postId} comments={comments}/>
             
             <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-end", alignContent: "flex-end", margin: "10px 0 0 0"}}>
-                <div style={{display: "flex", flexDirection: "row"}}>
-                    <SwitchDiv>
+               
+                {categoryComInfo === false? (
+                    <>
+                    <div style={{display: "flex", flexDirection: "row"}}>
+                    {categoryComAnoInfo === true? ( <SwitchDiv>
                         <span style={{textAlign: "center" ,fontSize: "15px", marginBottom: "5px"}}>
                             익명댓글 
                         </span>
                         <span onClick={getAnoInfo}>
                             {UseSwitchesBasic()}
                         </span>
-                    </SwitchDiv>
-                </div>
-                <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
-                    {/* <CustomInputWithLabel name='commentContent' placeholder='댓글을 작성해 주세요' onChange={getValue} value={comment.commentContent}/> */}
+                    </SwitchDiv>) : (
+                    <></>
+                    )}
+                    </div>
+                        <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
+                    
+                            <CommentInput id="commentInput" name='commentContent' onChange={getValue} value={comment.comment_content}/>
+                            <CustomButtonBlue onClick={writeComment}>댓글 작성</CustomButtonBlue>
+                        </div>
+                    </>
+               ) 
+               : (<></>)}
+                {/* <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
                     <CommentInput id="commentInput" name='commentContent' onChange={getValue} value={comment.comment_content}/>
                     <CustomButtonBlue onClick={writeComment}>댓글 작성</CustomButtonBlue>
-                </div>
+                </div> */}
             </div>
         </div>
     );

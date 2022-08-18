@@ -36,13 +36,17 @@ function CategoryList(changeState){
     const updateCider = !currentCider
 
     const [category, setCategory] = useState([])
-    const [changeCss, setChangeCss] = useState(1);
+    const changeCss = useSelector(state => state.category.changeCss)
     const [changeResult, setChangeResult] = useState(false);
     const [newCategory, setNewCategory] = useState(false)
     console.log("카테고리리스트: ", categoryList)
 
     function getChangeCss(){
-        setChangeCss(0)
+        dispatch(categoryActions.saveChangeCss(
+            {
+                changeCss: 0
+            }
+        ))
     }
 
     useEffect(() => {
@@ -125,11 +129,16 @@ function CategoryList(changeState){
 
         }
         
+        const categoryAnoInfo = useSelector(state => state.category.categoryAnoInfo)
       
         function CategoryFunction(i) {
             console.log("카테고리이이이이이: ", category)
             classFunction()
-            setChangeCss(i+1)
+            dispatch(categoryActions.saveChangeCss(
+                {
+                    changeCss: i+1
+                }
+            ))
             dispatch(categoryActions.saveCategory(
                 {categoryId: category[i].categoryId,
                 categoryAnoInfo: category[i].categoryAnoInfo,
@@ -139,6 +148,7 @@ function CategoryList(changeState){
                 cType: category[i].ctype,
                 userId: category[i].userId}
             ))
+            console.log('글 익명 여부: ', categoryAnoInfo)
             dispatch(reRenderingActions.saveSetMyPage(
                 {
                     setMyPage: false
@@ -178,6 +188,8 @@ function CategoryList(changeState){
                 }))
             });
         }
+        const {id} = useSelector(state => state.userInfo)
+        const departUserId = useSelector(state => state.category.userId)
         const result = [];
         const buttonList = [<CampaignIcon/>, <ContactSupportOutlinedIcon/>,<FolderOutlinedIcon/>,<ArticleOutlinedIcon/>, <VideocamOutlinedIcon/>, <span/>, <span/>, <span/>, <span/>, <span/>, <span/> ]
         for (let i = 0; i < category.length; i++) {
@@ -194,7 +206,7 @@ function CategoryList(changeState){
                                 </div>
                             </div>
                         </div>
-                        {i > 4 && (
+                        {(i > 4 && departUserId === id) && (
                             <CloseIcon onClick={() => {deleteCategory(category[i].categoryId)}} style={{zIndex: "1", position: "relative", left: "135px", bottom: "45px"}}/> 
                         )}
                     </StyledLink>
@@ -211,7 +223,7 @@ function CategoryList(changeState){
 function Category({changeState}){
     console.log("카테고리의 찬기",changeState)
     const departId = useSelector(state => state.depart.departId)
-    const [changeCss2, setChangeCss2] = useState(1);
+    const changeCss = useSelector(state => state.category.changeCss)
     const noClickStyle2 = {
         display: "flex",
         flexDirection: "row",
@@ -267,8 +279,11 @@ function Category({changeState}){
     }
     const dispatch = useDispatch()
     function adminPageFunction(){
-        setChangeCss2(9999)
-        // setChangeCss(0)
+        dispatch(categoryActions.saveChangeCss(
+            {
+                changeCss: 9999
+            }
+        ))
         dispatch(reRenderingActions.saveSetAdminPage(
             {
                 setAdminPage: getAdminPage(adminPage)
@@ -293,13 +308,13 @@ function Category({changeState}){
         <>
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", width: "210px", height: "700px"}}>
                 {CategoryList(changeState)}
-                {console.log("departUserId", departUserId)}
+                {console.log("departUserId", departUserId)} 
                 {console.log("id", id)}
                 { departUserId === id && (
-                    <div style={{position: "absolute", top: "750px"}}>
+                    <div style={{position: "absolute", top: "700px", display: "flex", flexDirection: "column",alignItems: "flex-end"}}>
                         <StyledLink to={`/community/`+ departId + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
-                            <div style={noClickStyle2}>
-                                <div style={ Bar }></div>
+                            <div style={changeCss === 9999 ? clickStyle2 : noClickStyle2}>
+                                <div style={changeCss === 9999 ? null : Bar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <DateRangeOutlinedIcon/>
                                     &nbsp;
@@ -307,10 +322,10 @@ function Category({changeState}){
                                 </div>
                             </div>
                         </StyledLink>
-                        <div style={{backgroundColor: "white", width: "180px", height: "70px", margin: "15px 0 0 0", opacity: "0.6", display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center"}} onClick={() => {handleModal6()}}>
+                        <AnimationDiv  onClick={() => {handleModal6()}}>
                             <div style={Bar}><PlayArrowIcon/></div>
                             <AddCategoryDiv>카테고리 추가</AddCategoryDiv>
-                        </div>
+                        </AnimationDiv>
                     </div>
                     )}
                     </div>
@@ -356,6 +371,52 @@ const AddCategoryDiv = styled.div`
     transition : 0.5s;
     color: ${palette.purlue_4};
     }
+
+`
+const AnimationDiv = styled.div`
+    background-color: white;
+    width: 180px;
+    height: 70px;
+    margin: 15px 0 0 0;
+    opacity: 0.6;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    &:hover{
+        cursor: pointer;
+        transition : 0.5s;
+        color: ${palette.purlue_4};
+        
+	/* -webkit-animation: slide-in-right 10s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-in-right 10s cubic-bezier(0.250, 0.460, 0.450, 0.940) both; */
+
+        }
+        /* @-webkit-keyframes slide-in-right {
+  0% {
+    -webkit-transform: translateX(200px);
+            transform: translateX(200px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes slide-in-right {
+  0% {
+    -webkit-transform: translateX(200px);
+            transform: translateX(200px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    opacity: 1;
+  }
+} */
+
 `
 
 export default Category

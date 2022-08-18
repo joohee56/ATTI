@@ -29,9 +29,9 @@ function Community() {
   },[categoryList])
 
   const ScheduleContainer = styled.div`
-  width: 80vw;
+  width: 84vw;
   height: 863px;
-  margin: 25px 20px 25px 0;
+  margin: 25px 60px 25px 0;
   border-radius: 20px;
   background-color: white;
   display: flex;

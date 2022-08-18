@@ -13,6 +13,7 @@ const categorySlice = createSlice({
         departId: null,
         userId: null,
         categoryList: [],
+        changeCss: 1
     },
     reducers: {
         saveCategory(state, action) {
@@ -32,6 +33,9 @@ const categorySlice = createSlice({
         },
         saveCType(state, action){
             state.cType =  action.payload.cType
+        },
+        saveChangeCss(state, action) {
+            state.changeCss = action.payload.changeCss
         }
     }
 
