@@ -65,5 +65,5 @@ public class Category{
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<Post> posts = new ArrayList<>();
-
+	
 }

@@ -2,7 +2,7 @@ import React, {PropsWithChildren, useState, useCallback, useEffect } from 'react
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NavLink, Route, Link } from "react-router-dom";
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 
 import apiAcc, {api} from '../../utils/api';
 import { categoryActions } from '../../store/community/Category';
@@ -62,6 +62,8 @@ function CategoryList(changeState){
 
 
     const Rendering = (changeState, changeResult,setChangeResult) => {
+        const {id} = useSelector(state => state.userInfo)
+        const departUserId = useSelector(state => state.category.userId)
         const noClickStyle = {
             display: "flex",
             flexDirection: "row",
@@ -93,6 +95,21 @@ function CategoryList(changeState){
             position: 'absolute',
             backgroundColor: palette.purlue_2,
            
+        }
+        const blueBar = {
+            width: "15px",
+            height: "60px",
+            position: 'absolute',
+            backgroundColor: palette.blue_2,
+           
+        }
+        function selectBar(){
+            if(categoryUserId === id){
+                return blueBar
+            }
+            else{
+                return purpleBar
+            }
         }
         // console.log("changeState는?", changeState);
         useEffect(() => {
@@ -188,16 +205,16 @@ function CategoryList(changeState){
                 }))
             });
         }
-        const {id} = useSelector(state => state.userInfo)
-        const departUserId = useSelector(state => state.category.userId)
+       
         const result = [];
+        const categoryUserId = useSelector((state) => state.category.userId)
         const buttonList = [<CampaignIcon/>, <ContactSupportOutlinedIcon/>,<FolderOutlinedIcon/>,<ArticleOutlinedIcon/>, <VideocamOutlinedIcon/>, <span/>, <span/>, <span/>, <span/>, <span/>, <span/> ]
         for (let i = 0; i < category.length; i++) {
           result.push(
                 <>  
                     <StyledLink to={`/community/` + departId + `/` + category[i].categoryId} onClick={() => { CategoryFunction(i)}}>
                         <div id ="1" key={i} style={changeCss === i+1 ? clickStyle : noClickStyle}>
-                            <div id="2" style={changeCss === i+1 ? null : purpleBar }></div>
+                            <div id="2" style={changeCss === i+1 ? null :selectBar() }></div>
                             <div id="3" style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                 {buttonList[i]}
                                 &nbsp; 
@@ -322,7 +339,7 @@ function Category({changeState}){
                                 </div>
                             </div>
                         </StyledLink>
-                        <AnimationDiv  onClick={() => {handleModal6()}}>
+                        <AnimationDiv style={{position: "relative", top: "20px", left: "160px",}} onClick={() => {handleModal6()}}>
                             <div style={Bar}><PlayArrowIcon/></div>
                             <AddCategoryDiv>카테고리 추가</AddCategoryDiv>
                         </AnimationDiv>
@@ -341,6 +358,25 @@ function Category({changeState}){
         </>
     );
 }
+
+const BigslideBox = keyframes`
+  0%{
+    width: 10vw;
+  }
+
+  100%{
+    width:18vw;
+  }
+`;
+const BigslideBox2 = keyframes`
+  0%{
+    width: 10vw;
+  }
+
+  100%{
+    width:18vw;
+  }
+`;
 
 
 const StyledLink = styled(NavLink)`
@@ -370,11 +406,14 @@ const AddCategoryDiv = styled.div`
     cursor: pointer;
     transition : 0.5s;
     color: ${palette.purlue_4};
+    animation: ${BigslideBox2} 1s 2s 1;
     }
 
 `
+
 const AnimationDiv = styled.div`
     background-color: white;
+    color: white;
     width: 180px;
     height: 70px;
     margin: 15px 0 0 0;
@@ -387,6 +426,7 @@ const AnimationDiv = styled.div`
         cursor: pointer;
         transition : 0.5s;
         color: ${palette.purlue_4};
+        animation: ${BigslideBox} 1s 0s 1;
         
 	/* -webkit-animation: slide-in-right 10s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 	        animation: slide-in-right 10s cubic-bezier(0.250, 0.460, 0.450, 0.940) both; */

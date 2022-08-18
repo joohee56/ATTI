@@ -32,18 +32,21 @@ function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3,
     const postLikeCount = useSelector(state => state.count.postLikeCount)
     const myLike = useSelector(state => state.count.myLike)
     const commentCount = useSelector(state => state.count.commentCount)
+    const categoryUserId = useSelector(state => state.category.userId)
     const categoryComInfo = useSelector(state => state.category.categoryComInfo)
     const categoryComAnoInfo = useSelector(state => state.category.categoryComAnoInfo)
+    const postComBanInfo = useSelector(state => state.post.postComBanInfo)
     const [single, setSingle] = useState([])
     const [comments, setComments] = useState([])
     const { id } = useSelector(state => state.userInfo)
-
+    
     useEffect(() => {
         // 개별 글 불러오는 것
         api.get(`/post/read/${postId}/${id}`
             ).then((res) => {
             console.log("개별 글 list : ", res.data)
             setSingle(res.data)
+            console.log("sdfafsdwer", single)
             setSinglePost(res.data)
             })
         // 댓글 list 불러오는 것
@@ -168,83 +171,87 @@ function PostDetail({postId, postLike, onClickToggleModal2, onClickToggleModal3,
         
     }
    
-    return(
+    return(      
         <div style={detailStyle}>
-            <div>
-                {console.log("벙글: ", single)}
-                <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between"}}>
-                    <div style={{width: "750px", margin: "10px 0 0 40px", fontWeight: "bold"}}>
-                        {single.postTitle}
-                    </div>
-                    <div style={{display: "flex", margin: "0 35px 0 0"}}>
-                        {/* <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
-                        <span style={{margin: "10px 0 0 0"}}>{commentCount}</span> */}
-                        &nbsp; &nbsp; 
-                        {myLike === true? (<Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<Favorite />} checkedIcon={<FavoriteBorder/>}/>  )
-                        :( <Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> )}
-                        <span style={{margin: "10px 0 0 0"}}></span>
-                    </div>
-                </div>
-                <hr style={hrStyle} />
-            </div>
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between", padding: "0 20px"}}>
-                <div style={{display: "flex", flexDirection: "row"}}>
-                    <Avatar sx={{ width: 50, height: 50 }}></Avatar>
-                    <div style={{display: "flex", flexDirection: "column", margin: "0 0 0 20px"}}>
-                        <div style={{margin: "0 0 10px 0"}}>
-                            {single.userId}
+            <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "space-between", width: "1000px", height: "640px"}}>
+                <div>
+                    <div>
+                        {/* {console.log("벙글: ", single)} */}
+                        <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between"}}>
+                            <div style={{width: "750px", margin: "10px 0 0 40px", fontWeight: "bold"}}>
+                                {single.postTitle}
+                            </div>
+                            <div style={{display: "flex", margin: "0 35px 0 0"}}>
+                                {/* <ChatBubbleOutlineIcon style={{margin: "10px 5px 0 0"}}/>
+                                <span style={{margin: "10px 0 0 0"}}>{commentCount}</span> */}
+                                &nbsp; &nbsp; 
+                                {myLike === true? (<Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<Favorite />} checkedIcon={<FavoriteBorder/>}/>  )
+                                :( <Checkbox  onClick={() => {postLike()}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> )}
+                                <span style={{margin: "10px 0 0 0"}}></span>
+                            </div>
                         </div>
-                        <div>
-                            <span>
-                               작성: {moment(single.postRegDate).format('YYYY-MM-DD HH:mm')}
+                        <hr style={hrStyle} />
+                    </div>
+                    <div style={{display: "flex", justifyContent: "space-between", alignItems: "sapce-between", padding: "0 20px"}}>
+                        <div style={{display: "flex", flexDirection: "row"}}>
+                            <Avatar sx={{ width: 50, height: 50 }}></Avatar>
+                            <div style={{display: "flex", flexDirection: "column", margin: "0 0 0 20px"}}>
+                                <div style={{margin: "0 0 10px 0"}}>
+                                    {single.userId}
+                                </div>
+                                <div>
+                                    <span>
+                                    작성: {moment(single.postRegDate).format('YYYY-MM-DD HH:mm')}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{display: "flex", flexDirection: "row" , margin: "0 20px 0 0"}}>
+                            {console.log("카테고리유저아이디: ", categoryUserId)}
+                            {categoryUserId === id ? (<CustomEditOutlinedIcon onClick={modalEvent}/>):(<></>)}
+                            &nbsp; &nbsp;
+                            {categoryUserId === id? (<CustomDeleteIcon onClick={()=> DeleteFunction()}/>):(<></>)}
+                        </div>
+                    </div>
+                    <br />
+                    <ContentDiv>
+                        {ReactHtmlParser(single.postContent)}
+                    </ContentDiv>
+                    <hr style={{ height: "0.1px", backgroundColor: "gray", width: "95%", marginBottom: "0"}} />
+                    <br />
+                    <CommentList postId={postId} comments={comments}/>
+                </div>
+                <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-end", alignContent: "flex-end", margin: "10px 0 0 0"}}>
+                    { console.log("postcombaninfo: ",postComBanInfo)}
+                    {(categoryComInfo === false && postComBanInfo === false) ? (
+                        <>
+                        <div style={{display: "flex", flexDirection: "row"}}>
+                        {categoryComAnoInfo === true ? ( <SwitchDiv>
+                            <span style={{textAlign: "center" ,fontSize: "15px", marginBottom: "5px"}}>
+                                익명댓글 
                             </span>
+                            <span onClick={getAnoInfo}>
+                                {UseSwitchesBasic()}
+                            </span>
+                        </SwitchDiv>) : (
+                        <></>
+                        )}
                         </div>
-                    </div>
-                </div>
-                <div style={{display: "flex", flexDirection: "row" , margin: "0 10px 0 0"}}>
-                    <CustomEditOutlinedIcon onClick={modalEvent}/>
-                    &nbsp; &nbsp;
-                    <CustomDeleteIcon onClick={()=> DeleteFunction()}/>
+                            <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
+                        
+                                <CommentInput id="commentInput" name='commentContent' onChange={getValue} value={comment.comment_content}/>
+                                <CustomButtonBlue onClick={writeComment}>댓글 작성</CustomButtonBlue>
+                            </div>
+                        </>
+                ) 
+                : (<></>)}
+                    {/* <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
+                        <CommentInput id="commentInput" name='commentContent' onChange={getValue} value={comment.comment_content}/>
+                        <CustomButtonBlue onClick={writeComment}>댓글 작성</CustomButtonBlue>
+                    </div> */}
                 </div>
             </div>
-            <br />
-            <ContentDiv>
-                {ReactHtmlParser(single.postContent)}
-                
-            </ContentDiv>
-            <hr style={{ height: "0.1px", backgroundColor: "gray", width: "95%", marginBottom: "0"}} />
-            <br />
-            <CommentList postId={postId} comments={comments}/>
             
-            <div style={{display: "flex", flexDirection: "column", justifyContent: "flex-end", alignContent: "flex-end", margin: "10px 0 0 0"}}>
-               
-                {categoryComInfo === false? (
-                    <>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                    {categoryComAnoInfo === true? ( <SwitchDiv>
-                        <span style={{textAlign: "center" ,fontSize: "15px", marginBottom: "5px"}}>
-                            익명댓글 
-                        </span>
-                        <span onClick={getAnoInfo}>
-                            {UseSwitchesBasic()}
-                        </span>
-                    </SwitchDiv>) : (
-                    <></>
-                    )}
-                    </div>
-                        <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
-                    
-                            <CommentInput id="commentInput" name='commentContent' onChange={getValue} value={comment.comment_content}/>
-                            <CustomButtonBlue onClick={writeComment}>댓글 작성</CustomButtonBlue>
-                        </div>
-                    </>
-               ) 
-               : (<></>)}
-                {/* <div style={{display: "flex", fiexDierction: "row", alignItems: "center" }}>
-                    <CommentInput id="commentInput" name='commentContent' onChange={getValue} value={comment.comment_content}/>
-                    <CustomButtonBlue onClick={writeComment}>댓글 작성</CustomButtonBlue>
-                </div> */}
-            </div>
         </div>
     );
 }

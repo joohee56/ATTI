@@ -4,13 +4,21 @@ const postSlice = createSlice({
     name: 'post',
     initialState: {
         
-        postComBanInfo: ""
+        postComBanInfo: "",
+        postAnoInfo: "",
+        postList: []
     },
     reducers: {
         saveNotice(state, action) {
             state.postComBanInfo = action.payload.commentCount;
-            
         },
+        savePost(state, action) {
+            state.postAnoInfo = action.payload.postAnoInfo;
+            state.postComBanInfo = action.payload.postComBanInfo;
+        },
+        savePostList(state, action) {
+            state.postList = action.payload.postList;
+        }
       
 }});
 

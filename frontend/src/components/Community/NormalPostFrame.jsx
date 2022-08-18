@@ -85,9 +85,10 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
 
 //   return `${Math.floor(betweenTimeDay / 365)}년 전`;
 // }
-const categoryAnoInfo = useSelector(state => state.category.categoryAnoInfo)
-console.log("카테고리 익명여부", categoryAnoInfo)
-  console.log(post);
+  const categoryAnoInfo = useSelector(state => state.category.categoryAnoInfo)
+  console.log("카테고리 익명여부", categoryAnoInfo)
+  const postAnoInfo = useSelector(state => state.post.postAnoInfo)
+
   if(post === null || post.length===0){
     return (
       <div></div>
@@ -112,12 +113,12 @@ console.log("카테고리 익명여부", categoryAnoInfo)
                   padding: "10px 20px "
                 }}
               >
-                <div style={{ fontSize: "20px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+                <div style={{ fontSize: "20px", width: "900px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                   {e.postTitle}   
                 </div> 
                 <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end"}}>
                   <UserIdDiv>
-                    {categoryAnoInfo === true ?  (<>익명</>) : (<>{e.userId}</>)}
+                    {categoryAnoInfo === true ?  ( postAnoInfo === true  &&  <>익명</>): (<>{e.userId}</>)}
                   </UserIdDiv>
                   &nbsp; &nbsp; &nbsp;
                   <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
@@ -129,8 +130,8 @@ console.log("카테고리 익명여부", categoryAnoInfo)
               </div>
               <hr style={{width: "95%"}} />
   
-              <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0px 20px", margin: "-5px 0px" }}>
-                <div style={{width: "1200px", fontSize: "17px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+              <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0px 30px", margin: "-5px 0px" }}>
+                <div style={{width: "1000px", height: "50px", fontSize: "17px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                   {ReactHtmlParser(e.postContent)}   
                 </div>
                 <div>

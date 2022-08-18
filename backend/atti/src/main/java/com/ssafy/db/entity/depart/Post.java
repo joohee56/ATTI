@@ -86,6 +86,11 @@ public class Post {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	@JsonIgnore
     private List<Comment> comments = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<UserPostLike> userPostLikes = new ArrayList<>();
+	
 //	
 //	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 //    private List<Image> images = new ArrayList<>();
