@@ -104,21 +104,25 @@ function CategoryList(changeState){
            
         }
         function selectBar(){
-            if(categoryUserId === id){
+            if(changeCss === 9999){
                 return blueBar
             }
             else{
                 return purpleBar
             }
         }
+
         // console.log("changeState는?", changeState);
         useEffect(() => {
             if (changeResult) {
                 console.log("찬기")
                 console.log(category);
                 // updateCategory()
-                CategoryFunction(0)
+                if(changeCss !== 9999){
+                    CategoryFunction(0)
+                }
                 setChangeResult(false);
+                
             }
             
         },[changeState,changeResult])
@@ -214,7 +218,7 @@ function CategoryList(changeState){
                 <>  
                     <StyledLink to={`/community/` + departId + `/` + category[i].categoryId} onClick={() => { CategoryFunction(i)}}>
                         <div id ="1" key={i} style={changeCss === i+1 ? clickStyle : noClickStyle}>
-                            <div id="2" style={changeCss === i+1 ? null :selectBar() }></div>
+                            <div id="2" style={changeCss === i+1 ? null : selectBar() }></div>
                             <div id="3" style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                 {buttonList[i]}
                                 &nbsp; 
@@ -299,6 +303,11 @@ function Category({changeState}){
         dispatch(categoryActions.saveChangeCss(
             {
                 changeCss: 9999
+            }
+        ))
+        dispatch(categoryActions.saveChangeCss2(
+            {
+                changeCss2: 100
             }
         ))
         dispatch(reRenderingActions.saveSetAdminPage(

@@ -21,6 +21,8 @@ function Community() {
   const categoryList = useSelector((state: RootState) => state.category.categoryList);
   const categoryName = useSelector((state: RootState) => state.category.categoryName);
   const categoryUserId = useSelector((state: RootState) => state.category.userId);
+  const changeCss = useSelector((state:RootState) => state.category.changeCss)
+  const changeCss2 = useSelector((state: RootState) => state.category.changeCss2)
   const {id} = useSelector((state: RootState) => state.userInfo)
   const categoryType = useSelector((state: RootState) => state.category.cType)
   const [changeState, setChangeState] = useState(false);
@@ -40,10 +42,13 @@ function Community() {
   display: flex;
   justify-content: center;
   align-items: center;
-`;
+`
+  console.log("changeCss,,,", changeCss)
+  console.log("changeCss222222,,,", changeCss2)
   return (
     <CommunityDiv>
-      {categoryUserId === id ? (<Main2> 
+      
+      {(changeCss === 9999 && changeCss2 === 100) ? (<Main2> 
           <div>
             <DepartList />
             <Category changeState={changeState } />
@@ -100,8 +105,8 @@ const Main = styled.div`
   }
   /* background-size: cover !important;
   background-position: center !important; */
-  z-index: -2
-`;
+  z-index: -2;
+`
 
 const Main2 = styled.div`
   display: flex;
@@ -114,6 +119,7 @@ const Main2 = styled.div`
     width: 100%;
     height: 968px;
     content: "";
+    /* background: red; */
     background: url(${adminBg}) no-repeat;
     background-size: 100% 968px;
     position: absolute;
@@ -125,7 +131,7 @@ const Main2 = styled.div`
   }
   /* background-size: cover !important;
   background-position: center !important; */
-  z-index: -2
+  z-index: -2;
 `;
 
 

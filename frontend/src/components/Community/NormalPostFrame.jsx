@@ -118,7 +118,7 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
                 </div> 
                 <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end"}}>
                   <UserIdDiv>
-                    {categoryAnoInfo === true ?  ( postAnoInfo === true  &&  <>익명</>): (<>{e.userName}({e.userId})</>)}
+                    {  postAnoInfo === true  ?  (<>익명</>): (<>{e.userName}({e.userId})</>)}
                   </UserIdDiv>
                   &nbsp; &nbsp; &nbsp;
                   <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
