@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -9,6 +10,8 @@ import SouthIcon from '@mui/icons-material/South';
 import TestImg from '../../assets/images/홈화면상단.png'
 
 function LowPort() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     AOS.init();
   });
@@ -94,7 +97,7 @@ function LowPort() {
         <span>click!</span>
         <SouthIcon color="action" sx={{ fontSize: 40 }} />
       </BoxStyle>
-      <SignupButton>회원가입하러 가기</SignupButton>
+      <SignupButton onClick={()=>navigate("/signup")}>회원가입하러 가기</SignupButton>
     </Main>
   );
 }

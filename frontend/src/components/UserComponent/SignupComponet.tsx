@@ -148,7 +148,6 @@ function SignupComponent() {
         .replace(/[^0-9]/g, "")
         .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
         .replace(/(\-{1,2})$/g, "")
-        
     );
   };
 
@@ -298,7 +297,6 @@ function SignupComponent() {
               placeholder="폰 번호"
               phonNumber={phoneNumber}
               onChange={onChangePhonNumber}
-              isCertifiedSuccess={setIsPhoneNumber}
             />
           </div>
           <NameHelperText>
@@ -341,8 +339,7 @@ function SignupComponent() {
             isId &&
             isPassword &&
             isPasswordConfirm &&
-            isEmail 
-            // &&            isPhoneNumber
+            isEmail
           ) ? (
             <p style={{ color: `${palette.red}` }}>
               회원가입하려면 모두 입력해주세요.
@@ -357,7 +354,6 @@ function SignupComponent() {
                 isPassword &&
                 isPasswordConfirm &&
                 isEmail
-                //  &&               isPhoneNumber
               )
             }
           >
