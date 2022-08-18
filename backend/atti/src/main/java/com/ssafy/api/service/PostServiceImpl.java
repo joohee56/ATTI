@@ -104,7 +104,7 @@ public class PostServiceImpl implements PostService {
 		Category category = categoryRepository.findById(categoryId)
 				.orElseThrow(() -> new IllegalArgumentException("category not found"));
 		User user = userRepository.findById(userId).orElse(null);
-		List<Post> postList = postRepository.findByDepartAndCategoryAndUserOrderByPostIdDesc(depart, category, user);
+		List<Post> postList = postRepository.findByDepartAndCategoryOrderByPostIdDesc(depart, category);
 		
 		List<PostViewAllRes> postViewAllResList;
 		if(postList.isEmpty()) return null;
@@ -135,6 +135,7 @@ public class PostServiceImpl implements PostService {
 					.likeCount(likeCount)
 					.commentCount(commentCount)
 					.myLike(myLike)
+					.userName(p.getUser().getUserName())
 					.build());
 		}
 		
@@ -160,7 +161,7 @@ public class PostServiceImpl implements PostService {
 		Long postLikeCount = userPostLikeRepository.countByPost(post);
 
 		
-		return new PostViewOneRes(post, myPostLike, postLikeCount);
+		return new PostViewOneRes(post, myPostLike, postLikeCount, post.getUser().getUserName());
 	}
 
 	@Override // 이름으로 게시글 검색

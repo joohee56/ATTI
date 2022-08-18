@@ -14,7 +14,7 @@ import com.ssafy.db.entity.user.User;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>{
-	List<Post> findByDepartAndCategoryAndUserOrderByPostIdDesc(Depart depart, Category category, User user);
+	List<Post> findByDepartAndCategoryOrderByPostIdDesc(Depart depart, Category category);
 
 	Optional<Post> deleteByCategory(Category category);
 	
