@@ -5,12 +5,9 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { palette } from "../../styles/palette";
 import { ButtonBlue } from "../ButtonStyled";
-import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import SouthIcon from "@mui/icons-material/South";
-import TestImg from "../../assets/images/홈화면상단.png";
 import Img1 from "../../assets/images/그림1.png";
 import Img2 from "../../assets/images/그림2.png";
-import Img2_2 from "../../assets/images/그림2_2.png";
 import Img3 from "../../assets/images/그림3.png";
 import Img4 from "../../assets/images/그림4.png";
 import Img5 from "../../assets/images/그림5.png";
@@ -42,7 +39,7 @@ function LowPort() {
       {/* 2번 */}
       <BlueContent>
         <ImageDiv data-aos="zoom-in">
-        <Imgs src={Img2_2} data-aos="zoom-in"/>
+        <Imgs src={Img2} data-aos="zoom-in"/>
         
         </ImageDiv>
         <TextDiv>
