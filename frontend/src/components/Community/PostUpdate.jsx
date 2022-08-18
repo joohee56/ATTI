@@ -18,11 +18,11 @@ import { postUpdDateActions } from '../../store/community/postUpdDate';
 export function PostUpdate({singlePost, handleModal3}) {
     const [post, setPost] = useState({
         postId : "",
-        postTitle : "",
-        postContent : "",
-        userId : "gusxo123",
-        categoryId : 2,
-        departId : 1
+        postTitle : singlePost.postTitle,
+        postContent : singlePost.postContent,
+        userId : "",
+        categoryId : "",
+        departId : ""
     })
 
     

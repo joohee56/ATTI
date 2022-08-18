@@ -86,6 +86,11 @@ public class Post {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	@JsonIgnore
     private List<Comment> comments = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<UserPostLike> userPostLikes = new ArrayList<>();
+	
 //	
 //	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 //    private List<Image> images = new ArrayList<>();
@@ -96,8 +101,9 @@ public class Post {
 //	@OneToMany(mappedBy = "post")
 //    private List<UserPostMention> userpostmentions = new ArrayList<>();
 //	
-//	@OneToMany(mappedBy = "post")
-//	private List<UserPostLike> userpostlikes = new ArrayList<>();
+//	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+//	@JsonIgnore
+//	private List<UserPostLike> userPostLikes = new ArrayList<>();
 //	
 //	public void setUser(User user) {
 //		this.user = user;

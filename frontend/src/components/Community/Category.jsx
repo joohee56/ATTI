@@ -2,7 +2,7 @@ import React, {PropsWithChildren, useState, useCallback, useEffect } from 'react
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NavLink, Route, Link } from "react-router-dom";
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 
 import apiAcc, {api} from '../../utils/api';
 import { categoryActions } from '../../store/community/Category';
@@ -36,13 +36,17 @@ function CategoryList(changeState){
     const updateCider = !currentCider
 
     const [category, setCategory] = useState([])
-    const [changeCss, setChangeCss] = useState(1);
+    const changeCss = useSelector(state => state.category.changeCss)
     const [changeResult, setChangeResult] = useState(false);
     const [newCategory, setNewCategory] = useState(false)
     console.log("카테고리리스트: ", categoryList)
 
     function getChangeCss(){
-        setChangeCss(0)
+        dispatch(categoryActions.saveChangeCss(
+            {
+                changeCss: 0
+            }
+        ))
     }
 
     useEffect(() => {
@@ -58,6 +62,8 @@ function CategoryList(changeState){
 
 
     const Rendering = (changeState, changeResult,setChangeResult) => {
+        const {id} = useSelector(state => state.userInfo)
+        const departUserId = useSelector(state => state.category.userId)
         const noClickStyle = {
             display: "flex",
             flexDirection: "row",
@@ -89,6 +95,21 @@ function CategoryList(changeState){
             position: 'absolute',
             backgroundColor: palette.purlue_2,
            
+        }
+        const blueBar = {
+            width: "15px",
+            height: "60px",
+            position: 'absolute',
+            backgroundColor: palette.blue_2,
+           
+        }
+        function selectBar(){
+            if(categoryUserId === id){
+                return blueBar
+            }
+            else{
+                return purpleBar
+            }
         }
         // console.log("changeState는?", changeState);
         useEffect(() => {
@@ -125,11 +146,16 @@ function CategoryList(changeState){
 
         }
         
+        const categoryAnoInfo = useSelector(state => state.category.categoryAnoInfo)
       
         function CategoryFunction(i) {
             console.log("카테고리이이이이이: ", category)
             classFunction()
-            setChangeCss(i+1)
+            dispatch(categoryActions.saveChangeCss(
+                {
+                    changeCss: i+1
+                }
+            ))
             dispatch(categoryActions.saveCategory(
                 {categoryId: category[i].categoryId,
                 categoryAnoInfo: category[i].categoryAnoInfo,
@@ -139,6 +165,7 @@ function CategoryList(changeState){
                 cType: category[i].ctype,
                 userId: category[i].userId}
             ))
+            console.log('글 익명 여부: ', categoryAnoInfo)
             dispatch(reRenderingActions.saveSetMyPage(
                 {
                     setMyPage: false
@@ -178,14 +205,16 @@ function CategoryList(changeState){
                 }))
             });
         }
+       
         const result = [];
+        const categoryUserId = useSelector((state) => state.category.userId)
         const buttonList = [<CampaignIcon/>, <ContactSupportOutlinedIcon/>,<FolderOutlinedIcon/>,<ArticleOutlinedIcon/>, <VideocamOutlinedIcon/>, <span/>, <span/>, <span/>, <span/>, <span/>, <span/> ]
         for (let i = 0; i < category.length; i++) {
           result.push(
                 <>  
                     <StyledLink to={`/community/` + departId + `/` + category[i].categoryId} onClick={() => { CategoryFunction(i)}}>
                         <div id ="1" key={i} style={changeCss === i+1 ? clickStyle : noClickStyle}>
-                            <div id="2" style={changeCss === i+1 ? null : purpleBar }></div>
+                            <div id="2" style={changeCss === i+1 ? null :selectBar() }></div>
                             <div id="3" style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                 {buttonList[i]}
                                 &nbsp; 
@@ -194,7 +223,7 @@ function CategoryList(changeState){
                                 </div>
                             </div>
                         </div>
-                        {i > 4 && (
+                        {(i > 4 && departUserId === id) && (
                             <CloseIcon onClick={() => {deleteCategory(category[i].categoryId)}} style={{zIndex: "1", position: "relative", left: "135px", bottom: "45px"}}/> 
                         )}
                     </StyledLink>
@@ -211,7 +240,7 @@ function CategoryList(changeState){
 function Category({changeState}){
     console.log("카테고리의 찬기",changeState)
     const departId = useSelector(state => state.depart.departId)
-    const [changeCss2, setChangeCss2] = useState(1);
+    const changeCss = useSelector(state => state.category.changeCss)
     const noClickStyle2 = {
         display: "flex",
         flexDirection: "row",
@@ -267,8 +296,11 @@ function Category({changeState}){
     }
     const dispatch = useDispatch()
     function adminPageFunction(){
-        setChangeCss2(9999)
-        // setChangeCss(0)
+        dispatch(categoryActions.saveChangeCss(
+            {
+                changeCss: 9999
+            }
+        ))
         dispatch(reRenderingActions.saveSetAdminPage(
             {
                 setAdminPage: getAdminPage(adminPage)
@@ -293,13 +325,13 @@ function Category({changeState}){
         <>
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", width: "210px", height: "700px"}}>
                 {CategoryList(changeState)}
-                {console.log("departUserId", departUserId)}
+                {console.log("departUserId", departUserId)} 
                 {console.log("id", id)}
                 { departUserId === id && (
-                    <div style={{position: "absolute", top: "750px"}}>
+                    <div style={{position: "absolute", top: "700px", display: "flex", flexDirection: "column",alignItems: "flex-end"}}>
                         <StyledLink to={`/community/`+ departId + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
-                            <div style={noClickStyle2}>
-                                <div style={ Bar }></div>
+                            <div style={changeCss === 9999 ? clickStyle2 : noClickStyle2}>
+                                <div style={changeCss === 9999 ? null : Bar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <DateRangeOutlinedIcon/>
                                     &nbsp;
@@ -307,10 +339,10 @@ function Category({changeState}){
                                 </div>
                             </div>
                         </StyledLink>
-                        <div style={{backgroundColor: "white", width: "180px", height: "70px", margin: "15px 0 0 0", opacity: "0.6", display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center"}} onClick={() => {handleModal6()}}>
+                        <AnimationDiv style={{position: "relative", top: "20px", left: "160px",}} onClick={() => {handleModal6()}}>
                             <div style={Bar}><PlayArrowIcon/></div>
                             <AddCategoryDiv>카테고리 추가</AddCategoryDiv>
-                        </div>
+                        </AnimationDiv>
                     </div>
                     )}
                     </div>
@@ -326,6 +358,25 @@ function Category({changeState}){
         </>
     );
 }
+
+const BigslideBox = keyframes`
+  0%{
+    width: 10vw;
+  }
+
+  100%{
+    width:18vw;
+  }
+`;
+const BigslideBox2 = keyframes`
+  0%{
+    width: 10vw;
+  }
+
+  100%{
+    width:18vw;
+  }
+`;
 
 
 const StyledLink = styled(NavLink)`
@@ -355,7 +406,57 @@ const AddCategoryDiv = styled.div`
     cursor: pointer;
     transition : 0.5s;
     color: ${palette.purlue_4};
+    animation: ${BigslideBox2} 1s 2s 1;
     }
+
+`
+
+const AnimationDiv = styled.div`
+    background-color: white;
+    color: white;
+    width: 180px;
+    height: 70px;
+    margin: 15px 0 0 0;
+    opacity: 0.6;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    &:hover{
+        cursor: pointer;
+        transition : 0.5s;
+        color: ${palette.purlue_4};
+        animation: ${BigslideBox} 1s 0s 1;
+        
+	/* -webkit-animation: slide-in-right 10s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-in-right 10s cubic-bezier(0.250, 0.460, 0.450, 0.940) both; */
+
+        }
+        /* @-webkit-keyframes slide-in-right {
+  0% {
+    -webkit-transform: translateX(200px);
+            transform: translateX(200px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes slide-in-right {
+  0% {
+    -webkit-transform: translateX(200px);
+            transform: translateX(200px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    opacity: 1;
+  }
+} */
+
 `
 
 export default Category
