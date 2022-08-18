@@ -5,9 +5,9 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { palette } from "../../styles/palette";
 import { ButtonBlue } from "../ButtonStyled";
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import SouthIcon from '@mui/icons-material/South';
-import TestImg from '../../assets/images/홈화면상단.png'
+import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
+import SouthIcon from "@mui/icons-material/South";
+import TestImg from "../../assets/images/홈화면상단.png";
 
 function LowPort() {
   const navigate = useNavigate();
@@ -16,8 +16,8 @@ function LowPort() {
     AOS.init();
   });
 
-// 질문을 남겨보세요 질문이 게시판에 남아있어요! 첫번째 두번째 내용이 겹침
-// 출석체크를 손쉽게 할 수 있어요. 화상미팅과 
+  // 질문을 남겨보세요 질문이 게시판에 남아있어요! 첫번째 두번째 내용이 겹침
+  // 출석체크를 손쉽게 할 수 있어요. 화상미팅과
   return (
     <Main>
       {/* 1번 */}
@@ -64,7 +64,9 @@ function LowPort() {
       </WhiteContent>
       {/* 4번 */}
       <BlueContent>
-        <ImageDiv data-aos="zoom-in">질문게시글, 화상채팅 글{"(캡처 or 피그마)"}</ImageDiv>
+        <ImageDiv data-aos="zoom-in">
+          질문게시글, 화상채팅 글{"(캡처 or 피그마)"}
+        </ImageDiv>
         <TextDiv>
           <BigText>온라인 수업에서 질문을 남겨보세요!</BigText>
           <SideText>
@@ -78,17 +80,17 @@ function LowPort() {
       <FinalContent>
         <FinalDiv>
           <TextDiv>
-            <BigText>친밀감을 위한 신뢰도 높은 기술</BigText>
+            <BigText>수업을 더 편하고 즐겁게</BigText>
             <SideText>
-              화상 회의와 소통할 수 있는 공간이 분리되어 불편하지 않으셨나요?
+              초대 코드를 통해 인증된 학생들만 안전한 대화할 수 있는 익명 시스템과
               <br />
-              여기에도 뭐라고 주저리주저리 써야될지 저도 고민되네요
-              <br />
-              여기에 우리가 이래서 ATTI를 써야된다라는 느낌을 주고 싶은데 뭐라하지
-              <br /> 소규모부터 대규모 학교까지 학생을 관리하고 함께 회의하고 공부해요
+              화상회의와 시간표를 하나로 관리하고 직접 게시판을 개설하여 운영하는 커뮤니티 플랫폼
+              <br /> 이제 소규모부터 대규모 학교까지 학생을 관리하고 함께 회의하고 공부해요!
             </SideText>
           </TextDiv>
-          <ImageDiv data-aos="zoom-in">화상채팅 화면 커뮤니티 화면{"(피그마(우리 애기사진) PPT)"}</ImageDiv>
+          <ImageDiv data-aos="zoom-in">
+            화상채팅 화면 커뮤니티 화면{"(피그마(우리 애기사진) PPT)"}
+          </ImageDiv>
         </FinalDiv>
       </FinalContent>
       {/* 시작해볼까 */}
@@ -97,7 +99,9 @@ function LowPort() {
         <span>click!</span>
         <SouthIcon color="action" sx={{ fontSize: 40 }} />
       </BoxStyle>
-      <SignupButton onClick={()=>navigate("/signup")}>회원가입하러 가기</SignupButton>
+      <SignupButton onClick={() => navigate("/signup")}>
+        회원가입하러 가기
+      </SignupButton>
     </Main>
   );
 }
@@ -151,7 +155,7 @@ const ImageDiv = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid;
+  /* border: 1px solid; */
 `;
 
 const BigText = styled.div`
