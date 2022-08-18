@@ -54,6 +54,8 @@ function CategoryCreate({handleModal6}){
     
     const currentCider = useSelector(state => state.reRendering.cider)
     const updateCider = !currentCider
+    const currentCategoryList = useSelector(state => state.category.categoryList)
+    const changeCss = useSelector(state => state.category.changeCss)
     // 카테고리 생성: 로그인 쪽에서 하는 axios 재랜더링 시켜야
     const categoryCreateFunction = () => {
         api.post(`/depart/category/create`,
@@ -80,6 +82,11 @@ function CategoryCreate({handleModal6}){
             // dispatch(reRenderingActions.saveReRendering(
             //     {cider: updateCider }
             // ))
+            dispatch(categoryActions.saveChangeCss(
+                {
+                    changeCss: currentCategoryList.length + 1
+                }
+            ))
             dispatch(categoryActions.saveCategory({
                     categoryId : res.data,
                     categoryAnoInfo: categoryAnoInfo,
