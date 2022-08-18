@@ -128,27 +128,27 @@ const SchedulePageWrapper = () => {
   const navigate = useNavigate();
 
   async function connectMeeting(e: any) {
-    await api
-      .put("/course/enterCourse", {
-        courseId: e.target.value,
-        // courseId: 537845,
-        userId: userInfo.id,
-        clickDate: moment().format("YYYY-MM-DD HH:mm"),
-        // clickDate: "2022-08-16 14:35",
-      })
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.message !== undefined && res.data.message === "출석") {
-          setClassCheck("정상 출석입니다.");
-          setClassCheckOpenModal(true);
-        } else if (
-          res.data.message !== undefined &&
-          res.data.message === "지각"
-        ) {
-          setClassCheck("지각 입니다.");
-          setClassCheckOpenModal(true);
-        }
-      });
+    // await api
+    //   .put("/course/enterCourse", {
+    //     // courseId: e.target.value,
+    //     courseId: 537845,
+    //     userId: userInfo.id,
+    //     // clickDate: moment().format("YYYY-MM-DD HH:mm"),
+    //     clickDate: "2022-08-16 14:35",
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     if (res.data.message !== undefined && res.data.message === "출석") {
+    //       setClassCheck("정상 출석입니다.");
+    //       setClassCheckOpenModal(true);
+    //     } else if (
+    //       res.data.message !== undefined &&
+    //       res.data.message === "지각"
+    //     ) {
+    //       setClassCheck("지각 입니다.");
+    //       setClassCheckOpenModal(true);
+    //     }
+    //   });
     await api
       .get("/course/attendence/" + departId)
       .then((res) => {
@@ -160,7 +160,7 @@ const SchedulePageWrapper = () => {
       .catch((e) => {
         console.log(e);
       });
-    // navigate("/classmeeting?courseId=" + e.target.value);
+    navigate("/classmeeting?courseId=" + e.target.value);
   }
 
   // useEffect(() => {
