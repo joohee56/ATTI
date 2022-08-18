@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.ssafy.db.entity.depart.Category;
 import com.ssafy.db.entity.depart.Depart;
 import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.user.User;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>{
