@@ -292,21 +292,12 @@ const OpenViduTest = () => {
   useEffect(() => {
     if (state.session !== undefined && state.publisher !== undefined) {
       state.session.on("signal:requestAllCamOff", (event) => {
-        if (
-          event.from.connectionId !== state.publisher.stream.connection.data
-        ) {
-          state.publisher.publishVideo(false);
-          setTurnOnCamera(false);
-        }
+        state.publisher.publishVideo(false);
+        setTurnOnCamera(false);
       });
       state.session.on("signal:requestAllMicOff", (event) => {
-        console.log(peopleList);
-        if (
-          event.from.connectionId !== state.publisher.stream.connection.data
-        ) {
-          state.publisher.publishAudio(false);
-          setTurnOnAudio(false);
-        }
+        state.publisher.publishAudio(false);
+        setTurnOnAudio(false);
       });
     }
   }, [peopleList, state.publisher, state.session]);
