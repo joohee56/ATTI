@@ -13,7 +13,8 @@ const categorySlice = createSlice({
         departId: null,
         userId: null,
         categoryList: [],
-        changeCss: 1
+        changeCss: 1,
+        changeCss2: 1
     },
     reducers: {
         saveCategory(state, action) {
@@ -36,6 +37,9 @@ const categorySlice = createSlice({
         },
         saveChangeCss(state, action) {
             state.changeCss = action.payload.changeCss
+        },
+        saveChangeCss2(state, action){
+            state.changeCss2 = action.payload.changeCss2
         }
     }
 
