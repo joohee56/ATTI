@@ -23,6 +23,8 @@ public class PostViewAllRes {
 	
 	private String userId = "익명";
 	
+	private String userName;
+	
 	// 수정 - 주희
 	private long likeCount;
 	private long commentCount;
@@ -36,5 +38,6 @@ public class PostViewAllRes {
 		if(post.getUser() != null) {
 			this.userId = post.getUser().getUserId();
 		}
+		this.userName = post.getUser().getUserName();
 	}
 }

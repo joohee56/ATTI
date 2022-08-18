@@ -103,13 +103,13 @@ public class PostServiceImpl implements PostService {
 				.orElseThrow(() -> new IllegalArgumentException("post not found"));
 		Category category = categoryRepository.findById(categoryId)
 				.orElseThrow(() -> new IllegalArgumentException("category not found"));
-		List<Post> postList = postRepository.findByDepartAndCategoryOrderByPostIdDesc(depart, category);
+		User user = userRepository.findById(userId).orElse(null);
+		List<Post> postList = postRepository.findByDepartAndCategoryAndUserOrderByPostIdDesc(depart, category, user);
 		
 		List<PostViewAllRes> postViewAllResList;
 		if(postList.isEmpty()) return null;
 		else postViewAllResList = new ArrayList<PostViewAllRes>(); 
 		
-		User user = userRepository.findById(userId).orElse(null);
 		
 		for(Post p : postList) {
 			if(p.isPostAnoInfo() == true) {
@@ -134,7 +134,8 @@ public class PostServiceImpl implements PostService {
 					.userId(p.getUser().getUserId())
 					.likeCount(likeCount)
 					.commentCount(commentCount)
-					.myLike(myLike).build());
+					.myLike(myLike)
+					.build());
 		}
 		
 		return postViewAllResList;
@@ -144,15 +145,11 @@ public class PostServiceImpl implements PostService {
 	public PostViewOneRes viewFindOne(Long postId, String userId) {
 		Post post = postRepository.findById(postId).orElse(null);
 //		List<Post> postList = postRepository.findByPost(post);
-		List<PostViewOneRes> postViewReplyRes;
 //		if(postList.isEmpty()) return null;
 //		else postViewReplyRes = new ArrayList<PostViewOneRes>();
-		
-//		for(Post c : postList) {
-			if(post.isPostAnoInfo() == true) {
-				post.setUser(null);
-			}
-//		}
+		if(post.isPostAnoInfo() == true) {
+			post.setUser(null);
+		}
 		
 		User user = userRepository.findById(userId).orElse(null);
 		UserPostLike like = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
@@ -161,6 +158,8 @@ public class PostServiceImpl implements PostService {
 			myPostLike = true;
 		
 		Long postLikeCount = userPostLikeRepository.countByPost(post);
+
+		
 		return new PostViewOneRes(post, myPostLike, postLikeCount);
 	}
 
