@@ -192,6 +192,7 @@ function PostEditor({handleModal1}, props) {
                     <Top>
                         <TopTitle>{categoryName} 글쓰기</TopTitle>
                         <Top2>
+                          {console.log("카테고리 글 익명 여부", categoryAnoInfo)}
                           {categoryAnoInfo === true && (
                             <SwitchDiv>
                                 <span style={{textAlign: "center" ,fontSize: "17px", marginBottom: "5px"}}>

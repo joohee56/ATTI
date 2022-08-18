@@ -87,9 +87,21 @@ const Main = styled.div`
   align-content: center;
   align-items: center;
   margin: 0;
-  background: url("${CommunityBg}") no-repeat;
-  background-size: cover !important;
-  background-position: center !important;
+  ::after{
+    width: 100%;
+    height: 968px;
+    content: "";
+    background: url(${CommunityBg}) no-repeat;
+    background-size: 100% 968px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -2;
+    opacity: 0.65;
+    filter: blur(1px);
+  }
+  /* background-size: cover !important;
+  background-position: center !important; */
   z-index: -2
 `;
 
@@ -100,9 +112,21 @@ const Main2 = styled.div`
   align-content: center;
   align-items: center;
   margin: 0;
-  background: url("${adminBg}") no-repeat;
-  background-size: cover !important;
-  background-position: center !important;
+  ::after{
+    width: 100%;
+    height: 968px;
+    content: "";
+    background: url(${adminBg}) no-repeat;
+    background-size: 100% 968px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -2;
+    opacity: 0.65;
+    filter: blur(1px);
+  }
+  /* background-size: cover !important;
+  background-position: center !important; */
   z-index: -2
 `;
 
