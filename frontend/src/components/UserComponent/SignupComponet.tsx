@@ -2,8 +2,6 @@ import { api } from "../../utils/api/index";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
-import Logo from "../../assets/images/logoComputer.png";
 import SnacbarTell from "../SnacbarTell";
 import InputWithLabel from "../InputWithLabel";
 import InputPassword from "../account/InputPassword";
@@ -115,7 +113,7 @@ function SignupComponent() {
   };
 
   let years = [];
-  for (let y = now.getFullYear() - 14; y >= now.getFullYear() - 60; y -= 1) {
+  for (let y = now.getFullYear() - 14; y >= now.getFullYear() - 35; y -= 1) {
     years.push(y.toString());
   }
 

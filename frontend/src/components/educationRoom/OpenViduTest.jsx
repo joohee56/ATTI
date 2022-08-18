@@ -127,6 +127,8 @@ const OpenViduTest = () => {
   const [questionAnswer, setQuestionAnswer] = useState(false);
   const [notConnectionList, setConnectionList] = useState([]);
   const [leaveSessionCheck, setLeaveSessionCheck] = useState(true);
+  const [anonymouseModeRequestUserName, setAnonymouseModeRequestUserName] =
+    useState("");
 
   function handlerAnswer() {
     setQuestionAnswer(true);
@@ -290,21 +292,12 @@ const OpenViduTest = () => {
   useEffect(() => {
     if (state.session !== undefined && state.publisher !== undefined) {
       state.session.on("signal:requestAllCamOff", (event) => {
-        if (
-          event.from.connectionId !== state.publisher.stream.connection.data
-        ) {
-          state.publisher.publishVideo(false);
-          setTurnOnCamera(false);
-        }
+        state.publisher.publishVideo(false);
+        setTurnOnCamera(false);
       });
       state.session.on("signal:requestAllMicOff", (event) => {
-        console.log(peopleList);
-        if (
-          event.from.connectionId !== state.publisher.stream.connection.data
-        ) {
-          state.publisher.publishAudio(false);
-          setTurnOnAudio(false);
-        }
+        state.publisher.publishAudio(false);
+        setTurnOnAudio(false);
       });
     }
   }, [peopleList, state.publisher, state.session]);
@@ -410,6 +403,9 @@ const OpenViduTest = () => {
       });
       state.session.on("signal:requestAnonymous", (event) => {
         if (state.myRole === PROFESSOR) {
+          setAnonymouseModeRequestUserName(
+            JSON.parse(event.from.data).clientData
+          );
           setOpenModal(true);
         }
       });
@@ -1131,7 +1127,7 @@ const OpenViduTest = () => {
                 }}
               >
                 <StudentAnonymouse
-                  detail={`${state.myUserName}님이 익명 모드로 발표를 요청했습니다. 수락하시겠습니까?`}
+                  detail={`${anonymouseModeRequestUserName}님이 익명 모드로 발표를 요청했습니다. 수락하시겠습니까?`}
                   detail2=""
                   anonymousOK={anonymousOK}
                   setOnClickToggleModal={turnOnModal}

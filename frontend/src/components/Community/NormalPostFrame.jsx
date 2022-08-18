@@ -85,8 +85,10 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
 
 //   return `${Math.floor(betweenTimeDay / 365)}년 전`;
 // }
+  const categoryAnoInfo = useSelector(state => state.category.categoryAnoInfo)
+  console.log("카테고리 익명여부", categoryAnoInfo)
+  const postAnoInfo = useSelector(state => state.post.postAnoInfo)
 
-  console.log(post);
   if(post === null || post.length===0){
     return (
       <div></div>
@@ -111,12 +113,12 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
                   padding: "10px 20px "
                 }}
               >
-                <div style={{ fontSize: "20px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+                <div style={{ fontSize: "20px", width: "900px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                   {e.postTitle}   
                 </div> 
                 <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end"}}>
                   <UserIdDiv>
-                    {e.userId}
+                    {  postAnoInfo === true  ?  (<>익명</>): (<>{e.userName}({e.userId})</>)}
                   </UserIdDiv>
                   &nbsp; &nbsp; &nbsp;
                   <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
@@ -128,8 +130,8 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
               </div>
               <hr style={{width: "95%"}} />
   
-              <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0px 20px", margin: "-5px 0px" }}>
-                <div style={{width: "1200px", fontSize: "17px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+              <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0px 30px", margin: "-5px 0px" }}>
+                <div style={{width: "1000px", height: "50px", fontSize: "17px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                   {ReactHtmlParser(e.postContent)}   
                 </div>
                 <div>
@@ -354,6 +356,7 @@ function NormalPostFrame({changeState}) {
               <PostList handleModal2={handleModal2} limit={limit} page={page} length={length} getLength={getLength} getPostId={getPostId} />
             </div>
           </div>
+          {length === 0? (<></>): (
           <StickyFooter>
           <Pagination
             total={length}
@@ -362,6 +365,7 @@ function NormalPostFrame({changeState}) {
             setPage={setPage}
           />
         </StickyFooter>
+          )}
         {isOpenModal1 && (
           <Modal
             onClickToggleModal={onClickToggleModal1}

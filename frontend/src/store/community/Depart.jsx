@@ -7,7 +7,7 @@ const departSlice = createSlice({
     initialState: {
         departId: "",
         userId: null,
-        departName: "싸피",
+        departName: "",
         departCode: null,
         departList: []
     },

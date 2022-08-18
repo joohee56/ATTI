@@ -91,7 +91,7 @@ public class CommentServiceImpl implements CommentService {
 				myCommentLike = true;
 			long commentLikeCount = userCommentLikeRepository.countByComment(c);
 			
-			commentViewReplyRes.add(new CommentViewReplyRes(c, myCommentLike, commentLikeCount));
+			commentViewReplyRes.add(new CommentViewReplyRes(c, myCommentLike, commentLikeCount, c.getUser().getUserName()));
 		}
 		return commentViewReplyRes;
 	}

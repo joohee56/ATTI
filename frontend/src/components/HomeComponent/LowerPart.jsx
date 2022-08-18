@@ -5,9 +5,15 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { palette } from "../../styles/palette";
 import { ButtonBlue } from "../ButtonStyled";
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import SouthIcon from '@mui/icons-material/South';
-import TestImg from '../../assets/images/홈화면상단.png'
+import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
+import SouthIcon from "@mui/icons-material/South";
+import TestImg from "../../assets/images/홈화면상단.png";
+import Img1 from "../../assets/images/그림1.png";
+import Img2 from "../../assets/images/그림2.png";
+import Img2_2 from "../../assets/images/그림2_2.png";
+import Img3 from "../../assets/images/그림3.png";
+import Img4 from "../../assets/images/그림4.png";
+import Img5 from "../../assets/images/그림5.png";
 
 function LowPort() {
   const navigate = useNavigate();
@@ -16,8 +22,8 @@ function LowPort() {
     AOS.init();
   });
 
-// 질문을 남겨보세요 질문이 게시판에 남아있어요! 첫번째 두번째 내용이 겹침
-// 출석체크를 손쉽게 할 수 있어요. 화상미팅과 
+  // 질문을 남겨보세요 질문이 게시판에 남아있어요! 첫번째 두번째 내용이 겹침
+  // 출석체크를 손쉽게 할 수 있어요. 화상미팅과
   return (
     <Main>
       {/* 1번 */}
@@ -30,14 +36,14 @@ function LowPort() {
           </SideText>
         </TextDiv>
         <ImageDiv data-aos="zoom-in">
-          <img src={TestImg}></img>
-          커뮤니티{"(캡처)"}와 채널 나눠진 이미지{"(피그마나 PPT)"}
+          <Imgs src={Img1} data-aos="zoom-in"/>
         </ImageDiv>
       </WhiteContent>
       {/* 2번 */}
       <BlueContent>
         <ImageDiv data-aos="zoom-in">
-          시간표{"(캡처)"}와 출석체크 모달{"(캡처)"}
+        <Imgs src={Img2_2} data-aos="zoom-in"/>
+        
         </ImageDiv>
         <TextDiv>
           <BigText>시간표를 통해 온라인 수업에 접속해보세요</BigText>
@@ -59,12 +65,14 @@ function LowPort() {
           </SideText>
         </TextDiv>
         <ImageDiv data-aos="zoom-in">
-          익명모드 요청{"(캡처)"}익명모드피그마{"(피그마나 PPT)"}
+        <Imgs src={Img3} data-aos="zoom-in"/>
         </ImageDiv>
       </WhiteContent>
       {/* 4번 */}
       <BlueContent>
-        <ImageDiv data-aos="zoom-in">질문게시글, 화상채팅 글{"(캡처 or 피그마)"}</ImageDiv>
+        <ImageDiv data-aos="zoom-in">
+        <Imgs src={Img4} data-aos="zoom-in"/>
+        </ImageDiv>
         <TextDiv>
           <BigText>온라인 수업에서 질문을 남겨보세요!</BigText>
           <SideText>
@@ -78,17 +86,17 @@ function LowPort() {
       <FinalContent>
         <FinalDiv>
           <TextDiv>
-            <BigText>친밀감을 위한 신뢰도 높은 기술</BigText>
+            <BigText>수업을 더 편하고 즐겁게</BigText>
             <SideText>
-              화상 회의와 소통할 수 있는 공간이 분리되어 불편하지 않으셨나요?
+              초대 코드를 통해 인증된 학생들만 안전한 대화할 수 있는 익명 시스템과
               <br />
-              여기에도 뭐라고 주저리주저리 써야될지 저도 고민되네요
-              <br />
-              여기에 우리가 이래서 ATTI를 써야된다라는 느낌을 주고 싶은데 뭐라하지
-              <br /> 소규모부터 대규모 학교까지 학생을 관리하고 함께 회의하고 공부해요
+              화상회의와 시간표를 하나로 관리하고 직접 게시판을 개설하여 운영하는 커뮤니티 플랫폼
+              <br /> 이제 소규모부터 대규모 학교까지 학생을 관리하고 함께 회의하고 공부해요!
             </SideText>
           </TextDiv>
-          <ImageDiv data-aos="zoom-in">화상채팅 화면 커뮤니티 화면{"(피그마(우리 애기사진) PPT)"}</ImageDiv>
+          <ImageDiv data-aos="zoom-in">
+          <Imgs src={Img5} data-aos="zoom-in" style={{height: "600px"}}/>
+          </ImageDiv>
         </FinalDiv>
       </FinalContent>
       {/* 시작해볼까 */}
@@ -97,7 +105,9 @@ function LowPort() {
         <span>click!</span>
         <SouthIcon color="action" sx={{ fontSize: 40 }} />
       </BoxStyle>
-      <SignupButton onClick={()=>navigate("/signup")}>회원가입하러 가기</SignupButton>
+      <SignupButton onClick={() => navigate("/signup")}>
+        회원가입하러 가기
+      </SignupButton>
     </Main>
   );
 }
@@ -120,7 +130,7 @@ const WhiteContent = styled.div`
   grid-template-columns: 1fr 1fr;
   column-gap: 50px;
   width: 100%;
-  height: 500px;
+  height: auto;
   background: white;
   /* border: 1px solid ${palette.blue_1}; */
 `;
@@ -130,7 +140,7 @@ const BlueContent = styled.div`
   grid-template-columns: 1fr 1fr;
   column-gap: 50px;
   width: 100%;
-  height: 600px;
+  height: auto;
   background: #f2f3fb;
   /* border: 1px solid ${palette.blue_1}; */
 `;
@@ -144,14 +154,23 @@ const TextDiv = styled.div`
   justify-content: center;
   /* border: 1px solid; */
 `;
-const ImageDiv = styled.div`
-  width: 80%;
-  height: 300px;
+
+const Imgs = styled.img`
+    width: 100%;
+  height: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid;
+`
+const ImageDiv = styled.div`
+  width: 80%;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* border: 1px solid; */
 `;
 
 const BigText = styled.div`
@@ -169,7 +188,7 @@ const FinalContent = styled.div`
   width: 100%;
   height: 600px;
   background: linear-gradient(#f2f3fb -20%, white 100%);
-  margin-bottom: 100px;
+  margin-bottom: 300px;
   /* border: 1px solid ${palette.blue_1}; */
 `;
 
@@ -179,8 +198,8 @@ const FinalDiv = styled.div`
   align-items: center;
   justify-content: center;
   width: 80vw;
-  height: 600px;
-  border: 1px solid;
+  height: auto;
+  /* border: 1px solid; */
   text-align: center;
 `;
 
