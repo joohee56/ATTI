@@ -25,7 +25,9 @@ function CategoryCreate({handleModal6}){
     const [categoryAnoInfo, setCategoryAnoInfo] = useState([]);
     const [categoryComInfo, setCategoryComInfo] = useState([]);
     const [categoryComAnoInfo, setCategoryComAnoInfo] = useState([]);
-    
+    console.log("11111111111111111", categoryAnoInfo)
+    console.log("22222222222222222,", categoryComInfo)
+    console.log("33333333333333333", categoryComAnoInfo)
     const { id } = useSelector(state => state.userInfo);
     const departId = useSelector(state => state.depart.departId);
     

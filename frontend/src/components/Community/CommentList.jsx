@@ -128,7 +128,7 @@ function CommentList({comments, postId}){
                                     {myCommentLike === true? (<Checkbox  onClick={() => {commentLike(e.commentId)}} style={{width: "24px", height: "45px"}}icon={<Favorite />} checkedIcon={<FavoriteBorder/>}/>  )
                                     :( <Checkbox  onClick={() => {commentLike(e.commentId)}} style={{width: "24px", height: "45px"}}icon={<FavoriteBorder />} checkedIcon={<Favorite />}/> )}
                                     &nbsp; &nbsp;
-                                    <span style={{margin: "10px 0 0 -10px"}}>좋아요count</span>
+                                    <span style={{margin: "10px 0 0 -10px"}}>{e.commentLikeCount}</span>
 
                                     <CustomDeleteIcon onClick={()=>{commentDelete(e.commentId)}}/>
                                 </div>

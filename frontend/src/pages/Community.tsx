@@ -29,7 +29,7 @@ function Community() {
   },[categoryList])
 
   const ScheduleContainer = styled.div`
-  width: 88vw;
+  width: 80vw;
   height: 863px;
   margin: 25px 20px 25px 0;
   border-radius: 20px;
@@ -46,7 +46,7 @@ function Community() {
             <DepartList />
             <Category changeState={changeState } />
           </div>
-          {(categoryName === "수업실") ? (
+          {(categoryType === "TIMETABLE") ? (
             <ScheduleContainer>
               <SchedulePageWrapper/>
             </ScheduleContainer>

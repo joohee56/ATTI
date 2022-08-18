@@ -20,7 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { palette } from "../../styles/palette";
 import { SosOutlined } from '@mui/icons-material';
 import { reRenderingActions } from '../../store/community/ReRendering';
-import { useSlider } from '@mui/base';
+
 
 
 function CategoryList(changeState){
@@ -40,6 +40,10 @@ function CategoryList(changeState){
     const [changeResult, setChangeResult] = useState(false);
     const [newCategory, setNewCategory] = useState(false)
     console.log("카테고리리스트: ", categoryList)
+
+    function getChangeCss(){
+        setChangeCss(0)
+    }
 
     useEffect(() => {
         if (categoryList !== null && categoryList.length > 0 && categoryList !== undefined) {
@@ -97,9 +101,34 @@ function CategoryList(changeState){
             }
             
         },[changeState,changeResult])
+        
+        const adminPage = useSelector(state => state.reRendering.setAdminPage)
+        const myPage = useSelector(state => state.reRendering.setMyPage)
+        const getAdminPage = (i) => {
+            return false
+        }
+        const getMyPage = (j) => {
+            return false
+        }
+        const dispatch = useDispatch()
+        function classFunction(){
+            dispatch(reRenderingActions.saveSetAdminPage(
+                {
+                    setAdminPage: getAdminPage(adminPage)
+                }
+            ))
+            dispatch(reRenderingActions.saveSetMyPage(
+                {
+                    setMyPage : getMyPage(myPage)
+                }
+            ))
 
+        }
+        
+      
         function CategoryFunction(i) {
             console.log("카테고리이이이이이: ", category)
+            classFunction()
             setChangeCss(i+1)
             dispatch(categoryActions.saveCategory(
                 {categoryId: category[i].categoryId,
@@ -115,11 +144,15 @@ function CategoryList(changeState){
                     setMyPage: false
                 }
             ))
+            
+            console.log("마이페이지", myPage)
             dispatch(reRenderingActions.saveSetAdminPage(
                 {
                     setAdminPage: false
                 }
             ))
+            
+            console.log("어드민페이지", adminPage)
         }
         // 카테고리 삭제
         const deleteCategory = (categoryId) => {
@@ -175,11 +208,11 @@ function CategoryList(changeState){
     return Rendering(changeState,changeResult,setChangeResult);
     }
 
-function Category({changeState }){
+function Category({changeState}){
     console.log("카테고리의 찬기",changeState)
     const departId = useSelector(state => state.depart.departId)
-    const [changeCss, setChangeCss] = useState(1);
-    const noClickStyle = {
+    const [changeCss2, setChangeCss2] = useState(1);
+    const noClickStyle2 = {
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-start",
@@ -190,7 +223,7 @@ function Category({changeState }){
         // boxShadow: "2px 2px 2px 2px grey"
         
     }
-    const clickStyle = {
+    const clickStyle2 = {
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-start",
@@ -227,14 +260,15 @@ function Category({changeState }){
     const adminPage = useSelector(state => state.reRendering.setAdminPage)
     const myPage = useSelector(state => state.reRendering.setMyPage)
     const getAdminPage = (i) => {
-        return !i
+        return true
       }
     const getMyPage = (j) => {
         return false
     }
     const dispatch = useDispatch()
     function adminPageFunction(){
-        setChangeCss(9999)
+        setChangeCss2(9999)
+        // setChangeCss(0)
         dispatch(reRenderingActions.saveSetAdminPage(
             {
                 setAdminPage: getAdminPage(adminPage)
@@ -243,6 +277,11 @@ function Category({changeState }){
         dispatch(reRenderingActions.saveSetMyPage(
             {
                 setMyPage : getMyPage(myPage)
+            }
+        ))
+        dispatch(categoryActions.saveCType(
+            {
+                cType: ""
             }
         ))
 
@@ -259,7 +298,7 @@ function Category({changeState }){
                 { departUserId === id && (
                     <div style={{position: "absolute", top: "750px"}}>
                         <StyledLink to={`/community/`+ departId + `/관리자페이지`} onClick={() => { adminPageFunction()}}>
-                            <div style={noClickStyle}>
+                            <div style={noClickStyle2}>
                                 <div style={ Bar }></div>
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", margin: "0 0 0 30px"}}>
                                     <DateRangeOutlinedIcon/>
@@ -294,8 +333,8 @@ const StyledLink = styled(NavLink)`
     color: black;
     font-weight: bold;
     font-size: medium;
-    /* width: "!65px";
-    height: "75px"; */
+    /* width: "165px";
+    height: "60px"; */
     &:focus, &:visited {
         text-decoration: none;
     }

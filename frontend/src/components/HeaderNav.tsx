@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../store/LoginStore";
 import { RootState } from "../store";
 import { reRenderingActions } from "../store/community/ReRendering";
+import { categoryActions } from "../store/community/Category";
 import {
   Avatar,
   Badge,
@@ -30,7 +31,7 @@ function HeaderNav() {
   //const adminPage = useSelector((state: RootState) => state.reRendering.setAdminPage)
 
   const getMyPage = (i: any) => {
-    return !i;
+    return true
   };
   const getAdminPage = (j: any) => {
     return false;
@@ -45,6 +46,12 @@ function HeaderNav() {
         setAdminPage: getAdminPage(myPage),
       })
     );
+    dispatch(categoryActions.saveCType(
+      {
+          cType: ""
+      }
+  ))
+
   }
 
   const dispatch = useDispatch();

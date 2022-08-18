@@ -39,7 +39,7 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
     backgroundColor: palette.white,
     width: "90%",
     height: "110px",
-    margin: "30px 0 0 50px",
+    margin: "30px 0 0 80px",
     // border: "1px solid",
     boxShadow: `1px 1px 2px 2px gray` 
   };
@@ -108,19 +108,29 @@ const Rendering = ({ post, handleModal2, limit, length, page, getPostId}) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-end",
-                  padding: "10px 20px 0 "
+                  padding: "10px 20px "
                 }}
               >
-                <UserIdDiv>
-                  작성자: {e.userId}
-                </UserIdDiv>
-                {moment(e.postRegDate).format("YYYY-MM-DD HH:mm")}
+                <div style={{ fontSize: "20px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+                  {e.postTitle}   
+                </div> 
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end"}}>
+                  <UserIdDiv>
+                    {e.userId}
+                  </UserIdDiv>
+                  &nbsp; &nbsp; &nbsp;
+                  <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                    {moment(e.postRegDate).format("YYYY-MM-DD HH:mm")}
+                  </div>
+
+                  
+                </div>
               </div>
               <hr style={{width: "95%"}} />
   
-              <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "7px 20px" }}>
-                <div style={{width: "1200px", fontSize: "20px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
-                  {e.postTitle}   
+              <div style={{display: "flex",justifyContent: "space-between", alignItems: "center", padding: "0px 20px", margin: "-5px 0px" }}>
+                <div style={{width: "1200px", fontSize: "17px", fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+                  {ReactHtmlParser(e.postContent)}   
                 </div>
                 <div>
                   {e.myLike === true? (
@@ -334,7 +344,7 @@ function NormalPostFrame({changeState}) {
           <div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               {selectTitle()}
-              <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 140px 0 0" }}>
+              <div style={{ display: "flex", flexDirection: "row",  alignItems: "center", margin: "20px 80px 0 0" }}>
                 {/* <SearchBar /> */}
    
                 {selectButton()}
@@ -396,9 +406,9 @@ color: transparent;
 -webkit-background-clip: text;
 `;
 const PostContainer = styled.div`
-  width: 80vw;
+  width: 84vw;
   height: 863px;
-  margin: 25px 20px 25px 0;
+  margin: 25px 60px 25px 0;
   border-radius: 20px;
   background-color: white;
   /* display: flex;

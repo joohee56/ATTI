@@ -20,4 +20,6 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	List<Post> findByCategory(Category category);
 	
 	void findByPostRegDate(Post post);
+	
+//	Optional<Post> findByPost(Post post);
 }
