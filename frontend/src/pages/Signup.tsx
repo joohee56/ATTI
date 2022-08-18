@@ -91,7 +91,7 @@ const LeftDiv = styled.div`
   align-items: center;
   height: 650px;
   position: relative;
-  top: 110px;
+  justify-content: center;
 `;
 
 const LogoImg = styled.img`

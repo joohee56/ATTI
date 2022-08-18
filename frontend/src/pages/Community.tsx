@@ -97,8 +97,6 @@ const Main = styled.div`
     top: 0;
     left: 0;
     z-index: -2;
-    opacity: 0.65;
-    filter: blur(1px);
   }
   /* background-size: cover !important;
   background-position: center !important; */
@@ -122,13 +120,14 @@ const Main2 = styled.div`
     top: 0;
     left: 0;
     z-index: -2;
-    opacity: 0.65;
+    opacity: 0.9;
     filter: blur(1px);
   }
   /* background-size: cover !important;
   background-position: center !important; */
   z-index: -2
 `;
+
 
 const FlexDiv = styled.div`
   display: flex;
