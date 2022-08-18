@@ -17,6 +17,7 @@ import { normalPostActions } from '../../store/community/Category'
 import { palette } from "../../styles/palette";
 import UseSwitchesBasic from "../SwitchButton"
 import { AutoFixHigh } from '@mui/icons-material';
+import { postUpdDateActions } from '../../store/community/postUpdDate';
 
 function PostEditor({handleModal1}, props) {
     const categoryId = useSelector(state => state.category.categoryId)
@@ -72,6 +73,11 @@ function PostEditor({handleModal1}, props) {
                 console.log("response:", res);
                 dispatch(reRenderingActions.saveSetPost(
                     {setPost: updateSetPost }
+                ))
+                dispatch(postUpdDateActions.savePostUpdDate(
+                  {
+                    postUpdDate: ""
+                  }
                 ))
 
               });

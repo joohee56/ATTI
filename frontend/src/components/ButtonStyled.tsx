@@ -10,6 +10,7 @@ export const ButtonBlue = styled.button`
   font-size: 0.8rem;
   font-weight: bold;
   cursor: pointer;
+  font-family: "GunggiLight";
 
   &:active,
   &:hover {
@@ -33,6 +34,7 @@ export const ButtonPurple = styled.button`
   font-size: 0.8rem;
   font-weight: bold;
   cursor: pointer;
+  font-family: "GunggiLight";
 
   &:active,
   &:hover {

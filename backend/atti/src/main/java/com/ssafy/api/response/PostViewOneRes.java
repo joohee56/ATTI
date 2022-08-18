@@ -19,9 +19,10 @@ public class PostViewOneRes {
 	
 //	private LocalDateTime postUpdDate;
 	
-	private String userId;
+	private String userId = "익명";
 	
 	boolean myPostLike;
+	
 	Long postLikeCount;
 	
 	public PostViewOneRes(Post post, boolean myPostLike, Long postLikeCount) {
@@ -29,7 +30,9 @@ public class PostViewOneRes {
 		this.postTitle = post.getPostTitle();
 		this.postContent = post.getPostContent();
 		this.postRegDate = post.getPostRegDate();
-		this.userId = post.getUser().getUserId();
+		if(post.getUser() != null) {
+			this.userId = post.getUser().getUserId();
+		}
 		this.myPostLike = myPostLike;
 		this.postLikeCount = postLikeCount;
 	}

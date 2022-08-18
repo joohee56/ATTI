@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,34 +69,14 @@ public class PostController {
 	}
 	
 	@PutMapping("/update") // 게시글 수정
-    public ResponseEntity<String> editPost(@RequestBody PostUpdateReq editPostInfo){
+    public ResponseEntity<LocalDateTime> editPost(@RequestBody PostUpdateReq editPostInfo){
 
         System.out.println("=====================");
         System.out.println("postContent : " + editPostInfo.getPostContent());
         System.out.println("=====================");
 
-        Post editPost = new Post();
-
-        editPost.setPostId(editPostInfo.getPostId());
-
-        User user = new User();
-        Depart depart = new Depart();
-        Category category = new Category();
-        
-        user.setUserId(editPostInfo.getUserId());
-        depart.setDepartId(editPostInfo.getDepartId());
-        category.setCategoryId(editPostInfo.getCategoryId());
-        
-        editPost.setUser(user);
-        editPost.setDepart(depart);
-        editPost.setCategory(category);
-        
-        editPost.setPostTitle(editPostInfo.getPostTitle());
-        editPost.setPostContent(editPostInfo.getPostContent());
-        
-        editPost.setCategory(category);
-        postService.editPost(editPost);
-        return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+//        postService.editPost(editPostInfo);
+        return new ResponseEntity<LocalDateTime>(postService.editPost(editPostInfo), HttpStatus.OK);
     }
 	
 	// 좋아요 기능 - 주희 추가
@@ -104,7 +86,5 @@ public class PostController {
 		Long count = postService.postLike(postId, userId);
 		return new ResponseEntity<Long>(count, HttpStatus.OK);
 	}
-	
-	
 	
 }
