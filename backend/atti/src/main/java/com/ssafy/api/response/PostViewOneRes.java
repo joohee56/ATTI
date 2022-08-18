@@ -3,6 +3,7 @@ package com.ssafy.api.response;
 import java.time.LocalDateTime;
 
 import com.ssafy.db.entity.depart.Post;
+import com.ssafy.db.entity.user.User;
 
 import lombok.Getter;
 
