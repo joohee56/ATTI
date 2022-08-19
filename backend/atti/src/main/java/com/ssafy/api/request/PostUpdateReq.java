@@ -33,9 +33,9 @@ public class PostUpdateReq {
 
     private String postContent;
 
-//    private LocalDateTime postRegDate;
+    private LocalDateTime postRegDate;
 
-    private LocalDateTime postUpdDate;
+//    private LocalDateTime postUpdDate;
 
     private boolean postAnoInfo;
 

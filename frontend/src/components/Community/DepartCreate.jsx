@@ -23,6 +23,7 @@ function DepartCreate({handleModal4, setNewDepartCreate, newDepartCreate}) {
     const currentCider = useSelector(state => state.reRendering.cider) // 리렌더링을 위해 사용
     const updateCider = !currentCider
     const dispatch = useDispatch()
+    const departList  = useSelector(state => state.depart.departList)
 
     const getValue = e => { // 채널 이름 같은 정보를 저장함
         const {value} = e.target;
@@ -37,8 +38,8 @@ function DepartCreate({handleModal4, setNewDepartCreate, newDepartCreate}) {
             userId: newDepart.userId,
             departName: newDepart.departName,
         }).then(function (response) {
-            console.log("채널 생성 결과:", response)
-            console.log("새로운 채널을 생성하는데요?", newDepart.departName)
+            // console.log("채널 생성 결과:", response)
+            // console.log("새로운 채널을 생성하는데요?", newDepart.departName)
             dispatch(departActions.saveDepart(           // 새로운 채널의 이름,id 저장, 생성자도 저장
                 {
                     userId: newDepart.userId,
@@ -58,9 +59,25 @@ function DepartCreate({handleModal4, setNewDepartCreate, newDepartCreate}) {
             //     departId: response.data[0].departId,
             //     departName: response.data[0].departName
             // }))
-            setNewDepartCreate((prev)=>{
-                return !prev;
-            });
+                const newList = []
+                newList.push({
+                departId: response.data[0].departId,
+                departName: newDepart.departName,
+                })
+                let combineList = []
+                if (departList !== null ) {
+      
+                  combineList = [...departList, ...newList];
+                } else {
+                combineList = [...newList];
+                }
+                dispatch(departActions.saveDepartList(
+                {
+                    departList: combineList
+                }
+                ))
+            console.log("새로 만들었어요 봐주세요" , combineList);
+            
             navigate(`/community/${response.data[0].departId}/${response.data[0].categoryId}`)
         })
     }

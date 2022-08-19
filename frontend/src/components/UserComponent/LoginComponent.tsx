@@ -199,6 +199,7 @@ function LoginComponent() {
         setNewPasswordOpen(true);
       })
       .catch(function (error) {
+        console.log(error);
         setFindPW("회원정보가 없습니다");
       });
   };
@@ -429,7 +430,6 @@ function LoginComponent() {
                       placeholder="폰 번호"
                       phonNumber={findPwInfo.phoneNumber}
                       onChange={onChangePhonNumber}
-                      isCertifiedSuccess={setIsPhoneNumber}
                       sizeBool={true}
                     />
                     </InputAll>

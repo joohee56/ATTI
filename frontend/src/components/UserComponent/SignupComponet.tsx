@@ -2,8 +2,6 @@ import { api } from "../../utils/api/index";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
-import Logo from "../../assets/images/logoComputer.png";
 import SnacbarTell from "../SnacbarTell";
 import InputWithLabel from "../InputWithLabel";
 import InputPassword from "../account/InputPassword";
@@ -16,6 +14,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 function SignupComponent() {
   const navigate = useNavigate();
+  const now = new Date();
 
   //이름, 아이디, 비밀번호, 비밀번호 확인, 생일, 이메일, 폰번호
   const [name, setName] = useState<string>("");
@@ -23,9 +22,9 @@ function SignupComponent() {
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const [birthState, setBirth] = useState({
-    yy: new Date().getFullYear(),
-    mm: new Date().getMonth(),
-    dd: new Date().getDay(),
+    yy: now.getFullYear() - 14,
+    mm: now.getMonth().toString(),
+    dd: now.getDay().toString(),
   });
   const [email, setEmail] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -112,9 +111,9 @@ function SignupComponent() {
       [e.target.name]: e.target.value,
     });
   };
-  const now = new Date();
+
   let years = [];
-  for (let y = now.getFullYear() - 14; y >= now.getFullYear() - 60; y -= 1) {
+  for (let y = now.getFullYear() - 14; y >= now.getFullYear() - 35; y -= 1) {
     years.push(y.toString());
   }
 
@@ -231,7 +230,7 @@ function SignupComponent() {
           <div>
             <InputStyle sx={{ width: 122, mr: 2 }} size="small">
               <Select
-                name="yy"
+              name="yy"
                 value={birthState.yy.toString()}
                 onChange={onChangeBirth}
                 displayEmpty
@@ -296,7 +295,6 @@ function SignupComponent() {
               placeholder="폰 번호"
               phonNumber={phoneNumber}
               onChange={onChangePhonNumber}
-              isCertifiedSuccess={setIsPhoneNumber}
             />
           </div>
           <NameHelperText>
@@ -339,8 +337,7 @@ function SignupComponent() {
             isId &&
             isPassword &&
             isPasswordConfirm &&
-            isEmail &&
-            isPhoneNumber
+            isEmail
           ) ? (
             <p style={{ color: `${palette.red}` }}>
               회원가입하려면 모두 입력해주세요.
@@ -354,8 +351,7 @@ function SignupComponent() {
                 isId &&
                 isPassword &&
                 isPasswordConfirm &&
-                isEmail &&
-                isPhoneNumber
+                isEmail
               )
             }
           >

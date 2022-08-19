@@ -13,15 +13,16 @@ import { ButtonBlue } from '../ButtonStyled';
 import { normalPostActions } from '../../store/community/Category'
 import { palette } from "../../styles/palette";
 import UseSwitchesBasic from "../SwitchButton"
+import { postUpdDateActions } from '../../store/community/postUpdDate';
 
 export function PostUpdate({singlePost, handleModal3}) {
     const [post, setPost] = useState({
         postId : "",
-        postTitle : "",
-        postContent : "",
-        userId : "gusxo123",
-        categoryId : 2,
-        departId : 1
+        postTitle : singlePost.postTitle,
+        postContent : singlePost.postContent,
+        userId : "",
+        categoryId : "",
+        departId : ""
     })
 
     
@@ -57,10 +58,15 @@ export function PostUpdate({singlePost, handleModal3}) {
               )
             
               .then((res) => {
-                console.log("response:", res);
+                console.log("글 수정 시 나오는 것:", res);
                 dispatch(reRenderingActions.saveSetPost(
                   {setPost: updateSetPost }
               ))
+                dispatch(postUpdDateActions.savePostUpdDate(
+                    {
+                        postUpdDate: res.data
+                    }
+                ))
     
 
               });

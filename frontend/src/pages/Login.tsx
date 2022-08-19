@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import LoginComponent from "../components/UserComponent/LoginComponent";
 import mainBG from "../assets/images/mainBG.png"
-import Logo from "../assets/images/logoComputer.png"
+import Logo from "../assets/images/logoCircle.png"
 import { palette } from "../styles/palette";
 
 function LoginPage() {
@@ -13,7 +13,7 @@ function LoginPage() {
         <LeftDiv>
         <LogoImg src={Logo} alt="Logo Cumputer Img" />
         <LogoText>
-          <p>자체 커뮤니티와 함께 화상 회의가 가능한 교육 플랫폼</p>{" "}
+        🚀 커뮤니티와 화상채팅의 공간 ATTI 🚀
         </LogoText>
         </LeftDiv>
         <Vline/>
@@ -30,7 +30,6 @@ const Main = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 900px;
   position: relative;
   -ms-overflow-style:none /* IE and Edge */
   scrollbar-width:none /* Firefox */
@@ -60,11 +59,11 @@ const Content = styled.div`
   text-align: center;
   ::after {
     width: 100%;
-    height: 900px;
+    height: 912px;
     content: "";
     background: url(${mainBG});
     /* background-size: cover; */
-    background-size: 100% 900px;
+    background-size: 100% 912px;
     position: absolute;
     top: 0;
     left: 0;
@@ -91,23 +90,24 @@ const LeftDiv = styled.div`
   align-items: center;
   height: 650px;
   position: relative;
-  top: 110px;
+  justify-content: center;
 `;
 
 const LogoImg = styled.img`
-  width: 60%;
+  width: 40%;
   max-width: 400px;
   height: auto;
-  padding-bottom: 50px;
+  padding-bottom: 60px;
   filter: drop-shadow(5px 5px #67676761);
 `;
 
 const LogoText = styled.div`
- background: ${palette.white};
+ background:rgba(255, 255, 255, 0.683);
  width: 80%;
- border-radius: 1rem;
- font-size: 1rem; //텍스트 크기
- font-weight: bold; //텍스트 굵기
+ border-radius: 1.2rem;
+ font-size: 1.2rem; //텍스트 크기
+ font-weight: 550;
+ padding: 12px 0px;
 `;
 
 const Vline = styled.div`

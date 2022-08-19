@@ -352,7 +352,6 @@ function MyPage() {
               placeholder={mydataInfo.phone}
               phonNumber={phoneNumber}
               onChange={onChangePhonNumber}
-              isCertifiedSuccess={setIsPhoneNumber}
             />
           </InputWithPhone_Phone>
           <NameHelperText>

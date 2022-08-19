@@ -17,6 +17,8 @@ import { normalPostActions } from '../../store/community/Category'
 import { palette } from "../../styles/palette";
 import UseSwitchesBasic from "../SwitchButton"
 import { AutoFixHigh } from '@mui/icons-material';
+import { postUpdDateActions } from '../../store/community/postUpdDate';
+import { postActions } from '../../store/community/Post';
 
 function PostEditor({handleModal1}, props) {
     const categoryId = useSelector(state => state.category.categoryId)
@@ -73,6 +75,17 @@ function PostEditor({handleModal1}, props) {
                 dispatch(reRenderingActions.saveSetPost(
                     {setPost: updateSetPost }
                 ))
+                dispatch(postActions.savePost(
+                  {
+                    postAnoInfo: post.postAnoInfo,
+                    postComBanInfo: post.postComBanInfo
+                  }
+                ))
+                dispatch(postUpdDateActions.savePostUpdDate(
+                  {
+                    postUpdDate: ""
+                  }
+                ))
 
               });
           } catch (err) {
@@ -102,74 +115,74 @@ function PostEditor({handleModal1}, props) {
     };
     const categoryName = useSelector(state => state.category.categoryName)
     
-    class File extends Component{
-      state = {
-        selectedFile: null,
-        fileUploadedSuccessfully: false
-      }
-      onFileChange = event => {
-        this.setState({selectedFile : event.target.files[0]});
-      }
+    // class File extends Component{
+    //   state = {
+    //     selectedFile: null,
+    //     fileUploadedSuccessfully: false
+    //   }
+    //   onFileChange = event => {
+    //     this.setState({selectedFile : event.target.files[0]});
+    //   }
     
-      onFileUpload = () => {
-        const formData = new FormData();
-        formData.append(
-          "demo file",
-          this.state.selectedFile,
-          this.state.selectedFile.name
-        )
-        axios.post(" https://nrjtrn2s29.execute-api.ap-northeast-2.amazonaws.com/atti", formData).then(() => { // API Gateway URL 입력
-          this.setState({selectedFile: null});
-          this.setState({fileUploadedSuccessfully: true});
-        })
-      }
+    //   onFileUpload = () => {
+    //     const formData = new FormData();
+    //     formData.append(
+    //       "demo file",
+    //       this.state.selectedFile,
+    //       this.state.selectedFile.name
+    //     )
+    //     axios.post(" https://nrjtrn2s29.execute-api.ap-northeast-2.amazonaws.com/atti", formData).then(() => { // API Gateway URL 입력
+    //       this.setState({selectedFile: null});
+    //       this.setState({fileUploadedSuccessfully: true});
+    //     })
+    //   }
     
-      fileData = () => {
-        if (this.state.selectedFile){
-          return(
-          <div>
-            <h2>파일 세부정보</h2>
-            <p>파일명: {this.state.selectedFile.name}</p>
-            <p>파일유형: {this.state.selectedFile.type}</p>
-            <p>Last Modified: {" "}
-              {this.state.selectedFile.lastModifiedDate.toDateString()}
-            </p>
-          </div>
-          )
-        } else if (this.state.fileUploadedSuccessfully){
-          return(
-          <div>
-            <br />
-            <h4>파일 정상 업로드!</h4> 
-          </div>
-          )
-        } else{
-          return(
-          <div>
-            <br/>
-            <h4> 파일을 선택하고 업로드 버튼을 클릭해 주세요.</h4>
-          </div>
-          )
-        }
-      }
+    //   fileData = () => {
+    //     if (this.state.selectedFile){
+    //       return(
+    //       <div>
+    //         <h2>파일 세부정보</h2>
+    //         <p>파일명: {this.state.selectedFile.name}</p>
+    //         <p>파일유형: {this.state.selectedFile.type}</p>
+    //         <p>Last Modified: {" "}
+    //           {this.state.selectedFile.lastModifiedDate.toDateString()}
+    //         </p>
+    //       </div>
+    //       )
+    //     } else if (this.state.fileUploadedSuccessfully){
+    //       return(
+    //       <div>
+    //         <br />
+    //         <h4>파일 정상 업로드!</h4> 
+    //       </div>
+    //       )
+    //     } else{
+    //       return(
+    //       <div>
+    //         <br/>
+    //         <h4> 파일을 선택하고 업로드 버튼을 클릭해 주세요.</h4>
+    //       </div>
+    //       )
+    //     }
+    //   }
     
-      render(){
-        return (
-          <div className='container'>
-            <h2>파일 업로드 웹 페이지</h2>
-            <a href = "https://heytech.tistory.com" target="blank">Hey Tech 티스토리 블로그</a>
-            <div>
-              <br></br>
-              <input type = "file" onChange = {this.onFileChange} />
-              <button onClick={this.onFileUpload}>
-                파일 업로드
-              </button>
-            </div>
-            {this.fileData()}
-          </div>
-        )
-      }
-    }
+    //   render(){
+    //     return (
+    //       <div className='container'>
+    //         <h2>파일 업로드 웹 페이지</h2>
+    //         <a href = "https://heytech.tistory.com" target="blank">Hey Tech 티스토리 블로그</a>
+    //         <div>
+    //           <br></br>
+    //           <input type = "file" onChange = {this.onFileChange} />
+    //           <button onClick={this.onFileUpload}>
+    //             파일 업로드
+    //           </button>
+    //         </div>
+    //         {this.fileData()}
+    //       </div>
+    //     )
+    //   }
+    // }
     const categoryAnoInfo = useSelector(state => state.category.categoryAnoInfo)
     const categoryComInfo = useSelector(state => state.category.categoryComInfo)
     return (
@@ -179,7 +192,8 @@ function PostEditor({handleModal1}, props) {
                     <Top>
                         <TopTitle>{categoryName} 글쓰기</TopTitle>
                         <Top2>
-                          {categoryAnoInfo === false && (
+                          {console.log("카테고리 글 익명 여부", categoryAnoInfo)}
+                          {categoryAnoInfo === true && (
                             <SwitchDiv>
                                 <span style={{textAlign: "center" ,fontSize: "17px", marginBottom: "5px"}}>
                                     익명으로 글쓰기 
@@ -211,9 +225,9 @@ function PostEditor({handleModal1}, props) {
                     />
                 </Main>
             </div>
-            {categoryName === "자료실" && (
+            {/* {categoryName === "자료실" && (
             <File/>
-            )}
+            )} */}
         <SubmitButton className='submit-button'
           onClick = {() => {EditFunction()}}>
             글작성</SubmitButton>

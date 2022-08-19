@@ -33,6 +33,7 @@ const Input = styled.input`
 function AdminInvaiteCode() {
   const [departCode, setDepartCode] = useState<string>("");
   const departId = useSelector((store: RootState) => store.depart.departId);
+  const departName = useSelector((store: RootState) => store.depart.departName);
   useEffect(() => {
     api("/admin/depart/check/" + departId).then((res) => {
       setDepartCode(res.data.departCode);
@@ -57,7 +58,7 @@ function AdminInvaiteCode() {
             marginBottom: "3vh",
           }}
         >
-          SSAFY 7기 채널에 입장할 수 있는 초대 코드입니다.
+          {departName} 채널에 입장할 수 있는 초대 코드입니다.
         </div>
         <div
           style={{

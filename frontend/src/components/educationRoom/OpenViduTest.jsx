@@ -71,6 +71,7 @@ const PROFESSOR = "professor";
 
 export const CHATTING = "chatting";
 export const QnA = "QnA";
+export const PRIVATE = "private";
 
 const OpenViduTest = () => {
   const userInfo = useSelector((store) => store.userInfo);
@@ -83,7 +84,7 @@ const OpenViduTest = () => {
   } else {
     myRole = PROFESSOR;
   }
-  const { categoryList } = useSelector((state) => state.userInfo);
+  const { categoryList } = useSelector((state) => state.category);
   console.log(categoryList);
   const [searchParams, setSearchParams] = useSearchParams();
   console.log(searchParams.get("courseId"));
@@ -124,16 +125,21 @@ const OpenViduTest = () => {
   const [allOff, setAllOff] = useState(false);
   const [answerPostNum, setAnswerPostNum] = useState("");
   const [questionAnswer, setQuestionAnswer] = useState(false);
+  const [notConnectionList, setConnectionList] = useState([]);
+  const [leaveSessionCheck, setLeaveSessionCheck] = useState(true);
+  const [anonymouseModeRequestUserName, setAnonymouseModeRequestUserName] =
+    useState("");
 
   function handlerAnswer() {
     setQuestionAnswer(true);
   }
 
   function QnAComment() {
+    const answer = answerRef.current.value;
     api
       .post("/post/comment/write", {
         commentAnoInfo: 0,
-        commentContent: answerRef.current.value,
+        commentContent: answer,
         commentDeleteInfo: 0,
         commentGroup: 1,
         commentLevel: 0,
@@ -143,6 +149,26 @@ const OpenViduTest = () => {
       })
       .then((res) => {
         setQuestionAnswer(false);
+        state.session
+          .signal({
+            data: QnAState.from + ")" + answer,
+            to: [],
+            type: "QnAResult",
+          })
+          .then(() => {
+            console.log(
+              "답변이 정상적으로 저장되었으며 결과를 메시지로 던집니다."
+            );
+            setChatList({
+              message:
+                "답변이 정상적으로 전달 되었으며 질문 게시글의 댓글로 달렸습니다.",
+              from: "운영",
+              type: "QnAResult",
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         setQnAState(undefined);
         answerRef.current.value = "";
       })
@@ -266,28 +292,31 @@ const OpenViduTest = () => {
   useEffect(() => {
     if (state.session !== undefined && state.publisher !== undefined) {
       state.session.on("signal:requestAllCamOff", (event) => {
-        if (
-          event.from.connectionId !== state.publisher.stream.connection.data
-        ) {
-          state.publisher.publishVideo(false);
-          setTurnOnCamera(false);
-        }
+        state.publisher.publishVideo(false);
+        setTurnOnCamera(false);
       });
       state.session.on("signal:requestAllMicOff", (event) => {
-        console.log(peopleList);
-        if (
-          event.from.connectionId !== state.publisher.stream.connection.data
-        ) {
-          state.publisher.publishAudio(false);
-          setTurnOnAudio(false);
-        }
+        state.publisher.publishAudio(false);
+        setTurnOnAudio(false);
       });
     }
   }, [peopleList, state.publisher, state.session]);
   useEffect(() => {
     if (state.session !== undefined) {
       console.log(peopleList);
-
+      state.session.on("signal:QnAResult", (event) => {
+        console.log(event);
+        let temp = event.data.lastIndexOf(")");
+        let question = event.data.slice(temp + 1);
+        let targetName = event.data.slice(0, temp);
+        if (targetName === state.myUserName) {
+          setChatList({
+            type: "QnAResult",
+            from: JSON.parse(event.from.data).clientData,
+            message: "질문의 답변: " + question,
+          });
+        }
+      });
       state.session.on("signal:audioAndVideo", (event) => {
         console.log(event);
         let subscribers = state.subscribers;
@@ -374,6 +403,9 @@ const OpenViduTest = () => {
       });
       state.session.on("signal:requestAnonymous", (event) => {
         if (state.myRole === PROFESSOR) {
+          setAnonymouseModeRequestUserName(
+            JSON.parse(event.from.data).clientData
+          );
           setOpenModal(true);
         }
       });
@@ -427,6 +459,27 @@ const OpenViduTest = () => {
       }
     }
   }, [state.publisher, state.subscribers, state.subscribers.length]);
+  useEffect(() => {
+    if (
+      peopleList !== null &&
+      peopleList !== undefined &&
+      peopleList.length > 0
+    ) {
+      let temp = studentList.userList.map((e) => {
+        return e.userName + "(" + e.userId + ")";
+      });
+      console.log("빼기전", temp);
+      peopleList.forEach((e) => {
+        let studentName = JSON.parse(e.data).clientData;
+        console.log(studentName);
+        temp = temp.filter((element) => {
+          return element !== studentName;
+        });
+      });
+      console.log("이거다:", temp);
+      setConnectionList(temp);
+    }
+  }, [studentList, peopleList]);
   useEffect(() => {
     if (state.session !== undefined && anonymousMode) {
       setTurnOnCamera(false);
@@ -631,10 +684,17 @@ const OpenViduTest = () => {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      leave: true,
     });
-
-    navigate("/");
+    setLeaveSessionCheck(false);
   }
+
+  useEffect(() => {
+    if (!leaveSessionCheck && state.leave !== undefined && state.leave) {
+      navigate("/community/" + departId + "/" + categoryList[0].categoryId);
+    }
+  }, [leaveSessionCheck]);
+
   async function switchCamera() {
     try {
       const devices = await OV.getDevices();
@@ -704,6 +764,7 @@ const OpenViduTest = () => {
           .catch((error) => {
             console.log(error);
           });
+        setChattingSelect(CHATTING);
       } else {
         if (chattingSelect === CHATTING) {
           mySession
@@ -968,6 +1029,11 @@ const OpenViduTest = () => {
       console.warn(exception);
     });
   }, []);
+
+  function nameButtonChangeChatting(value) {
+    setChattingSelect(value);
+  }
+
   return (
     <MeetingRoom id="test">
       {state.session === undefined ? (
@@ -1046,7 +1112,7 @@ const OpenViduTest = () => {
                 }}
               >
                 <StudentAnonymouse
-                  detail="호스트에게 익명 발표를 요청하시겠습니까?"
+                  detail="교수님에게 익명 발표를 요청하시겠습니까?"
                   detail2="(익명 발표는 카메라와 오디오가 전부 꺼지게 되며 채팅을 치면 TTS가
         읽어주는 기능입니다.)"
                   anonymousOK={anonymousOK}
@@ -1061,7 +1127,7 @@ const OpenViduTest = () => {
                 }}
               >
                 <StudentAnonymouse
-                  detail={`${state.myUserName}님이 익명 모드로 발표를 요청했습니다. 수락하시겠습니까?`}
+                  detail={`${anonymouseModeRequestUserName}님이 익명 모드로 발표를 요청했습니다. 수락하시겠습니까?`}
                   detail2=""
                   anonymousOK={anonymousOK}
                   setOnClickToggleModal={turnOnModal}
@@ -1310,7 +1376,8 @@ const OpenViduTest = () => {
                       peopleList={peopleList}
                       setChattingInfo={setChattingInfo}
                       openChattingList={openChattingList}
-                      notConnectionList={studentList}
+                      notConnectionList={notConnectionList}
+                      nameButtonChangeChatting={nameButtonChangeChatting}
                     />
                   ) : null}
                   {state.myRole === PROFESSOR ? (
@@ -1422,6 +1489,7 @@ const OpenViduTest = () => {
                             <ChattingSendButton
                               onClick={() => {
                                 setSendToUser("");
+                                setChattingSelect(CHATTING);
                               }}
                             >
                               취소

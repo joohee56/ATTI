@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.api.request.PostUpdateReq;
 import com.ssafy.api.request.PostWriteReq;
 import com.ssafy.api.response.PostViewAllRes;
 import com.ssafy.api.response.PostViewOneRes;
@@ -102,13 +103,13 @@ public class PostServiceImpl implements PostService {
 				.orElseThrow(() -> new IllegalArgumentException("post not found"));
 		Category category = categoryRepository.findById(categoryId)
 				.orElseThrow(() -> new IllegalArgumentException("category not found"));
+		User user = userRepository.findById(userId).orElse(null);
 		List<Post> postList = postRepository.findByDepartAndCategoryOrderByPostIdDesc(depart, category);
 		
 		List<PostViewAllRes> postViewAllResList;
 		if(postList.isEmpty()) return null;
 		else postViewAllResList = new ArrayList<PostViewAllRes>(); 
 		
-		User user = userRepository.findById(userId).orElse(null);
 		
 		for(Post p : postList) {
 			if(p.isPostAnoInfo() == true) {
@@ -133,7 +134,9 @@ public class PostServiceImpl implements PostService {
 					.userId(p.getUser().getUserId())
 					.likeCount(likeCount)
 					.commentCount(commentCount)
-					.myLike(myLike).build());
+					.myLike(myLike)
+					.userName(p.getUser().getUserName())
+					.build());
 		}
 		
 		return postViewAllResList;
@@ -142,6 +145,13 @@ public class PostServiceImpl implements PostService {
 	@Override // 게시글 상세 조회
 	public PostViewOneRes viewFindOne(Long postId, String userId) {
 		Post post = postRepository.findById(postId).orElse(null);
+//		List<Post> postList = postRepository.findByPost(post);
+//		if(postList.isEmpty()) return null;
+//		else postViewReplyRes = new ArrayList<PostViewOneRes>();
+		if(post.isPostAnoInfo() == true) {
+			post.setUser(null);
+		}
+		
 		User user = userRepository.findById(userId).orElse(null);
 		UserPostLike like = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
 		boolean myPostLike = false;
@@ -149,7 +159,9 @@ public class PostServiceImpl implements PostService {
 			myPostLike = true;
 		
 		Long postLikeCount = userPostLikeRepository.countByPost(post);
-		return new PostViewOneRes(post, myPostLike, postLikeCount);
+
+		
+		return new PostViewOneRes(post, myPostLike, postLikeCount, post.getUser().getUserName());
 	}
 
 	@Override // 이름으로 게시글 검색
@@ -176,10 +188,20 @@ public class PostServiceImpl implements PostService {
 
 	@Override // 단일 게시글 수정
 	@Transactional
-	public void editPost(Post editPost) {
-		editPost.setPostUpdDate(LocalDateTime.now());
-//		postRepository.updateOne(editPost);
-		postRepository.save(editPost);
+	public LocalDateTime editPost(PostUpdateReq editPost) {
+		Post post = postRepository.findById(editPost.getPostId()).orElse(null);
+		if(post == null) {
+			return null;
+		}
+		
+		post.setPostTitle(editPost.getPostTitle());
+		post.setPostContent(editPost.getPostContent());
+		post.setPostUpdDate(LocalDateTime.now());
+				
+		postRepository.save(post);
+		LocalDateTime ldt = post.getPostUpdDate();
+		
+		return ldt;
 	}
 	
 	// 좋아요 기능 - 주희 추가

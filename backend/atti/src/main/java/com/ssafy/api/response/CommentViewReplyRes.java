@@ -23,9 +23,13 @@ public class CommentViewReplyRes {
 	
 	private String userId = "익명";
 	
-	boolean myCommentLike;
+	private boolean myCommentLike;
 	
-	public CommentViewReplyRes(Comment comment, boolean myCommentLike) {
+	private long commentLikeCount;
+	
+	private String userName;
+	
+	public CommentViewReplyRes(Comment comment, boolean myCommentLike, long commentLikeCount, String userName) {
 		this.commentId = comment.getCommentId();
 		this.commentContent = comment.getCommentContent();
 		this.commentRegDate = comment.getCommentRegDate();
@@ -36,5 +40,7 @@ public class CommentViewReplyRes {
 		if(comment.getUser() != null) {
 			this.userId = comment.getUser().getUserId();
 		}
+		this.commentLikeCount = commentLikeCount;
+		this.userName = userName;
 	}
 }

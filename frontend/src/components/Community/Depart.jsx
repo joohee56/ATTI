@@ -33,38 +33,11 @@ function DepartList(){
   const [departs, setDeparts] = useState([])
 
   useEffect(() => {
-    setDeparts(departList);
-  },[])
-
-  function updateDepartList() {
-    console.log("새로운 채널 생성", newDepartId);
-
-    const newList = []
-    newList.push({
-      departId: newDepartId,
-      departName: newDepartName,
-    })
-    let combineList = []
-    if (departList !== null ) {
+    if (departList !== null && departList !== undefined && departList.length > 0) {
       
-      combineList = [...departList, ...newList];
-    } else {
-      combineList = [...newList];
+      setDeparts(departList);
     }
-    dispatch(departActions.saveDepartList(
-      {
-        departList: combineList
-      }
-    ))
-    console.log(combineList);
-    setDeparts(combineList)
-  }
-  
-  useEffect(() => {
-       
-      updateDepartList();
-    
-  }, [newDepartCreate])
+  },[departList])
 
     const handleClose = () => {
       setAnchorEl(null);
@@ -101,6 +74,8 @@ function DepartList(){
        })
     }
     const departName = useSelector(state => state.depart.departName)
+    const departId = useSelector(state => state.depart.departId)
+    const findId = (e) => e.departId === departId
 
     const onClickToggleModal4 = useCallback(() => {
       setOpenModal4(!isOpenModal4);
@@ -131,8 +106,7 @@ function DepartList(){
       onClickToggleModal5()
     }
     
-    const departId = useSelector(state => state.depart.departId)
-    const findId = (e) => e.departId === departId
+
     return (
       <>
       <DepartContainer>
@@ -162,12 +136,12 @@ function DepartList(){
           <MenuItem onClick={() => {departJoinFunction()}}><GroupAddIcon/>&nbsp; 채널가입</MenuItem>
          
           {departs !== null && departs.length > 0 && Object.keys(departs).map((e,i) => (
-            <div>{console.log(departs)}
+            <div>
             <MenuItem onClick={() => {departFunction(i)}} key={i}>{departs[e].departName}</MenuItem> </div>
           ))}
         </Menu>
         <div style={{display: 'flex', flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-        <Avatar sx={{ width: 45, height: 45 }} style={{margin: "11px 10px 0 11px"}}>1</Avatar>
+        <Avatar sx={{ width: 42, height: 42 }} style={{margin: "11px 10px 0 11px"}}>{departName.substring(0,1)}</Avatar>
           {departName}
         </div>
       </DepartContainer>

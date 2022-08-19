@@ -9,6 +9,8 @@ import {
   AttendsListConnectionDiv,
   AttendsListNotConnection,
 } from "./OpenViduTestStyled";
+import MessageIcon from "@mui/icons-material/Message";
+import { PRIVATE } from "./OpenViduTest";
 
 interface peopleListInterface {
   data: string;
@@ -30,6 +32,7 @@ type peopleProps = {
   }) => void;
   openChattingList: boolean;
   notConnectionList: any;
+  nameButtonChangeChatting: (value: string) => void;
   // children: React.ReactNode;
 };
 interface styledProps {
@@ -51,7 +54,7 @@ const AttendeesWrapper = styled.div<styledProps>`
   }
   width: 95%;
   height: ${(props) => (props.openChattingList ? "35%" : "85%")};
-  border-radius: 15px;
+  border-radius: 5px;
 `;
 const AttendeesListDiv = styled.div`
   width: 100%;
@@ -73,6 +76,10 @@ const AudioAndVideoButton = styled.button`
   background: none;
   border: none;
 `;
+const NameButton = styled.button`
+  background: none;
+  border: none;
+`;
 const AudioAndVideoWrapper = styled.div`
   margin-left: auto;
   margin-right: 30px;
@@ -82,34 +89,40 @@ const AttendeesList = ({
   setChattingInfo,
   openChattingList,
   notConnectionList,
+  nameButtonChangeChatting,
 }: peopleProps) => {
   console.log(peopleList);
   const onClick = (event: any) => {
-    console.log(event.target.id);
+    console.log(event.target);
 
     setChattingInfo({
       data: event.target.value,
       connectionId: event.target.id,
     });
+    nameButtonChangeChatting(PRIVATE);
   };
+
   return (
     <AttendeesWrapper openChattingList={openChattingList}>
       {peopleList !== undefined && peopleList.length > 0 ? (
         <AttendeesListDiv>
-          <AttendsListConnection>현재참가자</AttendsListConnection>
+          <AttendsListConnection>접속자</AttendsListConnection>
           {peopleList.map((e, i) => (
             <AttendWrapper key={i}>
               <NickNameWrapper>
-                <AudioAndVideoButton
-                  onClick={onClick}
+                <NameButton
                   id={e.connectionId}
                   value={JSON.parse(e.data).clientData}
+                  onClick={onClick}
                 >
                   {JSON.parse(e.data).clientData}
-                </AudioAndVideoButton>
+                </NameButton>
               </NickNameWrapper>
               {e.stream !== undefined ? (
                 <AudioAndVideoWrapper>
+                  <AudioAndVideoButton>
+                    <MessageIcon />
+                  </AudioAndVideoButton>
                   <AudioAndVideoButton>
                     {e.stream.videoActive ? (
                       <VideocamIcon></VideocamIcon>
@@ -124,8 +137,8 @@ const AttendeesList = ({
               ) : null}
             </AttendWrapper>
           ))}
-          <AttendsListNotConnection>전체 명단</AttendsListNotConnection>
-          <div>
+          <AttendsListNotConnection>미접속자</AttendsListNotConnection>
+          {/* <div>
             {Object.keys(notConnectionList.userList).map(
               (e: string, i: number) => (
                 <AttendsListConnectionDiv key={i}>
@@ -133,6 +146,13 @@ const AttendeesList = ({
                 </AttendsListConnectionDiv>
               )
             )}
+          </div> */}
+          <div>
+            {Object.keys(notConnectionList).map((e: string, i: number) => (
+              <AttendsListConnectionDiv key={i}>
+                {notConnectionList[e]}
+              </AttendsListConnectionDiv>
+            ))}
           </div>
         </AttendeesListDiv>
       ) : null}
