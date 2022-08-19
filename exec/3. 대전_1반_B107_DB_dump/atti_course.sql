@@ -1,0 +1,60 @@
+CREATE DATABASE  IF NOT EXISTS `atti` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `atti`;
+-- MySQL dump 10.13  Distrib 8.0.29, for Win64 (x86_64)
+--
+-- Host: i7b107.p.ssafy.io    Database: atti
+-- ------------------------------------------------------
+-- Server version	8.0.30-0ubuntu0.20.04.2
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `course`
+--
+
+DROP TABLE IF EXISTS `course`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `course` (
+  `course_id` bigint NOT NULL AUTO_INCREMENT,
+  `course_date` date DEFAULT NULL,
+  `course_end_time` datetime(6) DEFAULT NULL,
+  `course_name` varchar(255) DEFAULT NULL,
+  `course_start_time` datetime(6) DEFAULT NULL,
+  `course_teacher_name` varchar(255) DEFAULT NULL,
+  `depart_course` bigint DEFAULT NULL,
+  PRIMARY KEY (`course_id`),
+  KEY `FKhupfgx5xdsjdubqb8hmtr5ovq` (`depart_course`),
+  CONSTRAINT `FKhupfgx5xdsjdubqb8hmtr5ovq` FOREIGN KEY (`depart_course`) REFERENCES `depart` (`depart_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `course`
+--
+
+LOCK TABLES `course` WRITE;
+/*!40000 ALTER TABLE `course` DISABLE KEYS */;
+INSERT INTO `course` VALUES (1,'2022-08-16','2022-08-16 16:00:00.000000','안녕하세요','2022-08-16 11:00:00.000000','테스트',1),(2,'2022-08-18','2022-08-18 10:00:00.000000','test','2022-08-18 09:00:00.000000','asdf',1),(4,'2022-08-16','2022-08-16 13:00:00.000000','운영체제','2022-08-16 11:00:00.000000','정진',2),(5,'2022-08-19','2022-08-19 11:00:00.000000','자료구조와 실습','2022-08-19 09:00:00.000000','김연수',2),(7,'2022-08-15','2022-08-15 14:00:00.000000','','2022-08-15 14:00:00.000000','',2),(8,'2022-08-15','2022-08-15 18:00:00.000000','리액트 특강','2022-08-15 16:00:00.000000','정진',2),(9,'2022-08-17','2022-08-17 15:00:00.000000','자료구조','2022-08-17 13:00:00.000000','박범수',2),(10,'2022-08-18','2022-08-18 16:00:00.000000','컴퓨터 구조','2022-08-18 15:00:00.000000','정진',2),(12,'2022-08-19','2022-08-19 15:00:00.000000','스프링부트','2022-08-19 12:00:00.000000','정진',2),(13,'2022-08-18','2022-08-18 18:00:00.000000','자바스크립트','2022-08-18 17:00:00.000000','이현태',2),(14,'2022-08-19','2022-08-19 18:00:00.000000','장고','2022-08-19 15:00:00.000000','이현태',2),(15,'2022-08-17','2022-08-17 11:00:00.000000','자바실습','2022-08-17 10:00:00.000000','이주희',2),(16,'2022-08-16','2022-08-16 15:00:00.000000','test','2022-08-16 11:00:00.000000','aaaa',9),(17,'2022-08-19','2022-08-19 15:00:00.000000','aaa','2022-08-19 12:00:00.000000','aaa',9),(18,'2022-08-16','2022-08-16 12:00:00.000000','알고리즘','2022-08-16 11:00:00.000000','이현태',13);
+/*!40000 ALTER TABLE `course` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2022-08-19  9:35:43
