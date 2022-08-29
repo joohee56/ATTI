@@ -10,16 +10,18 @@ export const ButtonBlue = styled.button`
   font-size: 0.8rem;
   font-weight: bold;
   cursor: pointer;
+  font-family: "GunggiLight";
 
   &:active,
-  &:focus {
+  &:hover {
     filter: brightness(90%);
     background: ${palette.main_grBlue};
   }
 
   &:disabled {
-    filter: brightness(80%);
+    opacity: 0.5;
     background: ${palette.main_grBlue};
+    cursor: not-allowed;
   }
 `;
 
@@ -32,10 +34,17 @@ export const ButtonPurple = styled.button`
   font-size: 0.8rem;
   font-weight: bold;
   cursor: pointer;
+  font-family: "GunggiLight";
 
   &:active,
-  &:focus {
+  &:hover {
     filter: brightness(90%);
     background: ${palette.main_grPurple};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    background: ${palette.main_grPurple};
+    cursor: not-allowed;
   }
 `;

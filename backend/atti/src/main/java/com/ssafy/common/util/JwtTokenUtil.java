@@ -21,6 +21,8 @@ import com.auth0.jwt.exceptions.SignatureGenerationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
+import io.jsonwebtoken.Jwts;
+
 /*
  * JWT 토큰 유틸 정의
  */
@@ -35,11 +37,13 @@ public class JwtTokenUtil {
 	public static final String ISSUER = "b107.atti.ssafy.com";
 	
 	@Autowired
+	// secretKey와 expirationTime 설정
 	public JwtTokenUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") Integer expirationTime) {
 		this.secretKey = secretKey;
 		this.expirationTime = expirationTime;
 	}
 	
+	// 만료기한 설정
 	public void setExpirationTime() {
 		JwtTokenUtil.expirationTime = expirationTime;
 	}
@@ -48,6 +52,7 @@ public class JwtTokenUtil {
 		return JWT.require(Algorithm.HMAC512(secretKey.getBytes())).withIssuer(ISSUER).build();
 	}
 	
+	// 만료기한 설정
 	public static Date getTokenExpiration(int expirationTime) {
 		Date now = new Date();
 		return new Date(now.getTime() + expirationTime);

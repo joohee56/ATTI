@@ -1,23 +1,15 @@
 package com.ssafy.db.repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.db.entity.depart.Comment;
+import com.ssafy.db.entity.depart.Post;
 
 @Repository
-@Transactional
-public class CommentRepository {
-	
-	@PersistenceContext
-	private EntityManager em;
-	
-	// 댓글 작성
-	public void insertWriting(Comment comment) {
-		em.persist(comment);
-	}
-	
+public interface CommentRepository extends JpaRepository<Comment, Long>{
+	List<Comment> findByPostOrderByCommentId(Post post);
+	long countByPost(Post post);
 }

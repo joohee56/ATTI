@@ -9,5 +9,4 @@ import lombok.*;
 public class UserFindIdReq {
 	private String name;
 	private String email;
-	private Date birth;
 }

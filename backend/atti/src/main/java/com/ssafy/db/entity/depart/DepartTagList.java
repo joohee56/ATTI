@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ssafy.db.entity.user.Auth;
 import com.ssafy.db.entity.user.User;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +19,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/*
+ * [중계 테이블]
+ * 채널 해시 태그 리스트
+ */
 @Entity
 @Getter
 @ToString
@@ -30,23 +33,14 @@ public class DepartTagList {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="depart_tag_list_id")
-	private Long departTagListId;
+	private Long departTagListId;			// 채널 태그 리스트 ID
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="depart_id")
-	private Depart depart;
+	private Depart depart;					// 채널 ID (FK)
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="depart_tag_id")
-	private DepartTag departTag;
+	private DepartTag departTag;			// 채널 태그 ID (FK)
 	
-	public void setDepart(Depart depart) {
-		this.depart = depart;
-		depart.getDepartTagLists().add(this);
-	}
-	
-	public void setDepartTag(DepartTag departtag) {
-		this.departTag = departtag;
-		depart.getDepartTagLists().add(this);
-	}
 }

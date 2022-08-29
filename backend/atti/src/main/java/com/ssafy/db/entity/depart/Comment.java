@@ -1,9 +1,11 @@
 package com.ssafy.db.entity.depart;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,75 +20,69 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ssafy.db.entity.message.UserMessage;
-import com.ssafy.db.entity.user.Auth;
+import com.ssafy.db.entity.message.Message;
 import com.ssafy.db.entity.user.User;
 import com.ssafy.db.entity.user.UserRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/*
+ * 댓글
+ */
 @Entity
 @Getter
+@Setter
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
-
+	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="comment_id")
-	private Long commentId;
+	private Long commentId;					// 댓글 ID
 	
 	@Column(name="comment_reg_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date commnetRegDate;
+//	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime commentRegDate;			// 댓글 등록일
 	
 	@Column(name="comment_delete_info")
-	private boolean commentDeleteInfo;
+	private boolean commentDeleteInfo;		// 삭제 여부
 	
 	@Column(name="comment_ano_info")
-	private boolean commentAnoInfo;
+	private boolean commentAnoInfo;			// 댓글 익명 여부
 	
 	@Column(name="comment_content")
 	@Lob
-	private String commentContent;
+	private String commentContent;			// 댓글 내용
 	
 	@Column(name="comment_group")
-	private int commentGroup;
+	private int commentGroup;				// 댓글 그룹
 	
 	@Column(name="comment_level")
-	private int commentLevel;
+	private int commentLevel;				// 그룹 내 순서
 	
-	private boolean seq;
+	private boolean seq;					// 루트 여부
+	
+	//////////////////////////////////////////////////////////
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
-	private User user;
+	private User user;						// 사용자 ID (FK)
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="post_id")
-	private Post post;
+	private Post post;						// 게시글 ID (FK)
 	
-	@OneToMany(mappedBy = "comment")
-    private List<UserCommentMention> usercommentmentions = new ArrayList<>();
+	//////////////////////////////////////////////////////////
 	
-	@OneToMany(mappedBy = "comment")
+	@OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<UserCommentLike> usercommentlikes = new ArrayList<>();
-	
-	public void setUser(User user) {
-		this.user = user;
-		user.getComments().add(this);
-	}
-	
-	public void setPost(Post post) {
-		this.post = post;
-		user.getComments().add(this);
-	}
-	
-	
 }
