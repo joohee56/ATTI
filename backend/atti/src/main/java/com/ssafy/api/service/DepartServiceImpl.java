@@ -120,9 +120,6 @@ public class DepartServiceImpl implements DepartService {
 //		Optional<Depart> depart2 = departRepository.findById((long) 1);
 //		Depart depart3 = departRepository.findById((long)1).orElse(null);
 		
-		// 무덤
-//		depart.setDepartCode(generatedString);
-//		depart.setUser(userRepository.findById(userId));
 		return departId;
 	}
 

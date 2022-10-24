@@ -85,5 +85,4 @@ public class PostController {
 		Long count = postService.postLike(postId, userId);
 		return new ResponseEntity<Long>(count, HttpStatus.OK);
 	}
-	
 }

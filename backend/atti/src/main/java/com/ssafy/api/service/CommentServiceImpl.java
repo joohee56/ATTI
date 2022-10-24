@@ -33,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	// 좋아요 기능 - 주희
+	// 좋아요 기능 
 	@Autowired
 	private UserCommentLikeRepository userCommentLikeRepository;
 	
@@ -96,7 +96,7 @@ public class CommentServiceImpl implements CommentService {
 		return commentViewReplyRes;
 	}
 	
-	// 좋아요 기능 - 주희
+	// 좋아요 기능 
 	@Override
 	@Transactional
 	public long postCommentLike(Long commentId, String userId) {

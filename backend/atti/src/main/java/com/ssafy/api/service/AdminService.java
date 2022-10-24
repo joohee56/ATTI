@@ -51,7 +51,7 @@ public class AdminService {
 		
 	}
 	
-	// 채널 코드 보내주기 - 갓범
+	// 채널 코드 보내주기
 	public DepartCodeRes getDepartCode(Long departId) {
 		Depart depart = departRepository.findById(departId)
 				.orElseThrow(() -> new IllegalArgumentException("departCode not found"));
@@ -59,7 +59,7 @@ public class AdminService {
 		return new DepartCodeRes(depart);
 	}
 	
-	// 카테고리 삭제하기 - 무범
+	// 카테고리 삭제하기
 	public void deleteCategory(Long categoryId) {
 		categoryRepository.deleteById(categoryId);
 	}

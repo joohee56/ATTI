@@ -10,6 +10,6 @@ import com.ssafy.db.entity.depart.UserDepart;
 
 @Repository
 public interface AdminMemberRepository extends JpaRepository<UserDepart, Long>{
-	// 내가 원하는 채널 id로 회원목록 조회하려고 함
+	// 내가 원하는 채널 id로 회원목록 조회
 	List<UserDepart> findAllByDepart(Depart depart);
 }

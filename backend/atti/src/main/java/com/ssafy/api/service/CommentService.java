@@ -14,6 +14,6 @@ public interface CommentService {
 	
 	void deleteFindOne(Long commentId); // 댓글 삭제
 	
-	// 좋아요 - 주희
+	// 좋아요 기능
 	long postCommentLike(Long commentId, String userId);
 }

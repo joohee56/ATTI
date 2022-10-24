@@ -92,7 +92,4 @@ public class CourseController {
 		if(!res) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "잘못된 접근입니다."));
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "변경이 완료되었습니다"));
 	}
-	
-	
-	
 }

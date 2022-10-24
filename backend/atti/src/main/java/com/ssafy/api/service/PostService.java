@@ -27,7 +27,7 @@ public interface PostService {
 	
 	LocalDateTime editPost(PostUpdateReq editPost); // 단일 게시글 수정
 	
-	long postLike(Long postId, String userId);	// 좋아요 기능 - 주희
+	long postLike(Long postId, String userId);	// 좋아요 기능 
 	
 	public List<Post> findByCategory(Category category); // 카테고리 ID에 해당하는 게시글 조회 
 }

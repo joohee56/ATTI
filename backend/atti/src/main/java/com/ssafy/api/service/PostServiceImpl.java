@@ -40,11 +40,11 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	// 좋아요 추가 - 주희
+	// 좋아요 추가 
 	@Autowired
 	private UserPostLikeRepository userPostLikeRepository;
 	
-	// 댓글 갯수 추가 - 주희
+	// 댓글 갯수 추가 
 	@Autowired
 	private CommentRepository commentRepository;
 
@@ -77,8 +77,6 @@ public class PostServiceImpl implements PostService {
 				.build();
 		Long postId = postRepository.save(post).getPostId();
 		
-		
-//		post.setUser(user); 무덤
 		return postId;
 	}
 	
@@ -204,8 +202,7 @@ public class PostServiceImpl implements PostService {
 		return ldt;
 	}
 	
-	// 좋아요 기능 - 주희 추가
-	// 좋아요 버튼 누름
+	// 좋아요 기능 
 	@Override
 	@Transactional
 	public long postLike(Long postId, String userId) {
