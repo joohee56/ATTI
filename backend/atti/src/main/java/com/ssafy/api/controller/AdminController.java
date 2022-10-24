@@ -55,14 +55,14 @@ public class AdminController {
 	// 확인 버튼 클릭 시 수정
 	
 	
-	// 채널 코드 확인 - 갓범
+	// 채널 코드 확인
 	@GetMapping("/depart/check/{departId}")
 	public ResponseEntity<DepartCodeRes> getDepartCode(@PathVariable Long departId) {
 		
 		return new ResponseEntity<DepartCodeRes>(adminService.getDepartCode(departId), HttpStatus.OK);
 	}
 	
-	// 카테고리 삭제 - 무범
+	// 카테고리 삭제 
 	@DeleteMapping("/category/delete/{categoryId}")
 	public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
 		adminService.deleteCategory(categoryId);
