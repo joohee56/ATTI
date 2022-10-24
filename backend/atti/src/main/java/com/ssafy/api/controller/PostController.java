@@ -79,7 +79,6 @@ public class PostController {
         return new ResponseEntity<LocalDateTime>(postService.editPost(editPostInfo), HttpStatus.OK);
     }
 	
-	// 좋아요 기능 - 주희 추가
 	// 좋아요 버튼 누름
 	@GetMapping("/likeBtn/{postId}/{userId}")
 	public ResponseEntity<Long> postLike(@PathVariable("postId") Long postId, @PathVariable("userId") String userId) {
