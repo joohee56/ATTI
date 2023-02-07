@@ -240,13 +240,12 @@
 |![회원탈퇴](https://user-images.githubusercontent.com/83942393/187181935-617956df-7fc2-486e-87f2-e48201c38fa9.gif) |
 </br>
 
-## 👩🏻‍협업 (JIRA, Notion)
-| Notion |
-|:-------:|
-| ![3](https://user-images.githubusercontent.com/83942393/195985643-03f9c60c-3204-4347-b0fc-a604c01db3f6.PNG)
-![4](https://user-images.githubusercontent.com/83942393/195985665-02bb7c21-46e5-4802-b4c2-56781236fc62.PNG)
-![6](https://user-images.githubusercontent.com/83942393/195985671-69949a58-9c91-426d-a8fd-76a74cb3c064.PNG) |
+## 🤙🏻 협업 (JIRA, Notion)
+| Notion | Notion | 
+|:-------:|:-------:|
+| <img src="https://user-images.githubusercontent.com/83942393/195985643-03f9c60c-3204-4347-b0fc-a604c01db3f6.PNG"> | <img src="https://user-images.githubusercontent.com/83942393/195985671-69949a58-9c91-426d-a8fd-76a74cb3c064.PNG">  |
 </br>
+
 
 ## 👩🏻‍🚀 개발 멤버 소개
 <table>
