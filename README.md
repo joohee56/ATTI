@@ -260,8 +260,8 @@
       <img src="https://avatars.githubusercontent.com/lhynjn9" width="140px"/> <br><br> 이현정 <br>(Back-End) </a> <br></td>
     <td height="140px" align="center"><a href="https://github.com/ssafypark">
       <img src="https://avatars.githubusercontent.com/ssafypark" width="140px"/> <br><br> 박범수 <br>(Back-End) </a> <br></td>
-    <td height="140px" align="center"><a href="https://github.com/J00HUI">
-      <img src="https://avatars.githubusercontent.com/J00HUI" width="140px"/> <br><br> 이주희 <br>(Back-End) </a> <br></td>
+    <td height="140px" align="center"><a href="https://github.com/joohee56">
+      <img src="https://avatars.githubusercontent.com/joohee56" width="140px"/> <br><br> 이주희 <br>(Back-End) </a> <br></td>
   </tr>
   <tr>
       <td align="center">👑<br/>React<br/>WebRTC</td>
