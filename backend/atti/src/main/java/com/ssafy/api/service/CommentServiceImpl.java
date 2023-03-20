@@ -39,11 +39,6 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override // 댓글 작성
 	public void createReply(CommentWriteReq commentWriteReq) {
-//		User user = userRepository.findById(comment.getUserId());
-//		Post post = postRepository.findById(comment.getPostId());
-		
-//		Comment entity = comment.toEntity(user, post);
-//		commentRepository.insertWriting(comment);
 		commentWriteReq.setCommentRegDate(LocalDateTime.now());
 		
 		Post post = postRepository.findById(commentWriteReq.getPostId()).orElse(null);

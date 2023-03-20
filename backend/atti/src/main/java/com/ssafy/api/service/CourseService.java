@@ -94,7 +94,6 @@ public class CourseService {
 		LocalDate startDate = courseGetReq.getWeekStartDate().plusDays(1);	// 2022-08-14 ~ 2022-08-20
 		LocalDate endDate = startDate.plusDays(5);
 		
-//		System.out.println("startDate: " + startDate + ", endDate: " + endDate);
 		// course 중에 departId 에 해당하는 course 중 start Date between end Date 에 해당하는 리스트 뽑기
 		Depart depart = departRepository.findById(courseGetReq.getDepartId()).orElse(null);
 		if(depart == null) return null;
@@ -179,11 +178,6 @@ public class CourseService {
 		Date startTime = java.sql.Timestamp.valueOf(courseStartTime);
 		Date endTime = java.sql.Timestamp.valueOf(courseEndTime);
 		Date clickTime = java.sql.Timestamp.valueOf(clickDate);
-		
-		System.out.println("수업 시작 시간 : " + courseStartTime);
-		System.out.println("출석 인정 시간 (시작 30분 전) : " + acceptTime);
-		System.out.println("수업 끝나는 시간 : " + courseEndTime);
-		System.out.println("클릭 누른 시간 : " + clickDate);
 		
 		// 출석
 		if((clickTime.after(acceptTime) && clickTime.before(startTime)) || clickTime.equals(startTime) || clickTime.equals(acceptTime)) {

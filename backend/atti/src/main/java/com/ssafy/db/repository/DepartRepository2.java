@@ -36,7 +36,6 @@ public class DepartRepository2 {
 	
 	// 채널id 찾기
 	public Depart findById(Long departId) {
-		
 		return em.createQuery("select d from Depart d where d.departId = :departId", Depart.class)
 				.setParameter("departId", departId)
 				.getSingleResult();

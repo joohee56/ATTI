@@ -51,14 +51,6 @@ public class PostServiceImpl implements PostService {
 	@Override // 글쓰기
 	@Transactional // 쓰기가 필요할땐 그냥 Transactional
 	public Long createWriting(PostWriteReq postWriteReq) {
-//		Post post = Post.builder()
-//				.postTitle(postWriteReq.getPostTitle())
-//				.postContent(postWriteReq.getPostContent())
-//				.postRegDate(postWriteReq.getPostRegDate())
-//				.user(userRepository.getOne(postWriteReq.getUserId()))
-//				.category(categoryRepository.getById(postWriteReq.getCategoryId()))
-//				.depart(departRepository.findById(id)(postWriteReq.getDepartId()))
-//				.build();
 		postWriteReq.setPostRegDate(LocalDateTime.now());
 
 		Depart depart = departRepository.getById(postWriteReq.getDepartId());
@@ -88,15 +80,6 @@ public class PostServiceImpl implements PostService {
 	
 	@Override // 게시글 전체 조회
 	public List<PostViewAllRes> viewAllPosts(Long departId, Long categoryId, String userId) {
-
-//		System.out.println("=======================" + departId + "=======================");
-//		System.out.println("=======================" + categoryId + "=======================");
-//		List<Post> entityList = postRepository.findAllPosts(departRepository.findById(departId), categoryRepository.findById(categoryId));
-//		List<Post> entityList = postRepository.findAllById(departRepository.findById(departId), categoryRepository.findById(categoryId));
-//		List<PostViewAllRes> list = new ArrayList<>();
-//		for (Post post : entityList) {
-//			list.add(new PostViewAllRes(post));
-//		}
 		Depart depart = departRepository.findById(departId)
 				.orElseThrow(() -> new IllegalArgumentException("post not found"));
 		Category category = categoryRepository.findById(categoryId)
@@ -143,9 +126,6 @@ public class PostServiceImpl implements PostService {
 	@Override // 게시글 상세 조회
 	public PostViewOneRes viewFindOne(Long postId, String userId) {
 		Post post = postRepository.findById(postId).orElse(null);
-//		List<Post> postList = postRepository.findByPost(post);
-//		if(postList.isEmpty()) return null;
-//		else postViewReplyRes = new ArrayList<PostViewOneRes>();
 		if(post.isPostAnoInfo() == true) {
 			post.setUser(null);
 		}
@@ -177,9 +157,6 @@ public class PostServiceImpl implements PostService {
 	@Override // 카테고리 게시글 일괄 삭제
 	@Transactional
 	public void deleteAllPosts(Long categoryId) {
-		System.out.println("=====================");
-		System.out.println(categoryId);
-		System.out.println("=====================");
 		postRepository.deleteByCategory(categoryRepository.findById(categoryId)
 				.orElseThrow(() -> new IllegalArgumentException("category not found")));
 	}
@@ -209,16 +186,8 @@ public class PostServiceImpl implements PostService {
 		Post post = postRepository.findById(postId).orElse(null);
 		User user = userRepository.findById(userId).orElse(null);
 		
-		System.out.println("========================");
-		System.out.println("1");
-		System.out.println("=========================");
-		
 		// UserPostLike 에서 Post 에 해당하는 user 가 있는지 찾기
 		UserPostLike userPostLike = userPostLikeRepository.findByPostAndUser(post, user).orElse(null);
-		
-		System.out.println("========================");
-		System.out.println("2");
-		System.out.println("=========================");
 		
 		// 없다면, 추가
 		if(userPostLike == null)

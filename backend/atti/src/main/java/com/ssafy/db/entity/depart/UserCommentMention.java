@@ -42,6 +42,4 @@ public class UserCommentMention {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="comment_id")
 	private Comment comment;						// 댓글 ID
-	
-	///////////////////////////////////////////////////////
 }

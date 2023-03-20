@@ -44,7 +44,6 @@ public class CourseController {
 	// 시간표 조회
 	@PostMapping()
 	public ResponseEntity<CourseListRes> getCourse(@RequestBody CourseGetReq courseGetReq) {
-		System.out.println(courseGetReq.getDepartId());
 		List<CourseGetRes> courseResList = courseService.getCourse(courseGetReq);
 		
 		if(courseResList == null)

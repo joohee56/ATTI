@@ -38,26 +38,16 @@ public class PostController {
 	
 	@PostMapping("/write") // 게시글 쓰기
 	public ResponseEntity<Long> createWriting(@RequestBody PostWriteReq postWriteReq) {
-//		System.out.println(post);
-//		postService.createWriting(postWriteReq);
-//		System.out.println(post);
 		return new ResponseEntity<Long>(postService.createWriting(postWriteReq), HttpStatus.OK);
 	}
 	
 	@GetMapping("/read/{postId}/{userId}") // 게시글 상세 조회
 	public ResponseEntity<PostViewOneRes> viewFindOne(@PathVariable Long postId, @PathVariable String userId) {
-//		if(postService.viewFindOne(postId).getPostId() == postId) {
-//			
-//		}
-//		Post test = new Post();
-		System.out.println(postId);
 		return new ResponseEntity<PostViewOneRes>(postService.viewFindOne(postId, userId), HttpStatus.OK);
-//		return new ResponseEntity<Post>(test, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/delete/{postId}") // 단일 게시글 삭제
 	public ResponseEntity<String> deleteFindOne(@PathVariable Long postId){
-		System.out.println(postId);
 		postService.deleteFindOne(postId);
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
@@ -70,12 +60,6 @@ public class PostController {
 	
 	@PutMapping("/update") // 게시글 수정
     public ResponseEntity<LocalDateTime> editPost(@RequestBody PostUpdateReq editPostInfo){
-
-        System.out.println("=====================");
-        System.out.println("postContent : " + editPostInfo.getPostContent());
-        System.out.println("=====================");
-
-//        postService.editPost(editPostInfo);
         return new ResponseEntity<LocalDateTime>(postService.editPost(editPostInfo), HttpStatus.OK);
     }
 	

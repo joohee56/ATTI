@@ -35,10 +35,6 @@ public class CategoryServiceImpl implements CategoryService {
 		Depart depart = departRepository.findById(categoryCreateReq.getDepartId()).orElse(null);
 		User user = userRepository.findById(categoryCreateReq.getUserId()).orElse(null);
 		
- 		System.out.println("=====================");
- 		System.out.println(categoryCreateReq.getType());
-		System.out.println("=====================");
-		
 		Category category = Category.builder()
 				.categoryName(categoryCreateReq.getCategoryName())
 				.categoryAnoInfo(categoryCreateReq.isCategoryAnoInfo())
@@ -48,8 +44,6 @@ public class CategoryServiceImpl implements CategoryService {
 				.depart(depart)
 				.user(user)
 				.build();
-		
-//		categoryRepository.save(category).getCategoryId();
 		
 		return categoryRepository.save(category).getCategoryId();
 	}

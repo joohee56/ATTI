@@ -43,19 +43,13 @@ public class DepartController {
 	
 	@PostMapping("/create") // 채널 생성
 	public ResponseEntity<List<CategoryListRes>> createChannel(@RequestBody DepartCreateReq departCreateReq) {
-		System.out.println("===========================" + departCreateReq.getDepartName() + "=============================");
-		System.out.println("===========================" + departCreateReq.getUserId() + "=============================");
 		Long departId = departService.createChannel(departCreateReq);
-		
 		List<CategoryListRes> categoryList = categoryService.getCategoryList(departId);
-		
 		return new ResponseEntity<List<CategoryListRes>>(categoryList, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{departCode}/{userId}") // 채널 입장 
 	public ResponseEntity<? extends BaseResponseBody> joinChannel(@PathVariable String departCode, @PathVariable String userId) {
-//		System.out.println("===========================" + departId + "=============================");
-		
 		// 0. 채널 코드와 일치하는 채널 찾기
 		Long departId = departService.getDepartIdByCode(departCode);
 		if(departId == null)
@@ -84,20 +78,12 @@ public class DepartController {
 	
 	@GetMapping("/{departId}/category/{categoryId}/user/{userId}") // 게시글 전체 조회
 	public ResponseEntity<List<PostViewAllRes>> viewAllPosts(@PathVariable Long departId, @PathVariable Long categoryId, @PathVariable String userId) {
-		System.out.println("===========================" + departId + "=============================");
-		System.out.println("===========================" + categoryId + "=============================");
 		return new ResponseEntity<List<PostViewAllRes>>(postService.viewAllPosts(departId, categoryId, userId), HttpStatus.OK);
 	}
 	
 	// 카테고리 생성
 	@PostMapping("/category/create")
 	public ResponseEntity<Long> createCategory(@RequestBody CategoryCreateReq categoryCreateReq) {
-		System.out.println("=========================");
-		System.out.println("cType :"+ categoryCreateReq.getType());
-		System.out.println(categoryCreateReq.getCategoryName());
-		System.out.println("=========================");
-		
-//		categoryService.createCategory(categoryCreateReq);
 		return new ResponseEntity<Long>(categoryService.createCategory(categoryCreateReq), HttpStatus.OK);
 	}
 	

@@ -52,13 +52,9 @@ public class AdminController {
 		return ResponseEntity.status(200).body(AttendanceListRes.of(200, "success", courseResList));
 	}
 	
-	// 확인 버튼 클릭 시 수정
-	
-	
 	// 채널 코드 확인
 	@GetMapping("/depart/check/{departId}")
 	public ResponseEntity<DepartCodeRes> getDepartCode(@PathVariable Long departId) {
-		
 		return new ResponseEntity<DepartCodeRes>(adminService.getDepartCode(departId), HttpStatus.OK);
 	}
 	

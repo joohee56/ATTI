@@ -21,7 +21,4 @@
 //    			.where(qUser.userId.eq).fetchOne();
 //    	
 //    }
-//	
-//	
-//
 //}

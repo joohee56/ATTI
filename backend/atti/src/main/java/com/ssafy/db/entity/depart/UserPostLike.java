@@ -43,7 +43,4 @@ public class UserPostLike {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="post_id")
 	private Post post;							// 게시글 ID (FK)
-	
-	/////////////////////////////////////////////////////////
-	
 }

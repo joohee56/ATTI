@@ -47,6 +47,4 @@ public class Profile {
 	@OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user_id")
 	private User user;						// 회원 ID (FK)
-	
-
 }

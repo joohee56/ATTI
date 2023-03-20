@@ -44,14 +44,4 @@ public class ChatRoom {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="chatroom_id")
 	private Long chatroomId;				// 채팅방 번호
-	
-//	@OneToOne(fetch=FetchType.LAZY)
-//	private WebClass webclass;
-	
-//	@OneToMany(mappedBy = "chatroom")
-//    private List<Chat> chats = new ArrayList<>();
-	
-	
-// 연관관계 메소드
-
 }

@@ -43,7 +43,4 @@ public class ChatCategory {
 	
 	@Column(name="chat_category_name")
 	private String chatCategoryName;		// 채팅 카테고리 이름
-	
-//	@OneToMany(mappedBy = "chatcategory")
-//    private List<Chat> chats = new ArrayList<>();
 }

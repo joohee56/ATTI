@@ -85,6 +85,4 @@
 //		this.chatroom = chatroom;
 //		chatroom.getChats().add(this);
 //	}
-//	
-//	
 //}

@@ -65,5 +65,4 @@ public class File {
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="depart_id")
 	private Depart depart;
-	/////////////////////////////////////////////////////// 
 }

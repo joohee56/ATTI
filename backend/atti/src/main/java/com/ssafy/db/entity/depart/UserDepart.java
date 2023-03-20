@@ -42,7 +42,4 @@ public class UserDepart {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="depart_id")
 	private Depart depart;		 			// 채널 ID
-	
-	/////////////////////////////////////////////
-	
 }

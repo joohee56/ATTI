@@ -49,14 +49,5 @@ public class UserCourse {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="course_id")
 	private Course course;
-	
-//	public void setUser(User user) {
-//		this.user = user;
-//		user.getUsercourses().add(this);
-//	}
-//	
-//	public void setCourse(Course course) {
-//		this.course = course;
-//		course.getUsercourses().add(this);
-//	}
+
 }

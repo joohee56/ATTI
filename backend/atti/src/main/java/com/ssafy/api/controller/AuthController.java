@@ -143,7 +143,7 @@ public class AuthController {
 		return ResponseEntity.status(401).body(UserLoginRes.failOf(401, "Invalid Password"));
 	}
 	
-	// 자동 로그인 -> 나중에 수정 예정
+	// 자동 로그인
 	@PostMapping("/auto")
 	public ResponseEntity<UserLoginRes> autoLogin(@RequestBody LoginAutoReq loginAutoReq){
 		String userId = loginAutoReq.getUserId();

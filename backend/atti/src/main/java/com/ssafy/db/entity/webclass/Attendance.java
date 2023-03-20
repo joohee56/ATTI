@@ -44,23 +44,9 @@ public class Attendance {
 	@JoinColumn(name="course_id")
 	private Course course;
 	
-	// entity 는 setter 있는 게 안좋다고 함..
+	// entity 는 setter 있는 게 안좋다고 함.
 	public void updateAttendancedContent(String change) {
 		this.attendancedContent = change;
 	}
-	
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name="webclass_id")
-//	private WebClass webclass;
-//	
-//	public void setUser(User user) {
-//		this.user = user;
-//		user.getAttendances().add(this);
-//	}
-	
-//	public void setWebclass(WebClass webclass) {
-//		this.webclass = webclass;
-//		webclass.getAttendances().add(this);
-//	}
-	
+
 }
